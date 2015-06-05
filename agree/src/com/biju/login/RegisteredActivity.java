@@ -69,6 +69,7 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 
 	}
 
+	
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
