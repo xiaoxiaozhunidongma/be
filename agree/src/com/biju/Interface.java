@@ -112,7 +112,6 @@ public class Interface {
 	public static void requestError(VolleyError error) {
 	
 		//1............
-		//22222
 	}
 	
 	public Map<String, String> packParams(Object classObject , String interfaceType) {
