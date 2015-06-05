@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="orange">#ff9224</color>
+    <color name="gray">#878787</color>
+       <color name="color_money">#ffff611d</color>
+           <color name="color_4b">#ff4b4b4b</color>
+    <color name="color_ac">#ffacacac</color>
+    <color name="color_39">#ff393939</color>
+    <color name="color_f6">#fff6f6f6</color>
+    <color name="color_df">#ffdfdfdf</color>
+    <color name="color_ad">#ffadadad</color>
+    <color name="color_d6">#ffd6d6d6</color>
+    <color name="color_a5">#ffa5a5a5</color>
+    <color name="color_ae">#ffaeaeae</color>
+    <color name="color_93">#ff939393</color>
+    <color name="color_77">#ff777777</color>
+    <color name="color_e5">#ffe5e5e5</color>
+    <color name="color_e0">#ffe0e0e0</color>
+    <color name="color_ce">#ffcecece</color>
+        <color name="textColor_3c">#ff3c3c3c</color>
+    <color name="textColor_32">#ff323232</color>
+    <color name="textColor_77">#ff777777</color>
+    <color name="textColor_a0">#ffa0a0a0</color>
+        <color name="listview_driver_color">#ffd8d8d8</color>
+         <color name="bg_common_gray">#ffe2e2e2</color>
+           <color name="white">#ffffffff</color>
+</resources>
