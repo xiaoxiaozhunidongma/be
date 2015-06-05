@@ -1,18 +1,17 @@
 package com.biju.login;
 
-import com.biju.BaseActivity;
-import com.biju.MainActivity;
-import com.biju.R;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
-public class LoginActivity extends BaseActivity implements OnClickListener{
+import com.biju.MainActivity;
+import com.biju.R;
+
+public class LoginActivity extends Activity implements OnClickListener{
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,17 +57,6 @@ public class LoginActivity extends BaseActivity implements OnClickListener{
 		startActivity(intent);
 	}
 
-	@Override
-	public void Response() {
-		// TODO Auto-generated method stub
-		
-	}
-
-	@Override
-	public void ErrorResponse() {
-		// TODO Auto-generated method stub
-		
-	}
 
 
 }

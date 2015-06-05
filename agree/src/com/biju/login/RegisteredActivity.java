@@ -2,6 +2,7 @@ package com.biju.login;
 
 import java.io.IOException;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -22,14 +23,12 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import com.BJ.javabean.User;
-import com.biju.BaseActivity;
 import com.biju.Interface;
 import com.biju.R;
 
-public class RegisteredActivity extends BaseActivity implements OnClickListener {
+public class RegisteredActivity extends Activity implements OnClickListener {
 
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
@@ -48,6 +47,7 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 		registered_head = (ImageView) findViewById(R.id.registered_head);
 		registered_head.setOnClickListener(this);
 		mNickname = (EditText) findViewById(R.id.registered_nickname);
+		findViewById(R.id.registered_back).setOnClickListener(this);
 	}
 
 	@Override
@@ -57,15 +57,6 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 		return true;
 	}
 
-	@Override
-	public void Response() {
-
-	}
-
-	@Override
-	public void ErrorResponse() {
-
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -73,23 +64,29 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 		case R.id.registered_head:
 			registered_head();
 			break;
-
+		case R.id.registered_back:
+			registered_back();
 		default:
 			break;
 		}
 	}
-	//打开图库，选择图片
+
+	private void registered_back() {
+		finish();
+	}
+
+	// 打开图库，选择图片
 	private void registered_head() {
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
 		startActivityForResult(getAlbum, IMAGE_CODE);
-		
-		//把昵称传到接口
-		String nickname=mNickname.getText().toString().trim();
-		User user=new User();
+
+		// 把昵称传到接口
+		String nickname = mNickname.getText().toString().trim();
+		User user = new User();
 		user.setNickname(nickname);
-		Interface inter=new Interface();
+		Interface inter = new Interface();
 		inter.regNewAccount(RegisteredActivity.this, user);
 	}
 
@@ -126,7 +123,8 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 			}
 		}
 	}
-	//对图片进行修改，变成圆形
+
+	// 对图片进行修改，变成圆形
 	private void initHead(Bitmap bm) {
 		// 裁剪图片
 		BitmapFactory.Options options = new BitmapFactory.Options();
