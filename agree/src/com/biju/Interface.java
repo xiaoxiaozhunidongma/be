@@ -100,7 +100,6 @@ public class Interface {
 	//»ñÈ¡Í¼Æ¬Ç©Ãû
 	String kGetPictureSign= "101";
 	
-	
 	//test
 	String kTestInterface =  "1101";
 
