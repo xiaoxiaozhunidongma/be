@@ -39,6 +39,7 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 		initUI();
 	}
 
+	
 	private void initUI() {
 		registered_head = (ImageView) findViewById(R.id.registered_head);
 		registered_head.setOnClickListener(this);
@@ -51,6 +52,7 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 		return true;
 	}
 
+	
 	@Override
 	public void Response() {
 
