@@ -12,8 +12,6 @@ public abstract class BaseActivity extends Activity {
 		setContentView(R.layout.activity_base);
 	}
 
-	
-//	.........................1
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
