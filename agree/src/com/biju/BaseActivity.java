@@ -23,5 +23,4 @@ public abstract class BaseActivity extends Activity {
 	public abstract void Response();
 	public abstract void ErrorResponse();
 	
-	public abstract void ErrorResponse1();
 }
