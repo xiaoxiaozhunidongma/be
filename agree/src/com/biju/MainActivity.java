@@ -17,6 +17,7 @@ import com.fragment.SettingFragment;
 
 public class MainActivity extends FragmentActivity {
 
+	
 	private FragmentTabHost mTabhost;
 	private int tab_imagelist[] = new int[] { R.drawable.tab_home_selector,
 			R.drawable.tab_party_selector, R.drawable.tab_friends_selector,

@@ -103,7 +103,7 @@ public class Interface {
 	//test
 	String kTestInterface =  "1101";
 
-
+	//我在这里修改了
 	public static void requestDone(Object theObject) {
 
 	}
