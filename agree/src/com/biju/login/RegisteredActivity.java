@@ -20,9 +20,13 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
+import com.BJ.javabean.User;
 import com.biju.BaseActivity;
+import com.biju.Interface;
 import com.biju.R;
 
 public class RegisteredActivity extends BaseActivity implements OnClickListener {
@@ -30,6 +34,7 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
 	private ImageView registered_head;
+	private EditText mNickname;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -42,6 +47,7 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 	private void initUI() {
 		registered_head = (ImageView) findViewById(R.id.registered_head);
 		registered_head.setOnClickListener(this);
+		mNickname = (EditText) findViewById(R.id.registered_nickname);
 	}
 
 	@Override
@@ -78,6 +84,13 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
 		startActivityForResult(getAlbum, IMAGE_CODE);
+		
+		//把昵称传到接口
+		String nickname=mNickname.getText().toString().trim();
+		User user=new User();
+		user.setNickname(nickname);
+		Interface inter=new Interface();
+		inter.regNewAccount(RegisteredActivity.this, user);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
