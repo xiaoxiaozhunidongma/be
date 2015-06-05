@@ -105,13 +105,12 @@ public class Interface {
 	String kTestInterface =  "1101";
 
 
-	public static void requestDone(Object theObject) {
+	public static void requestDone(String theObject) {
 
 	}
 	
 	public static void requestError(VolleyError error) {
 	
-		//1............
 	}
 	
 	public Map<String, String> packParams(Object classObject , String interfaceType) {
