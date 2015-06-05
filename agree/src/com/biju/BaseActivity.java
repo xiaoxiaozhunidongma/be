@@ -12,6 +12,7 @@ public abstract class BaseActivity extends Activity {
 		setContentView(R.layout.activity_base);
 	}
 
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -22,5 +23,5 @@ public abstract class BaseActivity extends Activity {
 	public abstract void Response();
 	public abstract void ErrorResponse();
 	
-	
+	public abstract void ErrorResponse1();
 }
