@@ -37,7 +37,7 @@ public class MainActivity extends FragmentActivity {
 			
 			@Override
 			public void success(String A) {
-				Toast.makeText(MainActivity.this, A, Toast.LENGTH_SHORT).show();
+//				Toast.makeText(MainActivity.this, A, Toast.LENGTH_SHORT).show();
 			}
 			
 			@Override
