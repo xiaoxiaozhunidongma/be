@@ -35,6 +35,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private EditText mLogin_password;
 	private String savePath = "/mnt/sdcard/data1.txt";
 	private Person person;
+	private Interface logininter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -46,7 +47,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	private void initData() {
-		Interface logininter = new Interface();
+		logininter = new Interface();
 		logininter.setPostListener(new UserInterface() {
 
 			@Override
@@ -57,11 +58,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 				startActivity(intent);
 				overridePendingTransition(0, 0);
 				finish();
-				// Loginback loginback = GsonUtils.parseJson(A,
-				// Loginback.class);
-				// //取第一个Users[0]
-				// List<User> Users = loginback.getReturnData();
-				// User user=Users.get(0);
+				 Loginback loginback = GsonUtils.parseJson(A,
+				 Loginback.class);
+				 //取第一个Users[0]
+				 List<User> Users = loginback.getReturnData();
+				 if(Users.size()>=1){
+					 User user=Users.get(0);
+					 Log.e("解析出来的", user.getPassword());
+				 }
 			}
 
 			@Override
@@ -112,7 +116,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		User user = new User();
 		user.setPk_user(Integer.valueOf(mUser));
 		user.setPassword(mPassword);
-		Interface logininter = new Interface();
+//		Interface logininter = new Interface();
 		logininter.userLogin(LoginActivity.this, user);
 	}
 
@@ -142,7 +146,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			person = (Person) ois.readObject();
 			mLogin_account.setText(person.pk_user);
-			// mLogin_password.setText(person.password);
+			 mLogin_password.setText(person.password);
 			if (!("".equals(person.pk_user) && "".equals(person.password))) {
 				//如果起个线程可以加个动画效果
 //				mLogin_account.postDelayed(new Runnable() {
@@ -152,7 +156,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						User user = new User();
 						user.setPk_user(Integer.valueOf(person.pk_user));
 						user.setPassword(person.password);
-						Interface logininter = new Interface();
+//						Interface logininter = new Interface();
 						logininter.userLogin(LoginActivity.this, user);
 //					}
 //				}, 1000);
