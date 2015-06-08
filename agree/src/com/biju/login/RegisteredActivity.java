@@ -26,11 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.BJ.javabean.User;
-<<<<<<< HEAD
 import com.biju.BaseActivity;
 import com.BJ.javabean.User;
-=======
->>>>>>> origin/ZCL
 import com.biju.Interface;
 import com.biju.MainActivity;
 import com.biju.R;
@@ -65,10 +62,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		getMenuInflater().inflate(R.menu.registered, menu);
 		return true;
 	}
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/ZCL
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
