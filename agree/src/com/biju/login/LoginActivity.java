@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -18,12 +19,14 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 
+import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Person;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
@@ -50,7 +53,10 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Intent intent = new Intent(LoginActivity.this,
 						MainActivity.class);
 				startActivity(intent);
-
+				Loginback loginback = GsonUtils.parseJson(A, Loginback.class);
+				//取第一个Users[0]
+				List<User> Users = loginback.getReturnData();
+				User user=Users.get(0);
 			}
 
 			@Override
