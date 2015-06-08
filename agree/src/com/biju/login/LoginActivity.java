@@ -35,13 +35,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private EditText mLogin_account;
 	private EditText mLogin_password;
+	private Person person;
+	private Interface logininter;
 	private String savePath = "/mnt/sdcard/data3.txt";
 	private ImageView auto_login_image;
 	private RelativeLayout manually_login;
 	private RelativeLayout auto_login;
 	private AnimationDrawable drawable;
-	private Person person;
-	private Interface logininter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -65,7 +65,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 					@Override
 					public void run() {
-						drawable.stop();
+						if(drawable!=null){
+							drawable.stop();
+						}
 						Intent intent = new Intent(LoginActivity.this,
 								MainActivity.class);
 						startActivity(intent);
