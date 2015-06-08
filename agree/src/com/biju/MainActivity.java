@@ -3,6 +3,7 @@ package com.biju;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -28,8 +29,6 @@ public class MainActivity extends FragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_tabs);
-		//add 
-		//2
 		//≤‚ ‘
 		new Interface().testIf(this);
 		initUI();// ≥ı ºªØTabhost
