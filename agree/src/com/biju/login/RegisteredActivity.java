@@ -44,6 +44,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		initUI();
 	}
 
+	
 	private void initUI() {
 		registered_head = (ImageView) findViewById(R.id.registered_head);
 		registered_head.setOnClickListener(this);
@@ -59,7 +60,6 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.registered_head:
@@ -99,6 +99,13 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
 		startActivityForResult(getAlbum, IMAGE_CODE);
+		
+		//把昵称传到接口
+		String nickname=mNickname.getText().toString().trim();
+		User user=new User();
+		user.setNickname(nickname);
+		Interface inter=new Interface();
+		inter.regNewAccount(RegisteredActivity.this, user);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {

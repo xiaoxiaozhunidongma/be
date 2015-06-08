@@ -100,12 +100,9 @@ public class Interface {
 	//ªÒ»°Õº∆¨«©√˚
 	String kGetPictureSign= "101";
 	
-	
 	//test
 	String kTestInterface =  "1101";
 
-
-	
 	public Map<String, String> packParams(Object classObject , String interfaceType) {
 		Map map = Bean2Map.ConvertObjToMap(classObject);
 		JSONObject jsonObject=new JSONObject(map);
@@ -133,6 +130,7 @@ public class Interface {
 			}
 		});	
 	}
+	
 	 //≤‚ ‘
 	public void testIf(Context context) {
 		
