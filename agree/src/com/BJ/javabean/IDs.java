@@ -31,4 +31,11 @@ public class IDs {
 		this.id_user_group = id_user_group;
 	}
 	
+	//构造方法
+	public IDs(Integer id_group,Integer id_user,Integer id_user_group){
+		this.id_group = id_group;
+		this.id_user = id_user;
+		this.id_user_group = id_user_group;
+	}
+	
 }

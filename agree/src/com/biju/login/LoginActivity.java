@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.StreamCorruptedException;
+import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -21,12 +22,14 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 
+import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Person;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
 
 public class LoginActivity extends Activity implements OnClickListener {
 
@@ -37,6 +40,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private RelativeLayout manually_login;
 	private RelativeLayout auto_login;
 	private AnimationDrawable drawable;
+	private Person person;
+	private Interface logininter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -50,7 +55,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	private void initData() {
-		Interface logininter = new Interface();
+		logininter = new Interface();
 		logininter.setPostListener(new UserInterface() {
 
 			@Override
@@ -68,11 +73,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 						finish();
 					}
 				}, 1000);
-				// Loginback loginback = GsonUtils.parseJson(A,
-				// Loginback.class);
-				// //取第一个Users[0]
-				// List<User> Users = loginback.getReturnData();
-				// User user=Users.get(0);
+				 Loginback loginback = GsonUtils.parseJson(A,
+				 Loginback.class);
+				 //取第一个Users[0]
+				 List<User> Users = loginback.getReturnData();
+				 if(Users.size()>=1){
+					 User user=Users.get(0);
+					 Log.e("解析出来的", user.getPassword());
+				 }
 			}
 
 			@Override
@@ -126,7 +134,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		User user = new User();
 		user.setPk_user(Integer.valueOf(mUser));
 		user.setPassword(mPassword);
-		Interface logininter = new Interface();
+//		Interface logininter = new Interface();
 		logininter.userLogin(LoginActivity.this, user);
 	}
 
@@ -161,7 +169,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				User user = new User();
 				user.setPk_user(Integer.valueOf(person.pk_user));
 				user.setPassword(person.password);
-				Interface logininter = new Interface();
+//				Interface logininter = new Interface();
 				logininter.userLogin(LoginActivity.this, user);
 				manually_login.setVisibility(View.GONE);
 				auto_login.setVisibility(View.VISIBLE);
