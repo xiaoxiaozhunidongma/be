@@ -26,9 +26,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.BJ.javabean.User;
-
 import com.biju.BaseActivity;
-
+import com.BJ.javabean.User;
 import com.biju.Interface;
 import com.biju.MainActivity;
 import com.biju.R;
