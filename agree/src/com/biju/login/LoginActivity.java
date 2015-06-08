@@ -135,7 +135,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		User user = new User();
 		user.setPk_user(Integer.valueOf(mUser));
 		user.setPassword(mPassword);
-		// Interface logininter = new Interface();
+//		Interface logininter = new Interface();
 		logininter.userLogin(LoginActivity.this, user);
 	}
 
@@ -170,6 +170,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				User user = new User();
 				user.setPk_user(Integer.valueOf(person.pk_user));
 				user.setPassword(person.password);
+//				Interface logininter = new Interface();
 				logininter.userLogin(LoginActivity.this, user);
 				manually_login.setVisibility(View.GONE);
 				auto_login.setVisibility(View.VISIBLE);
