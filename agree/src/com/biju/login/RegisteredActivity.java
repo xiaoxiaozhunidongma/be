@@ -26,13 +26,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.BJ.javabean.User;
-<<<<<<< HEAD
 import com.biju.BaseActivity;
 import com.biju.Interface;
-=======
 import com.biju.Interface;
 import com.biju.MainActivity;
->>>>>>> origin/ZCL
+import com.biju.Interface;
+import com.biju.MainActivity;
 import com.biju.R;
 
 public class RegisteredActivity extends Activity implements OnClickListener {
@@ -55,11 +54,8 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		registered_head = (ImageView) findViewById(R.id.registered_head);
 		registered_head.setOnClickListener(this);
 		mNickname = (EditText) findViewById(R.id.registered_nickname);
-<<<<<<< HEAD
-=======
 		findViewById(R.id.registered_back).setOnClickListener(this);
 		findViewById(R.id.registered_OK).setOnClickListener(this);
->>>>>>> origin/ZCL
 	}
 
 	@Override
@@ -69,22 +65,9 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
-	
-	@Override
-<<<<<<< HEAD
-	public void Response() {
-
-	}
-
-	@Override
-	public void ErrorResponse() {
-
-	}
 
 	
 	@Override
-=======
->>>>>>> origin/ZCL
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.registered_head:
