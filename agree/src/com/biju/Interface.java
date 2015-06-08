@@ -131,6 +131,7 @@ public class Interface {
 			}
 		});	
 	}
+	
 	 //≤‚ ‘
 	public void testIf(Context context) {
 		
