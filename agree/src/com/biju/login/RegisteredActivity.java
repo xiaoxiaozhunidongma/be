@@ -2,6 +2,7 @@ package com.biju.login;
 
 import java.io.IOException;
 
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
@@ -25,11 +26,16 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.BJ.javabean.User;
+<<<<<<< HEAD
 import com.biju.BaseActivity;
 import com.biju.Interface;
+=======
+import com.biju.Interface;
+import com.biju.MainActivity;
+>>>>>>> origin/ZCL
 import com.biju.R;
 
-public class RegisteredActivity extends BaseActivity implements OnClickListener {
+public class RegisteredActivity extends Activity implements OnClickListener {
 
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
@@ -49,6 +55,11 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 		registered_head = (ImageView) findViewById(R.id.registered_head);
 		registered_head.setOnClickListener(this);
 		mNickname = (EditText) findViewById(R.id.registered_nickname);
+<<<<<<< HEAD
+=======
+		findViewById(R.id.registered_back).setOnClickListener(this);
+		findViewById(R.id.registered_OK).setOnClickListener(this);
+>>>>>>> origin/ZCL
 	}
 
 	@Override
@@ -60,6 +71,7 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 
 	
 	@Override
+<<<<<<< HEAD
 	public void Response() {
 
 	}
@@ -71,17 +83,42 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 
 	
 	@Override
+=======
+>>>>>>> origin/ZCL
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.registered_head:
 			registered_head();
 			break;
-
+		case R.id.registered_back:
+			registered_back();
+			break;
+		case R.id.registered_OK:
+			registered_OK();
+			break;
 		default:
 			break;
 		}
 	}
-	//打开图库，选择图片
+
+	private void registered_OK() {
+		// 把昵称传到接口
+		String nickname = mNickname.getText().toString().trim();
+		User user = new User();
+		user.setNickname(nickname);
+		Interface inter = new Interface();
+		inter.regNewAccount(RegisteredActivity.this, user);
+		
+		//跳转至主界面
+		Intent intent=new Intent(RegisteredActivity.this, MainActivity.class);
+		startActivity(intent);
+	}
+
+	private void registered_back() {
+		finish();
+	}
+
+	// 打开图库，选择图片
 	private void registered_head() {
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
@@ -129,7 +166,8 @@ public class RegisteredActivity extends BaseActivity implements OnClickListener 
 			}
 		}
 	}
-	//对图片进行修改，变成圆形
+
+	// 对图片进行修改，变成圆形
 	private void initHead(Bitmap bm) {
 		// 裁剪图片
 		BitmapFactory.Options options = new BitmapFactory.Options();

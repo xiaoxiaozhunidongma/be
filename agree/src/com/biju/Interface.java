@@ -103,6 +103,10 @@ public class Interface {
 	//test
 	String kTestInterface =  "1101";
 
+<<<<<<< HEAD
+=======
+
+>>>>>>> origin/ZCL
 	
 	public Map<String, String> packParams(Object classObject , String interfaceType) {
 		Map map = Bean2Map.ConvertObjToMap(classObject);

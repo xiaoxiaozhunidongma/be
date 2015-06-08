@@ -8,17 +8,22 @@ import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
+import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
+import com.biju.Interface.UserInterface;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
 import com.fragment.SettingFragment;
 
 public class MainActivity extends FragmentActivity {
+<<<<<<< HEAD
 
 	
+=======
+>>>>>>> origin/ZCL
 	private FragmentTabHost mTabhost;
 	private int tab_imagelist[] = new int[] { R.drawable.tab_home_selector,
 			R.drawable.tab_party_selector, R.drawable.tab_friends_selector,
@@ -31,6 +36,21 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.fragment_tabs);
 		//测试
 		new Interface().testIf(this);
+		//调用监听
+		Interface interface1 = new Interface();
+		interface1.setPostListener(new UserInterface() {
+			
+			@Override
+			public void success(String A) {
+				Toast.makeText(MainActivity.this, A, Toast.LENGTH_SHORT).show();
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
+		
 		initUI();// 初始化Tabhost
 	}
 
