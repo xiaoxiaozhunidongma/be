@@ -12,7 +12,9 @@ import android.util.Log;
 
 import com.BJ.javabean.Chat;
 import com.BJ.javabean.FeedBack;
+import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
+import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.User;
@@ -197,8 +199,8 @@ public class Interface {
 		volleyPost(context,packParams(group, kReadAllPerRelation));
 	}
 	//使用邀请码加入小组
-	public void useRequestCode2Join(Context context,Group group) {//group_code?
-		volleyPost(context,packParams(group, kUseRequestCode2join));
+	public void useRequestCode2Join(Context context,Group_Code code) {
+		volleyPost(context,packParams(code, kUseRequestCode2join));
 	}
 	//用户加入小组
 	public void userJoin2gourp(Context context,Group_User group_User) {
@@ -209,8 +211,8 @@ public class Interface {
 		volleyPost(context,packParams(user, kReadUserAllParty));
 	}
 	//读取用户在小组中的所有聚会
-	public void readUserGroupParty(Context context,User user) {//传入？？
-		volleyPost(context,packParams(user, kReadUserGroupParty));
+	public void readUserGroupParty(Context context,IDs iDs) {//...........传入字典
+		volleyPost(context,packParams(iDs, kReadUserGroupParty));
 	}
 	//更新用户对于聚会的参与信息
 	public void updateUserJoinMsg(Context context,Party_User party_User) {
@@ -257,7 +259,7 @@ public class Interface {
 		volleyPost(context,packParams(user, kReadfriend));
 	}
 	//匹配通讯录
-	public void mateComBook(Context context,User user) {  //传入？？？
+	public void mateComBook(Context context,User user) {  //........传入？？？
 		volleyPost(context,packParams(user, kMateComBook));
 	}
 	//成为好友关系
@@ -281,7 +283,7 @@ public class Interface {
 		volleyPost(context,packParams(feedBack, kFeedBack));
 	}
 	//获取图片签名
-	public void getPicSign(Context context,FeedBack feedBack) {  //传入？？？？？
+	public void getPicSign(Context context,FeedBack feedBack) {  //...........传入？？？？？
 		volleyPost(context,packParams(feedBack, kGetPictureSign));
 	}
 	//接口部分
