@@ -29,7 +29,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private EditText mLogin_account;
 	private EditText mLogin_password;
-	private String savePath="/mnt/sdcard/data1.txt";
+	private String savePath = "/mnt/sdcard/data1.txt";
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -46,14 +47,15 @@ public class LoginActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				Log.e("’À∫≈ID", A);
-				Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+				Intent intent = new Intent(LoginActivity.this,
+						MainActivity.class);
 				startActivity(intent);
 
 			}
 
 			@Override
 			public void defail(Object B) {
-				Log.e("’À∫≈ID"," ß∞‹");
+				Log.e("’À∫≈ID", " ß∞‹");
 			}
 		});
 
@@ -62,9 +64,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private void initUI() {
 		findViewById(R.id.Login_OK).setOnClickListener(this);
 		findViewById(R.id.Login_registered).setOnClickListener(this);
-		mLogin_account=(EditText) findViewById(R.id.Login_account);
-		mLogin_password=(EditText) findViewById(R.id.Login_password);
-		
+		mLogin_account = (EditText) findViewById(R.id.Login_account);
+		mLogin_password = (EditText) findViewById(R.id.Login_password);
+
 	}
 
 	@Override
@@ -94,54 +96,49 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	private void Login_OK() {
-		String mUser=mLogin_account.getText().toString().trim();
-		String mPassword=mLogin_password.getText().toString().trim();
+		String mUser = mLogin_account.getText().toString().trim();
+		String mPassword = mLogin_password.getText().toString().trim();
 		User user = new User();
 		user.setPk_user(Integer.valueOf(mUser));
 		user.setPassword(mPassword);
 		Interface logininter = new Interface();
 		logininter.userLogin(LoginActivity.this, user);
 	}
-	
+
 	@Override
 	protected void onStop() {
-		String pk_user=mLogin_account.getText().toString().trim();
-		String password=mLogin_password.getText().toString().trim();
-		Person person=new Person(pk_user, password);
+		String pk_user = mLogin_account.getText().toString().trim();
+		String password = mLogin_password.getText().toString().trim();
+		Person person = new Person(pk_user, password);
 		try {
-			ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(savePath));
+			ObjectOutputStream oos = new ObjectOutputStream(
+					new FileOutputStream(savePath));
 			oos.writeObject(person);
 			oos.close();
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		super.onStop();
 	}
-	
+
 	@Override
 	protected void onStart() {
 		FileInputStream fis;
 		try {
-			fis=new FileInputStream(savePath);
-			ObjectInputStream ois=new ObjectInputStream(fis);
-			Person person=(Person) ois.readObject();
+			fis = new FileInputStream(savePath);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Person person = (Person) ois.readObject();
 			mLogin_account.setText(person.pk_user);
 			mLogin_password.setText(person.password);
 		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (StreamCorruptedException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (ClassNotFoundException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		super.onStart();
