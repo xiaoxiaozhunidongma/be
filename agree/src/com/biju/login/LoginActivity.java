@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
@@ -33,6 +34,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private EditText mLogin_account;
 	private EditText mLogin_password;
 	private String savePath = "/mnt/sdcard/data1.txt";
+	private Person person;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -53,10 +55,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Intent intent = new Intent(LoginActivity.this,
 						MainActivity.class);
 				startActivity(intent);
-				Loginback loginback = GsonUtils.parseJson(A, Loginback.class);
-				//取第一个Users[0]
-				List<User> Users = loginback.getReturnData();
-				User user=Users.get(0);
+				overridePendingTransition(0, 0);
+				finish();
+				// Loginback loginback = GsonUtils.parseJson(A,
+				// Loginback.class);
+				// //取第一个Users[0]
+				// List<User> Users = loginback.getReturnData();
+				// User user=Users.get(0);
 			}
 
 			@Override
@@ -135,9 +140,29 @@ public class LoginActivity extends Activity implements OnClickListener {
 		try {
 			fis = new FileInputStream(savePath);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			Person person = (Person) ois.readObject();
+			person = (Person) ois.readObject();
 			mLogin_account.setText(person.pk_user);
-			mLogin_password.setText(person.password);
+			// mLogin_password.setText(person.password);
+			if (!("".equals(person.pk_user) && "".equals(person.password))) {
+				//如果起个线程可以加个动画效果
+//				mLogin_account.postDelayed(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+						User user = new User();
+						user.setPk_user(Integer.valueOf(person.pk_user));
+						user.setPassword(person.password);
+						Interface logininter = new Interface();
+						logininter.userLogin(LoginActivity.this, user);
+//					}
+//				}, 1000);
+			}else {
+				Intent intent = new Intent(LoginActivity.this,
+						LoginActivity.class);
+				startActivity(intent);
+				overridePendingTransition(0, 0);
+				finish();
+			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (StreamCorruptedException e) {
