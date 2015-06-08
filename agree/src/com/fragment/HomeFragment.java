@@ -14,14 +14,15 @@ import android.view.ViewGroup;
  */
 public class HomeFragment extends Fragment {
 
+	private View mLayout;
+
 	public HomeFragment() {
 	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		// Inflate the layout for this fragment
-		View mLayout = inflater.inflate(R.layout.fragment_home, container, false);
+		mLayout = inflater.inflate(R.layout.fragment_home, container, false);
 		return mLayout;
 	}
 

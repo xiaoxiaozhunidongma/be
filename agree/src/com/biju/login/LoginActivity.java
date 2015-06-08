@@ -11,6 +11,7 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -18,7 +19,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
@@ -33,9 +35,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private EditText mLogin_account;
 	private EditText mLogin_password;
-	private String savePath = "/mnt/sdcard/data1.txt";
 	private Person person;
 	private Interface logininter;
+	private String savePath = "/mnt/sdcard/data3.txt";
+	private ImageView auto_login_image;
+	private RelativeLayout manually_login;
+	private RelativeLayout auto_login;
+	private AnimationDrawable drawable;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -44,6 +50,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_login);
 		initUI();
 		initData();
+		manually_login.setVisibility(View.VISIBLE);
+		auto_login.setVisibility(View.GONE);
 	}
 
 	private void initData() {
@@ -53,19 +61,26 @@ public class LoginActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				Log.e("账号ID", A);
-				Intent intent = new Intent(LoginActivity.this,
-						MainActivity.class);
-				startActivity(intent);
-				overridePendingTransition(0, 0);
-				finish();
-				 Loginback loginback = GsonUtils.parseJson(A,
-				 Loginback.class);
-				 //取第一个Users[0]
-				 List<User> Users = loginback.getReturnData();
-				 if(Users.size()>=1){
-					 User user=Users.get(0);
-					 Log.e("解析出来的", user.getPassword());
-				 }
+				mLogin_account.postDelayed(new Runnable() {
+
+					@Override
+					public void run() {
+						drawable.stop();
+						Intent intent = new Intent(LoginActivity.this,
+								MainActivity.class);
+						startActivity(intent);
+						overridePendingTransition(0, 0);
+						finish();
+					}
+				}, 1000);
+				Loginback loginback = GsonUtils.parseJson(A,
+						Loginback.class);
+				//取第一个Users[0]
+				List<User> Users = loginback.getReturnData();
+				if(Users.size()>=1){
+					User user=Users.get(0);
+					Log.e("解析出来的", user.getPassword());
+				}
 			}
 
 			@Override
@@ -81,6 +96,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 		findViewById(R.id.Login_registered).setOnClickListener(this);
 		mLogin_account = (EditText) findViewById(R.id.Login_account);
 		mLogin_password = (EditText) findViewById(R.id.Login_password);
+		auto_login_image = (ImageView) findViewById(R.id.Auto_login_image);
+		manually_login = (RelativeLayout) findViewById(R.id.Manually_login);
+		auto_login = (RelativeLayout) findViewById(R.id.Auto_login);
 
 	}
 
@@ -144,28 +162,24 @@ public class LoginActivity extends Activity implements OnClickListener {
 		try {
 			fis = new FileInputStream(savePath);
 			ObjectInputStream ois = new ObjectInputStream(fis);
-			person = (Person) ois.readObject();
+			Person person = (Person) ois.readObject();
 			mLogin_account.setText(person.pk_user);
-			 mLogin_password.setText(person.password);
+			mLogin_password.setText(person.password);
 			if (!("".equals(person.pk_user) && "".equals(person.password))) {
-				//如果起个线程可以加个动画效果
-//				mLogin_account.postDelayed(new Runnable() {
-//					
-//					@Override
-//					public void run() {
-						User user = new User();
-						user.setPk_user(Integer.valueOf(person.pk_user));
-						user.setPassword(person.password);
-//						Interface logininter = new Interface();
-						logininter.userLogin(LoginActivity.this, user);
-//					}
-//				}, 1000);
-			}else {
+				User user = new User();
+				user.setPk_user(Integer.valueOf(person.pk_user));
+				user.setPassword(person.password);
+				Interface logininter = new Interface();
+				logininter.userLogin(LoginActivity.this, user);
+				manually_login.setVisibility(View.GONE);
+				auto_login.setVisibility(View.VISIBLE);
+				drawable = (AnimationDrawable) auto_login_image.getDrawable();
+				drawable.start();
+			} else {
 				Intent intent = new Intent(LoginActivity.this,
 						LoginActivity.class);
 				startActivity(intent);
 				overridePendingTransition(0, 0);
-				finish();
 			}
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();

@@ -27,10 +27,6 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.biju.BaseActivity"
-            android:label="@string/title_activity_base" >
-        </activity>
-        <activity
             android:name="com.biju.login.RegisteredActivity"
             android:label="@string/title_activity_registered" >
         </activity>
