@@ -166,6 +166,10 @@ public class Interface {
 		volleyPost(context,packParams(user, kReadUser));
 	}
 	//请求服务器发送验证码
+	/**
+	 * @param context
+	 * @param user this user can be null!
+	 */
 	public void requestVerCode(Context context,User user) {//传入为??
 		volleyPost(context,packParams(user, kRequestVerCode));
 	}
