@@ -1,29 +1,70 @@
 package com.biju.login;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.StreamCorruptedException;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.EditText;
 
+import com.BJ.javabean.User;
+import com.BJ.utils.Person;
+import com.biju.Interface;
+import com.biju.Interface.UserInterface;
 import com.biju.MainActivity;
 import com.biju.R;
 
-public class LoginActivity extends Activity implements OnClickListener{
+public class LoginActivity extends Activity implements OnClickListener {
 
+	private EditText mLogin_account;
+	private EditText mLogin_password;
+	private String savePath="/mnt/sdcard/data1.txt";
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		initUI();
+		initData();
+	}
+
+	private void initData() {
+		Interface logininter = new Interface();
+		logininter.setPostListener(new UserInterface() {
+
+			@Override
+			public void success(String A) {
+				Log.e("’À∫≈ID", A);
+				Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+				startActivity(intent);
+
+			}
+
+			@Override
+			public void defail(Object B) {
+				Log.e("’À∫≈ID"," ß∞‹");
+			}
+		});
+
 	}
 
 	private void initUI() {
 		findViewById(R.id.Login_OK).setOnClickListener(this);
 		findViewById(R.id.Login_registered).setOnClickListener(this);
+		mLogin_account=(EditText) findViewById(R.id.Login_account);
+		mLogin_password=(EditText) findViewById(R.id.Login_password);
+		
 	}
 
 	@Override
@@ -48,15 +89,62 @@ public class LoginActivity extends Activity implements OnClickListener{
 	}
 
 	private void Login_registered() {
-		Intent intent=new Intent(LoginActivity.this, RegisteredActivity.class);
+		Intent intent = new Intent(LoginActivity.this, RegisteredActivity.class);
 		startActivity(intent);
 	}
 
 	private void Login_OK() {
-		Intent intent=new Intent(LoginActivity.this, MainActivity.class);
-		startActivity(intent);
+		String mUser=mLogin_account.getText().toString().trim();
+		String mPassword=mLogin_password.getText().toString().trim();
+		User user = new User();
+		user.setPk_user(Integer.valueOf(mUser));
+		user.setPassword(mPassword);
+		Interface logininter = new Interface();
+		logininter.userLogin(LoginActivity.this, user);
 	}
-
-
+	
+	@Override
+	protected void onStop() {
+		String pk_user=mLogin_account.getText().toString().trim();
+		String password=mLogin_password.getText().toString().trim();
+		Person person=new Person(pk_user, password);
+		try {
+			ObjectOutputStream oos=new ObjectOutputStream(new FileOutputStream(savePath));
+			oos.writeObject(person);
+			oos.close();
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		super.onStop();
+	}
+	
+	@Override
+	protected void onStart() {
+		FileInputStream fis;
+		try {
+			fis=new FileInputStream(savePath);
+			ObjectInputStream ois=new ObjectInputStream(fis);
+			Person person=(Person) ois.readObject();
+			mLogin_account.setText(person.pk_user);
+			mLogin_password.setText(person.password);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (StreamCorruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		super.onStart();
+	}
 
 }

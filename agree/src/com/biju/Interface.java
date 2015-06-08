@@ -105,13 +105,6 @@ public class Interface {
 	String kTestInterface =  "1101";
 
 
-	public static void requestDone(String theObject) {
-
-	}
-	
-	public static void requestError(VolleyError error) {
-	
-	}
 	
 	public Map<String, String> packParams(Object classObject , String interfaceType) {
 		Map map = Bean2Map.ConvertObjToMap(classObject);
@@ -131,11 +124,12 @@ public class Interface {
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				requestError(error);
+				Log.e("失败", ""+error);
 			}
 			@Override
 			public void onResponse(String response) {
 				requestDone(response);
-				Log.e("", response );
+				Log.e("成功", response );//显示
 			}
 		});	
 	}
@@ -150,7 +144,7 @@ public class Interface {
 		per.put("request_data", jsonObject.toString());
 		per.put("request_type", kTestInterface);
 		
-		volleyPost(context,per);
+		volleyPost(context,per); 
 	}
 	//注册新用户
 	public void regNewAccount(Context context,User user) {
@@ -292,5 +286,24 @@ public class Interface {
 	//获取图片签名
 	public void getPicSign(Context context,FeedBack feedBack) {  //传入？？？？？
 		volleyPost(context,packParams(feedBack, kGetPictureSign));
+	}
+	//接口部分
+	private static UserInterface listener;
+	public interface UserInterface{
+		void success(String A);
+		void defail(Object B);
+	}
+	//开启监听
+	public void setPostListener(UserInterface listener){
+		this.listener=listener;
+	}
+	
+	public static void requestDone(String theObject) {
+		listener.success(theObject);
+	}
+	
+	public static void requestError(VolleyError error) {
+		listener.defail(error);
+		//1............
 	}
 }

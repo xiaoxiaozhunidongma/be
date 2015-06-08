@@ -26,6 +26,7 @@ import android.widget.ImageView;
 
 import com.BJ.javabean.User;
 import com.biju.Interface;
+import com.biju.MainActivity;
 import com.biju.R;
 
 public class RegisteredActivity extends Activity implements OnClickListener {
@@ -48,6 +49,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		registered_head.setOnClickListener(this);
 		mNickname = (EditText) findViewById(R.id.registered_nickname);
 		findViewById(R.id.registered_back).setOnClickListener(this);
+		findViewById(R.id.registered_OK).setOnClickListener(this);
 	}
 
 	@Override
@@ -57,7 +59,6 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		return true;
 	}
 
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -66,9 +67,26 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.registered_back:
 			registered_back();
+			break;
+		case R.id.registered_OK:
+			registered_OK();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void registered_OK() {
+		// 把昵称传到接口
+		String nickname = mNickname.getText().toString().trim();
+		User user = new User();
+		user.setNickname(nickname);
+		Interface inter = new Interface();
+		inter.regNewAccount(RegisteredActivity.this, user);
+		
+		//跳转至主界面
+		Intent intent=new Intent(RegisteredActivity.this, MainActivity.class);
+		startActivity(intent);
 	}
 
 	private void registered_back() {
@@ -81,13 +99,6 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
 		startActivityForResult(getAlbum, IMAGE_CODE);
-
-		// 把昵称传到接口
-		String nickname = mNickname.getText().toString().trim();
-		User user = new User();
-		user.setNickname(nickname);
-		Interface inter = new Interface();
-		inter.regNewAccount(RegisteredActivity.this, user);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
