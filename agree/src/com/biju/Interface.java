@@ -102,7 +102,6 @@ public class Interface {
 	
 	//test
 	String kTestInterface =  "1101";
-
 	public Map<String, String> packParams(Object classObject , String interfaceType) {
 		Map map = Bean2Map.ConvertObjToMap(classObject);
 		JSONObject jsonObject=new JSONObject(map);
