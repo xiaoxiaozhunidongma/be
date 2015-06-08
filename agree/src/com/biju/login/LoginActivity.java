@@ -65,7 +65,9 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 					@Override
 					public void run() {
-						drawable.stop();
+						if(drawable!=null){
+							drawable.stop();
+						}
 						Intent intent = new Intent(LoginActivity.this,
 								MainActivity.class);
 						startActivity(intent);
