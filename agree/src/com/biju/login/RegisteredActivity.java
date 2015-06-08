@@ -59,7 +59,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		getMenuInflater().inflate(R.menu.registered, menu);
 		return true;
 	}
-
+	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.registered_head:
