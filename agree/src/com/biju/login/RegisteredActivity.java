@@ -1,7 +1,6 @@
 package com.biju.login;
 
 import java.io.IOException;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
