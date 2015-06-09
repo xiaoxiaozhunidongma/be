@@ -168,7 +168,7 @@ public class Interface {
 	//请求服务器发送验证码
 	/**
 	 * @param context
-	 * @param user this user can be null!
+	 * @param user this user can be null!(这个对象可以是空的)
 	 */
 	public void requestVerCode(Context context,User user) {//传入为??
 		volleyPost(context,packParams(user, kRequestVerCode));
@@ -263,6 +263,11 @@ public class Interface {
 		volleyPost(context,packParams(user, kReadfriend));
 	}
 	//匹配通讯录
+	/**
+	 * 
+	 * @param context
+	 * @param user this user can be null!(这个对象可以是空的)
+	 */
 	public void mateComBook(Context context,User user) {  //........传入？？？
 		volleyPost(context,packParams(user, kMateComBook));
 	}
@@ -287,8 +292,13 @@ public class Interface {
 		volleyPost(context,packParams(feedBack, kFeedBack));
 	}
 	//获取图片签名
-	public void getPicSign(Context context,FeedBack feedBack) {  //...........传入？？？？？
-		volleyPost(context,packParams(feedBack, kGetPictureSign));
+	/**
+	 * 
+	 * @param context
+	 * @param user this user can be null!(这个对象可以是空的)
+	 */
+	public void getPicSign(Context context,User user) {  //.....传入？？？？？
+		volleyPost(context,packParams(user, kGetPictureSign));
 	}
 	//接口部分
 	private static UserInterface listener;

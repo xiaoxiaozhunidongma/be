@@ -16,7 +16,7 @@ public class FeedBack extends Model{
 	@Column
 	private String content;
 	@Column
-	private Date date;      //date类型？ datetime ？
+	private String date;      //date类型？ datetime ？
 	@Column
 	private Integer type;
 	@Column
@@ -40,10 +40,10 @@ public class FeedBack extends Model{
 	public void setContent(String content) {
 		this.content = content;
 	}
-	public Date getDate() {
+	public String getDate() {
 		return date;
 	}
-	public void setDate(Date date) {
+	public void setDate(String date) {
 		this.date = date;
 	}
 	public Integer getType() {
