@@ -202,6 +202,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 			Person person = (Person) ois.readObject();
 			mLogin_account.setText(person.pk_user);
 			mLogin_password.setText(person.password);
+<<<<<<< HEAD
 			Log.e("person.pk_user", person.pk_user);
 			Log.e("person.password", person.password);
 			SharedPreferences sp = getSharedPreferences("isLogin", 0);
@@ -219,6 +220,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 					drawable.start();
 				}
 			}
+=======
+			if (!("".equals(person.pk_user) && "".equals(person.password))) {
+				User user = new User();
+				user.setPk_user(Integer.valueOf(person.pk_user));
+				user.setPassword(person.password);
+//				Interface logininter = new Interface();
+				logininter.userLogin(LoginActivity.this, user);
+				manually_login.setVisibility(View.GONE);
+				auto_login.setVisibility(View.VISIBLE);
+				drawable = (AnimationDrawable) auto_login_image.getDrawable();
+				drawable.start();
+			} 
+>>>>>>> origin/ZZY
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (StreamCorruptedException e) {

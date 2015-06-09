@@ -36,7 +36,12 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
 	private ImageView registered_head;
 	private EditText mNickname;
+<<<<<<< HEAD
 	private TextView registered_tv_nickname;
+=======
+	
+	protected String mFilePath = null;
+>>>>>>> origin/ZZY
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -124,6 +129,36 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode != Activity.RESULT_OK || data == null)
+//            return;
+//
+//            try
+//            {
+//            	Uri selectedImage = data.getData();
+//                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//
+//                Cursor cursor = RegisteredActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+//                cursor.moveToFirst();
+//
+//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                mFilePath = cursor.getString(columnIndex);
+//                cursor.close();
+//                
+//                Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+//                
+//                initHead(bmp);// 画圆形头像
+//                
+//                if(bmp != null)
+//                	registered_head.setImageBitmap(bmp);
+//                else
+//                	registered_head.setImageResource(R.drawable.login_1);
+//            }
+//            catch (Exception e)
+//            {
+//                Log.e("Demo", "choose file error!", e);
+//            }
+            
 		if (resultCode != RESULT_OK) { // 此处的 RESULT_OK 是系统自定义得一个常量
 			Log.e("TAG->onresult", "ActivityResult resultCode error");
 			return;
