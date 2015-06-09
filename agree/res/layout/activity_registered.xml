@@ -61,11 +61,13 @@
         android:layout_above="@+id/registered_OK"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="60dp"
+        android:gravity="center"
         android:background="#ffffff"
         android:ems="10"
-        android:gravity="center"
-        android:hint="请输入一个昵称"
-        android:textSize="18.0sp" />
+        android:hint="输入昵称"
+        android:textSize="18.0sp" 
+        android:visibility="gone"
+        />
 
     <ImageView
         android:id="@+id/registered_head"
@@ -75,5 +77,17 @@
         android:layout_below="@+id/relativeLayout1"
         android:layout_marginTop="45dp"
         android:src="@drawable/login_1" />
+
+    <TextView
+        android:id="@+id/registered_tv_nickname"
+        android:layout_width="200.0dp"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/registered_OK"
+        android:text="请输入一个昵称"
+        android:textSize="18.0sp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="60dp"
+        android:gravity="center"
+         />
 
 </RelativeLayout>

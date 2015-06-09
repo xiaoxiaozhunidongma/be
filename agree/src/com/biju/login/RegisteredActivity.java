@@ -23,6 +23,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.BJ.javabean.User;
 import com.biju.Interface;
@@ -35,6 +36,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
 	private ImageView registered_head;
 	private EditText mNickname;
+	private TextView registered_tv_nickname;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +53,8 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		mNickname = (EditText) findViewById(R.id.registered_nickname);
 		findViewById(R.id.registered_back).setOnClickListener(this);
 		findViewById(R.id.registered_OK).setOnClickListener(this);
+		registered_tv_nickname = (TextView) findViewById(R.id.registered_tv_nickname);
+		registered_tv_nickname.setOnClickListener(this);
 	}
 
 	@Override
@@ -72,10 +76,20 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		case R.id.registered_OK:
 			registered_OK();
 			break;
+		case R.id.registered_tv_nickname:
+			registered_tv_nickname();
+			break;
 		default:
 			break;
 		}
 	}
+
+	private void registered_tv_nickname() {
+		registered_tv_nickname.setVisibility(View.GONE);
+		mNickname.setVisibility(View.VISIBLE);
+		
+	}
+
 
 	private void registered_OK() {
 		// 把昵称传到接口

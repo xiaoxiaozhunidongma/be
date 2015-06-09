@@ -100,7 +100,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		auto_login_image = (ImageView) findViewById(R.id.Auto_login_image);
 		manually_login = (RelativeLayout) findViewById(R.id.Manually_login);
 		auto_login = (RelativeLayout) findViewById(R.id.Auto_login);
-
 	}
 
 	@Override
@@ -135,7 +134,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		User user = new User();
 		user.setPk_user(Integer.valueOf(mUser));
 		user.setPassword(mPassword);
-		// Interface logininter = new Interface();
 		logininter.userLogin(LoginActivity.this, user);
 	}
 
