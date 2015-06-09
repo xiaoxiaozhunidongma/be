@@ -176,12 +176,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				auto_login.setVisibility(View.VISIBLE);
 				drawable = (AnimationDrawable) auto_login_image.getDrawable();
 				drawable.start();
-			} else {
-				Intent intent = new Intent(LoginActivity.this,
-						LoginActivity.class);
-				startActivity(intent);
-				overridePendingTransition(0, 0);
-			}
+			} 
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (StreamCorruptedException e) {
