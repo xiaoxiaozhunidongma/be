@@ -19,7 +19,7 @@ public class Photo {
 	@Column
 	private String path;
 	@Column
-	private Date create_time;
+	private String create_time;
 	@Column
 	private Integer type;
 	@Column
@@ -56,10 +56,10 @@ public class Photo {
 	public void setPath(String path) {
 		this.path = path;
 	}
-	public Date getCreate_time() {
+	public String getCreate_time() {
 		return create_time;
 	}
-	public void setCreate_time(Date create_time) {
+	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
 	}
 	public Integer getType() {

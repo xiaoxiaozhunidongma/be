@@ -202,5 +202,4 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		}
 		return inSampleSize;
 	}
-
 }

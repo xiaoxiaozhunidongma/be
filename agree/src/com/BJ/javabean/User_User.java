@@ -21,7 +21,7 @@ public class User_User {
 	@Column
 	private Integer relationship;
 	@Column
-	private Date create_date;
+	private String create_date;
 	@Column
 	private Integer chat_update;
 	@Column
@@ -64,10 +64,10 @@ public class User_User {
 	public void setRelationship(Integer relationship) {
 		this.relationship = relationship;
 	}
-	public Date getCreate_date() {
+	public String getCreate_date() {
 		return create_date;
 	}
-	public void setCreate_date(Date create_date) {
+	public void setCreate_date(String create_date) {
 		this.create_date = create_date;
 	}
 	public Integer getChat_update() {
