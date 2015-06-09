@@ -23,7 +23,7 @@ public class User_Chat {
 	@Column
 	private String image_path;
 	@Column
-	private Date create_time;
+	private String create_time;
 	@Column
 	private Integer status;
 	public Integer getPk_user_chat() {
@@ -68,10 +68,10 @@ public class User_Chat {
 	public void setImage_path(String image_path) {
 		this.image_path = image_path;
 	}
-	public Date getCreate_time() {
+	public String getCreate_time() {
 		return create_time;
 	}
-	public void setCreate_time(Date create_time) {
+	public void setCreate_time(String create_time) {
 		this.create_time = create_time;
 	}
 	public Integer getStatus() {

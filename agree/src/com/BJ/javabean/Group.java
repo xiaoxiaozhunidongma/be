@@ -15,9 +15,9 @@ public class Group {
 	@Column
 	private String name;
 	@Column
-	private Date setup_time;
+	private String setup_time;
 	@Column
-	private Date last_post_time;
+	private String last_post_time;
 	@Column
 	private String last_post_message;
 	@Column
@@ -44,16 +44,16 @@ public class Group {
 	public void setName(String name) {
 		this.name = name;
 	}
-	public Date getSetup_time() {
+	public String getSetup_time() {
 		return setup_time;
 	}
-	public void setSetup_time(Date setup_time) {
+	public void setSetup_time(String setup_time) {
 		this.setup_time = setup_time;
 	}
-	public Date getLast_post_time() {
+	public String getLast_post_time() {
 		return last_post_time;
 	}
-	public void setLast_post_time(Date last_post_time) {
+	public void setLast_post_time(String last_post_time) {
 		this.last_post_time = last_post_time;
 	}
 	public String getLast_post_message() {

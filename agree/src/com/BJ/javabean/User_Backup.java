@@ -21,9 +21,9 @@ public class User_Backup {
 	@Column
 	private String password;
 	@Column
-	private Date setup_time;
+	private String setup_time;
 	@Column
-	private Date last_login_time;
+	private String last_login_time;
 	@Column
 	private String jpush_id;
 	@Column
@@ -68,16 +68,16 @@ public class User_Backup {
 	public void setPassword(String password) {
 		this.password = password;
 	}
-	public Date getSetup_time() {
+	public String getSetup_time() {
 		return setup_time;
 	}
-	public void setSetup_time(Date setup_time) {
+	public void setSetup_time(String setup_time) {
 		this.setup_time = setup_time;
 	}
-	public Date getLast_login_time() {
+	public String getLast_login_time() {
 		return last_login_time;
 	}
-	public void setLast_login_time(Date last_login_time) {
+	public void setLast_login_time(String last_login_time) {
 		this.last_login_time = last_login_time;
 	}
 	public String getJpush_id() {

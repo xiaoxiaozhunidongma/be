@@ -1,5 +1,6 @@
 package com.biju.login;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -11,8 +12,11 @@ import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.drawable.AnimationDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -21,6 +25,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
@@ -37,11 +42,25 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private EditText mLogin_password;
 	private Person person;
 	private Interface logininter;
-	private String savePath = "/mnt/sdcard/data3.txt";
 	private ImageView auto_login_image;
 	private RelativeLayout manually_login;
 	private RelativeLayout auto_login;
 	private AnimationDrawable drawable;
+
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
+
+	private String fileName = getSDPath() + "/" + "saveData";
+	private boolean login = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -60,27 +79,38 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				Log.e("账号ID", A);
-				mLogin_account.postDelayed(new Runnable() {
-
-					@Override
-					public void run() {
-						if(drawable!=null){
-							drawable.stop();
-						}
-						Intent intent = new Intent(LoginActivity.this,
-								MainActivity.class);
-						startActivity(intent);
-						overridePendingTransition(0, 0);
-						finish();
-					}
-				}, 1000);
 				Loginback loginback = GsonUtils.parseJson(A, Loginback.class);
-				// 取第一个Users[0]
-				List<User> Users = loginback.getReturnData();
-				if (Users.size() >= 1) {
-					User user = Users.get(0);
-					Log.e("解析出来的", user.getPassword());
+				// 说明是已经登录成功
+				if (loginback.getStatusMsg() == 1) {
+					Log.e("账号ID", A);
+					mLogin_account.postDelayed(new Runnable() {
+
+						@Override
+						public void run() {
+							if (drawable != null) {
+								drawable.stop();
+							}
+							Intent intent = new Intent(LoginActivity.this,
+									MainActivity.class);
+							startActivity(intent);
+							overridePendingTransition(0, 0);
+							finish();
+						}
+					}, 1000);
+					// 取第一个Users[0]
+					List<User> Users = loginback.getReturnData();
+					if (Users.size() >= 1) {
+						User user = Users.get(0);
+						Log.e("解析出来的", user.getPassword());
+					}
+				} else {
+					if (drawable != null) {
+						drawable.stop();
+					}
+					Toast.makeText(LoginActivity.this, "账号或者密码错误!",
+							Toast.LENGTH_SHORT).show();
+					manually_login.setVisibility(View.VISIBLE);
+					auto_login.setVisibility(View.GONE);
 				}
 			}
 
@@ -100,7 +130,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		auto_login_image = (ImageView) findViewById(R.id.Auto_login_image);
 		manually_login = (RelativeLayout) findViewById(R.id.Manually_login);
 		auto_login = (RelativeLayout) findViewById(R.id.Auto_login);
-
 	}
 
 	@Override
@@ -136,16 +165,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 		user.setPk_user(Integer.valueOf(mUser));
 		user.setPassword(mPassword);
 		logininter.userLogin(LoginActivity.this, user);
+
+		SharedPreferences sp = getSharedPreferences("isLogin", 0);
+		Editor editor = sp.edit();
+		editor.putBoolean("Login", true);
+		editor.commit();
 	}
 
 	@Override
 	protected void onStop() {
 		String pk_user = mLogin_account.getText().toString().trim();
 		String password = mLogin_password.getText().toString().trim();
+		Log.e("sd卡路径", fileName);
 		Person person = new Person(pk_user, password);
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(
-					new FileOutputStream(savePath));
+					new FileOutputStream(fileName));
 			oos.writeObject(person);
 			oos.close();
 		} catch (FileNotFoundException e) {
@@ -158,13 +193,34 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onStart() {
+
+		Log.e("onStart() ", "有调用到");
 		FileInputStream fis;
 		try {
-			fis = new FileInputStream(savePath);
+			fis = new FileInputStream(fileName);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Person person = (Person) ois.readObject();
 			mLogin_account.setText(person.pk_user);
 			mLogin_password.setText(person.password);
+<<<<<<< HEAD
+			Log.e("person.pk_user", person.pk_user);
+			Log.e("person.password", person.password);
+			SharedPreferences sp = getSharedPreferences("isLogin", 0);
+			login = sp.getBoolean("Login", false);
+			if (login) {
+				if (!("".equals(person.pk_user) && "".equals(person.password))) {
+					User user = new User();
+					user.setPk_user(Integer.valueOf(person.pk_user));
+					user.setPassword(person.password);
+					logininter.userLogin(LoginActivity.this, user);
+					manually_login.setVisibility(View.GONE);
+					auto_login.setVisibility(View.VISIBLE);
+					drawable = (AnimationDrawable) auto_login_image
+							.getDrawable();
+					drawable.start();
+				}
+			}
+=======
 			if (!("".equals(person.pk_user) && "".equals(person.password))) {
 				User user = new User();
 				user.setPk_user(Integer.valueOf(person.pk_user));
@@ -174,12 +230,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 				auto_login.setVisibility(View.VISIBLE);
 				drawable = (AnimationDrawable) auto_login_image.getDrawable();
 				drawable.start();
-			} else {
-				Intent intent = new Intent(LoginActivity.this,
-						LoginActivity.class);
-				startActivity(intent);
-				overridePendingTransition(0, 0);
-			}
+			} 
+>>>>>>> origin/ZZY
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (StreamCorruptedException e) {
@@ -189,6 +241,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+
 		super.onStart();
 	}
 

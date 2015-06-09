@@ -1,7 +1,6 @@
 package com.biju.login;
 
 import java.io.IOException;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
@@ -23,6 +22,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.BJ.javabean.User;
 import com.biju.Interface;
@@ -35,6 +35,12 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
 	private ImageView registered_head;
 	private EditText mNickname;
+<<<<<<< HEAD
+	private TextView registered_tv_nickname;
+=======
+	
+	protected String mFilePath = null;
+>>>>>>> origin/ZZY
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +57,8 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		mNickname = (EditText) findViewById(R.id.registered_nickname);
 		findViewById(R.id.registered_back).setOnClickListener(this);
 		findViewById(R.id.registered_OK).setOnClickListener(this);
+		registered_tv_nickname = (TextView) findViewById(R.id.registered_tv_nickname);
+		registered_tv_nickname.setOnClickListener(this);
 	}
 
 	@Override
@@ -72,10 +80,20 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		case R.id.registered_OK:
 			registered_OK();
 			break;
+		case R.id.registered_tv_nickname:
+			registered_tv_nickname();
+			break;
 		default:
 			break;
 		}
 	}
+
+	private void registered_tv_nickname() {
+		registered_tv_nickname.setVisibility(View.GONE);
+		mNickname.setVisibility(View.VISIBLE);
+		
+	}
+
 
 	private void registered_OK() {
 		// 把昵称传到接口
@@ -110,6 +128,36 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+//        if (resultCode != Activity.RESULT_OK || data == null)
+//            return;
+//
+//            try
+//            {
+//            	Uri selectedImage = data.getData();
+//                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//
+//                Cursor cursor = RegisteredActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+//                cursor.moveToFirst();
+//
+//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//                mFilePath = cursor.getString(columnIndex);
+//                cursor.close();
+//                
+//                Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+//                
+//                initHead(bmp);// 画圆形头像
+//                
+//                if(bmp != null)
+//                	registered_head.setImageBitmap(bmp);
+//                else
+//                	registered_head.setImageResource(R.drawable.login_1);
+//            }
+//            catch (Exception e)
+//            {
+//                Log.e("Demo", "choose file error!", e);
+//            }
+            
 		if (resultCode != RESULT_OK) { // 此处的 RESULT_OK 是系统自定义得一个常量
 			Log.e("TAG->onresult", "ActivityResult resultCode error");
 			return;
@@ -188,5 +236,4 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		}
 		return inSampleSize;
 	}
-
 }
