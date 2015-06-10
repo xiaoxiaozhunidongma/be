@@ -1,8 +1,10 @@
 package com.biju.function;
 
+import com.BJ.javabean.Group;
 import com.BJ.javabean.User;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
+import com.biju.Interface.UserInterface;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.login.RegisteredActivity;
@@ -46,6 +48,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
 	private TextView newteam_tv_head;
 	private ProgressBar newteam_progressBar;
+	private Interface cregrouInter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,6 +59,19 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		initUpload();
 		newteam_tv_head.setVisibility(View.VISIBLE);//显示小组头像选择
 		mNewteam_head.setVisibility(View.GONE);
+		cregrouInter = new Interface();
+		cregrouInter.setPostListener(new UserInterface() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("NewteamActivity", "小组ID"+A);
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
 	}
 
 	private void initUpload() {
@@ -114,21 +130,23 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	private void newteam_OK() {
 		String newteam_name = mNewteam_name.getText().toString().trim();
-		User user = new User();
+		Group group=new Group();
+		group.setPk_group(153);
 		
-		upload(user);
+		group.setName(newteam_name);
+		upload(group);
 	}
 
-	private void upload(final User user) {
+	private void upload(final Group group) {
 		UploadTask task = new PhotoUploadTask(mFilePath,
 				new IUploadTaskListener() {
+
 					@Override
 					public void onUploadSucceed(final FileInfo result) {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						 //上传完成后注册
-						 user.setAvatar_path(result.fileId);
-						 Interface regInter=new Interface();
-						 regInter.createGroup(NewteamActivity.this, user);
+						 group.setAvatar_path(result.fileId);
+						 cregrouInter.createGroup(NewteamActivity.this, group);
 						 finish();
 					}
 
@@ -139,7 +157,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					@Override
 					public void onUploadProgress(long totalSize, long sendSize) {
 						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
-						 Log.e("上传进度", "上传进度: " + p + "%");
+//						 Log.e("上传进度", "上传进度: " + p + "%");
 						 newteam_progressBar.setProgress((int)p);
 					}
 

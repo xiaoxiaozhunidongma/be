@@ -170,6 +170,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		Editor editor = sp.edit();
 		editor.putBoolean("Login", true);
 		editor.commit();
+		finish();
 	}
 
 	@Override
@@ -195,6 +196,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		FileInputStream fis;
 		try {
+			Log.e("LoginActivity", "sd¿¨Â·¾¶"+fileName);
 			fis = new FileInputStream(fileName);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Person person = (Person) ois.readObject();
