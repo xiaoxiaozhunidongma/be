@@ -1,4 +1,4 @@
-package com.biju.login;
+package com.BJ.utils;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;

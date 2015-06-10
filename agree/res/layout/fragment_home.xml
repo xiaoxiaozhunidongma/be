@@ -25,19 +25,6 @@
             android:background="#aaaaaa" />
 
         <TextView
-            android:id="@+id/tab_home_new"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/tab_home_title"
-            android:layout_alignBottom="@+id/tab_home_title"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="14dp"
-            android:gravity="center"
-            android:text="新建"
-            android:textColor="#d3d3d3"
-            android:textSize="17.0sp" />
-
-        <TextView
             android:id="@+id/tab_home_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -45,6 +32,26 @@
             android:layout_centerVertical="true"
             android:text="必聚"
             android:textSize="18sp" />
+
+        <RelativeLayout
+            android:id="@+id/tab_home_new_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/tab_home_new"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="新建"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -53,7 +60,8 @@
         android:layout_below="@+id/home_title"
         android:layout_centerHorizontal="true" >
 
-        <!-- <TextView
+        <!--
+             <TextView
             android:id="@+id/home_requsetcode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -63,7 +71,8 @@
             android:text="收到了邀请码？"
             android:gravity="center"
             android:textColor="#55aeae"
-            android:textSize="25.0sp" /> -->
+            android:textSize="25.0sp" />
+        -->
 
         <GridView
             android:id="@+id/home_gridview"
@@ -73,7 +82,6 @@
             android:layout_centerVertical="true"
             android:numColumns="2" >
         </GridView>
-
     </RelativeLayout>
 
 </RelativeLayout>
