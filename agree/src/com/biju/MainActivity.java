@@ -13,12 +13,10 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.biju.Interface.UserInterface;
-import com.biju.login.RegisteredActivity;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
 import com.fragment.SettingFragment;
-import com.tencent.upload.UploadManager;
 
 public class MainActivity extends FragmentActivity {
 	private FragmentTabHost mTabhost;
@@ -39,8 +37,7 @@ public class MainActivity extends FragmentActivity {
 			
 			@Override
 			public void success(String A) {
-				Toast.makeText(MainActivity.this, "mainActivity"+A, Toast.LENGTH_SHORT).show();
-				Log.e("mainActivity", "注册成功"+A);
+//				Toast.makeText(MainActivity.this, A, Toast.LENGTH_SHORT).show();
 			}
 			
 			@Override
@@ -50,8 +47,6 @@ public class MainActivity extends FragmentActivity {
 		});
 		
 		initUI();// 初始化Tabhost
-			// 注册签名
-
 	}
 
 	private void initUI() {
