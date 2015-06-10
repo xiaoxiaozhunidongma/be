@@ -57,19 +57,19 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_newteam);
 		initUI();
 		initUpload();
-		newteam_tv_head.setVisibility(View.VISIBLE);//显示小组头像选择
+		newteam_tv_head.setVisibility(View.VISIBLE);// 显示小组头像选择
 		mNewteam_head.setVisibility(View.GONE);
 		cregrouInter = new Interface();
 		cregrouInter.setPostListener(new UserInterface() {
-			
+
 			@Override
 			public void success(String A) {
-				Log.e("NewteamActivity", "小组ID"+A);
+				Log.e("NewteamActivity", "小组ID" + A);
 			}
-			
+
 			@Override
 			public void defail(Object B) {
-				
+
 			}
 		});
 	}
@@ -91,7 +91,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		findViewById(R.id.newteam_back).setOnClickListener(this);// 返回
 		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// 完成
 		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// 完成
-		newteam_progressBar = (ProgressBar) findViewById(R.id.newteam_progressBar);//图片上传进度
+		newteam_progressBar = (ProgressBar) findViewById(R.id.newteam_progressBar);// 图片上传进度
 		newteam_progressBar.setMax(100);
 	}
 
@@ -130,13 +130,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	private void newteam_OK() {
 		String newteam_name = mNewteam_name.getText().toString().trim();
-		Group group=new Group();
+		Group group = new Group();
 		group.setPk_group(153);
-		
-<<<<<<< HEAD
-	}
-
-=======
 		group.setName(newteam_name);
 		upload(group);
 	}
@@ -148,10 +143,10 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					@Override
 					public void onUploadSucceed(final FileInfo result) {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
-						 //上传完成后注册
-						 group.setAvatar_path(result.fileId);
-						 cregrouInter.createGroup(NewteamActivity.this, group);
-						 finish();
+						// 上传完成后注册
+						group.setAvatar_path(result.fileId);
+						cregrouInter.createGroup(NewteamActivity.this, group);
+						finish();
 					}
 
 					@Override
@@ -161,8 +156,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					@Override
 					public void onUploadProgress(long totalSize, long sendSize) {
 						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
-//						 Log.e("上传进度", "上传进度: " + p + "%");
-						 newteam_progressBar.setProgress((int)p);
+						// Log.e("上传进度", "上传进度: " + p + "%");
+						newteam_progressBar.setProgress((int) p);
 					}
 
 					@Override
@@ -175,33 +170,30 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		uploadManager.upload(task); // 开始上传
 
 	}
->>>>>>> origin/ZCL
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK || data == null)
-            return;
-            try
-            {
-            	Uri selectedImage = data.getData();
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                Cursor cursor = NewteamActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                mFilePath = cursor.getString(columnIndex);
-                cursor.close();
-                Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-                newteam_tv_head.setVisibility(View.GONE);//显示小组头像选择
-				mNewteam_head.setVisibility(View.VISIBLE);
-				newteam_progressBar.setVisibility(View.VISIBLE);
-                mNewteam_head.setImageBitmap(bmp);
-            }
-            catch (Exception e)
-            {
-                Log.e("Demo", "choose file error!", e);
-            }
+		if (resultCode != Activity.RESULT_OK || data == null)
+			return;
+		try {
+			Uri selectedImage = data.getData();
+			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+			Cursor cursor = NewteamActivity.this.getContentResolver().query(
+					selectedImage, filePathColumn, null, null, null);
+			cursor.moveToFirst();
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			mFilePath = cursor.getString(columnIndex);
+			cursor.close();
+			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
+			mNewteam_head.setVisibility(View.VISIBLE);
+			newteam_progressBar.setVisibility(View.VISIBLE);
+			mNewteam_head.setImageBitmap(bmp);
+		} catch (Exception e) {
+			Log.e("Demo", "choose file error!", e);
+		}
 	}
-	
+
 	private void newteam_back() {
 		finish();
 	}
