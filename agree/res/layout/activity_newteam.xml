@@ -43,7 +43,7 @@
         android:layout_marginTop="25.0dp"
         android:background="@drawable/newteam"
         android:scaleType="fitXY"
-        android:visibility="gone" />
+        android:visibility="invisible" />
 
     <TextView
         android:id="@+id/newteam_tv_head"
@@ -89,11 +89,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="返回"
                 android:gravity="center"
+                android:text="返回"
                 android:textColor="#d3d3d3"
-                android:textSize="17.0sp"
-                 />
+                android:textSize="17.0sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -101,8 +100,7 @@
             android:layout_width="60.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            >
+            android:layout_centerVertical="true" >
 
             <TextView
                 android:id="@+id/newteam_OK"
@@ -114,9 +112,18 @@
                 android:text="完成"
                 android:textColor="#d3d3d3"
                 android:textSize="17.0sp" />
-
         </RelativeLayout>
-
     </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/newteam_progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newteam_head"
+        android:layout_alignRight="@+id/newteam_head"
+        android:layout_below="@+id/newteam_head"
+        android:visibility="gone"
+         />
 
 </RelativeLayout>
