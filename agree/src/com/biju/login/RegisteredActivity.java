@@ -1,8 +1,7 @@
 package com.biju.login;
 
-import java.io.IOException;
+
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -25,9 +24,17 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.BJ.javabean.User;
+import com.BJ.utils.Utils;
 import com.biju.Interface;
+import com.biju.Interface.UserInterface;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.tencent.upload.UploadManager;
+import com.tencent.upload.task.IUploadTaskListener;
+import com.tencent.upload.task.UploadTask;
+import com.tencent.upload.task.ITask.TaskState;
+import com.tencent.upload.task.data.FileInfo;
+import com.tencent.upload.task.impl.PhotoUploadTask;
 
 public class RegisteredActivity extends Activity implements OnClickListener {
 
@@ -35,22 +42,41 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
 	private ImageView registered_head;
 	private EditText mNickname;
-<<<<<<< HEAD
 	private TextView registered_tv_nickname;
-=======
-	
 	protected String mFilePath = null;
->>>>>>> origin/ZZY
+	public static String APP_VERSION = "1.0.0";
+	public static String APPID = "201139";
+	public static String USERID = "";
+	public static String SIGN="3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
+	private UploadManager uploadManager;
+	private TextView textView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_registered);
+//		get4Sign();
 		initUI();
+		initUpload();
 	}
 
 	
+	private void get4Sign() {
+		Interface interface2 = new Interface();
+		User user=new User();
+		interface2.getPicSign(RegisteredActivity.this, user);
+	}
+
+
+	private void initUpload() {
+		// 注册签名
+		UploadManager.authorize(APPID, USERID, SIGN);
+		uploadManager = new UploadManager(RegisteredActivity.this, "persistenceId");
+
+	}
+
+
 	private void initUI() {
 		registered_head = (ImageView) findViewById(R.id.registered_head);
 		registered_head.setOnClickListener(this);
@@ -59,6 +85,20 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		findViewById(R.id.registered_OK).setOnClickListener(this);
 		registered_tv_nickname = (TextView) findViewById(R.id.registered_tv_nickname);
 		registered_tv_nickname.setOnClickListener(this);
+//		regInter = new Interface();
+//		regInter.setPostListener(new UserInterface() {
+//			
+//			@Override
+//			public void success(String A) {
+//				Log.e("RegisteredActivity", "注册成功"+A);
+//			}
+//			
+//			@Override
+//			public void defail(Object B) {
+//				
+//			}
+//		});
+		textView = (TextView) findViewById(R.id.textView1);
 	}
 
 	@Override
@@ -100,13 +140,57 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		String nickname = mNickname.getText().toString().trim();
 		User user = new User();
 		user.setNickname(nickname);
-		Interface inter = new Interface();
-		inter.regNewAccount(RegisteredActivity.this, user);
 		
-		//跳转至主界面
-		Intent intent=new Intent(RegisteredActivity.this, MainActivity.class);
-		startActivity(intent);
+		upload(user);
+		
 	}
+
+	private void upload(final User user) {
+		UploadTask task = new PhotoUploadTask(mFilePath,new IUploadTaskListener() {			
+			 @Override
+			  public void onUploadSucceed(final FileInfo result) {
+			  Log.e("上传结果", "upload succeed: " + result.fileId);
+				 textView.post(new Runnable() {
+						
+						@Override
+						public void run() {
+							textView.setText(result.fileId);
+						}
+					});
+			  //上传完成后注册
+			  user.setAvatar_path(result.fileId);
+			  Interface regInter=new Interface();
+			  regInter.regNewAccount(RegisteredActivity.this, user);
+			  //跳转至主界面
+			  Intent intent=new Intent(RegisteredActivity.this, MainActivity.class);
+			  startActivity(intent);
+			  
+			  }
+			  @Override
+			  public void onUploadStateChange(TaskState state) {
+			   }
+			  
+			  @Override
+			  public void onUploadProgress(long totalSize, long sendSize){
+			 final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
+//			 Log.e("上传进度", "上传进度: " + p + "%");
+			 textView.post(new Runnable() {
+				
+				@Override
+				public void run() {
+					textView.setText("上传进度: " + p + "%");
+				}
+			});
+			  }
+			  @Override
+			   public void onUploadFailed(final int errorCode, final String errorMsg) {
+			 Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
+			  }
+			  });
+			 uploadManager.upload(task);  // 开始上传
+
+	}
+
 
 	private void registered_back() {
 		finish();
@@ -118,77 +202,35 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
 		startActivityForResult(getAlbum, IMAGE_CODE);
-		
-		//把昵称传到接口
-		String nickname=mNickname.getText().toString().trim();
-		User user=new User();
-		user.setNickname(nickname);
-		Interface inter=new Interface();
-		inter.regNewAccount(RegisteredActivity.this, user);
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-//        if (resultCode != Activity.RESULT_OK || data == null)
-//            return;
-//
-//            try
-//            {
-//            	Uri selectedImage = data.getData();
-//                String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//
-//                Cursor cursor = RegisteredActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-//                cursor.moveToFirst();
-//
-//                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//                mFilePath = cursor.getString(columnIndex);
-//                cursor.close();
-//                
-//                Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-//                
-//                initHead(bmp);// 画圆形头像
-//                
-//                if(bmp != null)
-//                	registered_head.setImageBitmap(bmp);
-//                else
-//                	registered_head.setImageResource(R.drawable.login_1);
-//            }
-//            catch (Exception e)
-//            {
-//                Log.e("Demo", "choose file error!", e);
-//            }
+        if (resultCode != Activity.RESULT_OK || data == null)
+            return;
+
+            try
+            {
+            	Uri selectedImage = data.getData();
+                String[] filePathColumn = { MediaStore.Images.Media.DATA };
+
+                Cursor cursor = RegisteredActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+                cursor.moveToFirst();
+
+                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+                mFilePath = cursor.getString(columnIndex);
+                cursor.close();
+                
+                Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+                
+                initHead(bmp);// 画圆形头像
+                
+            }
+            catch (Exception e)
+            {
+                Log.e("Demo", "choose file error!", e);
+            }
             
-		if (resultCode != RESULT_OK) { // 此处的 RESULT_OK 是系统自定义得一个常量
-			Log.e("TAG->onresult", "ActivityResult resultCode error");
-			return;
-		}
-		Bitmap bm = null;
-		// 外界的程序访问ContentProvider所提供数据 可以通过ContentResolver接口
-		ContentResolver resolver = getContentResolver();
-		// 此处的用于判断接收的Activity是不是你想要的那个
-		if (requestCode == IMAGE_CODE) {
-			try {
-				Uri originalUri = data.getData(); // 获得图片的uri
-				bm = MediaStore.Images.Media.getBitmap(resolver, originalUri);
-				// 显得到bitmap图片
-				// registered_head.setImageBitmap(bm);
-				initHead(bm);// 画圆形头像
-				// 这里开始的第二部分，获取图片的路径：
-				String[] proj = { MediaStore.Images.Media.DATA };
-				// 好像是android多媒体数据库的封装接口，具体的看Android文档
-				Cursor cursor = managedQuery(originalUri, proj, null, null,
-						null);
-				// 按我个人理解 这个是获得用户选择的图片的索引值
-				int column_index = cursor
-						.getColumnIndexOrThrow(MediaStore.Images.Media.DATA);
-				// 将光标移至开头 ，这个很重要，不小心很容易引起越界
-				cursor.moveToFirst();
-				// 最后根据索引值获取图片路径
-				String path = cursor.getString(column_index);
-				// imgPath.setText(path);
-			} catch (IOException e) {
-			}
-		}
 	}
 
 	// 对图片进行修改，变成圆形

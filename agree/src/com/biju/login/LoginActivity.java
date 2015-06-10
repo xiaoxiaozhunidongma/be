@@ -82,7 +82,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Loginback loginback = GsonUtils.parseJson(A, Loginback.class);
 				// 说明是已经登录成功
 				if (loginback.getStatusMsg() == 1) {
-					Log.e("账号ID", A);
+					Log.e("LoginActivity", "登录成功，账号ID"+A);
 					mLogin_account.postDelayed(new Runnable() {
 
 						@Override
@@ -176,7 +176,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onStop() {
 		String pk_user = mLogin_account.getText().toString().trim();
 		String password = mLogin_password.getText().toString().trim();
-		Log.e("sd卡路径", fileName);
 		Person person = new Person(pk_user, password);
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(
@@ -194,7 +193,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onStart() {
 
-		Log.e("onStart() ", "有调用到");
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(fileName);
@@ -202,7 +200,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			Person person = (Person) ois.readObject();
 			mLogin_account.setText(person.pk_user);
 			mLogin_password.setText(person.password);
-<<<<<<< HEAD
 			Log.e("person.pk_user", person.pk_user);
 			Log.e("person.password", person.password);
 			SharedPreferences sp = getSharedPreferences("isLogin", 0);
@@ -220,18 +217,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 					drawable.start();
 				}
 			}
-=======
-			if (!("".equals(person.pk_user) && "".equals(person.password))) {
-				User user = new User();
-				user.setPk_user(Integer.valueOf(person.pk_user));
-				user.setPassword(person.password);
-				logininter.userLogin(LoginActivity.this, user);
-				manually_login.setVisibility(View.GONE);
-				auto_login.setVisibility(View.VISIBLE);
-				drawable = (AnimationDrawable) auto_login_image.getDrawable();
-				drawable.start();
-			} 
->>>>>>> origin/ZZY
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		} catch (StreamCorruptedException e) {

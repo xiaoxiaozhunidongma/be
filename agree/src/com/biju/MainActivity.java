@@ -13,10 +13,12 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
 import com.biju.Interface.UserInterface;
+import com.biju.login.RegisteredActivity;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
 import com.fragment.SettingFragment;
+import com.tencent.upload.UploadManager;
 
 public class MainActivity extends FragmentActivity {
 	private FragmentTabHost mTabhost;
@@ -30,14 +32,15 @@ public class MainActivity extends FragmentActivity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_tabs);
 		//测试
-		new Interface().testIf(this);
+//		new Interface().testIf(this);
 		//调用监听
 		Interface interface1 = new Interface();
 		interface1.setPostListener(new UserInterface() {
 			
 			@Override
 			public void success(String A) {
-//				Toast.makeText(MainActivity.this, A, Toast.LENGTH_SHORT).show();
+				Toast.makeText(MainActivity.this, "mainActivity"+A, Toast.LENGTH_SHORT).show();
+				Log.e("mainActivity", "注册成功"+A);
 			}
 			
 			@Override
@@ -47,6 +50,8 @@ public class MainActivity extends FragmentActivity {
 		});
 		
 		initUI();// 初始化Tabhost
+			// 注册签名
+
 	}
 
 	private void initUI() {
