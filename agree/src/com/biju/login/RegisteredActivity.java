@@ -1,5 +1,6 @@
 package com.biju.login;
 
+import java.io.IOException;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -208,29 +209,22 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		super.onActivityResult(requestCode, resultCode, data);
         if (resultCode != Activity.RESULT_OK || data == null)
             return;
-
             try
             {
             	Uri selectedImage = data.getData();
                 String[] filePathColumn = { MediaStore.Images.Media.DATA };
-
                 Cursor cursor = RegisteredActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
                 cursor.moveToFirst();
-
                 int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
                 mFilePath = cursor.getString(columnIndex);
                 cursor.close();
-                
                 Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-                
                 initHead(bmp);// 画圆形头像
-                
             }
             catch (Exception e)
             {
                 Log.e("Demo", "choose file error!", e);
             }
-            
 	}
 
 	// 对图片进行修改，变成圆形
