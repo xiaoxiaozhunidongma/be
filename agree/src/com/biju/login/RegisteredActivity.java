@@ -1,7 +1,5 @@
 package com.biju.login;
 
-import java.io.IOException;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
@@ -31,9 +29,9 @@ import com.biju.Interface.UserInterface;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.tencent.upload.UploadManager;
+import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
 import com.tencent.upload.task.UploadTask;
-import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.data.FileInfo;
 import com.tencent.upload.task.impl.PhotoUploadTask;
 
@@ -48,7 +46,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
-	public static String SIGN="3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
+	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
 	private UploadManager uploadManager;
 	private TextView textView;
 	private Interface regInter;
@@ -58,26 +56,24 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_registered);
-//		get4Sign();
+		// get4Sign();
 		initUI();
 		initUpload();
 	}
 
-	
 	private void get4Sign() {
 		Interface interface2 = new Interface();
-		User user=new User();
+		User user = new User();
 		interface2.getPicSign(RegisteredActivity.this, user);
 	}
-
 
 	private void initUpload() {
 		// 注册签名
 		UploadManager.authorize(APPID, USERID, SIGN);
-		uploadManager = new UploadManager(RegisteredActivity.this, "persistenceId");
+		uploadManager = new UploadManager(RegisteredActivity.this,
+				"persistenceId");
 
 	}
-
 
 	private void initUI() {
 		registered_head = (ImageView) findViewById(R.id.registered_head);
@@ -89,15 +85,15 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		registered_tv_nickname.setOnClickListener(this);
 		regInter = new Interface();
 		regInter.setPostListener(new UserInterface() {
-			
+
 			@Override
 			public void success(String A) {
-				Log.e("RegisteredActivity", "注册成功"+A);
+				Log.e("RegisteredActivity", "注册成功" + A);
 			}
-			
+
 			@Override
 			public void defail(Object B) {
-				
+
 			}
 		});
 		textView = (TextView) findViewById(R.id.textView1);
@@ -133,65 +129,70 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private void registered_tv_nickname() {
 		registered_tv_nickname.setVisibility(View.GONE);
 		mNickname.setVisibility(View.VISIBLE);
-		
-	}
 
+	}
 
 	private void registered_OK() {
 		// 把昵称传到接口
 		String nickname = mNickname.getText().toString().trim();
 		User user = new User();
 		user.setNickname(nickname);
-		
+
 		upload(user);
-		
 	}
 
 	private void upload(final User user) {
-		UploadTask task = new PhotoUploadTask(mFilePath,new IUploadTaskListener() {			
-			 @Override
-			  public void onUploadSucceed(final FileInfo result) {
-			  Log.e("上传结果", "upload succeed: " + result.fileId);
-				 textView.post(new Runnable() {
-						
-						@Override
-						public void run() {
-							textView.setText(result.fileId);
-						}
-					});
-			  //上传完成后注册
-			  user.setAvatar_path(result.fileId);
-			  regInter.regNewAccount(RegisteredActivity.this, user);
-			  //跳转至主界面
-			  Intent intent=new Intent(RegisteredActivity.this, MainActivity.class);
-			  startActivity(intent);
-			  
-			  }
-			  @Override
-			  public void onUploadStateChange(TaskState state) {
-			   }
-			  
-			  @Override
-			  public void onUploadProgress(long totalSize, long sendSize){
-			 final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
-//			 Log.e("上传进度", "上传进度: " + p + "%");
-			 textView.post(new Runnable() {
-				
-				@Override
-				public void run() {
-					textView.setText("上传进度: " + p + "%");
-				}
-			});
-			  }
-			  @Override
-			   public void onUploadFailed(final int errorCode, final String errorMsg) {
-			 Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
-			  }
-			  });
-			 uploadManager.upload(task);  // 开始上传
+		UploadTask task = new PhotoUploadTask(mFilePath,
+				new IUploadTaskListener() {
+					@Override
+					public void onUploadSucceed(final FileInfo result) {
+						Log.e("上传结果", "upload succeed: " + result.fileId);
+						textView.post(new Runnable() {
+
+							@Override
+							public void run() {
+								textView.setVisibility(View.GONE);
+							}
+						});
+						// 上传完成后注册
+						user.setAvatar_path(result.fileId);
+						regInter.regNewAccount(RegisteredActivity.this, user);
+						// 跳转至主界面
+						Intent intent = new Intent(RegisteredActivity.this,
+								MainActivity.class);
+						startActivity(intent);
+						finish();
+
+					}
+
+					@Override
+					public void onUploadStateChange(TaskState state) {
+					}
+
+					@Override
+					public void onUploadProgress(long totalSize, long sendSize) {
+						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
+						// Log.e("上传进度", "上传进度: " + p + "%");
+						textView.post(new Runnable() {
+
+							@Override
+							public void run() {
+								textView.setVisibility(View.VISIBLE);
+								textView.setText(p + "%");
+							}
+						});
+					}
+
+					@Override
+					public void onUploadFailed(final int errorCode,
+							final String errorMsg) {
+						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"
+								+ errorMsg);
+					}
+				});
+		uploadManager.upload(task); // 开始上传
 
 	}
-
 
 	private void registered_back() {
 		finish();
@@ -207,24 +208,22 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-        if (resultCode != Activity.RESULT_OK || data == null)
-            return;
-            try
-            {
-            	Uri selectedImage = data.getData();
-                String[] filePathColumn = { MediaStore.Images.Media.DATA };
-                Cursor cursor = RegisteredActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-                cursor.moveToFirst();
-                int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-                mFilePath = cursor.getString(columnIndex);
-                cursor.close();
-                Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-                initHead(bmp);// 画圆形头像
-            }
-            catch (Exception e)
-            {
-                Log.e("Demo", "choose file error!", e);
-            }
+		if (resultCode != Activity.RESULT_OK || data == null)
+			return;
+		try {
+			Uri selectedImage = data.getData();
+			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+			Cursor cursor = RegisteredActivity.this.getContentResolver().query(
+					selectedImage, filePathColumn, null, null, null);
+			cursor.moveToFirst();
+			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			mFilePath = cursor.getString(columnIndex);
+			cursor.close();
+			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+			initHead(bmp);// 画圆形头像
+		} catch (Exception e) {
+			Log.e("Demo", "choose file error!", e);
+		}
 	}
 
 	// 对图片进行修改，变成圆形
