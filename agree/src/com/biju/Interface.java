@@ -127,7 +127,7 @@ public class Interface {
 			@Override
 			public void onResponse(String response) {
 				requestDone(response);
-				Log.e("成功", response );//显示
+//				Log.e("成功", response );//显示
 			}
 		});	
 	}

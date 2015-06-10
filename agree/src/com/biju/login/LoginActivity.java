@@ -82,7 +82,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				Loginback loginback = GsonUtils.parseJson(A, Loginback.class);
 				// 说明是已经登录成功
 				if (loginback.getStatusMsg() == 1) {
-					Log.e("账号ID", A);
+					Log.e("LoginActivity", "登录成功，账号ID"+A);
 					mLogin_account.postDelayed(new Runnable() {
 
 						@Override
@@ -176,7 +176,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onStop() {
 		String pk_user = mLogin_account.getText().toString().trim();
 		String password = mLogin_password.getText().toString().trim();
-		Log.e("sd卡路径", fileName);
 		Person person = new Person(pk_user, password);
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(
@@ -194,7 +193,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	@Override
 	protected void onStart() {
 
-		Log.e("onStart() ", "有调用到");
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(fileName);
