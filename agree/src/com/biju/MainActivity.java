@@ -31,20 +31,6 @@ public class MainActivity extends FragmentActivity {
 		setContentView(R.layout.fragment_tabs);
 		//测试
 //		new Interface().testIf(this);
-		//调用监听
-		Interface interface1 = new Interface();
-		interface1.setPostListener(new UserInterface() {
-			
-			@Override
-			public void success(String A) {
-//				Toast.makeText(MainActivity.this, A, Toast.LENGTH_SHORT).show();
-			}
-			
-			@Override
-			public void defail(Object B) {
-				
-			}
-		});
 		
 		initUI();// 初始化Tabhost
 	}

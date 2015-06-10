@@ -116,43 +116,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		String newteam_name = mNewteam_name.getText().toString().trim();
 		User user = new User();
 		
-		upload(user);
 	}
 
-	private void upload(final User user) {
-		UploadTask task = new PhotoUploadTask(mFilePath,
-				new IUploadTaskListener() {
-					@Override
-					public void onUploadSucceed(final FileInfo result) {
-						Log.e("上传结果", "upload succeed: " + result.fileId);
-						 //上传完成后注册
-						 user.setAvatar_path(result.fileId);
-						 Interface regInter=new Interface();
-						 regInter.createGroup(NewteamActivity.this, user);
-						 finish();
-					}
-
-					@Override
-					public void onUploadStateChange(TaskState state) {
-					}
-
-					@Override
-					public void onUploadProgress(long totalSize, long sendSize) {
-						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
-						 Log.e("上传进度", "上传进度: " + p + "%");
-						 newteam_progressBar.setProgress((int)p);
-					}
-
-					@Override
-					public void onUploadFailed(final int errorCode,
-							final String errorMsg) {
-						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"
-								+ errorMsg);
-					}
-				});
-		uploadManager.upload(task); // 开始上传
-
-	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);

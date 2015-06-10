@@ -51,6 +51,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	public static String SIGN="3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
 	private UploadManager uploadManager;
 	private TextView textView;
+	private Interface regInter;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -86,19 +87,19 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		findViewById(R.id.registered_OK).setOnClickListener(this);
 		registered_tv_nickname = (TextView) findViewById(R.id.registered_tv_nickname);
 		registered_tv_nickname.setOnClickListener(this);
-//		regInter = new Interface();
-//		regInter.setPostListener(new UserInterface() {
-//			
-//			@Override
-//			public void success(String A) {
-//				Log.e("RegisteredActivity", "注册成功"+A);
-//			}
-//			
-//			@Override
-//			public void defail(Object B) {
-//				
-//			}
-//		});
+		regInter = new Interface();
+		regInter.setPostListener(new UserInterface() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("RegisteredActivity", "注册成功"+A);
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
 		textView = (TextView) findViewById(R.id.textView1);
 	}
 
@@ -160,7 +161,6 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 					});
 			  //上传完成后注册
 			  user.setAvatar_path(result.fileId);
-			  Interface regInter=new Interface();
 			  regInter.regNewAccount(RegisteredActivity.this, user);
 			  //跳转至主界面
 			  Intent intent=new Intent(RegisteredActivity.this, MainActivity.class);
