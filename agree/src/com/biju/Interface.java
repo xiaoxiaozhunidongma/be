@@ -1,6 +1,5 @@
 package com.biju;
 
-import java.security.acl.Group;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -12,6 +11,7 @@ import android.util.Log;
 
 import com.BJ.javabean.Chat;
 import com.BJ.javabean.FeedBack;
+import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.IDs;
@@ -178,8 +178,8 @@ public class Interface {
 		volleyPost(context,packParams(user, kFindUser));
 	}
 	//新建小组
-	public void createGroup(Context context,User user) {
-		volleyPost(context,packParams(user, kCreateGroup));
+	public void createGroup(Context context,Group group) {
+		volleyPost(context,packParams(group, kCreateGroup));
 	}
 	//读取用户小组信息
 	public void readUserGroupMsg(Context context,User user) {
@@ -266,7 +266,7 @@ public class Interface {
 	/**
 	 * 
 	 * @param context
-	 * @param user this user can be null!(这个对象可以是空的)
+	 * @param user this user can be null!(这个对象属性可以是空的)
 	 */
 	public void mateComBook(Context context,User user) {  //........传入？？？
 		volleyPost(context,packParams(user, kMateComBook));
@@ -295,7 +295,7 @@ public class Interface {
 	/**
 	 * 
 	 * @param context
-	 * @param user this user can be null!(这个对象可以是空的)
+	 * @param user this user can be null!(这个对象属性可以是空的)
 	 */
 	public void getPicSign(Context context,User user) {  //.....传入？？？？？
 		volleyPost(context,packParams(user, kGetPictureSign));

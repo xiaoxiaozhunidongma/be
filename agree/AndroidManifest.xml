@@ -38,6 +38,10 @@
             android:name="com.biju.function.NewteamActivity"
             android:label="@string/title_activity_newteam" >
         </activity>
+        <activity
+            android:name="com.biju.NewteamActivitys"
+            android:label="@string/title_activity_newteam_activitys" >
+        </activity>
     </application>
 
 </manifest>
