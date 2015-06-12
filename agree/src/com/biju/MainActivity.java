@@ -41,7 +41,7 @@ public class MainActivity extends FragmentActivity {
 		AddTab("1", "小组", 0, HomeFragment.class);
 		AddTab("2", "聚会", 1, PartyFragment.class);
 		AddTab("3", "好友", 2, FriendsFragment.class);
-		AddTab("4", "设置", 3, SettingFragment.class);
+		AddTab("4", "我", 3, SettingFragment.class);
 	}
 
 	private void AddTab(String tag, String title, int i, Class cls) {

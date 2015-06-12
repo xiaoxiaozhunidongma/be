@@ -10,5 +10,7 @@
     <string name="title_activity_registered">RegisteredActivity</string>
     <string name="title_activity_newteam">NewteamActivity</string>
     <string name="title_activity_newteam_activitys">NewteamActivitys</string>
+    <string name="title_activity_request_code">RequestCodeActivity</string>
+    <string name="title_activity_user_setting">UserSettingActivity</string>
 
 </resources>

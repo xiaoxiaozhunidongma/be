@@ -64,11 +64,12 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:text="收到小组的邀请码?"
         android:layout_marginBottom="50.0dp"
         android:gravity="center"
-        android:text="收到小组的邀请码?"
         android:textColor="#55aeae"
-        android:textSize="20.0sp" />
+        android:textSize="20.0sp"
+         />
 
     <RelativeLayout
         android:layout_width="match_parent"

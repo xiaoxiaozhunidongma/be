@@ -1,38 +1,41 @@
 package com.biju.function;
 
-import com.BJ.javabean.Group;
-import com.BJ.javabean.User;
-import com.BJ.utils.Utils;
-import com.biju.Interface;
-import com.biju.Interface.UserInterface;
-import com.biju.MainActivity;
-import com.biju.R;
-import com.biju.login.RegisteredActivity;
-import com.tencent.upload.UploadManager;
-import com.tencent.upload.task.IUploadTaskListener;
-import com.tencent.upload.task.UploadTask;
-import com.tencent.upload.task.ITask.TaskState;
-import com.tencent.upload.task.data.FileInfo;
-import com.tencent.upload.task.impl.PhotoUploadTask;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
 
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.BitmapFactory.Options;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.webkit.WebView.FindListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.BJ.javabean.Group;
+import com.BJ.utils.Utils;
+import com.biju.Interface;
+import com.biju.Interface.UserInterface;
+import com.biju.R;
+import com.tencent.upload.UploadManager;
+import com.tencent.upload.task.ITask.TaskState;
+import com.tencent.upload.task.IUploadTaskListener;
+import com.tencent.upload.task.UploadTask;
+import com.tencent.upload.task.data.FileInfo;
+import com.tencent.upload.task.impl.PhotoUploadTask;
 
 public class NewteamActivity extends Activity implements OnClickListener {
 
@@ -93,6 +96,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// 完成
 		newteam_progressBar = (ProgressBar) findViewById(R.id.newteam_progressBar);// 图片上传进度
 		newteam_progressBar.setMax(100);
+		findViewById(R.id.newteam_requsetcode).setOnClickListener(this);// 跳转至邀请码搜索界面
 	}
 
 	@Override
@@ -116,9 +120,19 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		case R.id.newteam_tv_head:
 			newteam_tv_head();
 			break;
+		case R.id.newteam_requsetcode:
+			newteam_requsetcode();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void newteam_requsetcode() {
+		// 跳转至邀请码搜索界面
+		Intent intent = new Intent(NewteamActivity.this,
+				RequestCodeActivity.class);
+		startActivity(intent);
 	}
 
 	private void newteam_tv_head() {
@@ -131,7 +145,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private void newteam_OK() {
 		String newteam_name = mNewteam_name.getText().toString().trim();
 		Group group = new Group();
-		group.setPk_group(153);
 		group.setName(newteam_name);
 		upload(group);
 	}
@@ -185,6 +198,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			mFilePath = cursor.getString(columnIndex);
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+//			Log.e("NewteamActivity", "图片的高"+bmp.getHeight());
+//			Log.e("NewteamActivity", "图片的宽"+bmp.getWidth());
 			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
 			mNewteam_head.setVisibility(View.VISIBLE);
 			newteam_progressBar.setVisibility(View.VISIBLE);
@@ -194,7 +209,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		}
 	}
 
+
 	private void newteam_back() {
 		finish();
 	}
+	
 }

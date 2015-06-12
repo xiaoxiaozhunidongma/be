@@ -2,6 +2,8 @@ package com.biju.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -21,13 +23,17 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.BJ.javabean.Registeredback;
 import com.BJ.javabean.User;
+import com.BJ.utils.InitHead;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -39,7 +45,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
-	private ImageView registered_head;
+	public static ImageView registered_head;
 	private EditText mNickname;
 	private TextView registered_tv_nickname;
 	protected String mFilePath = null;
@@ -86,9 +92,29 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		regInter = new Interface();
 		regInter.setPostListener(new UserInterface() {
 
+
 			@Override
 			public void success(String A) {
 				Log.e("RegisteredActivity", "注册成功" + A);
+				Registeredback registered=GsonUtils.parseJson(A, Registeredback.class);
+				int returndata=registered.getReturnData();
+				int statusMsg = registered.getStatusMsg();
+				Log.e("RegisteredActivity", "returndata"+returndata);
+				SharedPreferences sp=getSharedPreferences("Registered", 0);
+				Editor editor=sp.edit();
+				editor.putInt("returndata", returndata);
+				editor.commit();
+				if(statusMsg==1)
+				{
+					// 跳转至主界面
+					Intent intent = new Intent(RegisteredActivity.this,
+							MainActivity.class);
+					startActivity(intent);
+					finish();
+				}else
+				{
+					Toast.makeText(RegisteredActivity.this, "请重新注册!", Toast.LENGTH_SHORT).show();
+				}
 			}
 
 			@Override
@@ -157,12 +183,6 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 						// 上传完成后注册
 						user.setAvatar_path(result.fileId);
 						regInter.regNewAccount(RegisteredActivity.this, user);
-						// 跳转至主界面
-						Intent intent = new Intent(RegisteredActivity.this,
-								MainActivity.class);
-						startActivity(intent);
-						finish();
-
 					}
 
 					@Override
@@ -220,55 +240,9 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			mFilePath = cursor.getString(columnIndex);
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-			initHead(bmp);// 画圆形头像
+			InitHead.initHead(bmp);// 画圆形头像
 		} catch (Exception e) {
 			Log.e("Demo", "choose file error!", e);
 		}
-	}
-
-	// 对图片进行修改，变成圆形
-	private void initHead(Bitmap bm) {
-		// 裁剪图片
-		BitmapFactory.Options options = new BitmapFactory.Options();
-		options.inJustDecodeBounds = true;
-		// 此宽度是目标ImageView希望的大小，你可以自定义ImageView，然后获得ImageView的宽度。
-		int dstWidth = 150;
-		// 我们需要加载的图片可能很大，我们先对原有的图片进行裁剪
-		int sampleSize = calculateInSampleSize(options, dstWidth, dstWidth);
-		options.inSampleSize = sampleSize;
-		options.inJustDecodeBounds = false;
-		Bitmap bmp = bm;
-		// 绘制图片
-		Bitmap resultBmp = Bitmap.createBitmap(dstWidth, dstWidth,
-				Bitmap.Config.ARGB_8888);
-		Paint paint = new Paint();
-		paint.setAntiAlias(true);
-		Canvas canvas = new Canvas(resultBmp);
-		// 画圆
-		canvas.drawCircle(dstWidth / 2, dstWidth / 2, dstWidth / 2, paint);
-		// 选择交集去上层图片
-		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
-		canvas.drawBitmap(bmp, new Rect(0, 0, bmp.getWidth(), bmp.getWidth()),
-				new Rect(0, 0, dstWidth, dstWidth), paint);
-		registered_head.setImageBitmap(resultBmp);
-		bmp.recycle();
-	}
-
-	private int calculateInSampleSize(BitmapFactory.Options options,
-			int reqWidth, int reqHeight) {
-		final int height = options.outHeight;
-		final int width = options.outWidth;
-		int inSampleSize = 1;
-
-		if (height > reqHeight || width > reqWidth) {
-
-			final int halfHeight = height / 2;
-			final int halfWidth = width / 2;
-			while ((halfHeight / inSampleSize) > reqHeight
-					&& (halfWidth / inSampleSize) > reqWidth) {
-				inSampleSize *= 2;
-			}
-		}
-		return inSampleSize;
 	}
 }
