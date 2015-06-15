@@ -1,7 +1,9 @@
 package com.fragment;
 
 import com.biju.R;
+import com.biju.function.UserSettingActivity;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -9,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 /**
@@ -19,6 +22,8 @@ public class SettingFragment extends Fragment implements OnClickListener{
 
 	private View mLayout;
 	private TextView setting_number;
+	private ImageView mSetting_head;
+	
 
 	public SettingFragment() {
 		// Required empty public constructor
@@ -44,6 +49,8 @@ public class SettingFragment extends Fragment implements OnClickListener{
 	private void initUI() {
 		setting_number = (TextView) mLayout.findViewById(R.id.setting_number);
 		mLayout.findViewById(R.id.setting_user).setOnClickListener(this);
+		mSetting_head = (ImageView) mLayout.findViewById(R.id.setting_head);
+		mSetting_head.setOnClickListener(this);
 	}
 
 	@Override
@@ -55,6 +62,18 @@ public class SettingFragment extends Fragment implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		
+		switch (v.getId()) {
+		case R.id.setting_user:
+			setting_user();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void setting_user() {
+		Intent intent=new Intent(getActivity(), UserSettingActivity.class);
+		startActivity(intent);
 	}
 }

@@ -1,5 +1,6 @@
 package com.BJ.utils;
 
+import com.biju.function.UserSettingActivity;
 import com.biju.login.RegisteredActivity;
 
 import android.graphics.Bitmap;
@@ -36,13 +37,23 @@ public class InitHead {
 		canvas.drawBitmap(bmp, new Rect(0, 0, bmp.getWidth(), bmp.getWidth()),
 				new Rect(0, 0, dstWidth, dstWidth), paint);
 		Registered(resultBmp);
+		usersetting(resultBmp);
 		bmp.recycle();
 	}
 
 	private static void Registered(Bitmap resultBmp) {
-//		RegisteredActivity registered = new RegisteredActivity();
-		RegisteredActivity.registered_head.setImageBitmap(resultBmp);
+		if(RegisteredActivity.registered_head!=null)
+		{
+			RegisteredActivity.registered_head.setImageBitmap(resultBmp);
+		}
 	}
+	private static void usersetting(Bitmap resultBmp) {
+		if(UserSettingActivity.mUsersetting_head!=null)
+		{
+			UserSettingActivity.mUsersetting_head.setImageBitmap(resultBmp);
+		}
+	}
+	
 
 	private static int calculateInSampleSize(BitmapFactory.Options options,
 			int reqWidth, int reqHeight) {

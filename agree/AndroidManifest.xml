@@ -51,6 +51,15 @@
             android:name="com.biju.function.UserSettingActivity"
             android:label="@string/title_activity_user_setting" >
         </activity>
+        <activity
+            android:name="com.biju.function.AddFriendsActivity"
+            android:label="@string/title_activity_add_buddy" >
+        </activity>
+        <activity
+            android:name="com.biju.function.FindFriendsActivity"
+            android:label="@string/title_activity_find_friends" >
+        </activity>
+
     </application>
 
 </manifest>
