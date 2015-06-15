@@ -149,8 +149,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		group.setName(newteam_name);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d HH:MM:ss");
 		String format2 = sdf.format(new Date());
-		Log.e("NewteamActivity", "format1--"+format1);
-		Log.e("NewteamActivity", "format2--"+format2);
 		
 		group.setSetup_time(format1);
 		group.setLast_post_time(format2);
@@ -172,10 +170,10 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						// 上传完成后注册
 						group.setAvatar_path(result.fileId);
 						//创建CreatGroup
-						Group_User group_User2 = new Group_User();
-						group_User2.setFk_user(30);
-						group_User2.setRole(1);
-						Group_User[] members={group_User2};
+						Group_User group_User = new Group_User();
+						group_User.setFk_user(30);
+						group_User.setRole(1);
+						Group_User[] members={group_User};
 						CreateGroup creatGroup=new CreateGroup(members, group);
 						Log.e("NewteamActivity", "group:"+group.toString());
 						cregrouInter.createGroup(NewteamActivity.this, creatGroup);//测试
