@@ -106,7 +106,8 @@ public class Interface {
 	//获取图片签名
 	String kGetPictureSign= "101";
 	//test新建小组
-	String testGroup="{'group':{'last_post_message':'U5c0fU7ec4U6210U7acbU5566!','last_post_time':'2015-06-11 11:43:58','em_id':'1433994238427','name':'test','setup_time':'2015-06-11 11:43:58'},'member':[{'fk_user':30,'role':1}]}";
+	String testGroup="{'group':{'last_post_message':'U5c0fU7ec4U6210U7acbU5566!','last_post_time':'2015-06-11 11:43:58',"
+			+ "'em_id':'1433994238427','name':'test','setup_time':'2015-06-11 11:43:58'},'member':[{'fk_user':30,'role':1}]}";
 	//test
 	String kTestInterface =  "1101";
 	public Map<String, String> packParams(Object classObject , String interfaceType) {
