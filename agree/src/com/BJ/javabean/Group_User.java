@@ -1,11 +1,16 @@
 package com.BJ.javabean;
 
+import java.io.Serializable;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table (name="tre_group_user")
-public class Group_User {
+public class Group_User  {
 	
+	/**
+	 * 
+	 */
 	@Column
 	private Integer pk_group_user;
 	@Column
@@ -101,6 +106,16 @@ public class Group_User {
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	@Override
+	public String toString() {
+		return "Group_User [pk_group_user=" + pk_group_user + ", fk_group="
+				+ fk_group + ", fk_user=" + fk_user + ", message_warn="
+				+ message_warn + ", party_warn=" + party_warn
+				+ ", public_phone=" + public_phone + ", remarks_name="
+				+ remarks_name + ", photo_update=" + photo_update
+				+ ", chat_update=" + chat_update + ", party_update="
+				+ party_update + ", role=" + role + ", status=" + status + "]";
 	}
 	
 	

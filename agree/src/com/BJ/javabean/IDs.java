@@ -1,16 +1,10 @@
 package com.BJ.javabean;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 
-@Table (name="Ids")
 public class IDs {
 	
-	@Column
 	private Integer id_group;
-	@Column
 	private Integer id_user;
-	@Column
 	private Integer id_user_group;
 	public Integer getId_group() {
 		return id_group;

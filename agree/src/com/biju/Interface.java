@@ -1,8 +1,11 @@
 package com.biju;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
@@ -10,13 +13,14 @@ import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.util.Log;
 
 import com.BJ.javabean.Chat;
+import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.FeedBack;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
-import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party_User;
+import com.BJ.javabean.StringCreGroup;
 import com.BJ.javabean.User;
 import com.BJ.javabean.User_Chat;
 import com.BJ.javabean.User_User;
@@ -101,16 +105,80 @@ public class Interface {
 	String kFeedBack= "91";
 	//获取图片签名
 	String kGetPictureSign= "101";
-	
+	//test新建小组
+	String testGroup="{'group':{'last_post_message':'U5c0fU7ec4U6210U7acbU5566!','last_post_time':'2015-06-11 11:43:58','em_id':'1433994238427','name':'test','setup_time':'2015-06-11 11:43:58'},'member':[{'fk_user':30,'role':1}]}";
 	//test
 	String kTestInterface =  "1101";
 	public Map<String, String> packParams(Object classObject , String interfaceType) {
 		Map map = Bean2Map.ConvertObjToMap(classObject);
+		Log.e("Interface", "map------"+map);
 		JSONObject jsonObject=new JSONObject(map);
 		Map<String, String> params=new HashMap<String, String>();
 
+		
 		params.put("request_type", interfaceType);
+		Log.e("Interface", "小组json:"+jsonObject.toString());
 		params.put("request_data",jsonObject.toString());
+		
+		return params;
+	}
+	
+	class MyData{
+		private Integer fk_user;
+		private Integer role;
+		public MyData(Integer fk_user, Integer role) {
+			super();
+			this.fk_user = fk_user;
+			this.role = role;
+		}
+		@Override
+		public String toString() {
+			return "{fk_user=" + fk_user + ", role=" + role + "}";
+		}
+		
+	}
+	//新建小组的packParams（）方法
+	ArrayList<String> list=new ArrayList<String>();
+	public Map<String, String> packParams3(Object classObject , String interfaceType) {
+		list.clear();//先清空
+		try {
+			for (int i = 0; i < ((CreateGroup) classObject).getMember().length; i++) {
+				MyData myData = new MyData(((CreateGroup) classObject).getMember()[i].getFk_user(),
+						((CreateGroup) classObject).getMember()[i].getRole());
+				list.add(myData.toString());
+			}							
+			JSONArray array=new JSONArray(list.toString());
+			Map usemap = Bean2Map.ConvertObjToMap(((CreateGroup) classObject).getGroup());
+			JSONObject jsonObject=new JSONObject(usemap);
+			creGroup = new StringCreGroup(array, jsonObject);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		Map map = Bean2Map.ConvertObjToMap(creGroup);
+		Log.e("Interface3", "map------"+map);
+		JSONObject jsonObject=new JSONObject(map);
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("request_type", interfaceType);
+		Log.e("Interface3", "小组json:"+jsonObject.toString().replace("\\", ""));
+		params.put("request_data",jsonObject.toString().replace("\\", ""));
+		
+		return params;
+	}
+	//test新建小组
+	public Map<String, String> packParams2(Object classObject , String interfaceType) {
+		Map map = Bean2Map.ConvertObjToMap(classObject);
+		JSONObject jsonObject=new JSONObject(map);
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("request_type", interfaceType);
+		try {
+			JSONObject object=new JSONObject(testGroup);
+			Log.e("Interface2", "小组json:"+object.toString());
+			params.put("request_data",object.toString());
+			Log.e("", "4556645645646"+params.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
 		
 		return params;
 	}
@@ -178,8 +246,12 @@ public class Interface {
 		volleyPost(context,packParams(user, kFindUser));
 	}
 	//新建小组
-	public void createGroup(Context context,Group group) {
-		volleyPost(context,packParams(group, kCreateGroup));
+	public void createGroup(Context context,CreateGroup creatGroup) {
+		volleyPost(context,packParams3(creatGroup, kCreateGroup));
+	}
+	//test新建小组
+	public void createGroup2(Context context,StringCreGroup creGroup) {
+		volleyPost(context,packParams2(creGroup, kCreateGroup));
 	}
 	//读取用户小组信息
 	public void readUserGroupMsg(Context context,User user) {
@@ -215,8 +287,8 @@ public class Interface {
 		volleyPost(context,packParams(user, kReadUserAllParty));
 	}
 	//读取用户在小组中的所有聚会
-	public void readUserGroupParty(Context context,IDs iDs) {//...........传入字典
-		volleyPost(context,packParams(iDs, kReadUserGroupParty));
+	public void readUserGroupParty(Context context,Map idsmap) {//...........传入字典
+		volleyPost(context,packParams(idsmap, kReadUserGroupParty));
 	}
 	//更新用户对于聚会的参与信息
 	public void updateUserJoinMsg(Context context,Party_User party_User) {
@@ -302,6 +374,8 @@ public class Interface {
 	}
 	//接口部分
 	private static UserInterface listener;
+
+	private StringCreGroup creGroup;
 	public interface UserInterface{
 		void success(String A);
 		void defail(Object B);

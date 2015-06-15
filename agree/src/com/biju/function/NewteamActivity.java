@@ -1,38 +1,50 @@
 package com.biju.function;
 
-import com.BJ.javabean.Group;
-import com.BJ.javabean.User;
-import com.BJ.utils.Utils;
-import com.biju.Interface;
-import com.biju.Interface.UserInterface;
-import com.biju.MainActivity;
-import com.biju.R;
-import com.biju.login.RegisteredActivity;
-import com.tencent.upload.UploadManager;
-import com.tencent.upload.task.IUploadTaskListener;
-import com.tencent.upload.task.UploadTask;
-import com.tencent.upload.task.ITask.TaskState;
-import com.tencent.upload.task.data.FileInfo;
-import com.tencent.upload.task.impl.PhotoUploadTask;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
+import java.util.Map;
 
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.MediaStore;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.graphics.Bitmap.CompressFormat;
+import android.net.Uri;
+import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.webkit.WebView.FindListener;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+
+import com.BJ.javabean.CreateGroup;
+import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_User;
+import com.BJ.javabean.StringCreGroup;
+import com.BJ.utils.Bean2Map;
+import com.BJ.utils.Utils;
+import com.biju.Interface;
+import com.biju.Interface.UserInterface;
+import com.biju.R;
+import com.tencent.upload.UploadManager;
+import com.tencent.upload.task.ITask.TaskState;
+import com.tencent.upload.task.IUploadTaskListener;
+import com.tencent.upload.task.UploadTask;
+import com.tencent.upload.task.data.FileInfo;
+import com.tencent.upload.task.impl.PhotoUploadTask;
 
 public class NewteamActivity extends Activity implements OnClickListener {
 
@@ -49,6 +61,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private TextView newteam_tv_head;
 	private ProgressBar newteam_progressBar;
 	private Interface cregrouInter;
+	private String format1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,6 +85,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 			}
 		});
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d HH:MM:ss");
+		format1 = sdf.format(new Date());
 	}
 
 	private void initUpload() {
@@ -131,21 +146,39 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private void newteam_OK() {
 		String newteam_name = mNewteam_name.getText().toString().trim();
 		Group group = new Group();
-		group.setPk_group(153);
 		group.setName(newteam_name);
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d HH:MM:ss");
+		String format2 = sdf.format(new Date());
+		Log.e("NewteamActivity", "format1--"+format1);
+		Log.e("NewteamActivity", "format2--"+format2);
+		
+		group.setSetup_time(format1);
+		group.setLast_post_time(format2);
+		group.setLast_post_message("asdfsd");
+		//上传图片
 		upload(group);
 	}
-
+	
+	private String tmpFilePath;
 	private void upload(final Group group) {
+		tmpFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/compress.tmp";
 		UploadTask task = new PhotoUploadTask(mFilePath,
 				new IUploadTaskListener() {
 
+					@SuppressLint("NewApi")
 					@Override
 					public void onUploadSucceed(final FileInfo result) {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
 						group.setAvatar_path(result.fileId);
-						cregrouInter.createGroup(NewteamActivity.this, group);
+						//创建CreatGroup
+						Group_User group_User2 = new Group_User();
+						group_User2.setFk_user(30);
+						group_User2.setRole(1);
+						Group_User[] members={group_User2};
+						CreateGroup creatGroup=new CreateGroup(members, group);
+						Log.e("NewteamActivity", "group:"+group.toString());
+						cregrouInter.createGroup(NewteamActivity.this, creatGroup);//测试
 						finish();
 					}
 

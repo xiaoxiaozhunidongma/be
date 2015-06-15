@@ -137,7 +137,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		String nickname = mNickname.getText().toString().trim();
 		User user = new User();
 		user.setNickname(nickname);
-
+		//ÉÏ´«Í¼Æ¬
 		upload(user);
 	}
 
