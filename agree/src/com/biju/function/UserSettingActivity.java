@@ -80,6 +80,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void ReadUser() {
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		returndata = sp.getInt("returndata", 0);
 		Interface readuserinter = new Interface();
 		User readuser = new User();
 		readuser.setPk_user(returndata);
@@ -96,14 +98,11 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 			}
 		});
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		returndata = sp.getInt("returndata", 0);
 	}
 
 	private void initInerface() {
 		usersetting_interface = new Interface();
 		usersetting_interface.setPostListener(new UserInterface() {
-
 			@Override
 			public void success(String A) {
 				updateback usersetting_updateback = GsonUtils.parseJson(A,
@@ -113,14 +112,13 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 					Log.e("UserSettingActivity", "更新成功" + A);
 					finish();
 				}
-				Log.e("UserSettingActivity", "更新成功" + A);
 			}
 
 			@Override
 			public void defail(Object B) {
 				// TODO Auto-generated method stub
-
 			}
+
 		});
 	}
 
@@ -146,6 +144,14 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		findViewById(R.id.usersetting_save_1).setOnClickListener(this);
 		mUsersetting_progress = (TextView) findViewById(R.id.usersetting_progress);// 显示上传进度
 		mUsersetting_save_2_layout = (RelativeLayout) findViewById(R.id.usersetting_save_2_layout);
+		mUsersetting_save_2_layout.setOnClickListener(this);// 保存2
+		findViewById(R.id.usersetting_save_2).setOnClickListener(this);
+		mUsersetting_phone_layout = (RelativeLayout) findViewById(R.id.usersetting_phone_layout);// 电话号码设置界面
+		mUsersetting_phone = (EditText) findViewById(R.id.usersetting_phone);// 输入电话号码
+		findViewById(R.id.usersetting_tv_phone).setOnClickListener(this);
+		mUsersetting_sex = (TextView) findViewById(R.id.usersetting_sex);// 设置性别
+		mUsersetting_sex.setOnClickListener(this);
+		findViewById(R.id.usersetting_back_layout).setOnClickListener(this);// 返回
 		mUsersetting_save_2_layout.setOnClickListener(this);// 保存2
 		findViewById(R.id.usersetting_save_2).setOnClickListener(this);
 		mUsersetting_phone_layout = (RelativeLayout) findViewById(R.id.usersetting_phone_layout);// 电话号码设置界面
@@ -277,7 +283,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 				user.setPhone(userphone);
 				user.setSex(1);
 				upload(user);
-
 			}
 		} else {
 			if (savepassword) {
@@ -327,6 +332,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 						user.setAvatar_path(result.fileId);
 						usersetting_interface.updateUser(
 								UserSettingActivity.this, user);
+						usersetting_interface.updateUser(
+								UserSettingActivity.this, user);
 					}
 
 					@Override
@@ -341,6 +348,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 							@Override
 							public void run() {
+								mUsersetting_progress
+										.setVisibility(View.VISIBLE);
 								mUsersetting_progress
 										.setVisibility(View.VISIBLE);
 								mUsersetting_progress.setText(p + "%");
@@ -358,5 +367,4 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		uploadManager.upload(task); // 开始上传
 
 	}
-
 }
