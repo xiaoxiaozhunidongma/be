@@ -5,19 +5,14 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import com.BJ.utils.ContactBean;
-import com.BJ.utils.ContactListAdapter;
-import com.BJ.utils.QuickAlphabeticBar;
-import com.biju.R;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.provider.ContactsContract;
 import android.app.Activity;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.database.Cursor;
+import android.net.Uri;
+import android.os.Bundle;
+import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -25,7 +20,12 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ListView;
 
-public class AddFriendsActivity extends Activity implements OnClickListener{
+import com.BJ.utils.ContactBean;
+import com.BJ.utils.ContactListAdapter;
+import com.BJ.utils.QuickAlphabeticBar;
+import com.biju.R;
+
+public class AddFriendsActivity extends Activity implements OnClickListener {
 
 	private ContactListAdapter adapter;
 	private ListView contactList;
@@ -33,7 +33,7 @@ public class AddFriendsActivity extends Activity implements OnClickListener{
 	private AsyncQueryHandler asyncQueryHandler; // 异步查询数据库类对象
 	private QuickAlphabeticBar alphabeticBar; // 快速索引条
 	private Map<Integer, ContactBean> contactIdMap = null;
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -49,9 +49,9 @@ public class AddFriendsActivity extends Activity implements OnClickListener{
 	}
 
 	private void initUI() {
-		findViewById(R.id.addbuddy_findfriends_layout).setOnClickListener(this);//查找好友
+		findViewById(R.id.addbuddy_findfriends_layout).setOnClickListener(this);// 查找好友
 		findViewById(R.id.addbuddy_findfriends).setOnClickListener(this);
-		findViewById(R.id.addbuddy_back_layout).setOnClickListener(this);//返回
+		findViewById(R.id.addbuddy_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.addbuddy_back).setOnClickListener(this);
 	}
 
@@ -83,10 +83,11 @@ public class AddFriendsActivity extends Activity implements OnClickListener{
 	}
 
 	private void addbuddy_findfriends() {
-		Intent intent=new Intent(AddFriendsActivity.this, FindFriendsActivity.class);
+		Intent intent = new Intent(AddFriendsActivity.this,
+				FindFriendsActivity.class);
 		startActivity(intent);
 	}
-	
+
 	/**
 	 * 初始化数据库查询参数
 	 */
@@ -131,9 +132,9 @@ public class AddFriendsActivity extends Activity implements OnClickListener{
 					String sortKey = cursor.getString(3);
 					Log.e("ContactListActivity+sortKey", sortKey);
 					int contactId = cursor.getInt(4);
-					Log.e("ContactListActivity+contactId", contactId+"");
+					Log.e("ContactListActivity+contactId", contactId + "");
 					Long photoId = cursor.getLong(5);
-					Log.e("ContactListActivity+photoId", photoId+"");
+					Log.e("ContactListActivity+photoId", photoId + "");
 					String lookUpKey = cursor.getString(6);
 					Log.e("ContactListActivity+lookUpKey", lookUpKey);
 
@@ -170,6 +171,5 @@ public class AddFriendsActivity extends Activity implements OnClickListener{
 		alphabeticBar.setHight(alphabeticBar.getHeight());
 		alphabeticBar.setVisibility(View.VISIBLE);
 	}
-	
 
 }

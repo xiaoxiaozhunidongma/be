@@ -169,6 +169,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					public void onUploadSucceed(final FileInfo result) {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
+						Log.e("图片路径", "result.url"+result.url);
 						group.setAvatar_path(result.fileId);
 						//创建CreatGroup
 						Group_User group_User = new Group_User();

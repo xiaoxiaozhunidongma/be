@@ -75,12 +75,12 @@
             android:id="@+id/contact_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginRight="22.0dp"
             android:cacheColorHint="#000000"
             android:divider="#00000000"
             android:fadingEdge="none"
             android:scrollbars="none"
             android:scrollingCache="false"
-            android:layout_marginRight="22.0dp"
             android:visibility="visible" />
 
         <com.BJ.utils.QuickAlphabeticBar
@@ -108,6 +108,7 @@
             android:textColor="#404040"
             android:textSize="48dip"
             android:visibility="invisible" />
+
     </RelativeLayout>
 
 </RelativeLayout>

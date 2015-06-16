@@ -1,7 +1,5 @@
 package com.biju.function;
 
-import java.util.List;
-
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -21,7 +19,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
 import com.BJ.utils.InitHead;
@@ -60,7 +57,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private TextView mUsersetting_progress;
 	private Interface usersetting_interface;
 	private int returndata;
-	private String password="";
+	private String password = "";
 	private RelativeLayout mUsersetting_phone_layout;
 	private EditText mUsersetting_phone;
 	private RelativeLayout mUsersetting_save_1_layout;
@@ -73,7 +70,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_setting);
-		SharedPreferences sp=getSharedPreferences("Registered", 0);
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
 		returndata = sp.getInt("returndata", 0);
 		initUI();
 		mUsersetting_tv_password.setText("请输入想要设置的密码");
@@ -83,42 +80,46 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void ReadUser() {
-		Interface readuserinter=new Interface();
-		User readuser=new User();
+		Interface readuserinter = new Interface();
+		User readuser = new User();
 		readuser.setPk_user(returndata);
 		readuserinter.readUser(UserSettingActivity.this, readuser);
 		readuserinter.setPostListener(new UserInterface() {
-			
+
 			@Override
 			public void success(String A) {
-				Log.e("UserSettingActivity", "用户资料"+A);
+				Log.e("UserSettingActivity", "用户资料" + A);
 			}
-			
+
 			@Override
 			public void defail(Object B) {
-				
+
 			}
 		});
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		returndata = sp.getInt("returndata", 0);
 	}
 
 	private void initInerface() {
 		usersetting_interface = new Interface();
 		usersetting_interface.setPostListener(new UserInterface() {
-			
+
 			@Override
 			public void success(String A) {
-				updateback usersetting_updateback = GsonUtils.parseJson(A, updateback.class);
-				int a=usersetting_updateback.getStatusMsg();
-				if(a==1)
-				{
-					Log.e("UserSettingActivity", "更新成功"+A);
+				updateback usersetting_updateback = GsonUtils.parseJson(A,
+						updateback.class);
+				int a = usersetting_updateback.getStatusMsg();
+				if (a == 1) {
+					Log.e("UserSettingActivity", "更新成功" + A);
 					finish();
 				}
+				Log.e("UserSettingActivity", "更新成功" + A);
 			}
-			
+
 			@Override
 			public void defail(Object B) {
-				
+				// TODO Auto-generated method stub
+
 			}
 		});
 	}
@@ -145,14 +146,14 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		findViewById(R.id.usersetting_save_1).setOnClickListener(this);
 		mUsersetting_progress = (TextView) findViewById(R.id.usersetting_progress);// 显示上传进度
 		mUsersetting_save_2_layout = (RelativeLayout) findViewById(R.id.usersetting_save_2_layout);
-		mUsersetting_save_2_layout.setOnClickListener(this);//保存2
+		mUsersetting_save_2_layout.setOnClickListener(this);// 保存2
 		findViewById(R.id.usersetting_save_2).setOnClickListener(this);
-		mUsersetting_phone_layout = (RelativeLayout) findViewById(R.id.usersetting_phone_layout);//电话号码设置界面
-		mUsersetting_phone = (EditText) findViewById(R.id.usersetting_phone);//输入电话号码
+		mUsersetting_phone_layout = (RelativeLayout) findViewById(R.id.usersetting_phone_layout);// 电话号码设置界面
+		mUsersetting_phone = (EditText) findViewById(R.id.usersetting_phone);// 输入电话号码
 		findViewById(R.id.usersetting_tv_phone).setOnClickListener(this);
-		mUsersetting_sex = (TextView) findViewById(R.id.usersetting_sex);//设置性别
+		mUsersetting_sex = (TextView) findViewById(R.id.usersetting_sex);// 设置性别
 		mUsersetting_sex.setOnClickListener(this);
-		findViewById(R.id.usersetting_back_layout).setOnClickListener(this);//返回
+		findViewById(R.id.usersetting_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.usersetting_back).setOnClickListener(this);
 	}
 
@@ -194,13 +195,16 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
+
 	private void usersetting_back() {
 		finish();
 	}
-	int i=0;
+
+	int i = 0;
+
 	private void usersetting_sex() {
 		i++;
-		int a=i%3;
+		int a = i % 3;
 		switch (a) {
 		case 0:
 			mUsersetting_sex.setText("性别");
@@ -245,8 +249,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		try {
 			Uri selectedImage = data.getData();
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Cursor cursor = UserSettingActivity.this.getContentResolver().query(
-					selectedImage, filePathColumn, null, null, null);
+			Cursor cursor = UserSettingActivity.this.getContentResolver()
+					.query(selectedImage, filePathColumn, null, null, null);
 			cursor.moveToFirst();
 			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 			mFilePath = cursor.getString(columnIndex);
@@ -254,26 +258,26 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
 			InitHead.initHead(bmp);// 画圆形头像
 		} catch (Exception e) {
+			Log.e("Demo", "choose file error!", e);
 		}
 	}
 
 	private void usersetting_save_1() {
 		if (isSetting) {
-			String nickname=mUsersetting_nickname.getText().toString().trim();
-			String usersex=mUsersetting_sex.getText().toString().trim();
-			if("性别".equals(usersex))
-			{
-				Toast.makeText(UserSettingActivity.this, "请选择性别", Toast.LENGTH_SHORT).show();
-			}else
-			{
-				User user=new User();
+			String nickname = mUsersetting_nickname.getText().toString().trim();
+			String usersex = mUsersetting_sex.getText().toString().trim();
+			if ("性别".equals(usersex)) {
+				Toast.makeText(UserSettingActivity.this, "请选择性别",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				User user = new User();
 				user.setPk_user(returndata);
 				user.setPassword(password);
 				user.setNickname(nickname);
 				user.setPhone(userphone);
 				user.setSex(1);
 				upload(user);
-				
+
 			}
 		} else {
 			if (savepassword) {
@@ -312,6 +316,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		mUsersetting.setVisibility(View.GONE);
 		mUsersetting_password_layout.setVisibility(View.VISIBLE);
 	}
+
 	private void upload(final User user) {
 		UploadTask task = new PhotoUploadTask(mFilePath,
 				new IUploadTaskListener() {
@@ -320,7 +325,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
 						user.setAvatar_path(result.fileId);
-						usersetting_interface.updateUser(UserSettingActivity.this,user);
+						usersetting_interface.updateUser(
+								UserSettingActivity.this, user);
 					}
 
 					@Override
@@ -335,7 +341,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 							@Override
 							public void run() {
-								mUsersetting_progress.setVisibility(View.VISIBLE);
+								mUsersetting_progress
+										.setVisibility(View.VISIBLE);
 								mUsersetting_progress.setText(p + "%");
 							}
 						});
@@ -351,5 +358,5 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		uploadManager.upload(task); // 开始上传
 
 	}
-	
+
 }

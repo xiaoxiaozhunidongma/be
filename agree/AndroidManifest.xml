@@ -71,6 +71,10 @@
             android:label="@string/title_activity_find_friends" >
         </activity>
 
+        <activity
+            android:name="com.biju.Mdfsdfsdf"
+            android:label="@string/title_activity_mdfsdfsdf" >
+        </activity>
     </application>
 
 </manifest>
