@@ -2,9 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddFriendsActivity"
     android:background="#ffffff"
-     >
+    tools:context=".AddFriendsActivity" >
 
     <RelativeLayout
         android:id="@+id/addbuddy_listview_layout"
@@ -63,26 +62,52 @@
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
-            android:background="#aaaaaa"
-            />
-
+            android:background="#aaaaaa" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/addbuddy_listview_layout"
-        android:layout_centerHorizontal="true"
-         >
+        android:layout_centerHorizontal="true" >
 
         <ListView
-            android:id="@+id/addbuddy_listview"
+            android:id="@+id/contact_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            >
-        </ListView>
+            android:layout_marginRight="22.0dp"
+            android:cacheColorHint="#000000"
+            android:divider="#00000000"
+            android:fadingEdge="none"
+            android:scrollbars="none"
+            android:scrollingCache="false"
+            android:visibility="visible" />
+
+        <com.BJ.utils.QuickAlphabeticBar
+            android:id="@+id/fast_scroller"
+            android:layout_width="22dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_gravity="top|right|center"
+            android:layout_marginTop="0dip"
+            android:background="#000000"
+            android:scaleType="centerInside"
+            android:src="@drawable/dic_background" >
+        </com.BJ.utils.QuickAlphabeticBar>
+
+        <TextView
+            android:id="@+id/fast_position"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_margin="34dip"
+            android:background="@drawable/sort_icon_bg_click"
+            android:gravity="center"
+            android:padding="2dip"
+            android:textColor="#404040"
+            android:textSize="48dip"
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

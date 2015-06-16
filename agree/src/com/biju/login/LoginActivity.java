@@ -40,12 +40,19 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	private EditText mLogin_account;
 	private EditText mLogin_password;
-	private Person person;
-	private Interface logininter;
 	private ImageView auto_login_image;
 	private RelativeLayout manually_login;
 	private RelativeLayout auto_login;
 	private AnimationDrawable drawable;
+
+	private Integer pk_user;
+	private String nickname;
+	private String avatar_path;
+	private String phone;
+	private String password;
+	private String fileName = getSDPath() + "/" + "saveData";
+	private boolean onelogin = false;
+	private Interface readuserinter;
 
 	public String getSDPath() {
 		File sdDir = null;
@@ -59,67 +66,84 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	}
 
-	private String fileName = getSDPath() + "/" + "saveData";
-	private boolean login = false;
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		initUI();
-		initData();
 		manually_login.setVisibility(View.VISIBLE);
 		auto_login.setVisibility(View.GONE);
 	}
 
-	private void initData() {
-		logininter = new Interface();
-		logininter.setPostListener(new UserInterface() {
+	private void auto_ReadUser(Integer mpk_user) {
+		readuserinter = new Interface();
+		User readuser = new User();
+		readuser.setPk_user(mpk_user);
+		readuserinter.setPostListener(new UserInterface() {
 
 			@Override
 			public void success(String A) {
-				Loginback loginback = GsonUtils.parseJson(A, Loginback.class);
-				// 说明是已经登录成功
-				if (loginback.getStatusMsg() == 1) {
-					Log.e("LoginActivity", "登录成功，账号ID"+A);
-					mLogin_account.postDelayed(new Runnable() {
-
-						@Override
-						public void run() {
-							if (drawable != null) {
-								drawable.stop();
-							}
-							Intent intent = new Intent(LoginActivity.this,
-									MainActivity.class);
-							startActivity(intent);
-							overridePendingTransition(0, 0);
-							finish();
-						}
-					}, 1000);
+				Loginback loginbackread = GsonUtils.parseJson(A,
+						Loginback.class);
+				int aa = loginbackread.getStatusMsg();
+				if (aa == 1) {
+					Log.e("LoginActivity", "用户资料" + A);
 					// 取第一个Users[0]
-					List<User> Users = loginback.getReturnData();
+					List<User> Users = loginbackread.getReturnData();
 					if (Users.size() >= 1) {
-						User user = Users.get(0);
-						Log.e("解析出来的", user.getPassword());
+						User readuser = Users.get(0);
+						pk_user = readuser.getPk_user();
+						nickname = readuser.getNickname();
+						avatar_path = readuser.getAvatar_path();
+						phone = readuser.getPhone();
+						password = readuser.getPassword();
 					}
-				} else {
-					if (drawable != null) {
-						drawable.stop();
+					String mPassword = mLogin_password.getText().toString()
+							.trim();
+					if (mPassword.equals(password)) {
+						Loginback loginback = GsonUtils.parseJson(A,
+								Loginback.class);
+						// 说明是已经登录成功
+						if (loginback.getStatusMsg() == 1) {
+							Log.e("LoginActivity", "登录成功，账号ID" + A);
+							mLogin_account.postDelayed(new Runnable() {
+
+								@Override
+								public void run() {
+									if (drawable != null) {
+										drawable.stop();
+									}
+									Intent intent = new Intent(
+											LoginActivity.this,
+											MainActivity.class);
+									startActivity(intent);
+									overridePendingTransition(0, 0);
+									finish();
+								}
+							}, 1000);
+							// 取第一个Users[0]
+							// List<User> Users = loginback.getReturnData();
+							// if (Users.size() >= 1) {
+							// User user = Users.get(0);
+							// Log.e("解析出来的",
+							// user.getPhone() + "====" + user.getNickname());
+							// }
+						}
+					} else {
+						Toast.makeText(LoginActivity.this, "账号或者密码错误!",
+								Toast.LENGTH_SHORT).show();
 					}
-					Toast.makeText(LoginActivity.this, "账号或者密码错误!",
-							Toast.LENGTH_SHORT).show();
-					manually_login.setVisibility(View.VISIBLE);
-					auto_login.setVisibility(View.GONE);
 				}
+
 			}
 
 			@Override
 			public void defail(Object B) {
-				Log.e("账号ID", "失败");
+
 			}
 		});
-
+		readuserinter.readUser(LoginActivity.this, readuser);
 	}
 
 	private void initUI() {
@@ -161,10 +185,16 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private void Login_OK() {
 		String mUser = mLogin_account.getText().toString().trim();
 		String mPassword = mLogin_password.getText().toString().trim();
-		User user = new User();
-		user.setPk_user(Integer.valueOf(mUser));
-		user.setPassword(mPassword);
-		logininter.userLogin(LoginActivity.this, user);
+		auto_ReadUser(Integer.valueOf(mUser));
+		if (mPassword.equals(password)) {
+			User loginuser = new User();
+			loginuser.setPk_user(pk_user);
+			loginuser.setAvatar_path(avatar_path);
+			loginuser.setNickname(nickname);
+			loginuser.setPassword(mPassword);
+			loginuser.setPhone(phone);
+			readuserinter.userLogin(LoginActivity.this, loginuser);
+		}
 
 		SharedPreferences sp = getSharedPreferences("isLogin", 0);
 		Editor editor = sp.edit();
@@ -195,7 +225,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 		FileInputStream fis;
 		try {
-			Log.e("LoginActivity", "sd卡路径"+fileName);
+			Log.e("LoginActivity", "sd卡路径" + fileName);
 			fis = new FileInputStream(fileName);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Person person = (Person) ois.readObject();
@@ -203,19 +233,25 @@ public class LoginActivity extends Activity implements OnClickListener {
 			mLogin_password.setText(person.password);
 			Log.e("person.pk_user", person.pk_user);
 			Log.e("person.password", person.password);
+			manually_login.setVisibility(View.GONE);
+			auto_login.setVisibility(View.VISIBLE);
+			drawable = (AnimationDrawable) auto_login_image.getDrawable();
+			drawable.start();
 			SharedPreferences sp = getSharedPreferences("isLogin", 0);
-			login = sp.getBoolean("Login", false);
-			if (login) {
+			onelogin = sp.getBoolean("Login", false);
+			if (onelogin) {
 				if (!("".equals(person.pk_user) && "".equals(person.password))) {
-					User user = new User();
-					user.setPk_user(Integer.valueOf(person.pk_user));
-					user.setPassword(person.password);
-					logininter.userLogin(LoginActivity.this, user);
-					manually_login.setVisibility(View.GONE);
-					auto_login.setVisibility(View.VISIBLE);
-					drawable = (AnimationDrawable) auto_login_image
-							.getDrawable();
-					drawable.start();
+					auto_ReadUser(Integer.valueOf(person.pk_user));
+					if (person.password.equals(password)) {
+						User autologinuser = new User();
+						autologinuser.setPk_user(pk_user);
+						autologinuser.setAvatar_path(avatar_path);
+						autologinuser.setNickname(nickname);
+						autologinuser.setPassword(person.password);
+						autologinuser.setPhone(phone);
+						readuserinter.userLogin(LoginActivity.this,
+								autologinuser);
+					}
 				}
 			}
 		} catch (FileNotFoundException e) {

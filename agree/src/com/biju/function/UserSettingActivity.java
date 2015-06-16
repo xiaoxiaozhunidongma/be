@@ -20,11 +20,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BJ.javabean.User;
+import com.BJ.javabean.updateback;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -68,12 +70,32 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_setting);
+		SharedPreferences sp=getSharedPreferences("Registered", 0);
+		returndata = sp.getInt("returndata", 0);
 		initUI();
 		mUsersetting_tv_password.setText("请输入想要设置的密码");
 		initUpload();
 		initInerface();
-		SharedPreferences sp=getSharedPreferences("Registered", 0);
-		returndata = sp.getInt("returndata", 0);
+		ReadUser();
+	}
+
+	private void ReadUser() {
+		Interface readuserinter=new Interface();
+		User readuser=new User();
+		readuser.setPk_user(returndata);
+		readuserinter.readUser(UserSettingActivity.this, readuser);
+		readuserinter.setPostListener(new UserInterface() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("UserSettingActivity", "用户资料"+A);
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
 	}
 
 	private void initInerface() {
@@ -83,6 +105,13 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				Log.e("UserSettingActivity", "更新成功"+A);
+				updateback usersetting_updateback = GsonUtils.parseJson(A, updateback.class);
+				int a=usersetting_updateback.getStatusMsg();
+				if(a==1)
+				{
+					Log.e("UserSettingActivity", "更新成功"+A);
+					finish();
+				}
 			}
 			
 			@Override
@@ -122,6 +151,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		findViewById(R.id.usersetting_tv_phone).setOnClickListener(this);
 		mUsersetting_sex = (TextView) findViewById(R.id.usersetting_sex);//设置性别
 		mUsersetting_sex.setOnClickListener(this);
+		findViewById(R.id.usersetting_back_layout).setOnClickListener(this);//返回
+		findViewById(R.id.usersetting_back).setOnClickListener(this);
 	}
 
 	@Override
@@ -154,9 +185,16 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		case R.id.usersetting_sex:
 			usersetting_sex();
 			break;
+		case R.id.usersetting_back_layout:
+		case R.id.usersetting_back:
+			usersetting_back();
+			break;
 		default:
 			break;
 		}
+	}
+	private void usersetting_back() {
+		finish();
 	}
 	int i=0;
 	private void usersetting_sex() {
