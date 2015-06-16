@@ -11,6 +11,17 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
+    <!-- 读取本地通讯录 -->
+    <!-- 读联系人权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <!-- 写联系人权限 -->
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
+    <!-- 拨号权限 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" />
+    <!-- 读短信权限 -->
+    <uses-permission android:name="android.permission.READ_SMS" />
+    <!-- 读取本地通讯录 -->
 
     <!-- 读取本地通讯录 -->
     <!-- 读联系人权限 -->
@@ -69,14 +80,6 @@
         <activity
             android:name="com.biju.function.FindFriendsActivity"
             android:label="@string/title_activity_find_friends" >
-        </activity>
-        <activity
-            android:name="com.biju.Mdfsdfsdf"
-            android:label="@string/title_activity_mdfsdfsdf" >
-        </activity>
-        <activity
-            android:name="com.biju.MainActivitysdfsd"
-            android:label="@string/title_activity_main_activitysdfsd" >
         </activity>
     </application>
 
