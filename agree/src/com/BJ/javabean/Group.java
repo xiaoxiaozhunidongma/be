@@ -1,5 +1,7 @@
 package com.BJ.javabean;
 
+import java.sql.Date;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
@@ -78,6 +80,15 @@ public class Group {
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+	@Override
+	public String toString() {
+		return "{"+"\"pk_group\":" + pk_group + ",\"em_id\":" + em_id + ",\"name\":"
+				+ name + ",\"setup_time\":" + setup_time + ",\"last_post_time\":"
+				+ last_post_time + ",\"last_post_message\":" + last_post_message
+				+ ",\"avatar_path\":" + avatar_path + ",\"remark\":" + remark
+				+ ",\"status\":" + status + "}";
+	}
+
 	
 
 }

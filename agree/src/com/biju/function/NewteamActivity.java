@@ -1,19 +1,16 @@
 package com.biju.function;
 
-import java.io.ByteArrayInputStream;
-import java.io.ByteArrayOutputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.BitmapFactory.Options;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -25,7 +22,9 @@ import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_User;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
@@ -52,6 +51,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private TextView newteam_tv_head;
 	private ProgressBar newteam_progressBar;
 	private Interface cregrouInter;
+	private String format1;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,6 +75,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 			}
 		});
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d HH:MM:ss");
+		format1 = sdf.format(new Date());
 	}
 
 	private void initUpload() {
@@ -146,19 +148,36 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		String newteam_name = mNewteam_name.getText().toString().trim();
 		Group group = new Group();
 		group.setName(newteam_name);
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d HH:MM:ss");
+		String format2 = sdf.format(new Date());
+		
+		group.setSetup_time(format1);
+		group.setLast_post_time(format2);
+		group.setLast_post_message("asdfsd");
+		//上传图片
 		upload(group);
 	}
-
+	
+	private String tmpFilePath;
 	private void upload(final Group group) {
+		tmpFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/compress.tmp";
 		UploadTask task = new PhotoUploadTask(mFilePath,
 				new IUploadTaskListener() {
 
+					@SuppressLint("NewApi")
 					@Override
 					public void onUploadSucceed(final FileInfo result) {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
 						group.setAvatar_path(result.fileId);
-						cregrouInter.createGroup(NewteamActivity.this, group);
+						//创建CreatGroup
+						Group_User group_User = new Group_User();
+						group_User.setFk_user(30);
+						group_User.setRole(1);
+						Group_User[] members={group_User};
+						CreateGroup creatGroup=new CreateGroup(members, group);
+						Log.e("NewteamActivity", "group:"+group.toString());
+						cregrouInter.createGroup(NewteamActivity.this, creatGroup);//测试
 						finish();
 					}
 

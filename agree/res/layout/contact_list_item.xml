@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <!-- 首字母 -->
+
+    <TextView
+        android:id="@+id/alpha"
+        android:layout_width="fill_parent"
+        android:layout_height="20.0dp"
+        android:background="#333333"
+        android:paddingLeft="10dip"
+        android:textColor="#ffffff" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/alpha" >
+
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="100.0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="left"
+            android:singleLine="true"
+            android:text="15614"
+            android:textAppearance="?android:textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="50.0dp"
+            android:layout_height="50.0dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:src="@drawable/ad_loading_01"
+            android:visibility="invisible" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/name"
+            android:layout_marginLeft="25dp"
+            android:layout_marginTop="12.50dp"
+            android:layout_toRightOf="@+id/name"
+            android:gravity="left"
+            android:text="邀请加入"
+            android:textSize="17.0sp" />
+    </RelativeLayout>
+
+</RelativeLayout>
