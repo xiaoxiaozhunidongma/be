@@ -170,7 +170,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		Editor editor = sp.edit();
 		editor.putBoolean("Login", true);
 		editor.commit();
-		finish();
 	}
 
 	@Override

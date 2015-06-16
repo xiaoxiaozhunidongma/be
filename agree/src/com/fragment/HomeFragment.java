@@ -18,6 +18,12 @@ import android.view.ViewGroup;
 public class HomeFragment extends Fragment implements OnClickListener{
 
 	private View mLayout;
+	private String  beginStr="http://201139.image.myqcloud.com/201139/0/";
+	private String endStr="/original";
+	//ÍêÕûÂ·¾¶completeURL=beginStr+result.filepath+endStr;
+	private String completeURL="";
+	
+	
 
 	public HomeFragment() {
 	}

@@ -1,21 +1,13 @@
 package com.biju.function;
 
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
-import java.util.Map;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.Bitmap.CompressFormat;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -33,8 +25,6 @@ import android.widget.TextView;
 import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
-import com.BJ.javabean.StringCreGroup;
-import com.BJ.utils.Bean2Map;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
@@ -108,6 +98,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// 完成
 		newteam_progressBar = (ProgressBar) findViewById(R.id.newteam_progressBar);// 图片上传进度
 		newteam_progressBar.setMax(100);
+		findViewById(R.id.newteam_requsetcode).setOnClickListener(this);// 跳转至邀请码搜索界面
 	}
 
 	@Override
@@ -131,9 +122,19 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		case R.id.newteam_tv_head:
 			newteam_tv_head();
 			break;
+		case R.id.newteam_requsetcode:
+			newteam_requsetcode();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void newteam_requsetcode() {
+		// 跳转至邀请码搜索界面
+		Intent intent = new Intent(NewteamActivity.this,
+				RequestCodeActivity.class);
+		startActivity(intent);
 	}
 
 	private void newteam_tv_head() {
@@ -168,6 +169,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					public void onUploadSucceed(final FileInfo result) {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
+						Log.e("图片路径", "result.url"+result.url);
 						group.setAvatar_path(result.fileId);
 						//创建CreatGroup
 						Group_User group_User = new Group_User();
@@ -216,6 +218,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			mFilePath = cursor.getString(columnIndex);
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+//			Log.e("NewteamActivity", "图片的高"+bmp.getHeight());
+//			Log.e("NewteamActivity", "图片的宽"+bmp.getWidth());
 			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
 			mNewteam_head.setVisibility(View.VISIBLE);
 			newteam_progressBar.setVisibility(View.VISIBLE);
@@ -225,7 +229,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		}
 	}
 
+
 	private void newteam_back() {
 		finish();
 	}
+	
 }

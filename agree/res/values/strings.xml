@@ -10,5 +10,10 @@
     <string name="title_activity_registered">RegisteredActivity</string>
     <string name="title_activity_newteam">NewteamActivity</string>
     <string name="title_activity_newteam_activitys">NewteamActivitys</string>
+    <string name="title_activity_request_code">RequestCodeActivity</string>
+    <string name="title_activity_user_setting">UserSettingActivity</string>
+    <string name="title_activity_add_buddy">AddBuddyActivity</string>
+    <string name="title_activity_find_friends">FindFriendsActivity</string>
+    <string name="title_activity_mdfsdfsdf">Mdfsdfsdf</string>
 
 </resources>
