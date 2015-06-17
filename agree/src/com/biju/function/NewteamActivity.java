@@ -1,5 +1,9 @@
 package com.biju.function;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -47,7 +51,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private UploadManager uploadManager;
 	protected String mFilePath = null;
 	private final String IMAGE_TYPE = "image/*";
-	private final int IMAGE_CODE = 0; // ÕâÀïµÄIMAGE_CODEÊÇ×Ô¼ºÈÎÒâ¶¨ÒåµÄ
+	private final int IMAGE_CODE = 0; // è¿™é‡Œçš„IMAGE_CODEæ˜¯è‡ªå·±ä»»æ„å®šä¹‰çš„
 	private TextView newteam_tv_head;
 	private ProgressBar newteam_progressBar;
 	private Interface cregrouInter;
@@ -60,14 +64,14 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_newteam);
 		initUI();
 		initUpload();
-		newteam_tv_head.setVisibility(View.VISIBLE);// ÏÔÊ¾Ğ¡×éÍ·ÏñÑ¡Ôñ
+		newteam_tv_head.setVisibility(View.VISIBLE);// æ˜¾ç¤ºå°ç»„å¤´åƒé€‰æ‹©
 		mNewteam_head.setVisibility(View.GONE);
 		cregrouInter = new Interface();
 		cregrouInter.setPostListener(new UserInterface() {
 
 			@Override
 			public void success(String A) {
-				Log.e("NewteamActivity", "Ğ¡×éID" + A);
+				Log.e("NewteamActivity", "å°ç»„ID" + A);
 			}
 
 			@Override
@@ -80,25 +84,25 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUpload() {
-		// ×¢²áÇ©Ãû
+		// æ³¨å†Œç­¾å
 		UploadManager.authorize(APPID, USERID, SIGN);
 		uploadManager = new UploadManager(NewteamActivity.this, "persistenceId");
 
 	}
 
 	private void initUI() {
-		mNewteam_name = (EditText) findViewById(R.id.newteam_name);// Ğ¡×éÃû³Æ
-		mNewteam_head = (ImageView) findViewById(R.id.newteam_head);// ÏÔÊ¾Ğ¡×éÍ·Ïñ
+		mNewteam_name = (EditText) findViewById(R.id.newteam_name);// å°ç»„åç§°
+		mNewteam_head = (ImageView) findViewById(R.id.newteam_head);// æ˜¾ç¤ºå°ç»„å¤´åƒ
 		newteam_tv_head = (TextView) findViewById(R.id.newteam_tv_head);
-		newteam_tv_head.setOnClickListener(this);// Ñ¡ÔñĞ¡×éÍ·Ïñ
-		findViewById(R.id.newteam_requsetcode).setOnClickListener(this);// Ğ¡×éÑûÇëÂë
-		findViewById(R.id.newteam_back_layout).setOnClickListener(this);// ·µ»Ø
-		findViewById(R.id.newteam_back).setOnClickListener(this);// ·µ»Ø
-		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// Íê³É
-		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// Íê³É
-		newteam_progressBar = (ProgressBar) findViewById(R.id.newteam_progressBar);// Í¼Æ¬ÉÏ´«½ø¶È
+		newteam_tv_head.setOnClickListener(this);// é€‰æ‹©å°ç»„å¤´åƒ
+		findViewById(R.id.newteam_requsetcode).setOnClickListener(this);// å°ç»„é‚€è¯·ç 
+		findViewById(R.id.newteam_back_layout).setOnClickListener(this);// è¿”å›
+		findViewById(R.id.newteam_back).setOnClickListener(this);// è¿”å›
+		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// å®Œæˆ
+		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// å®Œæˆ
+		newteam_progressBar = (ProgressBar) findViewById(R.id.newteam_progressBar);// å›¾ç‰‡ä¸Šä¼ è¿›åº¦
 		newteam_progressBar.setMax(100);
-		findViewById(R.id.newteam_requsetcode).setOnClickListener(this);// Ìø×ªÖÁÑûÇëÂëËÑË÷½çÃæ
+		findViewById(R.id.newteam_requsetcode).setOnClickListener(this);// è·³è½¬è‡³é‚€è¯·ç æœç´¢ç•Œé¢
 	}
 
 	@Override
@@ -131,21 +135,21 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private void newteam_requsetcode() {
-		// Ìø×ªÖÁÑûÇëÂëËÑË÷½çÃæ
+		// è·³è½¬è‡³é‚€è¯·ç æœç´¢ç•Œé¢
 		Intent intent = new Intent(NewteamActivity.this,
 				RequestCodeActivity.class);
 		startActivity(intent);
 	}
 
 	private void newteam_tv_head() {
-		// Ê¹ÓÃintentµ÷ÓÃÏµÍ³Ìá¹©µÄÏà²á¹¦ÄÜ£¬Ê¹ÓÃstartActivityForResultÊÇÎªÁË»ñÈ¡ÓÃ»§Ñ¡ÔñµÄÍ¼Æ¬
+		// ä½¿ç”¨intentè°ƒç”¨ç³»ç»Ÿæä¾›çš„ç›¸å†ŒåŠŸèƒ½ï¼Œä½¿ç”¨startActivityForResultæ˜¯ä¸ºäº†è·å–ç”¨æˆ·é€‰æ‹©çš„å›¾ç‰‡
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
 		startActivityForResult(getAlbum, IMAGE_CODE);
 	}
 
 	private void newteam_OK() {
-		String newteam_name = mNewteam_name.getText().toString().trim();
+		newteam_name = mNewteam_name.getText().toString().trim();
 		Group group = new Group();
 		group.setName(newteam_name);
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d HH:MM:ss");
@@ -154,11 +158,13 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		group.setSetup_time(format1);
 		group.setLast_post_time(format2);
 		group.setLast_post_message("asdfsd");
-		//ÉÏ´«Í¼Æ¬
+		//ä¸Šä¼ å›¾ç‰‡
 		upload(group);
 	}
 	
 	private String tmpFilePath;
+	private String newteam_name;
+	private String sDpath;
 	private void upload(final Group group) {
 		tmpFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/compress.tmp";
 		UploadTask task = new PhotoUploadTask(mFilePath,
@@ -167,18 +173,20 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					@SuppressLint("NewApi")
 					@Override
 					public void onUploadSucceed(final FileInfo result) {
-						Log.e("ÉÏ´«½á¹û", "upload succeed: " + result.fileId);
-						// ÉÏ´«Íê³Éºó×¢²á
-						Log.e("Í¼Æ¬Â·¾¶", "result.url"+result.url);
+						Log.e("ä¸Šä¼ ç»“æœ", "upload succeed: " + result.fileId);
+						// ä¸Šä¼ å®Œæˆåæ³¨å†Œ
+						Log.e("å›¾ç‰‡è·¯å¾„", "result.url"+result.url);
+						//ä¸Šä¼ å®Œæˆååˆ é™¤SDä¸­å›¾ç‰‡
+						deleteMybitmap(sDpath);
 						group.setAvatar_path(result.fileId);
-						//´´½¨CreatGroup
+						//åˆ›å»ºCreatGroup
 						Group_User group_User = new Group_User();
 						group_User.setFk_user(30);
 						group_User.setRole(1);
 						Group_User[] members={group_User};
 						CreateGroup creatGroup=new CreateGroup(members, group);
 						Log.e("NewteamActivity", "group:"+group.toString());
-						cregrouInter.createGroup(NewteamActivity.this, creatGroup);//²âÊÔ
+						cregrouInter.createGroup(NewteamActivity.this, creatGroup);//æµ‹è¯•
 						finish();
 					}
 
@@ -189,18 +197,18 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					@Override
 					public void onUploadProgress(long totalSize, long sendSize) {
 						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
-						// Log.e("ÉÏ´«½ø¶È", "ÉÏ´«½ø¶È: " + p + "%");
+						// Log.e("ä¸Šä¼ è¿›åº¦", "ä¸Šä¼ è¿›åº¦: " + p + "%");
 						newteam_progressBar.setProgress((int) p);
 					}
 
 					@Override
 					public void onUploadFailed(final int errorCode,
 							final String errorMsg) {
-						Log.e("Demo", "ÉÏ´«½á¹û:Ê§°Ü! ret:" + errorCode + " msg:"
+						Log.e("Demo", "ä¸Šä¼ ç»“æœ:å¤±è´¥! ret:" + errorCode + " msg:"
 								+ errorMsg);
 					}
 				});
-		uploadManager.upload(task); // ¿ªÊ¼ÉÏ´«
+		uploadManager.upload(task); // å¼€å§‹ä¸Šä¼ 
 
 	}
 
@@ -218,9 +226,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			mFilePath = cursor.getString(columnIndex);
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-//			Log.e("NewteamActivity", "Í¼Æ¬µÄ¸ß"+bmp.getHeight());
-//			Log.e("NewteamActivity", "Í¼Æ¬µÄ¿í"+bmp.getWidth());
-			newteam_tv_head.setVisibility(View.GONE);// ÏÔÊ¾Ğ¡×éÍ·ÏñÑ¡Ôñ
+			saveMyBitmap(bmp,newteam_name);
+			mFilePath=sDpath;//å›¾ç‰‡åœ¨SDå¡ä¸­çš„è·¯å¾„
+			newteam_tv_head.setVisibility(View.GONE);// æ˜¾ç¤ºå°ç»„å¤´åƒé€‰æ‹©
 			mNewteam_head.setVisibility(View.VISIBLE);
 			newteam_progressBar.setVisibility(View.VISIBLE);
 			mNewteam_head.setImageBitmap(bmp);
@@ -228,7 +236,47 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			Log.e("Demo", "choose file error!", e);
 		}
 	}
+	
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// åˆ¤æ–­sdå¡æ˜¯å¦å­˜åœ¨
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// è·å–è·Ÿç›®å½•
+		}
+		return sdDir.toString();
 
+	}
+
+
+	 public void saveMyBitmap(Bitmap mBitmap,String bitName)  {
+         sDpath = getSDPath()+"/"+bitName + ".png";
+         Log.e("NewteamAc", "sDpath~~~"+sDpath);
+		File f = new File(sDpath);
+         FileOutputStream fOut = null;
+         try {
+                 fOut = new FileOutputStream(f);
+         } catch (FileNotFoundException e) {
+                 e.printStackTrace();
+         }
+         mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+         try {
+                 fOut.flush();
+         } catch (IOException e) {
+                 e.printStackTrace();
+         }
+         try {
+                 fOut.close();
+         } catch (IOException e) {
+                 e.printStackTrace();
+         }
+	 } 
+	 
+	 public void deleteMybitmap(String path){
+		 File f = new File(path);
+		 f.delete();
+	 }
 
 	private void newteam_back() {
 		finish();

@@ -131,6 +131,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 							// }
 						}
 					} else {
+						if (drawable != null) {
+							drawable.stop();
+						}
+						manually_login.setVisibility(View.VISIBLE);
+						auto_login.setVisibility(View.GONE);
 						Toast.makeText(LoginActivity.this, "’À∫≈ªÚ’ﬂ√‹¬Î¥ÌŒÛ!",
 								Toast.LENGTH_SHORT).show();
 					}
