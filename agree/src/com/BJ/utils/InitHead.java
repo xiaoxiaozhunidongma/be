@@ -41,6 +41,7 @@ public class InitHead {
 		bmp.recycle();
 	}
 
+
 	private static void Registered(Bitmap resultBmp) {
 		if(RegisteredActivity.registered_head!=null)
 		{

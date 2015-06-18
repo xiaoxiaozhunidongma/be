@@ -70,7 +70,7 @@
         android:layout_below="@+id/setting_number"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:src="@drawable/login_selector" />
+        android:src="@drawable/login_1" />
 
     <TextView
         android:id="@+id/setting_user"

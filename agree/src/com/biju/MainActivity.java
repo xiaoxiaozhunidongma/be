@@ -1,5 +1,7 @@
 package com.biju;
 
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -62,4 +64,13 @@ public class MainActivity extends FragmentActivity {
 		return true;
 	}
 
+	@Override
+	protected void onStop() {
+		SharedPreferences sp=getSharedPreferences("Registered", 0);
+		Editor editor=sp.edit();
+		editor.putBoolean("isRegistered_one", false);
+		editor.commit();
+		super.onStop();
+	}
+	
 }
