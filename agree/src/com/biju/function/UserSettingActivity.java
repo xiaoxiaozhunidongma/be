@@ -27,6 +27,7 @@ import com.BJ.javabean.updateback;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.InitHead;
+import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
@@ -79,12 +80,15 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private String  beginStr="http://201139.image.myqcloud.com/201139/0/";
 	private String endStr="/original";
 	//完整路径completeURL=beginStr+result.filepath+endStr;
+	private String TestcompleteURL=beginStr+"1ddff6cf-35ac-446b-8312-10f4083ee13d"+endStr;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_setting);
+		String Cacheurl = PreferenceUtils.readImageCache(this);
+		completeURL=Cacheurl;
 		initUI();
 		boolean isWIFI=Ifwifi.getNetworkConnected(UserSettingActivity.this);
 		Log.e("UserSettingActivity", "判断是否有网络"+isWIFI);
@@ -168,6 +172,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 									+ Usernickname);
 						}
 						completeURL = beginStr+Useravatar_path+endStr;
+						PreferenceUtils.saveImageCache(UserSettingActivity.this, completeURL);
 						ImageLoaderUtils.getInstance().LoadImage(UserSettingActivity.this, completeURL, mUsersetting_head);
 					}
 				} else {
