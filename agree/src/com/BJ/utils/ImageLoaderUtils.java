@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import com.biju.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class ImageLoaderUtils {
 	private static ImageLoaderUtils imageLoaderUtils = new ImageLoaderUtils() {
@@ -34,7 +35,10 @@ public class ImageLoaderUtils {
 				.showImageOnLoading(R.drawable.ic_launcher)
 				.showImageForEmptyUri(R.drawable.ic_empty)
 				.showImageOnFail(R.drawable.ic_error).cacheInMemory(true)
+				.displayer(new CircleBitmapDisplayer())//т╡пн
 				.cacheOnDisk(true).considerExifParams(true).build();
+		
+				
 	}
 
 }
