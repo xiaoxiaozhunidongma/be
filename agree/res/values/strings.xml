@@ -17,5 +17,7 @@
     <string name="title_activity_mdfsdfsdf">Mdfsdfsdf</string>
     <string name="title_activity_main_activitysdfsd">MainActivitysdfsd</string>
     <string name="title_activity_main_activity_ssssss">MainActivitySSSSSS</string>
+    <string name="title_activity_feedback">FeedbackActivity</string>
+    <string name="title_activity_about_us">AboutUsActivity</string>
 
 </resources>

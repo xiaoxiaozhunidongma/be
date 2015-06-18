@@ -247,6 +247,7 @@
             android:layout_marginTop="60dp"
             android:background="#ffffff"
             android:ems="10"
+            android:phoneNumber="true"
             android:gravity="center"
             android:hint="电话号码:" />
 

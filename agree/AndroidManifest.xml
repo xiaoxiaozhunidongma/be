@@ -97,8 +97,12 @@
             android:label="@string/title_activity_find_friends" >
         </activity>
         <activity
-            android:name="com.biju.MainActivitySSSSSS"
-            android:label="@string/title_activity_main_activity_ssssss" >
+            android:name="com.biju.function.FeedbackActivity"
+            android:label="@string/title_activity_feedback" >
+        </activity>
+        <activity
+            android:name="com.biju.function.AboutUsActivity"
+            android:label="@string/title_activity_about_us" >
         </activity>
     </application>
 

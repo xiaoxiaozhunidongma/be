@@ -22,6 +22,8 @@ import com.BJ.utils.PreferenceUtils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
+import com.biju.function.AboutUsActivity;
+import com.biju.function.FeedbackActivity;
 import com.biju.function.UserSettingActivity;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
@@ -126,6 +128,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		mLayout.findViewById(R.id.setting_user).setOnClickListener(this);
 		mSetting_head = (ImageView) mLayout.findViewById(R.id.setting_head);
 		mSetting_head.setOnClickListener(this);
+		mLayout.findViewById(R.id.setting_feedback).setOnClickListener(this);
+		mLayout.findViewById(R.id.setting_about_us).setOnClickListener(this);
 	}
 
 	@Override
@@ -141,10 +145,25 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		case R.id.setting_user:
 			setting_user();
 			break;
-
+		case R.id.setting_feedback:
+			setting_feedback();
+			break;
+		case R.id.setting_about_us:
+			setting_about_us();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void setting_about_us() {
+		Intent intent=new Intent(getActivity(), AboutUsActivity.class);
+		startActivity(intent);
+	}
+
+	private void setting_feedback() {
+		Intent intent=new Intent(getActivity(), FeedbackActivity.class);
+		startActivity(intent);
 	}
 
 	private void setting_user() {

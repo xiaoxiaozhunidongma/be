@@ -1,30 +1,31 @@
 package com.biju.function;
 
 import java.util.List;
-import java.util.zip.Inflater;
 
-import com.BJ.javabean.Loginback;
-import com.BJ.javabean.User;
-import com.BJ.javabean.User_User;
-import com.biju.Interface;
-import com.biju.Interface.UserInterface;
-import com.biju.R;
-import com.github.volley_examples.utils.GsonUtils;
-
-import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.Window;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.BJ.javabean.Loginback;
+import com.BJ.javabean.User;
+import com.BJ.javabean.User_User;
+import com.BJ.utils.Ifwifi;
+import com.BJ.utils.ImageLoaderUtils;
+import com.biju.Interface;
+import com.biju.Interface.UserInterface;
+import com.biju.login.LoginActivity;
+import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
 
 public class FindFriendsActivity extends Activity implements OnClickListener {
 
@@ -35,6 +36,10 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 	private TextView mFindfriends_nickname;
 	private Interface findfriends_inter_before;
 	private int i = 1;
+	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
+	private String endStr = "/original";
+
+	// 完整路径completeURL=beginStr+result.filepath+endStr;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +53,8 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 	private void initInterface() {
 		findfriends_inter_before = new Interface();
 		findfriends_inter_before.setPostListener(new UserInterface() {
+
+			private String userAvatar_path;
 
 			@Override
 			public void success(String A) {
@@ -64,9 +71,15 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 					if (Users.size() >= 1) {
 						User user = Users.get(0);
 						mFindfriends_nickname.setText(user.getNickname());
+						userAvatar_path = user.getAvatar_path();
 						Log.e("FindFriendsActivity",
 								"图片路径" + user.getAvatar_path());
+
 					}
+					String completeURL = beginStr + userAvatar_path + endStr;
+					ImageLoaderUtils.getInstance().LoadImage(
+							FindFriendsActivity.this, completeURL,
+							mFindfriends_head);
 
 				} else {
 					Toast.makeText(FindFriendsActivity.this, "查找好友失败，请重新查找!",
@@ -139,10 +152,16 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 	}
 
 	private void findfriends_find() {
-		String pk_user = mFindfriends_number.getText().toString().trim();
-		User user = new User();
-		user.setPhone(pk_user);
-		findfriends_inter_before.findUser(FindFriendsActivity.this, user);
+		boolean isWIFI = Ifwifi.getNetworkConnected(FindFriendsActivity.this);
+		if (isWIFI) {
+			String pk_user = mFindfriends_number.getText().toString().trim();
+			User user = new User();
+			user.setPhone(pk_user);
+			findfriends_inter_before.findUser(FindFriendsActivity.this, user);
+		} else {
+			Toast.makeText(FindFriendsActivity.this, "网络异常，请检查网络!",
+					Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void findfriends_back() {

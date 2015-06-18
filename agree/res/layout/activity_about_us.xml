@@ -1,0 +1,96 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AboutUsActivity" >
+
+    <RelativeLayout
+        android:id="@+id/aboutus_title"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <RelativeLayout
+            android:id="@+id/aboutus_back_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/aboutus_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="返回"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="关于我们"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#aaaaaa" />
+    </RelativeLayout>
+
+    <ScrollView
+        android:id="@+id/scrollView1"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/aboutus_title"
+        android:layout_centerHorizontal="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/aboutus_title"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/myTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:ellipsize="marquee"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:marqueeRepeatLimit="marquee_forever"
+                android:scrollHorizontally="true"
+                android:textSize="17.0sp"
+                android:textColor="#808080"
+                android:text="ewrew000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000
+            000000000000000000000000000000000000000000000000000000000000000000000000000
+            
+            000000000000000" >
+            </TextView>
+        </RelativeLayout>
+    </ScrollView>
+
+</RelativeLayout>
