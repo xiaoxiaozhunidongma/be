@@ -18,6 +18,7 @@ import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.PreferenceUtils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
@@ -38,6 +39,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private String endStr = "/original";
 	private String useravatar_path;
 	private String completeURL;
+	private String TestcompleteURL=beginStr+"1ddff6cf-35ac-446b-8312-10f4083ee13d"+endStr;
 
 	// ÕÍ’˚¬∑æ∂completeURL=beginStr+result.filepath+endStr;
 
@@ -48,6 +50,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
+		completeURL=Cacheurl;
 		if (mLayout == null) {
 			mLayout = inflater.inflate(R.layout.fragment_setting, container,
 					false);
@@ -104,6 +108,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						useravatar_path = readuser.getAvatar_path();
 					}
 					completeURL = beginStr + useravatar_path + endStr;
+					PreferenceUtils.saveImageCache(getActivity(), completeURL);//¥ÊSP
 					ImageLoaderUtils.getInstance().LoadImage(getActivity(),
 							completeURL, mSetting_head);
 				}
