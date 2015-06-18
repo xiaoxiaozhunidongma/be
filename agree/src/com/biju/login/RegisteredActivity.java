@@ -27,10 +27,12 @@ import android.widget.Toast;
 
 import com.BJ.javabean.Registeredback;
 import com.BJ.javabean.User;
+import com.BJ.utils.Ifwifi;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
+import com.biju.function.UserSettingActivity;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
@@ -103,6 +105,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 				SharedPreferences sp=getSharedPreferences("Registered", 0);
 				Editor editor=sp.edit();
 				editor.putInt("returndata", returndata);
+				editor.putBoolean("isRegistered_one", true);
 				editor.commit();
 				if(statusMsg==1)
 				{
@@ -159,12 +162,24 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	}
 
 	private void registered_OK() {
-		// 把昵称传到接口
-		String nickname = mNickname.getText().toString().trim();
-		User user = new User();
-		user.setNickname(nickname);
-		//上传图片
-		upload(user);
+		boolean isWIFI=Ifwifi.getNetworkConnected(RegisteredActivity.this);
+		if(isWIFI)
+		{
+			SharedPreferences sp = getSharedPreferences("isLogin", 0);
+			Editor editor = sp.edit();
+			editor.putBoolean("Login", false);
+			editor.commit();
+			
+			// 把昵称传到接口
+			String nickname = mNickname.getText().toString().trim();
+			User user = new User();
+			user.setNickname(nickname);
+			//上传图片
+			upload(user);
+		}else
+		{
+			Toast.makeText(RegisteredActivity.this, "网络异常，请检查网络!", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	private void upload(final User user) {

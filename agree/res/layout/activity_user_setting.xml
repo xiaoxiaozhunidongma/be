@@ -100,22 +100,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20.0dp"
-            android:src="@drawable/login_selector" />
-
-        <EditText
-            android:id="@+id/usersetting_nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/usersetting_head"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30dp"
-            android:background="#ffffff"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="请输入昵称" >
-
-            <requestFocus />
-        </EditText>
+            android:src="@drawable/login_1" />
 
         <TextView
             android:id="@+id/usersetting_password"
@@ -137,8 +122,7 @@
             android:layout_marginTop="30dp"
             android:gravity="center"
             android:text="性别"
-            android:textSize="18.0sp"
-             />
+            android:textSize="18.0sp" />
 
         <TextView
             android:id="@+id/usersetting_tv_phone"
@@ -167,7 +151,23 @@
             android:layout_alignBottom="@+id/usersetting_head"
             android:layout_centerHorizontal="true"
             android:layout_marginBottom="30dp"
+            android:textColor="#ffffff"
             android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/usersetting_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usersetting_head"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:background="#ffffff"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="请输入昵称" >
+
+            <requestFocus />
+        </EditText>
     </RelativeLayout>
 
     <RelativeLayout
@@ -201,6 +201,8 @@
             android:gravity="center"
             android:hint="密码"
             android:textSize="20.0sp" />
+
+        <requestFocus />
 
         <EditText
             android:id="@+id/usersetting_edt_password_2"
@@ -242,12 +244,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/textView2"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="60.0dp"
+            android:layout_marginTop="60dp"
             android:background="#ffffff"
             android:ems="10"
             android:gravity="center"
-            android:hint="电话号码:"
-            android:textSize="20.0sp" />
+            android:hint="电话号码:" />
+
+        <requestFocus />
     </RelativeLayout>
 
 </RelativeLayout>

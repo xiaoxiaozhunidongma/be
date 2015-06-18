@@ -32,8 +32,8 @@ public class ImageLoaderUtils {
 
 	private void initUILOptions() {
 		options = new DisplayImageOptions.Builder()
-				.showImageOnLoading(R.drawable.ic_launcher)
-				.showImageForEmptyUri(R.drawable.ic_empty)
+				.showImageOnLoading(R.drawable.login_1)
+				.showImageForEmptyUri(R.drawable.login_1)
 				.showImageOnFail(R.drawable.ic_error).cacheInMemory(true)
 				.displayer(new CircleBitmapDisplayer())//т╡пн
 				.cacheOnDisk(true).considerExifParams(true).build();
