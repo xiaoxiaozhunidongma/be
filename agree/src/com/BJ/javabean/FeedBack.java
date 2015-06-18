@@ -1,13 +1,10 @@
 package com.BJ.javabean;
 
-import java.sql.Date;
-
-import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table (name="t_feedback")
-public class FeedBack extends Model{
+public class FeedBack {
 
 	@Column
 	private Integer pk_feedback;
