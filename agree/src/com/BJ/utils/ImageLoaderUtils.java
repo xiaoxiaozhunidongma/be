@@ -26,6 +26,7 @@ public class ImageLoaderUtils {
 	}
 
 	public void LoadImage(Context context, String url, ImageView imageView) {
+		//图片要设置大小！
 		ImageLoader.getInstance().displayImage(url, imageView, options, null);
 	}
 
@@ -34,8 +35,10 @@ public class ImageLoaderUtils {
 				.showImageOnLoading(R.drawable.login_1)
 				.showImageForEmptyUri(R.drawable.login_1)
 				.showImageOnFail(R.drawable.ic_error).cacheInMemory(true)
-				.displayer(new CircleBitmapDisplayer())//是否设置为圆角，弧度为多少  
+				.displayer(new CircleBitmapDisplayer())//圆形
 				.cacheOnDisk(true).considerExifParams(true).build();
+		
+				
 	}
 
 }
