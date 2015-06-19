@@ -1,11 +1,20 @@
 package com.fragment;
 
+import com.BJ.javabean.Loginback;
+import com.BJ.javabean.User;
+import com.biju.Interface;
+import com.biju.Interface.UserInterface;
 import com.biju.R;
 import com.biju.function.NewteamActivity;
+import com.biju.login.LoginActivity;
+import com.github.volley_examples.utils.GsonUtils;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -35,8 +44,51 @@ public class HomeFragment extends Fragment implements OnClickListener{
 		{
 			mLayout = inflater.inflate(R.layout.fragment_home, container, false);
 			initUI();
+			initNewTeam();
 		}
 		return mLayout;
+	}
+
+	private void initNewTeam() {
+		SharedPreferences sp = getActivity().getSharedPreferences("Registered", 0);
+		boolean isRegistered_one = sp.getBoolean("isRegistered_one", false);
+		Log.e("HomeFragment", "isRegistered_one==="+isRegistered_one);
+		if(isRegistered_one)
+		{
+			
+		}else
+		{
+			int pk_user=LoginActivity.pk_user;
+			ReadTeam(pk_user);
+			Log.e("HomeFragment", "pk_user1===="+pk_user);
+		}
+	}
+
+
+	private void ReadTeam(int pk_user) {
+		Interface homeInterface=new Interface();
+		User homeuser=new User();
+		homeuser.setPk_user(pk_user);
+		Log.e("HomeFragment", "pk_user2===="+pk_user);
+		homeInterface.readUserGroupMsg(getActivity(), homeuser);
+		homeInterface.setPostListener(new UserInterface() {
+			
+			@Override
+			public void success(String A) {
+				Loginback homeback=GsonUtils.parseJson(A, Loginback.class);
+				int homeStatusMsg=homeback.getStatusMsg();
+				if(homeStatusMsg==1)
+				{
+					Log.e("HomeFragment", "读取用户小组信息2==="+A);
+				}
+			}
+			
+			@Override
+			public void defail(Object B) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
 	}
 
 	private void initUI() {

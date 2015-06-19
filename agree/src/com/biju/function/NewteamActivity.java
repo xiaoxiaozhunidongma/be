@@ -10,6 +10,8 @@ import java.util.Date;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -29,10 +31,12 @@ import android.widget.TextView;
 import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
+import com.BJ.javabean.Newteamback;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -71,7 +75,17 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				Log.e("NewteamActivity", "小组ID" + A);
+				Newteamback newteamback=GsonUtils.parseJson(A, Newteamback.class);
+				int newteamStatusMsg=newteamback.getStatusMsg();
+				if(newteamStatusMsg==1)
+				{
+					Log.e("NewteamActivity", "小组ID" + A);
+//					int returndata=newteamback.getReturnData();
+//					SharedPreferences sp=getSharedPreferences("newteam", 0);
+//					Editor editor=sp.edit();
+//					editor.putInt("returndata", returndata);
+//					editor.commit();
+				}
 			}
 
 			@Override
@@ -79,7 +93,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 			}
 		});
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d HH:MM:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
 		format1 = sdf.format(new Date());
 	}
 
@@ -152,21 +166,23 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		newteam_name = mNewteam_name.getText().toString().trim();
 		Group group = new Group();
 		group.setName(newteam_name);
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-m-d HH:MM:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
 		String format2 = sdf.format(new Date());
-		
+
 		group.setSetup_time(format1);
 		group.setLast_post_time(format2);
 		group.setLast_post_message("asdfsd");
-		//上传图片
+		// 上传图片
 		upload(group);
 	}
-	
+
 	private String tmpFilePath;
 	private String newteam_name;
 	private String sDpath;
+
 	private void upload(final Group group) {
-		tmpFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/compress.tmp";
+		tmpFilePath = Environment.getExternalStorageDirectory()
+				.getAbsolutePath() + "/compress.tmp";
 		UploadTask task = new PhotoUploadTask(mFilePath,
 				new IUploadTaskListener() {
 
@@ -175,18 +191,19 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					public void onUploadSucceed(final FileInfo result) {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
-						Log.e("图片路径", "result.url"+result.url);
-						//上传完成后删除SD中图片
+						Log.e("图片路径", "result.url" + result.url);
+						// 上传完成后删除SD中图片
 						deleteMybitmap(sDpath);
 						group.setAvatar_path(result.fileId);
-						//创建CreatGroup
+						// 创建CreatGroup
 						Group_User group_User = new Group_User();
-						group_User.setFk_user(30);
+						group_User.setFk_user(40);
 						group_User.setRole(1);
-						Group_User[] members={group_User};
-						CreateGroup creatGroup=new CreateGroup(members, group);
-						Log.e("NewteamActivity", "group:"+group.toString());
-						cregrouInter.createGroup(NewteamActivity.this, creatGroup);//测试
+						Group_User[] members = { group_User };
+						CreateGroup creatGroup = new CreateGroup(members, group);
+						Log.e("NewteamActivity", "group:" + group.toString());
+						cregrouInter.createGroup(NewteamActivity.this,
+								creatGroup);// 测试
 						finish();
 					}
 
@@ -226,8 +243,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			mFilePath = cursor.getString(columnIndex);
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-			saveMyBitmap(bmp,newteam_name);
-			mFilePath=sDpath;//图片在SD卡中的路径
+			saveMyBitmap(bmp, newteam_name);
+			mFilePath = sDpath;// 图片在SD卡中的路径
 			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
 			mNewteam_head.setVisibility(View.VISIBLE);
 			newteam_progressBar.setVisibility(View.VISIBLE);
@@ -236,7 +253,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			Log.e("Demo", "choose file error!", e);
 		}
 	}
-	
+
 	public String getSDPath() {
 		File sdDir = null;
 		boolean sdCardExist = Environment.getExternalStorageState().equals(
@@ -249,37 +266,36 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	}
 
-
-	 public void saveMyBitmap(Bitmap mBitmap,String bitName)  {
-         sDpath = getSDPath()+"/"+bitName + ".png";
-         Log.e("NewteamAc", "sDpath~~~"+sDpath);
+	public void saveMyBitmap(Bitmap mBitmap, String bitName) {
+		sDpath = getSDPath() + "/" + bitName + ".png";
+		Log.e("NewteamAc", "sDpath~~~" + sDpath);
 		File f = new File(sDpath);
-         FileOutputStream fOut = null;
-         try {
-                 fOut = new FileOutputStream(f);
-         } catch (FileNotFoundException e) {
-                 e.printStackTrace();
-         }
-         mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
-         try {
-                 fOut.flush();
-         } catch (IOException e) {
-                 e.printStackTrace();
-         }
-         try {
-                 fOut.close();
-         } catch (IOException e) {
-                 e.printStackTrace();
-         }
-	 } 
-	 
-	 public void deleteMybitmap(String path){
-		 File f = new File(path);
-		 f.delete();
-	 }
+		FileOutputStream fOut = null;
+		try {
+			fOut = new FileOutputStream(f);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		mBitmap.compress(Bitmap.CompressFormat.JPEG, 100, fOut);
+		try {
+			fOut.flush();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		try {
+			fOut.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+
+	public void deleteMybitmap(String path) {
+		File f = new File(path);
+		f.delete();
+	}
 
 	private void newteam_back() {
 		finish();
 	}
-	
+
 }
