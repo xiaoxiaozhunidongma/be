@@ -179,9 +179,10 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						//上传完成后删除SD中图片
 						deleteMybitmap(sDpath);
 						group.setAvatar_path(result.fileId);
+						group.setStatus(1);
 						//创建CreatGroup
 						Group_User group_User = new Group_User();
-						group_User.setFk_user(30);
+						group_User.setFk_user(30);//这个改成当前用户的fk_user
 						group_User.setRole(1);
 						Group_User[] members={group_User};
 						CreateGroup creatGroup=new CreateGroup(members, group);
