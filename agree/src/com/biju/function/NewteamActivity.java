@@ -35,6 +35,7 @@ import com.BJ.javabean.Newteamback;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
+import com.biju.login.LoginActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
@@ -44,6 +45,7 @@ import com.tencent.upload.task.UploadTask;
 import com.tencent.upload.task.data.FileInfo;
 import com.tencent.upload.task.impl.PhotoUploadTask;
 
+@SuppressLint("SimpleDateFormat")
 public class NewteamActivity extends Activity implements OnClickListener {
 
 	private EditText mNewteam_name;
@@ -80,11 +82,12 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				if(newteamStatusMsg==1)
 				{
 					Log.e("NewteamActivity", "小组ID" + A);
-//					int returndata=newteamback.getReturnData();
-//					SharedPreferences sp=getSharedPreferences("newteam", 0);
-//					Editor editor=sp.edit();
-//					editor.putInt("returndata", returndata);
-//					editor.commit();
+					//发广播进行更新gridviw
+					Intent intent=new Intent();
+					intent.setAction("isRefresh");
+					intent.putExtra("refresh", "ok");
+					sendBroadcast(intent);
+					Log.e("NewteamActivity", "有广播发出");
 				}
 			}
 
@@ -189,6 +192,12 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					@SuppressLint("NewApi")
 					@Override
 					public void onUploadSucceed(final FileInfo result) {
+						
+						SharedPreferences sp = getSharedPreferences("Registered", 0);
+						int returndata_1 = sp.getInt("returndata", 0);
+						boolean isRegistered_one = sp.getBoolean("isRegistered_one", false);
+						
+						
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
 						Log.e("图片路径", "result.url" + result.url);
@@ -197,8 +206,14 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						group.setAvatar_path(result.fileId);
 						// 创建CreatGroup
 						Group_User group_User = new Group_User();
-						group_User.setFk_user(40);
+						if (isRegistered_one) {
+							group_User.setFk_user(returndata_1);
+						} else {
+							int returndata_2 = LoginActivity.pk_user;
+							group_User.setFk_user(returndata_2);
+						}
 						group_User.setRole(1);
+						group.setStatus(1);
 						Group_User[] members = { group_User };
 						CreateGroup creatGroup = new CreateGroup(members, group);
 						Log.e("NewteamActivity", "group:" + group.toString());
@@ -297,5 +312,4 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private void newteam_back() {
 		finish();
 	}
-
 }

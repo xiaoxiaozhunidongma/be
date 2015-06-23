@@ -19,5 +19,7 @@
     <string name="title_activity_main_activity_ssssss">MainActivitySSSSSS</string>
     <string name="title_activity_feedback">FeedbackActivity</string>
     <string name="title_activity_about_us">AboutUsActivity</string>
+    <string name="title_activity_main_activity_ssss">MainActivitySSSS</string>
+    <string name="title_activity_group">GroupActivity</string>
 
 </resources>

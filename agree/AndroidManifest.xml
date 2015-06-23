@@ -12,6 +12,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
 
     <!-- 读取本地通讯录 -->
     <!-- 读联系人权限 -->
@@ -103,6 +105,10 @@
         <activity
             android:name="com.biju.function.AboutUsActivity"
             android:label="@string/title_activity_about_us" >
+        </activity>
+        <activity
+            android:name="com.biju.function.GroupActivity"
+            android:label="@string/title_activity_group" >
         </activity>
     </application>
 
