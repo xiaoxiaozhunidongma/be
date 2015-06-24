@@ -2,7 +2,6 @@ package com.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.zip.Inflater;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -21,7 +20,6 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -55,6 +53,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private List<Group> users;
 	private ArrayList<Group> list = new ArrayList<Group>();
 	private MyGridviewAdapter adapter;
+	private boolean isTeam;
+	private boolean isRegistered_one;
+	private int returndata;
 
 	public HomeFragment() {
 	}
@@ -65,6 +66,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		if (mLayout == null) {
 			mLayout = inflater
 					.inflate(R.layout.fragment_home, container, false);
+			SharedPreferences sp = getActivity().getSharedPreferences(
+					"Registered", 0);
+			isRegistered_one = sp.getBoolean("isRegistered_one", false);
+			Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
+			returndata = sp.getInt("returndata", returndata);
+
 			initUI(inflater);
 			initNewTeam();
 			adapter.notifyDataSetChanged();
@@ -92,15 +99,13 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initNewTeam() {
-		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
-				0);
-		boolean isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
 		if (isRegistered_one) {
-
+			ReadTeam(returndata);
+			Log.e("HomeFragment", "进入注册的新建小组");
 		} else {
 			int pk_user = LoginActivity.pk_user;
 			ReadTeam(pk_user);
+			Log.e("HomeFragment", "进入登录的新建小组");
 		}
 	}
 
@@ -150,8 +155,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				int getcount = home_gridview.getCount();
-				if ((getcount - 3) == arg2) {
+//				Log.e("HomeFragment", "(list.size()+1)==="+(list.size()+1));
+//				Log.e("HomeFragment", "arg2==="+arg2);
+				if (list.size() == arg2) {
 					Intent intent = new Intent(getActivity(),
 							NewteamActivity.class);
 					startActivity(intent);
@@ -204,19 +210,48 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			Log.e("HomeFragment", "position  1=====" + position);
+//			Log.e("HomeFragment", "position  1=====" + position);
+//			Log.e("HomeFragment", "(list.size() + 1)=====" + (list.size() + 1));
+//			Log.e("HomeFragment", "(list.size())=====" + list.size());
 			View inflater = null;
 			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-			int pos = home_gridview.getCount();
-			Log.e("HomeFragment", "pos=====" + pos);
-			if (position < pos - 3) {
-				inflater = layoutInflater.inflate(R.layout.home_gridview_item,
-						null);
-				home_item_head = (ImageView) inflater
-						.findViewById(R.id.home_item_head);
-				home_item_name = (TextView) inflater
-						.findViewById(R.id.home_item_name);
+			if (isRegistered_one) {
 				if (list.size() > 0) {
+					if (position < list.size()) {
+						inflater = layoutInflater.inflate(
+								R.layout.home_gridview_item, null);
+						home_item_head = (ImageView) inflater
+								.findViewById(R.id.home_item_head);
+						home_item_name = (TextView) inflater
+								.findViewById(R.id.home_item_name);
+						Group homeuser_gridview = list.get(position);
+						Log.e("HomeFragment", "position  2=====" + position);
+						String homeAvatar_path = homeuser_gridview
+								.getAvatar_path();
+						String homenickname = homeuser_gridview.getName();
+						home_item_name.setText(homenickname);
+						completeURL = beginStr + homeAvatar_path + endStr;
+						PreferenceUtils.saveImageCache(getActivity(),
+								completeURL);
+						homeImageLoaderUtils.getInstance().LoadImage(
+								getActivity(), completeURL, home_item_head);
+						Log.e("HomeFragment", "进这来1");
+					} else {
+						inflater = layoutInflater.inflate(
+								R.layout.home_teamadd_item, null);
+					}
+				} else {
+					inflater = layoutInflater.inflate(
+							R.layout.home_teamadd_item, null);
+				}
+			} else {
+				if (position < list.size()) {
+					inflater = layoutInflater.inflate(
+							R.layout.home_gridview_item, null);
+					home_item_head = (ImageView) inflater
+							.findViewById(R.id.home_item_head);
+					home_item_name = (TextView) inflater
+							.findViewById(R.id.home_item_name);
 					Group homeuser_gridview = list.get(position);
 					Log.e("HomeFragment", "position  2=====" + position);
 					String homeAvatar_path = homeuser_gridview.getAvatar_path();
@@ -227,11 +262,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
 					homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
 							completeURL, home_item_head);
 					Log.e("HomeFragment", "进这来1");
-				}
 
-			} else {
-				inflater = layoutInflater.inflate(R.layout.home_teamadd_item,
-						null);
+				} else {
+					inflater = layoutInflater.inflate(
+							R.layout.home_teamadd_item, null);
+				}
 			}
 			return inflater;
 		}

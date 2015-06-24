@@ -35,8 +35,8 @@ import com.BJ.javabean.Newteamback;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
-import com.biju.login.LoginActivity;
 import com.biju.R;
+import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
@@ -68,6 +68,14 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_newteam);
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		isRegistered_one = sp.getBoolean("isRegistered_one", true);
+		Log.e("NewteamActivity", "isRegistered_one" + isRegistered_one);
+		returndata_1 = sp.getInt("returndata", returndata_1);
+		Log.e("NewteamActivity", "进入注册的" + returndata_1);
+
+		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
+		login = sp1.getBoolean("Login", false);
 		initUI();
 		initUpload();
 		newteam_tv_head.setVisibility(View.VISIBLE);// 显示小组头像选择
@@ -77,13 +85,13 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				Newteamback newteamback=GsonUtils.parseJson(A, Newteamback.class);
-				int newteamStatusMsg=newteamback.getStatusMsg();
-				if(newteamStatusMsg==1)
-				{
+				Newteamback newteamback = GsonUtils.parseJson(A,
+						Newteamback.class);
+				int newteamStatusMsg = newteamback.getStatusMsg();
+				if (newteamStatusMsg == 1) {
 					Log.e("NewteamActivity", "小组ID" + A);
-					//发广播进行更新gridviw
-					Intent intent=new Intent();
+					// 发广播进行更新gridviw
+					Intent intent = new Intent();
 					intent.setAction("isRefresh");
 					intent.putExtra("refresh", "ok");
 					sendBroadcast(intent);
@@ -182,6 +190,10 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private String tmpFilePath;
 	private String newteam_name;
 	private String sDpath;
+	private int returndata_1;
+	private boolean isRegistered_one;
+	private boolean isno1;
+	private boolean login;
 
 	private void upload(final Group group) {
 		tmpFilePath = Environment.getExternalStorageDirectory()
@@ -192,12 +204,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					@SuppressLint("NewApi")
 					@Override
 					public void onUploadSucceed(final FileInfo result) {
-						
-						SharedPreferences sp = getSharedPreferences("Registered", 0);
-						int returndata_1 = sp.getInt("returndata", 0);
-						boolean isRegistered_one = sp.getBoolean("isRegistered_one", false);
-						
-						
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
 						Log.e("图片路径", "result.url" + result.url);
@@ -208,9 +214,15 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						Group_User group_User = new Group_User();
 						if (isRegistered_one) {
 							group_User.setFk_user(returndata_1);
+							Log.e("NewteamActivity", "进入注册的");
 						} else {
-							int returndata_2 = LoginActivity.pk_user;
-							group_User.setFk_user(returndata_2);
+							if (login) {
+								int returndata_2 = LoginActivity.pk_user;
+								Log.e("NewteamActivity", "进入登录的");
+								group_User.setFk_user(returndata_2);
+							} else {
+								group_User.setFk_user(returndata_1);
+							}
 						}
 						group_User.setRole(1);
 						group.setStatus(1);
@@ -311,5 +323,18 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	private void newteam_back() {
 		finish();
+	}
+
+	@Override
+	protected void onStop() {
+		if (isRegistered_one) {
+			SharedPreferences sp = getSharedPreferences("Registered", 0);
+			Editor editor = sp.edit();
+			editor.putInt("returndata", returndata_1);
+			editor.putBoolean("isRegistered_one", true);
+			editor.commit();
+		}
+
+		super.onStop();
 	}
 }

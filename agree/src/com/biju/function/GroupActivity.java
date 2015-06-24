@@ -1,5 +1,6 @@
 package com.biju.function;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -75,8 +76,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void group_setting() {
-		// TODO Auto-generated method stub
-
+		Intent intent=new Intent(GroupActivity.this, TeamSettingActivity.class);
+		startActivity(intent);
 	}
 
 	private void group_back() {
