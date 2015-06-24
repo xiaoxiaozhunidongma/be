@@ -23,8 +23,8 @@ import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
-import com.biju.login.LoginActivity;
 import com.biju.R;
+import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class FindFriendsActivity extends Activity implements OnClickListener {
@@ -139,9 +139,22 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 	private void findfriends_sendrequest() {
 		String pk_user = mFindfriends_number.getText().toString().trim();
 		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		boolean isRegistered_one = sp.getBoolean("isRegistered_one", false);
 		int returndata = sp.getInt("returndata", 0);
+		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
+		boolean login = sp1.getBoolean("Login", false);
+		// Log.e("FindFriendsActivity", "returndata"+returndata);
 		User_User user_User = new User_User();
-		user_User.setFk_user_from(returndata);
+		if (isRegistered_one) {
+			user_User.setFk_user_from(returndata);
+		} else {
+			if (login) {
+				int user = LoginActivity.pk_user;
+				user_User.setFk_user_from(user);
+			} else {
+				user_User.setFk_user_from(returndata);
+			}
+		}
 		user_User.setFk_user_to(Integer.valueOf(pk_user));
 		findfriends_inter_before.addFriend(FindFriendsActivity.this, user_User);
 	}

@@ -19,6 +19,7 @@ import com.fragment.ScheduleFragment;
 public class GroupActivity extends FragmentActivity implements OnClickListener {
 
 	private FragmentTabHost mTabhost;
+	private int pk_group;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -26,6 +27,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_tab);
 		initUI();
+		Intent intent = getIntent();
+		pk_group = intent.getIntExtra("pk_group",pk_group);
 	}
 
 	private void initUI() {
@@ -77,6 +80,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 
 	private void group_setting() {
 		Intent intent=new Intent(GroupActivity.this, TeamSettingActivity.class);
+		intent.putExtra("Group",pk_group);
 		startActivity(intent);
 	}
 

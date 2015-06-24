@@ -56,6 +56,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private boolean isTeam;
 	private boolean isRegistered_one;
 	private int returndata;
+	private boolean login;
 
 	public HomeFragment() {
 	}
@@ -71,7 +72,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			isRegistered_one = sp.getBoolean("isRegistered_one", false);
 			Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
 			returndata = sp.getInt("returndata", returndata);
-
+			SharedPreferences sp1 = getActivity().getSharedPreferences("isLogin", 0);
+			login = sp1.getBoolean("Login", false);
+			
 			initUI(inflater);
 			initNewTeam();
 			adapter.notifyDataSetChanged();
@@ -103,9 +106,15 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			ReadTeam(returndata);
 			Log.e("HomeFragment", "进入注册的新建小组");
 		} else {
-			int pk_user = LoginActivity.pk_user;
-			ReadTeam(pk_user);
-			Log.e("HomeFragment", "进入登录的新建小组");
+			if(login)
+			{
+				int pk_user = LoginActivity.pk_user;
+				ReadTeam(pk_user);
+				Log.e("HomeFragment", "进入登录的新建小组======="+pk_user);
+			}else
+			{
+				ReadTeam(returndata);
+			}
 		}
 	}
 
@@ -162,8 +171,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
 							NewteamActivity.class);
 					startActivity(intent);
 				} else {
-					Intent intent = new Intent(getActivity(),
-							GroupActivity.class);
+					Group group=list.get(arg2);
+					int pk_group=group.getPk_group();
+					Intent intent = new Intent(getActivity(),GroupActivity.class);
+					intent.putExtra("pk_group", pk_group);
+					Log.e("HomeFragment", "pk_group"+pk_group);
 					startActivity(intent);
 				}
 			}
