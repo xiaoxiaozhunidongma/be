@@ -147,18 +147,20 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 					try {
 						JSONObject jsonObject=new JSONObject(A);
 						Object object = jsonObject.get("returnData");
+						Log.e("TeamSettingActivity", "object"+object);
+						Log.e("TeamSettingActivity", "object.toString()"+object.toString());
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-					 GroupCodeback groupcodeback=GsonUtils.parseJson(A,
-					 GroupCodeback.class);
-					 int Group_statusmsg=groupcodeback.getStatusMsg();
-					 if(Group_statusmsg==1)
-					 {
-					 String requestcode=groupcodeback.getReturnData();
+//					 GroupCodeback groupcodeback=GsonUtils.parseJson(A,
+//					 GroupCodeback.class);
+//					 int Group_statusmsg=groupcodeback.getStatusMsg();
+//					 if(Group_statusmsg==1)
+//					 {
+//					 String requestcode=groupcodeback.getReturnData();
 //					 teamSetting_requestcode.setText(requestcode);
-					 }
+//					 }
 				}
 			}
 
