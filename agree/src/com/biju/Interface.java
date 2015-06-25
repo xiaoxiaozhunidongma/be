@@ -274,7 +274,7 @@ public class Interface {
 	}
 	//生成邀请码
 	public void produceRequestCode(Context context,Group group) {
-		volleyPost(context,packParams(group, kReadAllPerRelation));
+		volleyPost(context,packParams(group, kProduceRequestCode));
 	}
 	//使用邀请码加入小组
 	public void useRequestCode2Join(Context context,Group_Code code) {

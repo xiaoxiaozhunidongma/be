@@ -5,16 +5,13 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.Toast;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
-import com.biju.Interface.UserInterface;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
@@ -31,9 +28,9 @@ public class MainActivity extends FragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_tabs);
-		//≤‚ ‘
-//		new Interface().testIf(this);
-		
+		// ≤‚ ‘
+		// new Interface().testIf(this);
+
 		initUI();// ≥ı ºªØTabhost
 	}
 
@@ -66,11 +63,11 @@ public class MainActivity extends FragmentActivity {
 
 	@Override
 	protected void onStop() {
-		SharedPreferences sp=getSharedPreferences("Registered", 0);
-		Editor editor=sp.edit();
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		Editor editor = sp.edit();
 		editor.putBoolean("isRegistered_one", false);
 		editor.commit();
 		super.onStop();
 	}
-	
+
 }

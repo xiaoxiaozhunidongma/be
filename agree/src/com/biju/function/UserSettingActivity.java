@@ -1,10 +1,13 @@
 package com.biju.function;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -20,7 +23,6 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
@@ -41,6 +43,7 @@ import com.tencent.upload.task.UploadTask;
 import com.tencent.upload.task.data.FileInfo;
 import com.tencent.upload.task.impl.PhotoUploadTask;
 
+@SuppressLint("SimpleDateFormat")
 public class UserSettingActivity extends Activity implements OnClickListener {
 
 	public static ImageView mUsersetting_head;
@@ -81,6 +84,9 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private String endStr="/original";
 	//完整路径completeURL=beginStr+result.filepath+endStr;
 	private String TestcompleteURL=beginStr+"1ddff6cf-35ac-446b-8312-10f4083ee13d"+endStr;
+	private String setup_time;
+
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,6 +123,19 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		initUpload();
 	}
 
+	@Override
+	protected void onStop() {
+		if(isRegistered_one)
+		{
+			SharedPreferences sp=getSharedPreferences("Registered", 0);
+			Editor editor=sp.edit();
+			editor.putBoolean("isRegistered_one", true);
+			editor.commit();
+		}
+		
+		super.onStop();
+	}
+	
 	private void ReadUser(int returndata) {
 		readuserinter = new Interface();
 		User readuser = new User();
@@ -141,6 +160,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 							Usernickname = readuser.getNickname();
 							Useravatar_path = readuser.getAvatar_path();
 							Userphone = readuser.getPhone();
+							Log.e("UserSettingActivity", "电话号码1 ==  "+Userphone);
 							Userpassword = readuser.getPassword();
 							Log.e("UserSettingActivity", "读取出来的" + Userpk_user
 									+ Usernickname + Useravatar_path
@@ -151,6 +171,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 							mUsersetting_phone.setText(Userphone);
 							password = Userpassword;
 							int Usersex = readuser.getSex();
+							Log.e("UserSettingActivity", "性别"+Usersex);
 							switch (Usersex) {
 							case 0:
 								mUsersetting_sex.setText("性别");
@@ -167,6 +188,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 							default:
 								break;
 							}
+							SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+							setup_time = sdf.format(new Date());
 							
 							Log.e("UserSettingActivity", "昵称显示" + "====="
 									+ Usernickname);
@@ -271,10 +294,10 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	}
 
 	int i = 0;
-	private String one;
 	private int returndata_1;
 	private boolean isRegistered_one;
 	private int sex = 0;
+	private String phone;
 
 	private void usersetting_sex() {
 		i++;
@@ -298,7 +321,16 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void usersetting_save_2() {
-		Userphone = mUsersetting_phone.getText().toString().trim();
+		String userphone = mUsersetting_phone.getText().toString().trim();
+		if(userphone.equals(Userphone))
+		{
+			phone = userphone;
+			Log.e("UserSettingActivity", "电话号码2 ==  "+phone);
+		}else
+		{
+			phone=userphone;
+			Log.e("UserSettingActivity", "电话号码3 ==  "+phone);
+		}
 		mUsersetting.setVisibility(View.VISIBLE);
 		mUsersetting_save_1_layout.setVisibility(View.VISIBLE);
 		mUsersetting_phone_layout.setVisibility(View.GONE);
@@ -317,7 +349,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
 		startActivityForResult(getAlbum, IMAGE_CODE);
-		ishead = !ishead;
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -335,8 +366,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
 			InitHead.initHead(bmp);// 画圆形头像
+			ishead = !ishead;
 		} catch (Exception e) {
-			Log.e("Demo", "choose file error!", e);
 		}
 	}
 
@@ -353,9 +384,13 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			}
 			usersetting.setNickname(Usernickname);
 			usersetting.setPassword(password);
-			usersetting.setPhone(Userphone);
 			usersetting.setSex(sex);
 			Log.e("UserSettingActivity", "性别" + "  " + sex);
+			usersetting.setPhone(phone);
+			Log.e("UserSettingActivity", "电话号码4==  "+phone);
+			SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			usersetting.setSetup_time(setup_time);
+			usersetting.setLast_login_time(sdf1.format(new Date()));
 			if (ishead) {
 				upload(usersetting);
 			} else {

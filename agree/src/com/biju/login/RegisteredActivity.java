@@ -58,6 +58,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private UploadManager uploadManager;
 	private TextView textView;
 	private Interface regInter;
+	private boolean ishead;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,16 +100,17 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			public void success(String A) {
 				Log.e("RegisteredActivity", "注册成功" + A);
 				Registeredback registered=GsonUtils.parseJson(A, Registeredback.class);
-				int returndata=registered.getReturnData();
 				int statusMsg = registered.getStatusMsg();
-				Log.e("RegisteredActivity", "returndata"+returndata);
-				SharedPreferences sp=getSharedPreferences("Registered", 0);
-				Editor editor=sp.edit();
-				editor.putInt("returndata", returndata);
-				editor.putBoolean("isRegistered_one", true);
-				editor.commit();
 				if(statusMsg==1)
 				{
+					
+					int returndata=registered.getReturnData();
+					Log.e("RegisteredActivity", "returndata"+returndata);
+					SharedPreferences sp=getSharedPreferences("Registered", 0);
+					Editor editor=sp.edit();
+					editor.putInt("returndata", returndata);
+					editor.putBoolean("isRegistered_one", true);
+					editor.commit();
 					// 跳转至主界面
 					Intent intent = new Intent(RegisteredActivity.this,
 							MainActivity.class);
@@ -174,8 +176,14 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			String nickname = mNickname.getText().toString().trim();
 			User user = new User();
 			user.setNickname(nickname);
-			//上传图片
-			upload(user);
+			if(ishead)
+			{
+				//上传图片
+				upload(user);
+			}else
+			{
+				regInter.regNewAccount(RegisteredActivity.this, user);
+			}
 		}else
 		{
 			Toast.makeText(RegisteredActivity.this, "网络异常，请检查网络!", Toast.LENGTH_SHORT).show();
@@ -256,6 +264,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
 			InitHead.initHead(bmp);// 画圆形头像
+			ishead=!ishead;
 		} catch (Exception e) {
 			Log.e("Demo", "choose file error!", e);
 		}
