@@ -33,6 +33,7 @@ import com.github.volley_examples.app.VolleyListenner;
 
 public class Interface {
 	
+//	String url="http://120.25.218.3/webroot/sr_interface_android.php";
 	String url="http://203.195.159.110/webroot/sr_interface_android.php";
 	
 	//×¢²áÓÃ»§
