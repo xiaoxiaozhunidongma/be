@@ -20,6 +20,9 @@ import android.widget.TextView;
 
 import com.BJ.javabean.Group;
 import com.BJ.javabean.GroupCodeback;
+import com.BJ.javabean.GroupCodeback2;
+import com.BJ.javabean.Group_Code;
+import com.BJ.javabean.Group_Code2;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
@@ -30,6 +33,7 @@ import com.biju.Interface.UserInterface;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
+import com.google.gson.reflect.TypeToken;
 
 public class TeamSettingActivity extends Activity implements OnClickListener {
 
@@ -145,22 +149,46 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 				} else {
 					Log.e("TeamSettingActivity", "=========" + A);
 					try {
-						JSONObject jsonObject=new JSONObject(A);
+						JSONObject jsonObject = new JSONObject(A);
 						Object object = jsonObject.get("returnData");
-						Log.e("TeamSettingActivity", "object"+object);
-						Log.e("TeamSettingActivity", "object.toString()"+object.toString());
+						Log.e("TeamSettingActivity", "object====" + object);
+						Log.e("TeamSettingActivity", "object.toString()===="
+								+ object.toString());
+						Log.e("TeamSettingActivity",
+								"object.toString().length()===="
+										+ object.toString().length());
+						if (object.toString().length() > 4) {
+							Log.e("TeamSettingActivity", "进入第二次====");
+							java.lang.reflect.Type type = new TypeToken<GroupCodeback2>() {
+							}.getType();
+							GroupCodeback2 groupcodeback2 = GsonUtils
+									.parseJsonArray(A, type);
+							int Group_statusmsg2 = groupcodeback2
+									.getStatusMsg();
+							List<Group_Code2> grouplsit = (List<Group_Code2>) groupcodeback2
+									.getReturnData();
+							if (Group_statusmsg2 == 1) {
+								Group_Code2 groupcode = grouplsit.get(0);
+								String requestcode = groupcode
+										.getPk_group_code();
+								mTeamSetting_requestcode.setText(requestcode);
+							}
+						} else {
+							Log.e("TeamSettingActivity", "进入第一次====");
+							GroupCodeback groupcodeback = GsonUtils.parseJson(
+									A, GroupCodeback.class);
+							int Group_statusmsg = groupcodeback.getStatusMsg();
+							if (Group_statusmsg == 1) {
+								String requestcode = groupcodeback
+										.getReturnData();
+								mTeamSetting_requestcode.setText(requestcode);
+							}
+						}
 					} catch (JSONException e) {
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
-//					 GroupCodeback groupcodeback=GsonUtils.parseJson(A,
-//					 GroupCodeback.class);
-//					 int Group_statusmsg=groupcodeback.getStatusMsg();
-//					 if(Group_statusmsg==1)
-//					 {
-//					 String requestcode=groupcodeback.getReturnData();
-//					 teamSetting_requestcode.setText(requestcode);
-//					 }
+
 				}
 			}
 
