@@ -33,7 +33,6 @@ import com.BJ.utils.Ifwifi;
 import com.BJ.utils.Person;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
-import com.biju.function.UserSettingActivity;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
@@ -188,12 +187,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private void Login_registered() {
 		Intent intent = new Intent(LoginActivity.this, RegisteredActivity.class);
 		startActivity(intent);
+		finish();
 	}
 
 	private void Login_OK() {
-		boolean isWIFI=Ifwifi.getNetworkConnected(LoginActivity.this);
-		if(isWIFI)
-		{
+		boolean isWIFI = Ifwifi.getNetworkConnected(LoginActivity.this);
+		if (isWIFI) {
 			String mUser = mLogin_account.getText().toString().trim();
 			String mPassword = mLogin_password.getText().toString().trim();
 			auto_ReadUser(Integer.valueOf(mUser));
@@ -206,14 +205,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 				loginuser.setPhone(phone);
 				readuserinter.userLogin(LoginActivity.this, loginuser);
 			}
-			
+
 			SharedPreferences sp = getSharedPreferences("isLogin", 0);
 			Editor editor = sp.edit();
 			editor.putBoolean("Login", true);
 			editor.commit();
-		}else
-		{
-			Toast.makeText(LoginActivity.this, "ÍøÂçÒì³££¬Çë¼ì²éÍøÂç!", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(LoginActivity.this, "ÍøÂçÒì³££¬Çë¼ì²éÍøÂç!",
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -237,9 +236,8 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onStart() {
-		boolean isWIFI=Ifwifi.getNetworkConnected(LoginActivity.this);
-		if(isWIFI)
-		{
+		boolean isWIFI = Ifwifi.getNetworkConnected(LoginActivity.this);
+		if (isWIFI) {
 			FileInputStream fis;
 			try {
 				Log.e("LoginActivity", "sd¿¨Â·¾¶" + fileName);
@@ -255,9 +253,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 				if (onelogin) {
 					manually_login.setVisibility(View.GONE);
 					auto_login.setVisibility(View.VISIBLE);
-					drawable = (AnimationDrawable) auto_login_image.getDrawable();
+					drawable = (AnimationDrawable) auto_login_image
+							.getDrawable();
 					drawable.start();
-					if (!("".equals(person.pk_user) && "".equals(person.password))) {
+					if (!("".equals(person.pk_user) && ""
+							.equals(person.password))) {
 						auto_ReadUser(Integer.valueOf(person.pk_user));
 						if (person.password.equals(password)) {
 							User autologinuser = new User();
@@ -283,11 +283,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-		}else
-		{
+		} else {
 			manually_login.setVisibility(View.VISIBLE);
 			auto_login.setVisibility(View.GONE);
-			Toast.makeText(LoginActivity.this, "ÍøÂçÒì³££¬Çë¼ì²éÍøÂç!", Toast.LENGTH_SHORT).show();
+			Toast.makeText(LoginActivity.this, "ÍøÂçÒì³££¬Çë¼ì²éÍøÂç!",
+					Toast.LENGTH_SHORT).show();
 		}
 
 		super.onStart();

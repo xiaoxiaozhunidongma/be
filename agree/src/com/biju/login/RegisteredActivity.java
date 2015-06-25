@@ -6,12 +6,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.PorterDuff;
-import android.graphics.PorterDuffXfermode;
-import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
@@ -32,7 +26,6 @@ import com.BJ.utils.InitHead;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
-import com.biju.function.UserSettingActivity;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
@@ -95,19 +88,18 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		regInter = new Interface();
 		regInter.setPostListener(new UserInterface() {
 
-
 			@Override
 			public void success(String A) {
 				Log.e("RegisteredActivity", "注册成功" + A);
-				Registeredback registered=GsonUtils.parseJson(A, Registeredback.class);
+				Registeredback registered = GsonUtils.parseJson(A,
+						Registeredback.class);
 				int statusMsg = registered.getStatusMsg();
-				if(statusMsg==1)
-				{
-					
-					int returndata=registered.getReturnData();
-					Log.e("RegisteredActivity", "returndata"+returndata);
-					SharedPreferences sp=getSharedPreferences("Registered", 0);
-					Editor editor=sp.edit();
+				if (statusMsg == 1) {
+
+					int returndata = registered.getReturnData();
+					Log.e("RegisteredActivity", "returndata" + returndata);
+					SharedPreferences sp = getSharedPreferences("Registered", 0);
+					Editor editor = sp.edit();
 					editor.putInt("returndata", returndata);
 					editor.putBoolean("isRegistered_one", true);
 					editor.commit();
@@ -116,9 +108,9 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 							MainActivity.class);
 					startActivity(intent);
 					finish();
-				}else
-				{
-					Toast.makeText(RegisteredActivity.this, "请重新注册!", Toast.LENGTH_SHORT).show();
+				} else {
+					Toast.makeText(RegisteredActivity.this, "请重新注册!",
+							Toast.LENGTH_SHORT).show();
 				}
 			}
 
@@ -164,29 +156,26 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	}
 
 	private void registered_OK() {
-		boolean isWIFI=Ifwifi.getNetworkConnected(RegisteredActivity.this);
-		if(isWIFI)
-		{
+		boolean isWIFI = Ifwifi.getNetworkConnected(RegisteredActivity.this);
+		if (isWIFI) {
 			SharedPreferences sp = getSharedPreferences("isLogin", 0);
 			Editor editor = sp.edit();
 			editor.putBoolean("Login", false);
 			editor.commit();
-			
+
 			// 把昵称传到接口
 			String nickname = mNickname.getText().toString().trim();
 			User user = new User();
 			user.setNickname(nickname);
-			if(ishead)
-			{
-				//上传图片
+			if (ishead) {
+				// 上传图片
 				upload(user);
-			}else
-			{
+			} else {
 				regInter.regNewAccount(RegisteredActivity.this, user);
 			}
-		}else
-		{
-			Toast.makeText(RegisteredActivity.this, "网络异常，请检查网络!", Toast.LENGTH_SHORT).show();
+		} else {
+			Toast.makeText(RegisteredActivity.this, "网络异常，请检查网络!",
+					Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -238,7 +227,13 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	}
 
 	private void registered_back() {
+		SharedPreferences sp = getSharedPreferences("isLogin", 0);
+		Editor editor = sp.edit();
+		editor.putBoolean("Login", false);
+		editor.commit();
 		finish();
+		Intent intent=new Intent(RegisteredActivity.this, LoginActivity.class);
+		startActivity(intent);
 	}
 
 	// 打开图库，选择图片
@@ -264,7 +259,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
 			InitHead.initHead(bmp);// 画圆形头像
-			ishead=!ishead;
+			ishead = !ishead;
 		} catch (Exception e) {
 			Log.e("Demo", "choose file error!", e);
 		}

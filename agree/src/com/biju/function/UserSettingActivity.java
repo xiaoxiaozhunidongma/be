@@ -3,6 +3,7 @@ package com.biju.function;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
@@ -80,43 +82,46 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private Interface readuserinter;
 	private boolean isRead;
 	private String completeURL;
-	private String  beginStr="http://201139.image.myqcloud.com/201139/0/";
-	private String endStr="/original";
-	//完整路径completeURL=beginStr+result.filepath+endStr;
-	private String TestcompleteURL=beginStr+"1ddff6cf-35ac-446b-8312-10f4083ee13d"+endStr;
+	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
+	private String endStr = "/original";
+	// 完整路径completeURL=beginStr+result.filepath+endStr;
+	private String TestcompleteURL = beginStr
+			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private String setup_time;
 
-	
-	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_setting);
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		returndata_1 = sp.getInt("returndata", returndata_1);
+		isRegistered_one = sp.getBoolean("isRegistered_one", false);
+
+		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
+		login = sp1.getBoolean("Login", false);
 		String Cacheurl = PreferenceUtils.readImageCache(this);
-		completeURL=Cacheurl;
+		completeURL = Cacheurl;
 		initUI();
-		boolean isWIFI=Ifwifi.getNetworkConnected(UserSettingActivity.this);
-		Log.e("UserSettingActivity", "判断是否有网络"+isWIFI);
-		if(isWIFI)
-		{
-			SharedPreferences sp = getSharedPreferences("Registered", 0);
-			returndata_1 = sp.getInt("returndata", 0);
-			isRegistered_one = sp.getBoolean("isRegistered_one", false);
+		boolean isWIFI = Ifwifi.getNetworkConnected(UserSettingActivity.this);
+		Log.e("UserSettingActivity", "判断是否有网络" + isWIFI);
+		if (isWIFI) {
 			if (isRegistered_one) {
 				ReadUser(returndata_1);
 				Log.e("UserSettingActivity", "进注册的");
 			} else {
-				int returndata_2 = LoginActivity.pk_user;
-				ReadUser(returndata_2);
-				Log.e("UserSettingActivity", "进登录 的");
+				if (login) {
+					int returndata_2 = LoginActivity.pk_user;
+					ReadUser(returndata_2);
+					Log.e("UserSettingActivity", "进登录 的");
+				} else {
+					ReadUser(returndata_1);
+				}
 			}
-			Log.e("UserSettingActivity", "有网络进入这里"+isWIFI);
-		}else
-		{
-			ImageLoaderUtils.getInstance().LoadImage(UserSettingActivity.this, completeURL, mUsersetting_head);
-			Log.e("UserSettingActivity", "没有网络进入这里"+isWIFI);
-			Log.e("UserSettingActivity", "图片的路径"+completeURL);
+			Log.e("UserSettingActivity", "有网络进入这里" + isWIFI);
+		} else {
+			ImageLoaderUtils.getInstance().LoadImage(UserSettingActivity.this,
+					completeURL, mUsersetting_head);
 		}
 
 		mUsersetting_tv_password.setText("请输入想要设置的密码");
@@ -125,17 +130,17 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onStop() {
-		if(isRegistered_one)
-		{
-			SharedPreferences sp=getSharedPreferences("Registered", 0);
-			Editor editor=sp.edit();
+		if (isRegistered_one) {
+			SharedPreferences sp = getSharedPreferences("Registered", 0);
+			Editor editor = sp.edit();
+			editor.putInt("returndata", returndata_1);
 			editor.putBoolean("isRegistered_one", true);
 			editor.commit();
 		}
-		
+
 		super.onStop();
 	}
-	
+
 	private void ReadUser(int returndata) {
 		readuserinter = new Interface();
 		User readuser = new User();
@@ -160,7 +165,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 							Usernickname = readuser.getNickname();
 							Useravatar_path = readuser.getAvatar_path();
 							Userphone = readuser.getPhone();
-							Log.e("UserSettingActivity", "电话号码1 ==  "+Userphone);
+							Log.e("UserSettingActivity", "电话号码1 ==  "
+									+ Userphone);
 							Userpassword = readuser.getPassword();
 							Log.e("UserSettingActivity", "读取出来的" + Userpk_user
 									+ Usernickname + Useravatar_path
@@ -171,7 +177,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 							mUsersetting_phone.setText(Userphone);
 							password = Userpassword;
 							int Usersex = readuser.getSex();
-							Log.e("UserSettingActivity", "性别"+Usersex);
+							Log.e("UserSettingActivity", "性别" + Usersex);
 							switch (Usersex) {
 							case 0:
 								mUsersetting_sex.setText("性别");
@@ -188,15 +194,19 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 							default:
 								break;
 							}
-							SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+							SimpleDateFormat sdf = new SimpleDateFormat(
+									"yyyy-MM-dd hh:mm:ss");
 							setup_time = sdf.format(new Date());
-							
+
 							Log.e("UserSettingActivity", "昵称显示" + "====="
 									+ Usernickname);
 						}
-						completeURL = beginStr+Useravatar_path+endStr;
-						PreferenceUtils.saveImageCache(UserSettingActivity.this, completeURL);
-						ImageLoaderUtils.getInstance().LoadImage(UserSettingActivity.this, completeURL, mUsersetting_head);
+						completeURL = beginStr + Useravatar_path + endStr;
+						PreferenceUtils.saveImageCache(
+								UserSettingActivity.this, completeURL);
+						ImageLoaderUtils.getInstance().LoadImage(
+								UserSettingActivity.this, completeURL,
+								mUsersetting_head);
 					}
 				} else {
 					// 更新用户资料成功
@@ -298,6 +308,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private boolean isRegistered_one;
 	private int sex = 0;
 	private String phone;
+	private boolean login;
 
 	private void usersetting_sex() {
 		i++;
@@ -322,14 +333,12 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 	private void usersetting_save_2() {
 		String userphone = mUsersetting_phone.getText().toString().trim();
-		if(userphone.equals(Userphone))
-		{
+		if (userphone.equals(Userphone)) {
 			phone = userphone;
-			Log.e("UserSettingActivity", "电话号码2 ==  "+phone);
-		}else
-		{
-			phone=userphone;
-			Log.e("UserSettingActivity", "电话号码3 ==  "+phone);
+			Log.e("UserSettingActivity", "电话号码2 ==  " + phone);
+		} else {
+			phone = userphone;
+			Log.e("UserSettingActivity", "电话号码3 ==  " + phone);
 		}
 		mUsersetting.setVisibility(View.VISIBLE);
 		mUsersetting_save_1_layout.setVisibility(View.VISIBLE);
@@ -379,16 +388,22 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			if (isRegistered_one) {
 				usersetting.setPk_user(returndata_1);
 			} else {
-				int returndata_2 = LoginActivity.pk_user;
-				usersetting.setPk_user(returndata_2);
+				if(login)
+				{
+					int returndata_2 = LoginActivity.pk_user;
+					usersetting.setPk_user(returndata_2);
+				}else
+				{
+					usersetting.setPk_user(returndata_1);
+				}
 			}
 			usersetting.setNickname(Usernickname);
 			usersetting.setPassword(password);
 			usersetting.setSex(sex);
 			Log.e("UserSettingActivity", "性别" + "  " + sex);
 			usersetting.setPhone(phone);
-			Log.e("UserSettingActivity", "电话号码4==  "+phone);
-			SimpleDateFormat sdf1=new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+			Log.e("UserSettingActivity", "电话号码4==  " + phone);
+			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			usersetting.setSetup_time(setup_time);
 			usersetting.setLast_login_time(sdf1.format(new Date()));
 			if (ishead) {

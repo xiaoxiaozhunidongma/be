@@ -41,7 +41,11 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private String endStr = "/original";
 	private String useravatar_path;
 	private String completeURL;
-	private String TestcompleteURL=beginStr+"1ddff6cf-35ac-446b-8312-10f4083ee13d"+endStr;
+	private String TestcompleteURL = beginStr
+			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
+	private int returndata_1;
+	private boolean isRegistered_one;
+	private boolean login;
 
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 
@@ -53,38 +57,45 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
-		completeURL=Cacheurl;
+		completeURL = Cacheurl;
 		if (mLayout == null) {
 			mLayout = inflater.inflate(R.layout.fragment_setting, container,
 					false);
+			SharedPreferences sp = getActivity().getSharedPreferences(
+					"Registered", 0);
+			returndata_1 = sp.getInt("returndata", returndata_1);
+			isRegistered_one = sp.getBoolean("isRegistered_one", false);
+			SharedPreferences sp1 = getActivity().getSharedPreferences("isLogin", 0);
+			login = sp1.getBoolean("Login", false);
 			initUI();
-			boolean isWIFI=Ifwifi.getNetworkConnected(getActivity());
-			if(isWIFI)
-			{
+			boolean isWIFI = Ifwifi.getNetworkConnected(getActivity());
+			if (isWIFI) {
 				returndata();
-				Log.e("SettingFragment", "有网络进入这里"+isWIFI);
-			}else
-			{
+				Log.e("SettingFragment", "有网络进入这里" + isWIFI);
+			} else {
 				ImageLoaderUtils.getInstance().LoadImage(getActivity(),
 						completeURL, mSetting_head);
-				Log.e("SettingFragment", "没有网络进入这里"+isWIFI);
+				Log.e("SettingFragment", "没有网络进入这里" + isWIFI);
 			}
 		}
 		return mLayout;
 	}
 
 	private void returndata() {
-		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
-				0);
-		int returndata_1 = sp.getInt("returndata", 0);
-		boolean isRegistered_one = sp.getBoolean("isRegistered_one", false);
 		if (isRegistered_one) {
 			setting_number.setText("必聚号:" + returndata_1);
 			ReadUser(returndata_1);
 		} else {
-			int returndata_2 = LoginActivity.pk_user;
-			setting_number.setText("必聚号:" + returndata_2);
-			ReadUser(returndata_2);
+			if(login)
+			{
+				int returndata_2 = LoginActivity.pk_user;
+				setting_number.setText("必聚号:" + returndata_2);
+				ReadUser(returndata_2);
+			}else
+			{
+				setting_number.setText("必聚号:" + returndata_1);
+				ReadUser(returndata_1);
+			}
 		}
 	}
 
@@ -94,7 +105,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		readuser.setPk_user(returndata);
 		readuserinter.readUser(getActivity(), readuser);
 		readuserinter.setPostListener(new UserInterface() {
-
 
 			@Override
 			public void success(String A) {
@@ -110,7 +120,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						useravatar_path = readuser.getAvatar_path();
 					}
 					completeURL = beginStr + useravatar_path + endStr;
-					PreferenceUtils.saveImageCache(getActivity(), completeURL);//存SP
+					PreferenceUtils.saveImageCache(getActivity(), completeURL);// 存SP
 					ImageLoaderUtils.getInstance().LoadImage(getActivity(),
 							completeURL, mSetting_head);
 				}
@@ -157,12 +167,12 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	private void setting_about_us() {
-		Intent intent=new Intent(getActivity(), AboutUsActivity.class);
+		Intent intent = new Intent(getActivity(), AboutUsActivity.class);
 		startActivity(intent);
 	}
 
 	private void setting_feedback() {
-		Intent intent=new Intent(getActivity(), FeedbackActivity.class);
+		Intent intent = new Intent(getActivity(), FeedbackActivity.class);
 		startActivity(intent);
 	}
 

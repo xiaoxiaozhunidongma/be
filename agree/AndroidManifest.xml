@@ -110,6 +110,10 @@
             android:name="com.biju.function.GroupActivity"
             android:label="@string/title_activity_group" >
         </activity>
+        <activity
+            android:name="com.biju.function.TeamSettingActivity"
+            android:label="@string/title_activity_team_setting" >
+        </activity>
     </application>
 
 </manifest>
