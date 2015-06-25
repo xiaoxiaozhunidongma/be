@@ -1,9 +1,9 @@
 package com.BJ.javabean;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import java.util.List;
 
-import com.google.gson.JsonArray;
+import org.json.JSONArray;
+
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,7 +12,7 @@ public class GroupCodeback2 {
 	@Expose
 	private Integer statusMsg;
 	@Expose
-	private JSONArray returnData;
+	private List<Group_Code2> returnData;
 	@SerializedName("interface")
 	@Expose
 	private String _interface;
@@ -20,17 +20,16 @@ public class GroupCodeback2 {
 	public Integer getStatusMsg() {
 		return statusMsg;
 	}
-	
 
 	public void setStatusMsg(Integer statusMsg) {
 		this.statusMsg = statusMsg;
 	}
 
-	public JSONArray getReturnData() {
+	public List<Group_Code2> getReturnData() {
 		return returnData;
 	}
 
-	public void setReturnData(JSONArray returnData) {
+	public void setReturnData(List<Group_Code2> returnData) {
 		this.returnData = returnData;
 	}
 
