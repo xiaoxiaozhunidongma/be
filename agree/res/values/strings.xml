@@ -22,6 +22,6 @@
     <string name="title_activity_main_activity_ssss">MainActivitySSSS</string>
     <string name="title_activity_group">GroupActivity</string>
     <string name="title_activity_team_setting">TeamSettingActivity</string>
-    <string name="title_activity_main_activity_www">MainActivityWWW</string>
+    <string name="title_activity_new_party">NewPartyActivity</string>
 
 </resources>
