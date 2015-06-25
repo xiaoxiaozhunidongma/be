@@ -118,6 +118,10 @@
             android:name="com.biju.function.NewPartyActivity"
             android:label="@string/title_activity_new_party" >
         </activity>
+        <activity
+            android:name="com.biju.function.MapActivity"
+            android:label="@string/title_activity_map" >
+        </activity>
     </application>
 
 </manifest>

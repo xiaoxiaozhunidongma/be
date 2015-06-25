@@ -1,7 +1,9 @@
 package com.fragment;
 
 import com.biju.R;
+import com.biju.function.NewPartyActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -48,7 +50,8 @@ public class PartyFragment extends Fragment implements OnClickListener{
 	}
 
 	private void tab_party_new() {
-		
+		Intent intent=new Intent(getActivity(), NewPartyActivity.class);
+		startActivity(intent);
 	}
 
 }

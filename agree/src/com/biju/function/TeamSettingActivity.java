@@ -2,6 +2,9 @@ package com.biju.function;
 
 import java.util.List;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.GroupCodeback;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
@@ -140,14 +144,23 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 					}
 				} else {
 					Log.e("TeamSettingActivity", "=========" + A);
-					// GroupCodeback groupcodeback=GsonUtils.parseJson(A,
-					// GroupCodeback.class);
-					// int Group_statusmsg=groupcodeback.getStatusMsg();
-					// if(Group_statusmsg==1)
-					// {
-					// String requestcode=groupcodeback.getReturnData();
-					// teamSetting_requestcode.setText(requestcode);
-					// }
+					try {
+						JSONObject jsonObject=new JSONObject(A);
+						Object object = jsonObject.get("returnData");
+						Log.e("TeamSettingActivity", "object"+object);
+						Log.e("TeamSettingActivity", "object.toString()"+object.toString());
+					} catch (JSONException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+//					 GroupCodeback groupcodeback=GsonUtils.parseJson(A,
+//					 GroupCodeback.class);
+//					 int Group_statusmsg=groupcodeback.getStatusMsg();
+//					 if(Group_statusmsg==1)
+//					 {
+//					 String requestcode=groupcodeback.getReturnData();
+//					 teamSetting_requestcode.setText(requestcode);
+//					 }
 				}
 			}
 
