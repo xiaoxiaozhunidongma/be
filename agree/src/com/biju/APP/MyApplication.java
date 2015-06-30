@@ -1,5 +1,6 @@
 package com.biju.APP;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -15,6 +16,8 @@ public class MyApplication extends Application{
 		// TODO Auto-generated method stub
 		super.onCreate();
 		initImageLoader(getApplicationContext());
+		//µÿÕº≥ı ºªØ
+		SDKInitializer.initialize(this);
 
 	}
 	
