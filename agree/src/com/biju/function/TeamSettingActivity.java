@@ -21,7 +21,6 @@ import android.widget.TextView;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.GroupCodeback;
 import com.BJ.javabean.GroupCodeback2;
-import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_Code2;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
