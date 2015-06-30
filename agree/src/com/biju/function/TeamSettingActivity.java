@@ -184,7 +184,6 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 							}
 						}
 					} catch (JSONException e) {
-						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
 

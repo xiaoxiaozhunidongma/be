@@ -1,11 +1,15 @@
 package com.biju.function;
 
+import com.BJ.javabean.Group_Code;
+import com.biju.Interface;
+import com.biju.Interface.UserInterface;
 import com.biju.R;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,12 +22,30 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 	private EditText mRequest_edt_code;
 	private TextView mRequest_tv_code;
 	private TextView mRequest_OK;
+	private Interface requestcode_interface;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_code);
 		initUI();
+		initInterface();
+	}
+
+	private void initInterface() {
+		requestcode_interface = new Interface();
+		requestcode_interface.setPostListener(new UserInterface() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("RequestCodeActivity", "使用邀请码加入的小组"+A);
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
 	}
 
 	private void initUI() {
@@ -77,6 +99,10 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 	}
 
 	private void request_OK() {
+		String pk_group_code=mRequest_edt_code.getText().toString().trim();
+		Group_Code group_Code=new Group_Code();
+		group_Code.setPk_group_code(pk_group_code);
+		requestcode_interface.useRequestCode2Join(RequestCodeActivity.this, group_Code);
 		
 	}
 
