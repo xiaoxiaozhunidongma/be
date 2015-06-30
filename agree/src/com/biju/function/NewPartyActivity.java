@@ -20,6 +20,8 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -113,6 +115,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 		findViewById(R.id.newparty_back_layout).setOnClickListener(this);
 		findViewById(R.id.newparty_back).setOnClickListener(this);
 		newparty_gridview = (GridView) findViewById(R.id.newparty_gridview);
+		newparty_gridview.setSelector(new ColorDrawable(Color.TRANSPARENT));// 去除gridview点击后的背景颜色
 		adapter = new MyGridviewAdapter();
 		newparty_gridview.setAdapter(adapter);
 		newparty_gridview.setOnItemClickListener(new OnItemClickListener() {
@@ -178,7 +181,19 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 
 	@Override
 	public void onClick(View v) {
-		
+		switch (v.getId()) {
+		case R.id.newparty_back_layout:
+		case R.id.newparty_back:
+			newparty_back();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void newparty_back() {
+		finish();
 	}
 
 }
