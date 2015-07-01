@@ -34,12 +34,23 @@ import com.biju.R;
 import com.github.volley_examples.utils.NotifiUtils;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.graphics.Point;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
-public class MapActivity extends Activity implements OnGetGeoCoderResultListener {
+public class MapActivity extends Activity implements OnGetGeoCoderResultListener ,OnClickListener{
 
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
@@ -55,6 +66,8 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 	private ArrayList<BitmapDescriptor> mOverLayList = new ArrayList<BitmapDescriptor>();
 	private GeoCoder mSearch;
 	private LocationMode tempMode = LocationMode.Hight_Accuracy;
+	private float y;
+	private float x;
 	
 	/**
 	 * 定位SDK监听函数
@@ -100,16 +113,27 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
+//		initUI();
 	}
 	
+
+//	private void initUI() {
+//		findViewById(R.id.map_back_layout).setOnClickListener(this);//返回
+//		findViewById(R.id.map_back).setOnClickListener(this);
+//		findViewById(R.id.map_next_layout).setOnClickListener(this);//下一步
+//		findViewById(R.id.map_next).setOnClickListener(this);
+//	}
+
 
 	private void initListener() {
 
 		mBaiduMap.setOnMapTouchListener(new OnMapTouchListener() {
 
+
 			@Override
 			public void onTouch(MotionEvent event) {
-
+				y = event.getY();
+				x = event.getX();
 			}
 		});
 
@@ -286,5 +310,33 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		}
 		NotifiUtils.showToast(MapActivity.this, result.getAddress());
 	}
+
+
+	@Override
+	public void onClick(View v) {
+//		switch (v.getId()) {
+//		case R.id.map_back_layout:
+//		case R.id.map_back:
+//			map_back();
+//			break;
+//		case R.id.map_next_layout:
+//		case R.id.map_next:
+//			map_next();
+//			break;
+//		default:
+//			break;
+//		}
+	}
+
+
+//	private void map_next() {
+//		Intent intent=new Intent(MapActivity.this, TimeActivity.class);
+//		startActivity(intent);
+//	}
+
+
+//	private void map_back() {
+//		finish();
+//	}
 
 }
