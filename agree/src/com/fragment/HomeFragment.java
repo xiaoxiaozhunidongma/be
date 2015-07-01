@@ -127,7 +127,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 						group_User.setFk_user(returndata);
 					}
 				}
-				group_User.setRole(1);
+				group_User.setRole(2);
 				group_User.setStatus(1);
 				homeInterface.userJoin2gourp(getActivity(), group_User);
 				list.add(0, readhomeuser);

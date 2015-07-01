@@ -34,12 +34,21 @@ import com.biju.R;
 import com.github.volley_examples.utils.NotifiUtils;
 
 import android.os.Bundle;
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.graphics.Point;
+import android.util.AttributeSet;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import android.widget.Toast;
 
 public class MapActivity extends Activity implements OnGetGeoCoderResultListener ,OnClickListener{
@@ -58,6 +67,8 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 	private ArrayList<BitmapDescriptor> mOverLayList = new ArrayList<BitmapDescriptor>();
 	private GeoCoder mSearch;
 	private LocationMode tempMode = LocationMode.Hight_Accuracy;
+	private float y;
+	private float x;
 	
 	/**
 	 * 定位SDK监听函数
@@ -91,6 +102,7 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// 地图初始化
@@ -119,9 +131,11 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 
 		mBaiduMap.setOnMapTouchListener(new OnMapTouchListener() {
 
+
 			@Override
 			public void onTouch(MotionEvent event) {
-
+				y = event.getY();
+				x = event.getX();
 			}
 		});
 
@@ -154,15 +168,15 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		});
 		mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
 			public void onMapStatusChangeStart(MapStatus status) {
-				updateMapState();
+//				updateMapState();
 			}
 
 			public void onMapStatusChangeFinish(MapStatus status) {
-				updateMapState();
+//				updateMapState();
 			}
 
 			public void onMapStatusChange(MapStatus status) {
-				updateMapState();
+//				updateMapState();
 			}
 		});
 
