@@ -35,7 +35,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="82dp"
+            android:layout_marginLeft="80dp"
             android:layout_toRightOf="@+id/newparty_back_layout"
             android:text="选择一个小组"
             android:textSize="18.0sp"

@@ -1,13 +1,12 @@
 package com.biju.APP;
 
-import com.baidu.mapapi.SDKInitializer;
+import android.app.Application;
+import android.content.Context;
+
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-
-import android.app.Application;
-import android.content.Context;
 
 public class MyApplication extends Application{
 
@@ -17,7 +16,7 @@ public class MyApplication extends Application{
 		super.onCreate();
 		initImageLoader(getApplicationContext());
 		//µÿÕº≥ı ºªØ
-		SDKInitializer.initialize(this);
+//		SDKInitializer.initialize(this);
 
 	}
 	

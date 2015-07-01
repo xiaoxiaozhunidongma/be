@@ -1,11 +1,17 @@
 package com.BJ.javabean;
 
+import java.io.Serializable;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table (name="t_group")
-public class Group {
+public class Group implements Serializable{
 	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = -4276756878654027138L;
 	@Column
 	private Integer pk_group;
 	@Column
@@ -24,6 +30,9 @@ public class Group {
 	private String remark;
 	@Column
 	private Integer status;
+	
+	public Group(){}
+	
 	public Integer getPk_group() {
 		return pk_group;
 	}
