@@ -66,6 +66,7 @@
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/ datePicker_layout"
         android:layout_width="match_parent"
         android:layout_height="300.0dp"
         android:layout_below="@+id/time_title_layout"
@@ -137,6 +138,22 @@
                 android:layout_height="1dp"
                 android:background="#bbcc3333" />
         </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ datePicker_layout"
+        android:layout_centerHorizontal="true"
+        
+         >
+
+        <TimePicker
+            android:id="@+id/timePicker"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            />
+
     </RelativeLayout>
 
 </RelativeLayout>

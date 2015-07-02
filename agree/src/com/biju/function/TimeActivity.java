@@ -14,6 +14,9 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.TimePicker;
+import android.widget.TimePicker.OnTimeChangedListener;
+import android.widget.Toast;
 
 import com.BJ.utils.KCalendar;
 import com.BJ.utils.KCalendar.OnCalendarClickListener;
@@ -25,6 +28,8 @@ public class TimeActivity extends Activity implements OnClickListener {
 	String date = null;// 设置默认选中的日期 格式为 “2014-04-05” 标准DATE格式
 	private KCalendar calendar;
 	private TextView popupwindow_calendar_month;
+	private TimePicker mTimePicker;
+	private TextView mTime_next;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,9 +69,43 @@ public class TimeActivity extends Activity implements OnClickListener {
 		findViewById(R.id.time_back_layout).setOnClickListener(this);
 		findViewById(R.id.time_back).setOnClickListener(this);// 返回
 		findViewById(R.id.time_next_layout).setOnClickListener(this);// 下一步
-		findViewById(R.id.time_next).setOnClickListener(this);
+		mTime_next = (TextView) findViewById(R.id.time_next);
+		mTime_next.setOnClickListener(this);
+		mTimePicker = (TimePicker) findViewById(R.id.timePicker);
+		OnChangeListener  buc=new OnChangeListener();  
+		mTime_next.setOnClickListener(buc); 
+		//是否使用24小时制  
+		mTimePicker.setIs24HourView(true);  
+        TimeListener times=new TimeListener();  
+        mTimePicker.setOnTimeChangedListener(times);
 	}
-
+	
+	class OnChangeListener implements OnClickListener{  
+        @Override  
+        public void onClick(View v) {  
+            // TODO Auto-generated method stub  
+            int h=mTimePicker.getCurrentHour();  
+            int m=mTimePicker.getCurrentMinute();  
+            Log.e("TimeActivity", "h:"+h+"   m:"+m);
+        }  
+    }  
+	
+	 class TimeListener implements OnTimeChangedListener{  
+         
+	        /** 
+	         * view 当前选中TimePicker控件 
+	         *  hourOfDay 当前控件选中TimePicker 的小时 
+	         * minute 当前选中控件TimePicker  的分钟 
+	         */  
+	        @Override  
+	        public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {  
+	            // TODO Auto-generated method stub  
+	            Log.e("TimeActivity", "h:"+ hourOfDay +" m:"+minute);
+	        }  
+	          
+	    }  
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
