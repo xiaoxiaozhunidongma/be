@@ -82,4 +82,81 @@
 
      </RelativeLayout>
 
+     <RelativeLayout
+         android:id="@+id/map_title_layout"
+         android:layout_width="match_parent"
+         android:layout_height="50.0dp"
+         android:layout_alignParentTop="true"
+         android:layout_centerHorizontal="true"
+         >
+
+         <RelativeLayout
+             android:id="@+id/map_back_layout"
+             android:layout_width="80.0dp"
+             android:layout_height="match_parent"
+             android:layout_alignParentLeft="true"
+             android:layout_centerVertical="true"
+              >
+
+             <TextView
+                 android:id="@+id/map_back"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerHorizontal="true"
+                 android:layout_centerVertical="true"
+                 android:text="返回" 
+                 android:textSize="17.0sp"
+                 android:textColor="#d3d3d3"
+                 />
+
+         </RelativeLayout>
+
+         <TextView
+             android:id="@+id/map_title"
+             android:layout_width="wrap_content"
+             android:layout_height="wrap_content"
+             android:layout_centerHorizontal="true"
+             android:layout_centerVertical="true"
+             android:text="选择地点" 
+             android:textSize="18.0sp"
+             android:textColor="#000000"
+             />
+
+         <RelativeLayout
+             android:id="@+id/map_next_layout"
+             android:layout_width="80.0dp"
+             android:layout_height="match_parent"
+             android:layout_alignParentRight="true"
+             android:layout_centerVertical="true"
+             
+             >
+
+             <TextView
+                 android:id="@+id/map_next"
+                 android:layout_width="wrap_content"
+                 android:layout_height="wrap_content"
+                 android:layout_centerHorizontal="true"
+                 android:layout_centerVertical="true"
+                 android:text="下一步" />
+
+         </RelativeLayout>
+
+         <TextView
+             android:id="@+id/textView1"
+             android:layout_width="match_parent"
+             android:layout_height="0.50dp"
+             android:layout_alignParentBottom="true"
+             android:background="#aaaaaa"
+             
+             />
+
+     </RelativeLayout>
+
+     <ImageView
+         android:id="@+id/imageView1"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:src="@drawable/shop_icon" 
+         android:visibility="invisible"/>
+
 </RelativeLayout>

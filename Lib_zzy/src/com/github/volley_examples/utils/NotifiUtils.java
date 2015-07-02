@@ -24,8 +24,8 @@ public final class NotifiUtils {
 		tvText.setText(text);
 		// toast.setBackground();
 		toast.setView(view);
-		toast.setGravity(Gravity.TOP, 0, 60);
-		toast.setDuration(Toast.LENGTH_LONG);
+		toast.setGravity(Gravity.TOP, 0, 150);
+		toast.setDuration(Toast.LENGTH_SHORT);
 		toast.show();
 	}
 //	
