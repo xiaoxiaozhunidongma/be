@@ -159,7 +159,7 @@
             android:label="@string/title_activity_time" >
         </activity>
         <activity
-            android:name="com.biju.OkPartyActivity"
+            android:name="com.biju.function.OkPartyActivity"
             android:label="@string/title_activity_ok_party" >
         </activity>
     </application>

@@ -4,6 +4,8 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -348,6 +350,11 @@ public class MapActivity extends Activity implements
 			return;
 		}
 		NotifiUtils.showToast(MapActivity.this, result.getAddress());
+		SharedPreferences sp=getSharedPreferences("isParty", 0);
+		Editor editor=sp.edit();
+		editor.putString("isAddress", result.getAddress());
+		editor.commit();
+		
 	}
 
 	@Override
@@ -374,5 +381,6 @@ public class MapActivity extends Activity implements
 	private void map_back() {
 		finish();
 	}
+
 
 }

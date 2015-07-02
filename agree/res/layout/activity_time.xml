@@ -144,16 +144,12 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/ datePicker_layout"
-        android:layout_centerHorizontal="true"
-        
-         >
+        android:layout_centerHorizontal="true" >
 
         <TimePicker
             android:id="@+id/timePicker"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            />
-
+            android:layout_height="match_parent" />
     </RelativeLayout>
 
 </RelativeLayout>
