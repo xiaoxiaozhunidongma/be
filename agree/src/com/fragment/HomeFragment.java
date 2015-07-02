@@ -24,6 +24,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
@@ -57,6 +58,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private boolean isRegistered_one;
 	private int returndata;
 	private boolean login;
+	private Interface homeInterface;
+	private boolean iscode;
+	private Integer fk_group;
 
 	public HomeFragment() {
 	}
@@ -72,16 +76,20 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			isRegistered_one = sp.getBoolean("isRegistered_one", false);
 			Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
 			returndata = sp.getInt("returndata", returndata);
-			SharedPreferences sp1 = getActivity().getSharedPreferences("isLogin", 0);
+			SharedPreferences sp1 = getActivity().getSharedPreferences(
+					"isLogin", 0);
 			login = sp1.getBoolean("Login", false);
-			
+
 			initUI(inflater);
-			initNewTeam();
 			adapter.notifyDataSetChanged();
 			IntentFilter filter = new IntentFilter();
 			filter.addAction("isRefresh");
 			MyReceiver receiver = new MyReceiver();
 			getActivity().registerReceiver(receiver, filter);
+			if(!iscode)
+			{
+				initNewTeam();
+			}
 		}
 		return mLayout;
 	}
@@ -91,11 +99,40 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			String refresh = intent.getStringExtra("refresh");
-			if ("ok".equals(refresh)) {
-				list.clear();
+			iscode = intent.getBooleanExtra("isCode", false);
+			Group readhomeuser = (Group) intent
+					.getSerializableExtra("readhomeuser");
+			fk_group = readhomeuser.getPk_group();
+			Log.e("HomeFragment", "使用邀请码添加后的fk_group======" + fk_group);
+			if (!iscode) {
+				if ("ok".equals(refresh)) {
+					list.clear();
+					initNewTeam();
+					adapter.notifyDataSetChanged();
+					Log.e("HomeFragment", "有接受到广播");
+				}
+			} else {
+//				list.add(0, readhomeuser);
+//				initNewTeam();
+				Group_User group_User = new Group_User();
+				group_User.setFk_group(fk_group);
+				if (isRegistered_one) {
+					group_User.setFk_user(returndata);
+				} else {
+					if (login) {
+						int pk_user = LoginActivity.pk_user;
+						group_User.setFk_user(pk_user);
+						Log.e("HomeFragment", "使用邀请码添加后的pk_user======" + pk_user);
+					} else {
+						group_User.setFk_user(returndata);
+					}
+				}
+				group_User.setRole(1);
+				group_User.setStatus(1);
+				homeInterface.userJoin2gourp(getActivity(), group_User);
+				list.add(0, readhomeuser);
 				initNewTeam();
 				adapter.notifyDataSetChanged();
-				Log.e("HomeFragment", "有接受到广播");
 			}
 		}
 
@@ -104,22 +141,20 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private void initNewTeam() {
 		if (isRegistered_one) {
 			ReadTeam(returndata);
-			Log.e("HomeFragment", "进入注册的新建小组");
+//			Log.e("HomeFragment", "进入注册的新建小组");
 		} else {
-			if(login)
-			{
+			if (login) {
 				int pk_user = LoginActivity.pk_user;
 				ReadTeam(pk_user);
-				Log.e("HomeFragment", "进入登录的新建小组======="+pk_user);
-			}else
-			{
+//				Log.e("HomeFragment", "进入登录的新建小组=======" + pk_user);
+			} else {
 				ReadTeam(returndata);
 			}
 		}
 	}
 
 	private void ReadTeam(int pk_user) {
-		Interface homeInterface = new Interface();
+		homeInterface = new Interface();
 		User homeuser = new User();
 		homeuser.setPk_user(pk_user);
 		homeInterface.readUserGroupMsg(getActivity(), homeuser);
@@ -127,21 +162,26 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
-				int homeStatusMsg = homeback.getStatusMsg();
-				if (homeStatusMsg == 1) {
-					Log.e("HomeFragment", "读取用户小组信息2===" + A);
-					users = homeback.getReturnData();
-					Log.e("HomeFragment", "users的长度===" + users.size());
-					if (users.size() > 0) {
-						for (int i = 0; i < users.size(); i++) {
-							Group readhomeuser = users.get(i);
-							Log.e("HomeFragment", "readhomeuser==="
-									+ readhomeuser);
-							list.add(readhomeuser);
+				if (!iscode) {
+					Groupback homeback = GsonUtils
+							.parseJson(A, Groupback.class);
+					int homeStatusMsg = homeback.getStatusMsg();
+					if (homeStatusMsg == 1) {
+						Log.e("HomeFragment", "读取用户小组信息2===" + A);
+						users = homeback.getReturnData();
+//						Log.e("HomeFragment", "users的长度===" + users.size());
+						if (users.size() > 0) {
+							for (int i = 0; i < users.size(); i++) {
+								Group readhomeuser = users.get(i);
+								Log.e("HomeFragment", "readhomeuser==="
+										+ readhomeuser);
+								list.add(readhomeuser);
+							}
 						}
+						adapter.notifyDataSetChanged();
 					}
-					adapter.notifyDataSetChanged();
+				} else {
+					Log.e("HomeFragment", "读取用户小组信息使用邀请码添加后的===" + A);
 				}
 			}
 
@@ -164,18 +204,19 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-//				Log.e("HomeFragment", "(list.size()+1)==="+(list.size()+1));
-//				Log.e("HomeFragment", "arg2==="+arg2);
+				// Log.e("HomeFragment", "(list.size()+1)==="+(list.size()+1));
+				// Log.e("HomeFragment", "arg2==="+arg2);
 				if (list.size() == arg2) {
 					Intent intent = new Intent(getActivity(),
 							NewteamActivity.class);
 					startActivity(intent);
 				} else {
-					Group group=list.get(arg2);
-					int pk_group=group.getPk_group();
-					Intent intent = new Intent(getActivity(),GroupActivity.class);
+					Group group = list.get(arg2);
+					int pk_group = group.getPk_group();
+					Intent intent = new Intent(getActivity(),
+							GroupActivity.class);
 					intent.putExtra("pk_group", pk_group);
-					Log.e("HomeFragment", "pk_group"+pk_group);
+					Log.e("HomeFragment", "pk_group" + pk_group);
 					startActivity(intent);
 				}
 			}
@@ -222,9 +263,10 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-//			Log.e("HomeFragment", "position  1=====" + position);
-//			Log.e("HomeFragment", "(list.size() + 1)=====" + (list.size() + 1));
-//			Log.e("HomeFragment", "(list.size())=====" + list.size());
+			// Log.e("HomeFragment", "position  1=====" + position);
+			// Log.e("HomeFragment", "(list.size() + 1)=====" + (list.size() +
+			// 1));
+			// Log.e("HomeFragment", "(list.size())=====" + list.size());
 			View inflater = null;
 			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 			if (isRegistered_one) {
@@ -309,5 +351,4 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
 	}
-
 }

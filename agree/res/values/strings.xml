@@ -24,5 +24,6 @@
     <string name="title_activity_team_setting">TeamSettingActivity</string>
     <string name="title_activity_new_party">NewPartyActivity</string>
     <string name="title_activity_map">MapActivity</string>
+    <string name="title_activity_time">TimeActivity</string>
 
 </resources>

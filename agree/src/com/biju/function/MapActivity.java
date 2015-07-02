@@ -113,16 +113,16 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
-//		initUI();
+		initUI();
 	}
 	
 
-//	private void initUI() {
-//		findViewById(R.id.map_back_layout).setOnClickListener(this);//返回
-//		findViewById(R.id.map_back).setOnClickListener(this);
-//		findViewById(R.id.map_next_layout).setOnClickListener(this);//下一步
-//		findViewById(R.id.map_next).setOnClickListener(this);
-//	}
+	private void initUI() {
+		findViewById(R.id.map_back_layout).setOnClickListener(this);//返回
+		findViewById(R.id.map_back).setOnClickListener(this);
+		findViewById(R.id.map_next_layout).setOnClickListener(this);//下一步
+		findViewById(R.id.map_next).setOnClickListener(this);
+	}
 
 
 	private void initListener() {
@@ -166,15 +166,15 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		});
 		mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
 			public void onMapStatusChangeStart(MapStatus status) {
-				updateMapState();
+//				updateMapState();
 			}
 
 			public void onMapStatusChangeFinish(MapStatus status) {
-				updateMapState();
+//				updateMapState();
 			}
 
 			public void onMapStatusChange(MapStatus status) {
-				updateMapState();
+//				updateMapState();
 			}
 		});
 
@@ -314,29 +314,29 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 
 	@Override
 	public void onClick(View v) {
-//		switch (v.getId()) {
-//		case R.id.map_back_layout:
-//		case R.id.map_back:
-//			map_back();
-//			break;
-//		case R.id.map_next_layout:
-//		case R.id.map_next:
-//			map_next();
-//			break;
-//		default:
-//			break;
-//		}
+		switch (v.getId()) {
+		case R.id.map_back_layout:
+		case R.id.map_back:
+			map_back();
+			break;
+		case R.id.map_next_layout:
+		case R.id.map_next:
+			map_next();
+			break;
+		default:
+			break;
+		}
 	}
 
 
-//	private void map_next() {
-//		Intent intent=new Intent(MapActivity.this, TimeActivity.class);
-//		startActivity(intent);
-//	}
+	private void map_next() {
+		Intent intent=new Intent(MapActivity.this, TimeActivity.class);
+		startActivity(intent);
+	}
 
 
-//	private void map_back() {
-//		finish();
-//	}
+	private void map_back() {
+		finish();
+	}
 
 }
