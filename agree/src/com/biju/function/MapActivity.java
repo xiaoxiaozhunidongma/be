@@ -357,6 +357,7 @@ public class MapActivity extends Activity implements
 		
 	}
 
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {

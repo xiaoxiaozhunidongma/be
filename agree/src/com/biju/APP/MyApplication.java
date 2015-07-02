@@ -16,7 +16,7 @@ public class MyApplication extends Application{
 		// TODO Auto-generated method stub
 		super.onCreate();
 		initImageLoader(getApplicationContext());
-		//地图初始化
+//		地图初始化
 		SDKInitializer.initialize(this);
 
 	}
