@@ -20,6 +20,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
@@ -64,6 +65,20 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 		
 		initUI();
 		initNewTeam();
+		
+	}
+
+	@Override
+	protected void onStart() {
+		initdate();
+		super.onStart();
+	}
+	//当用户退回到小组选择时之前所选的地点和时间清除
+	private void initdate() {
+		SharedPreferences sp = getSharedPreferences("isdate", 0);
+		Editor editor = sp.edit();
+		editor.putBoolean("date", false);
+		editor.commit();
 	}
 
 	private void initNewTeam() {

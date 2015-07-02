@@ -3,26 +3,28 @@ package com.biju.function;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.biju.R;
-
-import android.os.Bundle;
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.drawable.BitmapDrawable;
-import android.view.Gravity;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.LayoutParams;
-import android.view.animation.AnimationUtils;
 import android.view.Window;
-import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-public class TimeActivity extends Activity implements OnClickListener{
+import com.BJ.utils.KCalendar;
+import com.BJ.utils.KCalendar.OnCalendarClickListener;
+import com.BJ.utils.KCalendar.OnCalendarDateChangedListener;
+import com.biju.R;
+
+public class TimeActivity extends Activity implements OnClickListener {
+
+	String date = null;// 设置默认选中的日期 格式为 “2014-04-05” 标准DATE格式
+	private KCalendar calendar;
+	private TextView popupwindow_calendar_month;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -30,14 +32,38 @@ public class TimeActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_time);
 		initUI();
+		initDate();
 	}
-	
 
+	private void initDate() {
+		PPopupWindows();
+		SharedPreferences sp = getSharedPreferences("isdate", 0);
+		boolean date1 = sp.getBoolean("date", false);
+		if (date1) {
+			String dateFormat = sp.getString("dateFormat", "");
+			calendar.setCalendarDayBgColor(dateFormat,
+					R.drawable.calendar_date_focused);
+			date = dateFormat;// 最后返回给全局 date
+			Log.e("MainActivity", "进保存后的");
+			if (null != date) {
+
+				int years = Integer.parseInt(date.substring(0,
+						date.indexOf("-")));
+				int month = Integer.parseInt(date.substring(
+						date.indexOf("-") + 1, date.lastIndexOf("-")));
+				popupwindow_calendar_month.setText(years + "年" + month + "月");
+
+				calendar.showCalendar(years, month);
+				calendar.setCalendarDayBgColor(date,
+						R.drawable.calendar_date_focused);
+			}
+		}
+	}
 
 	private void initUI() {
 		findViewById(R.id.time_back_layout).setOnClickListener(this);
-		findViewById(R.id.time_back).setOnClickListener(this);//返回
-		findViewById(R.id.time_next_layout).setOnClickListener(this);//下一步
+		findViewById(R.id.time_back).setOnClickListener(this);// 返回
+		findViewById(R.id.time_next_layout).setOnClickListener(this);// 下一步
 		findViewById(R.id.time_next).setOnClickListener(this);
 	}
 
@@ -65,14 +91,95 @@ public class TimeActivity extends Activity implements OnClickListener{
 	}
 
 	private void time_next() {
-		// TODO Auto-generated method stub
-		
+
 	}
 
 	private void time_back() {
 		finish();
 	}
-	
-	
+
+	private void PPopupWindows() {
+		popupwindow_calendar_month = (TextView) findViewById(R.id.popupwindow_calendar_month);
+		calendar = (KCalendar) findViewById(R.id.popupwindow_calendar);
+
+		popupwindow_calendar_month.setText(calendar.getCalendarYear() + "年"
+				+ calendar.getCalendarMonth() + "月");
+
+		if (null != date) {
+
+			int years = Integer.parseInt(date.substring(0, date.indexOf("-")));
+			int month = Integer.parseInt(date.substring(date.indexOf("-") + 1,
+					date.lastIndexOf("-")));
+			popupwindow_calendar_month.setText(years + "年" + month + "月");
+
+			calendar.showCalendar(years, month);
+			calendar.setCalendarDayBgColor(date,
+					R.drawable.calendar_date_focused);
+		}
+
+		List<String> list = new ArrayList<String>(); // 设置标记列表
+		list.add("2014-04-01");
+		list.add("2014-04-02");
+		calendar.addMarks(list, 0);
+
+		// 监听所选中的日期
+		calendar.setOnCalendarClickListener(new OnCalendarClickListener() {
+
+			public void onCalendarClick(int row, int col, String dateFormat) {
+				int month = Integer.parseInt(dateFormat.substring(
+						dateFormat.indexOf("-") + 1,
+						dateFormat.lastIndexOf("-")));
+
+				if (calendar.getCalendarMonth() - month == 1// 跨年跳转
+						|| calendar.getCalendarMonth() - month == -11) {
+					calendar.lastMonth();
+
+				} else if (month - calendar.getCalendarMonth() == 1 // 跨年跳转
+						|| month - calendar.getCalendarMonth() == -11) {
+					calendar.nextMonth();
+
+				} else {
+					calendar.removeAllBgColor();
+					calendar.setCalendarDayBgColor(dateFormat,
+							R.drawable.calendar_date_focused);
+					date = dateFormat;// 最后返回给全局 date
+					Log.e("date", "date=========" + date);
+					SharedPreferences sp = getSharedPreferences("isdate", 0);
+					Editor editor = sp.edit();
+					editor.putString("dateFormat", dateFormat);
+					editor.putBoolean("date", true);
+					editor.commit();
+				}
+			}
+		});
+
+		// 监听当前月份
+		calendar.setOnCalendarDateChangedListener(new OnCalendarDateChangedListener() {
+			public void onCalendarDateChanged(int year, int month) {
+				popupwindow_calendar_month.setText(year + "年" + month + "月");
+			}
+		});
+
+		// 上月监听按钮
+		RelativeLayout popupwindow_calendar_last_month = (RelativeLayout) findViewById(R.id.popupwindow_calendar_last_month);
+		popupwindow_calendar_last_month
+				.setOnClickListener(new OnClickListener() {
+
+					public void onClick(View v) {
+						calendar.lastMonth();
+					}
+
+				});
+
+		// 下月监听按钮
+		RelativeLayout popupwindow_calendar_next_month = (RelativeLayout) findViewById(R.id.popupwindow_calendar_next_month);
+		popupwindow_calendar_next_month
+				.setOnClickListener(new OnClickListener() {
+
+					public void onClick(View v) {
+						calendar.nextMonth();
+					}
+				});
+	}
 
 }
