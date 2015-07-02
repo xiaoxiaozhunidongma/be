@@ -79,7 +79,7 @@
         <!-- 百度签名 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="yGkNOAGTinoQq0oFRuksvUIi" />
+            android:value="wVPLhs0pEqbegYMGNWCUmboz" />
         <!-- 百度签名 -->
         <activity
             android:name="com.biju.MainActivity"
@@ -159,7 +159,7 @@
             android:label="@string/title_activity_time" >
         </activity>
         <activity
-            android:name="com.biju.OkPartyActivity"
+            android:name="com.biju.function.OkPartyActivity"
             android:label="@string/title_activity_ok_party" >
         </activity>
     </application>

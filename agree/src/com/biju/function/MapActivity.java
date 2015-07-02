@@ -4,12 +4,19 @@ import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.Window;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import com.baidu.location.BDLocation;
@@ -30,6 +37,7 @@ import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
+import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
@@ -50,7 +58,7 @@ public class MapActivity extends Activity implements
 	private BaiduMap mBaiduMap;
 	private LatLng currentPt;
 	private String touchType;
-//	public MyLocationListenner myListener = new MyLocationListenner();
+	public MyLocationListenner myListener = new MyLocationListenner();
 	private BDLocation mLocation;
 	boolean isFirstLoc = true;// 是否首次定位
 	private double mLng;
@@ -60,13 +68,14 @@ public class MapActivity extends Activity implements
 	private ArrayList<BitmapDescriptor> mOverLayList = new ArrayList<BitmapDescriptor>();
 	private GeoCoder mSearch;
 	private LocationMode tempMode = LocationMode.Hight_Accuracy;
-	private float y;
+	private Marker mMarkerD;
 	private float x;
+	private float y;
 
 	/**
 	 * 定位SDK监听函数
 	 */
-	/*public class MyLocationListenner implements BDLocationListener {
+	public class MyLocationListenner implements BDLocationListener {
 
 		@Override
 		public void onReceiveLocation(BDLocation location) {
@@ -93,7 +102,7 @@ public class MapActivity extends Activity implements
 
 		public void onReceivePoi(BDLocation poiLocation) {
 		}
-	}*/
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,13 +110,17 @@ public class MapActivity extends Activity implements
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
 		// 地图初始化
-		/*
-		 * mMapView = (MapView) findViewById(R.id.bmapView); mBaiduMap =
-		 * mMapView.getMap(); initMap(); MapStatusUpdate msu =
-		 * MapStatusUpdateFactory.zoomTo(scale); mBaiduMap.setMapStatus(msu);
-		 * initListener(); // 初始化搜索模块，注册事件监听 mSearch = GeoCoder.newInstance();
-		 * mSearch.setOnGetGeoCodeResultListener(this);
-		 */
+
+		mMapView = (MapView) findViewById(R.id.bmapView);
+		mBaiduMap = mMapView.getMap();
+		initMap();
+		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(scale);
+		mBaiduMap.setMapStatus(msu);
+		initListener(); 
+		// 初始化搜索模块，注册事件监听 
+		mSearch = GeoCoder.newInstance();
+		mSearch.setOnGetGeoCodeResultListener(this);
+
 		initUI();
 	}
 
@@ -118,7 +131,7 @@ public class MapActivity extends Activity implements
 		findViewById(R.id.map_next).setOnClickListener(this);
 	}
 
-	/*private void initListener() {
+	private void initListener() {
 
 		mBaiduMap.setOnMapTouchListener(new OnMapTouchListener() {
 
@@ -169,9 +182,9 @@ public class MapActivity extends Activity implements
 			}
 		});
 
-	}*/
+	}
 
-	/*private void updateMapState() {
+	private void updateMapState() {
 
 		String state = "";
 		if (currentPt == null) {
@@ -220,19 +233,55 @@ public class MapActivity extends Activity implements
 
 	}
 
-	private void addOverlay(double lat, double lng, int drawableRes) {
-		LatLng llA = new LatLng(lat, lng);
-		// 设置悬浮的图案
-		BitmapDescriptor bdA = BitmapDescriptorFactory
-				.fromResource(drawableRes);
-		mOverLayList.add(bdA);
-
-		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA)
-				.zIndex(9).draggable(true);
-		// 添加之前先清空
-		mBaiduMap.clear();
-		// 在地图中添加悬浮图案
-		mBaiduMap.addOverlay(ooA);
+	private void addOverlay(double lat, double lng, final int drawableRes) {
+		final LatLng llA = new LatLng(lat, lng);
+		
+		//设置覆盖物下掉动画
+		final ImageView imageView = (ImageView) findViewById(R.id.imageView1);
+		int[] location=new int[2];
+		imageView.getLocationInWindow(location);
+		int offheight=location[1];
+		int offleft=location[0];
+		int IMGheight = imageView.getHeight();
+		int IMGwidth = imageView.getWidth();
+		Log.e("Maina", "offheight:"+offheight);
+		Log.e("Maina", "offleft:"+offleft);
+		
+		Animation animation=new TranslateAnimation(x-IMGwidth/2, x-IMGwidth/2, 0, y-offheight+IMGheight/2);
+		animation.setDuration(500);
+//		animation.setFillAfter(true);
+		//第一次进来不启动动画
+		if(isFirstLoc==false){
+			imageView.startAnimation(animation);
+		}
+		//添加之前先清空
+		if(mMarkerD!=null){
+			mMarkerD.remove();
+		}
+		animation.setAnimationListener(new AnimationListener() {
+			
+			@Override
+			public void onAnimationStart(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationRepeat(Animation animation) {
+			}
+			
+			@Override
+			public void onAnimationEnd(Animation animation) {
+				
+				//设置悬浮的图案
+				BitmapDescriptor bdA = BitmapDescriptorFactory
+						.fromResource(drawableRes);
+				mOverLayList.add(bdA);
+				
+				OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA)
+						.zIndex(0).draggable(true);
+				mMarkerD = (Marker)mBaiduMap.addOverlay(ooA);
+			}
+		});
+		
 		// 设置悬浮物点击监听
 		// mBaiduMap.setOnMarkerClickListener(new OnMarkerClickListener() {
 		// public boolean onMarkerClick(final Marker marker) {
@@ -251,7 +300,7 @@ public class MapActivity extends Activity implements
 		// return true;
 		// }
 		// });
-	}*/
+	}
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -260,7 +309,7 @@ public class MapActivity extends Activity implements
 		return true;
 	}
 
-	/*@Override
+	@Override
 	protected void onPause() {
 		// MapView的生命周期与Activity同步，当activity挂起时需调用MapView.onPause()
 		mMapView.onPause();
@@ -286,7 +335,7 @@ public class MapActivity extends Activity implements
 		}
 		mSearch.destroy();
 		super.onDestroy();
-	}*/
+	}
 
 	@Override
 	public void onGetGeoCodeResult(GeoCodeResult result) {
@@ -301,6 +350,11 @@ public class MapActivity extends Activity implements
 			return;
 		}
 		NotifiUtils.showToast(MapActivity.this, result.getAddress());
+		SharedPreferences sp=getSharedPreferences("isParty", 0);
+		Editor editor=sp.edit();
+		editor.putString("isAddress", result.getAddress());
+		editor.commit();
+		
 	}
 
 	@Override

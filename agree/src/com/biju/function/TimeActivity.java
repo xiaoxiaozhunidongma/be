@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -16,7 +17,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
-import android.widget.Toast;
 
 import com.BJ.utils.KCalendar;
 import com.BJ.utils.KCalendar.OnCalendarClickListener;
@@ -30,6 +30,8 @@ public class TimeActivity extends Activity implements OnClickListener {
 	private TextView popupwindow_calendar_month;
 	private TimePicker mTimePicker;
 	private TextView mTime_next;
+	private int mHour;
+	private int mMinute;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -72,40 +74,38 @@ public class TimeActivity extends Activity implements OnClickListener {
 		mTime_next = (TextView) findViewById(R.id.time_next);
 		mTime_next.setOnClickListener(this);
 		mTimePicker = (TimePicker) findViewById(R.id.timePicker);
-		OnChangeListener  buc=new OnChangeListener();  
-		mTime_next.setOnClickListener(buc); 
-		//是否使用24小时制  
-		mTimePicker.setIs24HourView(true);  
-        TimeListener times=new TimeListener();  
-        mTimePicker.setOnTimeChangedListener(times);
+//		OnChangeListener buc = new OnChangeListener();
+//		mTime_next.setOnClickListener(buc);
+		// 是否使用24小时制
+		mTimePicker.setIs24HourView(true);
+		TimeListener times = new TimeListener();
+		mTimePicker.setOnTimeChangedListener(times);
 	}
-	
-	class OnChangeListener implements OnClickListener{  
-        @Override  
-        public void onClick(View v) {  
-            // TODO Auto-generated method stub  
-            int h=mTimePicker.getCurrentHour();  
-            int m=mTimePicker.getCurrentMinute();  
-            Log.e("TimeActivity", "h:"+h+"   m:"+m);
-        }  
-    }  
-	
-	 class TimeListener implements OnTimeChangedListener{  
-         
-	        /** 
-	         * view 当前选中TimePicker控件 
-	         *  hourOfDay 当前控件选中TimePicker 的小时 
-	         * minute 当前选中控件TimePicker  的分钟 
-	         */  
-	        @Override  
-	        public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {  
-	            // TODO Auto-generated method stub  
-	            Log.e("TimeActivity", "h:"+ hourOfDay +" m:"+minute);
-	        }  
-	          
-	    }  
-	
-	
+
+	class OnChangeListener implements OnClickListener {
+		@Override
+		public void onClick(View v) {
+			int h = mTimePicker.getCurrentHour();
+			int m = mTimePicker.getCurrentMinute();
+			Log.e("TimeActivity", "h:" + h + "   m:" + m);
+		}
+	}
+
+	class TimeListener implements OnTimeChangedListener {
+
+		/**
+		 * view 当前选中TimePicker控件 hourOfDay 当前控件选中TimePicker 的小时 minute
+		 * 当前选中控件TimePicker 的分钟
+		 */
+		@Override
+		public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
+			Log.e("TimeActivity", "h:" + hourOfDay + " m:" + minute);
+			mHour = hourOfDay;
+			mMinute = minute;
+		}
+
+	}
+
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -130,7 +130,14 @@ public class TimeActivity extends Activity implements OnClickListener {
 	}
 
 	private void time_next() {
-
+		SharedPreferences sp=getSharedPreferences("isParty", 0);
+		Editor editor=sp.edit();
+		editor.putInt("hour", mHour);
+		editor.putInt("minute", mMinute);
+		editor.putString("isCalendar", date);
+		editor.commit();
+		Intent intent=new Intent(TimeActivity.this, OkPartyActivity.class);
+		startActivity(intent);
 	}
 
 	private void time_back() {
