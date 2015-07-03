@@ -350,9 +350,13 @@ public class MapActivity extends Activity implements
 			return;
 		}
 		NotifiUtils.showToast(MapActivity.this, result.getAddress());
+		float mLng_1=(float) mLng;
+		float mLat_1=(float) mLat;
 		SharedPreferences sp=getSharedPreferences("isParty", 0);
 		Editor editor=sp.edit();
 		editor.putString("isAddress", result.getAddress());
+		editor.putFloat("mLng", mLng_1);
+		editor.putFloat("mLat", mLat_1);
 		editor.commit();
 		
 	}

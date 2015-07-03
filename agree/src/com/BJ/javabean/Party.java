@@ -1,13 +1,10 @@
 package com.BJ.javabean;
 
-import java.sql.Date;
-
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table (name="t_party")
 public class Party {
-	
 	@Column
 	private String pk_party;
 	@Column

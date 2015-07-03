@@ -17,7 +17,7 @@ public class MyApplication extends Application{
 		super.onCreate();
 		initImageLoader(getApplicationContext());
 //		µÿÕº≥ı ºªØ
-		SDKInitializer.initialize(this);
+//		SDKInitializer.initialize(this);
 
 	}
 	

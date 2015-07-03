@@ -138,6 +138,12 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
+				Group group = list.get(arg2);
+				int fk_group=group.getPk_group();
+				SharedPreferences sp=getSharedPreferences("isParty_fk_group", 0);
+				Editor editor=sp.edit();
+				editor.putInt("fk_group", fk_group);
+				editor.commit();
 				Intent intent=new Intent(NewPartyActivity.this, MapActivity.class);
 				startActivity(intent);
 			}

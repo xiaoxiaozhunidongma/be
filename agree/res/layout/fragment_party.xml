@@ -1,12 +1,13 @@
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".PartyFragment" >
 
     <!-- TODO: Update blank fragment layout -->
-
-	<RelativeLayout
+    <RelativeLayout
+	    android:id="@+id/tab_party_title_layout"
         android:layout_width="match_parent"
         android:layout_height="50.0dp" >
 
@@ -50,4 +51,45 @@
             />
 
     </RelativeLayout>
-</FrameLayout>
+
+    <RelativeLayout
+        android:id="@+id/tab_party_prompt_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_party_title_layout"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="45dp"
+            android:textColor="#ff0000"
+            android:text="你还没有创建日程哦！" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/tab_party_list_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/tab_party_title_layout"
+        android:layout_centerHorizontal="true"
+        >
+
+        <ListView
+            android:id="@+id/tab_party_listView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+             >
+        </ListView>
+
+    </RelativeLayout>
+
+</RelativeLayout>
