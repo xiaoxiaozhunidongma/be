@@ -21,7 +21,6 @@ import android.widget.TimePicker.OnTimeChangedListener;
 import com.BJ.utils.KCalendar;
 import com.BJ.utils.KCalendar.OnCalendarClickListener;
 import com.BJ.utils.KCalendar.OnCalendarDateChangedListener;
-import com.biju.OkPartyActivity;
 import com.biju.R;
 
 public class TimeActivity extends Activity implements OnClickListener {

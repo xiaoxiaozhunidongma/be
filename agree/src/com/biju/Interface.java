@@ -18,6 +18,7 @@ import com.BJ.javabean.FeedBack;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
+import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.StringCreGroup;
@@ -289,7 +290,7 @@ public class Interface {
 		volleyPost(context,packParams(user, kReadUserAllParty));
 	}
 	//读取用户在小组中的所有聚会
-	public void readUserGroupParty(Context context,Map idsmap) {//...........传入字典
+	public void readUserGroupParty(Context context,IDs idsmap) {//...........传入字典
 		volleyPost(context,packParams(idsmap, kReadUserGroupParty));
 	}
 	//更新用户对于聚会的参与信息
