@@ -23,6 +23,7 @@
         android:layout_alignParentTop="true" >
 
         <RelativeLayout
+            android:id="@+id/tab_setting_cancle_layout"
             android:layout_width="80.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"

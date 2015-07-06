@@ -67,6 +67,11 @@ public class MainActivity extends FragmentActivity {
 		Editor editor = sp.edit();
 		editor.putBoolean("isRegistered_one", false);
 		editor.commit();
+		
+		SharedPreferences login_sp=getSharedPreferences("Logout", 0);
+		Editor login_editor=login_sp.edit();
+		login_editor.putBoolean("isLogout", false);
+		login_editor.commit();
 		super.onStop();
 	}
 

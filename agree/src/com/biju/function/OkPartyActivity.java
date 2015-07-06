@@ -78,7 +78,9 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 			
 			@Override
 			public void defail(Object B) {
-				
+				Log.e("OkPartyActivity", "日程是否创建成功dfsdfds======"+B);
+				Log.e("OkPartyActivity", "日程是否创建成功dfsdfds======"+B.toString().length());
+				finish();
 			}
 		});
 	}
@@ -179,7 +181,7 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 		}
 		party.setName(name);
 		party.setRemark(remark);
-		party.setBegin_time(isCalendar + "" + hour + ":" + minute);
+		party.setBegin_time(isCalendar + "   " + hour + ":" + minute);
 		party.setLongitude(mLng);
 		party.setLatitude(mLat);
 		party.setLocation(address);
@@ -193,7 +195,6 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 		Log.e("OkPartyActivity", "新建日程的mLat====="+mLat);
 		Log.e("OkPartyActivity", "新建日程的地址====="+address);
 		okPartyInterface.addParty(OkPartyActivity.this, party);
-		finish();
 	}
 
 	private void OkParty_feedback() {

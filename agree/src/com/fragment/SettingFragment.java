@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -140,6 +141,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		mSetting_head.setOnClickListener(this);
 		mLayout.findViewById(R.id.setting_feedback).setOnClickListener(this);
 		mLayout.findViewById(R.id.setting_about_us).setOnClickListener(this);
+		mLayout.findViewById(R.id.tab_setting_cancle_layout).setOnClickListener(this);//×¢ÏúµÇÂ¼
+		mLayout.findViewById(R.id.tab_setting_cancle).setOnClickListener(this);
 	}
 
 	@Override
@@ -161,9 +164,24 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		case R.id.setting_about_us:
 			setting_about_us();
 			break;
+		case R.id.tab_setting_cancle_layout:
+		case R.id.tab_setting_cancle:
+			tab_setting_cancle();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void tab_setting_cancle() {
+		SharedPreferences login_sp=getActivity().getSharedPreferences("Logout", 0);
+		Editor login_editor=login_sp.edit();
+		login_editor.putBoolean("isLogout", true);
+		login_editor.commit();
+		Intent intent=new Intent(getActivity(), LoginActivity.class);
+		startActivity(intent);
+		getActivity().finish();
+		
 	}
 
 	private void setting_about_us() {

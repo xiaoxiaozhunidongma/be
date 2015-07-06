@@ -162,6 +162,10 @@
             android:name="com.biju.function.OkPartyActivity"
             android:label="@string/title_activity_ok_party" >
         </activity>
+        <activity
+            android:name="com.biju.function.PartyDetailsActivity"
+            android:label="@string/title_activity_party_details" >
+        </activity>
     </application>
 
 </manifest>
