@@ -146,6 +146,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 				editor.commit();
 				Intent intent=new Intent(NewPartyActivity.this, MapActivity.class);
 				startActivity(intent);
+				finish();
 			}
 		});
 	}

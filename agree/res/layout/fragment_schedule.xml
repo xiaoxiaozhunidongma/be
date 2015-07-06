@@ -1,18 +1,18 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/RelativeLayout1"
+    xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ScheduleFragment" >
 
     <!-- TODO: Update blank fragment layout -->
+
     <RelativeLayout
         android:id="@+id/Schedule_prompt_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        >
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/textView2"
@@ -21,27 +21,26 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="45dp"
-            android:textColor="#ff0000"
-            android:text="你还没有创建日程哦！" />
-
+            android:text="你还没有创建日程哦！"
+            android:textColor="#ff0000" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/Schedule_list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        >
+    <!-- com.handmark.pulltorefresh.library -->
 
-        <ListView
-            android:id="@+id/Schedule_listView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-             >
-        </ListView>
-
-    </RelativeLayout>
+    <com.handmark.pulltorefresh.library.PullToRefreshListView
+        android:id="@+id/pull_refresh_list"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:background="#ffffff"
+        android:cacheColorHint="#00000000"
+        android:divider="#19000000"
+        android:dividerHeight="1dp"
+        android:fadingEdge="none"
+        android:fastScrollEnabled="false"
+        android:footerDividersEnabled="false"
+        android:headerDividersEnabled="false"
+        android:smoothScrollbar="true"
+        ptr:ptrAnimationStyle="rotate"
+        ptr:ptrDrawableStart="@drawable/refreshing_animtaion" />
 
 </RelativeLayout>

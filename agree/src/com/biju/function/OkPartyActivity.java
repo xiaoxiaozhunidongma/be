@@ -10,6 +10,7 @@ import com.biju.login.LoginActivity;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
@@ -150,6 +151,8 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 
 	private void OkParty_back() {
 		finish();
+		Intent intent=new Intent(OkPartyActivity.this, TimeActivity.class);
+		startActivity(intent);
 	}
 
 	private void OkParty_complete() {
@@ -176,7 +179,7 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 		}
 		party.setName(name);
 		party.setRemark(remark);
-		party.setBegin_time(isCalendar + "    " + hour + ":" + minute);
+		party.setBegin_time(isCalendar + "" + hour + ":" + minute);
 		party.setLongitude(mLng);
 		party.setLatitude(mLat);
 		party.setLocation(address);
@@ -190,6 +193,7 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 		Log.e("OkPartyActivity", "新建日程的mLat====="+mLat);
 		Log.e("OkPartyActivity", "新建日程的地址====="+address);
 		okPartyInterface.addParty(OkPartyActivity.this, party);
+		finish();
 	}
 
 	private void OkParty_feedback() {
