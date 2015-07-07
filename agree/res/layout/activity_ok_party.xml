@@ -13,13 +13,14 @@
         android:background="#f0f0f0" >
 
         <RelativeLayout
+            android:id="@+id/OkParty_back_layout"
             android:layout_width="80.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/OkParty_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -30,13 +31,14 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/OkParty_complete_layout"
             android:layout_width="80.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/OkParty_complete"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -63,27 +65,6 @@
             android:layout_alignParentBottom="true"
             android:background="#aaaaaa" />
     </RelativeLayout>
-
-    <TextView
-        android:id="@+id/OkParty_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/OkParty_title_layout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="54dp"
-        android:text="聚会名称"
-        android:textSize="25.0sp" />
-
-    <TextView
-        android:id="@+id/OkParty_note"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/OkParty_name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25dp"
-        android:gravity="center"
-        android:text="聚会的备注信息"
-        android:textSize="17.0sp" />
 
     <TextView
         android:id="@+id/textView7"
@@ -136,5 +117,31 @@
         android:layout_marginLeft="20dp"
         android:text="反馈设置"
         android:textSize="17.0sp" />
+
+    <EditText
+        android:id="@+id/OkParty_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/OkParty_title_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="50dp"
+        android:textSize="25.0sp" 
+        android:ems="10"
+        android:gravity="center"
+        android:hint="聚会名称"
+        android:background="@null"
+         />
+
+    <EditText
+        android:id="@+id/OkParty_note"
+        android:layout_width="250.0dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/OkParty_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25dp"
+        android:gravity="center"
+        android:hint="聚会的备注信息"
+        android:background="@null"
+        android:textSize="17.0sp"/>
 
 </RelativeLayout>

@@ -3,33 +3,33 @@ package com.BJ.javabean;
 
 public class IDs {
 	
-	private Integer id_group;
-	private Integer id_user;
-	private Integer id_user_group;
-	public Integer getId_group() {
-		return id_group;
+	private Integer group_id;
+	private Integer user_id;
+	private Integer pk_group_user;
+	public Integer getgroup_id() {
+		return group_id;
 	}
-	public void setId_group(Integer id_group) {
-		this.id_group = id_group;
+	public void setgroup_id(Integer group_id) {
+		this.group_id = group_id;
 	}
-	public Integer getId_user() {
-		return id_user;
+	public Integer getuser_id() {
+		return user_id;
 	}
-	public void setId_user(Integer id_user) {
-		this.id_user = id_user;
+	public void setuser_id(Integer user_id) {
+		this.user_id = user_id;
 	}
-	public Integer getId_user_group() {
-		return id_user_group;
+	public Integer getpk_group_user() {
+		return pk_group_user;
 	}
-	public void setId_user_group(Integer id_user_group) {
-		this.id_user_group = id_user_group;
+	public void setpk_group_user(Integer pk_group_user) {
+		this.pk_group_user = pk_group_user;
 	}
 	
 	//构造方法
-	public IDs(Integer id_group,Integer id_user,Integer id_user_group){
-		this.id_group = id_group;
-		this.id_user = id_user;
-		this.id_user_group = id_user_group;
+	public IDs(Integer group_id,Integer user_id,Integer pk_group_user){
+		this.group_id = group_id;
+		this.user_id = user_id;
+		this.pk_group_user = pk_group_user;
 	}
 	
 }

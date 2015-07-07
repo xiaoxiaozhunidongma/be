@@ -1,6 +1,7 @@
 package com.biju.function;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,6 +23,7 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.GroupCodeback;
 import com.BJ.javabean.GroupCodeback2;
 import com.BJ.javabean.Group_Code2;
+import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
@@ -54,12 +56,26 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	private boolean ismessage;
 	private boolean ischat;
 	private boolean isphone;
+	private int message = 0;
+	private int chat = 0;
+	private int phone = 0;
+	private int returndata;
+	private boolean isRegistered_one;
+	private boolean login;
+	private boolean isupdate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_team_setting);
+		// 得到fk_user
+		SharedPreferences sp2 = getSharedPreferences("Registered", 0);
+		isRegistered_one = sp2.getBoolean("isRegistered_one", false);
+		returndata = sp2.getInt("returndata", returndata);
+		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
+		login = sp1.getBoolean("Login", false);
+
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("Group", pk_group);
 		initUI();
@@ -127,67 +143,76 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				if (!isProduce) {
-					// 读取用户资料成功
-					Loginback usersettingback = GsonUtils.parseJson(A,
-							Loginback.class);
-					int userStatusmsg = usersettingback.getStatusMsg();
-					if (userStatusmsg == 1) {
-						List<User> Users = usersettingback.getReturnData();
-						if (Users.size() >= 1) {
-							User readuser = Users.get(0);
-							useravatar_path = readuser.getAvatar_path();
-						}
-						completeURL = beginStr + useravatar_path + endStr;
-						PreferenceUtils.saveImageCache(
-								TeamSettingActivity.this, completeURL);// 存SP
-						ImageLoaderUtils.getInstance().LoadImage(
-								TeamSettingActivity.this, completeURL,
-								mTeamSetting_head);
-					}
-				} else {
-					Log.e("TeamSettingActivity", "=========" + A);
-					try {
-						JSONObject jsonObject = new JSONObject(A);
-						Object object = jsonObject.get("returnData");
-						Log.e("TeamSettingActivity", "object====" + object);
-						Log.e("TeamSettingActivity", "object.toString()===="
-								+ object.toString());
-						Log.e("TeamSettingActivity",
-								"object.toString().length()===="
-										+ object.toString().length());
-						if (object.toString().length() > 4) {
-							Log.e("TeamSettingActivity", "进入第二次====");
-							java.lang.reflect.Type type = new TypeToken<GroupCodeback2>() {
-							}.getType();
-							GroupCodeback2 groupcodeback2 = GsonUtils
-									.parseJsonArray(A, type);
-							int Group_statusmsg2 = groupcodeback2
-									.getStatusMsg();
-							List<Group_Code2> grouplsit = (List<Group_Code2>) groupcodeback2
-									.getReturnData();
-							if (Group_statusmsg2 == 1) {
-								Group_Code2 groupcode = grouplsit.get(0);
-								String requestcode = groupcode
-										.getPk_group_code();
-								mTeamSetting_requestcode.setText(requestcode);
-							}
-						} else {
-							Log.e("TeamSettingActivity", "进入第一次====");
-							GroupCodeback groupcodeback = GsonUtils.parseJson(
-									A, GroupCodeback.class);
-							int Group_statusmsg = groupcodeback.getStatusMsg();
-							if (Group_statusmsg == 1) {
-								String requestcode = groupcodeback
-										.getReturnData();
-								mTeamSetting_requestcode.setText(requestcode);
-							}
-						}
-					} catch (JSONException e) {
-						e.printStackTrace();
-					}
+				if (isupdate) {
+					Log.e("TeamSettingActivity", "更新完的返回结果"+A);
 
+				} else {
+					if (!isProduce) {
+						// 读取用户资料成功
+						Loginback usersettingback = GsonUtils.parseJson(A,
+								Loginback.class);
+						int userStatusmsg = usersettingback.getStatusMsg();
+						if (userStatusmsg == 1) {
+							List<User> Users = usersettingback.getReturnData();
+							if (Users.size() >= 1) {
+								User readuser = Users.get(0);
+								useravatar_path = readuser.getAvatar_path();
+							}
+							completeURL = beginStr + useravatar_path + endStr;
+							PreferenceUtils.saveImageCache(
+									TeamSettingActivity.this, completeURL);// 存SP
+							ImageLoaderUtils.getInstance().LoadImage(
+									TeamSettingActivity.this, completeURL,
+									mTeamSetting_head);
+						}
+					} else {
+						Log.e("TeamSettingActivity", "=========" + A);
+						try {
+							JSONObject jsonObject = new JSONObject(A);
+							Object object = jsonObject.get("returnData");
+							Log.e("TeamSettingActivity", "object====" + object);
+							Log.e("TeamSettingActivity",
+									"object.toString()====" + object.toString());
+							Log.e("TeamSettingActivity",
+									"object.toString().length()===="
+											+ object.toString().length());
+							if (object.toString().length() > 4) {
+								Log.e("TeamSettingActivity", "进入第二次====");
+								java.lang.reflect.Type type = new TypeToken<GroupCodeback2>() {
+								}.getType();
+								GroupCodeback2 groupcodeback2 = GsonUtils
+										.parseJsonArray(A, type);
+								int Group_statusmsg2 = groupcodeback2
+										.getStatusMsg();
+								List<Group_Code2> grouplsit = (List<Group_Code2>) groupcodeback2
+										.getReturnData();
+								if (Group_statusmsg2 == 1) {
+									Group_Code2 groupcode = grouplsit.get(0);
+									String requestcode = groupcode
+											.getPk_group_code();
+									mTeamSetting_requestcode
+											.setText(requestcode);
+								}
+							} else {
+								Log.e("TeamSettingActivity", "进入第一次====");
+								GroupCodeback groupcodeback = GsonUtils
+										.parseJson(A, GroupCodeback.class);
+								int Group_statusmsg = groupcodeback
+										.getStatusMsg();
+								if (Group_statusmsg == 1) {
+									String requestcode = groupcodeback
+											.getReturnData();
+									mTeamSetting_requestcode
+											.setText(requestcode);
+								}
+							}
+						} catch (JSONException e) {
+							e.printStackTrace();
+						}
+
+					}
 				}
+
 			}
 
 			@Override
@@ -253,8 +278,10 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		isphone = !isphone;
 		if (isphone) {
 			mTeamSetting_phone.setText("未公开");
+			phone = 0;
 		} else {
 			mTeamSetting_phone.setText("已公开");
+			phone = 1;
 		}
 	}
 
@@ -262,8 +289,10 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		ischat = !ischat;
 		if (ischat) {
 			mTeamSetting_chat.setText("已关闭");
+			chat = 0;
 		} else {
 			mTeamSetting_chat.setText("已开启");
+			chat = 1;
 		}
 	}
 
@@ -271,8 +300,10 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		ismessage = !ismessage;
 		if (ismessage) {
 			mTeamSetting_message.setText("已关闭");
+			message = 0;
 		} else {
 			mTeamSetting_message.setText("已开启");
+			message = 1;
 		}
 	}
 
@@ -285,8 +316,27 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 				Group_teamsetting);
 	}
 
+	//更新小组设置
 	private void TeamSetting_save() {
-
+		isupdate = true;
+		Group_User group_user = new Group_User();
+		if (isRegistered_one) {
+			group_user.setFk_user(returndata);
+		} else {
+			if (login) {
+				int fk_user = LoginActivity.pk_user;
+				group_user.setFk_user(fk_user);
+			} else {
+				group_user.setFk_user(returndata);
+			}
+		}
+		group_user.setFk_group(pk_group);
+		group_user.setParty_warn(message);
+		group_user.setPublic_phone(phone);
+		group_user.setMessage_warn(chat);
+		group_user.setRole(1);
+		group_user.setStatus(1);
+		readuserinter.updateGroupSet(TeamSettingActivity.this, group_user);
 	}
 
 	private void TeamSetting_back() {

@@ -106,6 +106,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 
 	}
 
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -138,10 +139,13 @@ public class TimeActivity extends Activity implements OnClickListener {
 		editor.commit();
 		Intent intent=new Intent(TimeActivity.this, OkPartyActivity.class);
 		startActivity(intent);
+		finish();
 	}
 
 	private void time_back() {
 		finish();
+		Intent intent=new Intent(TimeActivity.this, MapActivity.class);
+		startActivity(intent);
 	}
 
 	private void PPopupWindows() {
