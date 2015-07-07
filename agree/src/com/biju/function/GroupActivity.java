@@ -4,6 +4,7 @@ import java.util.List;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -35,6 +36,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private boolean isRegistered_one;
 	private Interface groupInterface;
 	public static Integer pk_group_user;
+	private int isChat;
+	private int isMessage;
+	private int isPhone;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,26 +59,41 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		pk_group = intent.getIntExtra("pk_group",pk_group);
 		initInterface();
 		initreadUserGroupRelation();
+		Log.e("GroupActivity", "进入+onCreate()");
 	}
 
 	private void initInterface() {
 		groupInterface = new Interface();
 		groupInterface.setPostListener(new UserInterface() {
-			
 			@Override
 			public void success(String A) {
-				Groupuserback groupuserback=GsonUtils.parseJson(A, Groupuserback.class);
-				Integer statusMsg = groupuserback.getStatusMsg();
-				if(statusMsg==1)
-				{
-					List<Group_User> groupuser_returnData = groupuserback.getReturnData();
-					if(groupuser_returnData.size()>0)
+					Groupuserback groupuserback=GsonUtils.parseJson(A, Groupuserback.class);
+					Integer statusMsg = groupuserback.getStatusMsg();
+					if(statusMsg==1)
 					{
-						Group_User group_user=groupuser_returnData.get(0);
-						pk_group_user = group_user.getPk_group_user();
+						Log.e("GroupActivity", "返回小组关系ID===="+A);
+						List<Group_User> groupuser_returnData = groupuserback.getReturnData();
+						if(groupuser_returnData.size()>0)
+						{
+							Group_User group_user=groupuser_returnData.get(0);
+							pk_group_user = group_user.getPk_group_user();
+							int ischat = group_user.getMessage_warn();
+							int ismessage = group_user.getParty_warn();
+							int isphone = group_user.getPublic_phone();
+							Log.e("GroupActivity", "小组的聚会信息的提醒--------"+ismessage);
+							Log.e("GroupActivity", "小组的聊天信息的提醒--------"+ischat);
+							Log.e("GroupActivity", "小组的公开手机号码--------"+isphone);
+							isChat=ischat;
+							isMessage=ismessage;
+							isPhone=isphone;
+						}
+						SharedPreferences sp = getSharedPreferences("Switch", 0);
+						Editor editor = sp.edit();
+						editor.putInt("ismessage", isMessage);
+						editor.putInt("ischat", isChat);
+						editor.putInt("isphone", isPhone);
+						editor.commit();
 					}
-				}
-				Log.e("GroupActivity", "返回小组关系ID===="+A);
 			}
 			
 			@Override

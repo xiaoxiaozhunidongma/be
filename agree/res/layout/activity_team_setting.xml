@@ -130,7 +130,6 @@
         android:layout_alignRight="@+id/textView2"
         android:layout_marginRight="42dp"
         android:gravity="center"
-        android:text="已开启"
         android:textSize="15.0sp" />
 
     <TextView
@@ -152,7 +151,6 @@
         android:layout_alignRight="@+id/TeamSetting_message"
         android:layout_alignTop="@+id/textView3"
         android:gravity="center"
-        android:text="已开启"
         android:textSize="15.0sp"
         
         
@@ -176,7 +174,6 @@
         android:layout_height="wrap_content"
         android:layout_alignRight="@+id/TeamSetting_chat"
         android:layout_alignTop="@+id/textView5"
-        android:text="已公开"
         android:textSize="15.0sp"
         android:gravity="center"
          />

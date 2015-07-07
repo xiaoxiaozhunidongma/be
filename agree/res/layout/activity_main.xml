@@ -159,4 +159,19 @@
          android:src="@drawable/shop_icon" 
          android:visibility="invisible"/>
 
+     <EditText
+         android:id="@+id/edit_address"
+         android:layout_width="match_parent"
+         android:layout_height="45dp"
+         android:layout_alignTop="@+id/bmapView"
+         android:layout_centerHorizontal="true"
+         android:ems="10"
+         android:background="#ffffff" 
+         android:layout_marginTop="5dp"
+         android:gravity="center"
+         android:hint="使用文本输入地址">
+
+         <requestFocus />
+     </EditText>
+
 </RelativeLayout>
