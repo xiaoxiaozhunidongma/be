@@ -7,6 +7,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -16,9 +18,9 @@ import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.animation.Animation.AnimationListener;
 import android.view.Window;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -43,6 +45,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeOption;
 import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
@@ -71,6 +74,9 @@ public class MapActivity extends Activity implements
 	private Marker mMarkerD;
 	private float x;
 	private float y;
+	private EditText edit_address;
+	private String strCity;
+	private String strGeocodekey;
 
 	/**
 	 * 定位SDK监听函数
@@ -129,6 +135,7 @@ public class MapActivity extends Activity implements
 		findViewById(R.id.map_back).setOnClickListener(this);
 		findViewById(R.id.map_next_layout).setOnClickListener(this);// 下一步
 		findViewById(R.id.map_next).setOnClickListener(this);
+		edit_address = (EditText) findViewById(R.id.edit_address);
 	}
 
 	private void initListener() {
@@ -339,7 +346,25 @@ public class MapActivity extends Activity implements
 
 	@Override
 	public void onGetGeoCodeResult(GeoCodeResult result) {
-
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			Toast.makeText(MapActivity.this, "抱歉，未能找到结果", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
+		mLat=result.getLocation().latitude;
+		mLng=result.getLocation().longitude;
+//		//测试定位图标
+//		initMap();
+		float mLng_1=(float) mLng;
+		float mLat_1=(float) mLat;
+		Log.e("MapActivity", "mLng_1:"+mLng_1);
+		Log.e("MapActivity", "mLat_1:"+mLat_1);
+		SharedPreferences sp=getSharedPreferences("isParty", 0);
+		Editor editor=sp.edit();
+		editor.putString("isAddress", result.getAddress());
+		editor.putFloat("mLng", mLng_1);
+		editor.putFloat("mLat", mLat_1);
+		editor.commit();
 	}
 
 	@Override
@@ -349,9 +374,12 @@ public class MapActivity extends Activity implements
 					.show();
 			return;
 		}
-		NotifiUtils.showToast(MapActivity.this, result.getAddress());
+//		NotifiUtils.showToast(MapActivity.this, result.getAddress());
+		edit_address.setText(result.getAddress());
 		float mLng_1=(float) mLng;
 		float mLat_1=(float) mLat;
+		Log.e("MapActivity", "点击mLng_1:"+mLng_1);
+		Log.e("MapActivity", "点击mLat_1:"+mLat_1);
 		SharedPreferences sp=getSharedPreferences("isParty", 0);
 		Editor editor=sp.edit();
 		editor.putString("isAddress", result.getAddress());
@@ -379,9 +407,24 @@ public class MapActivity extends Activity implements
 	}
 
 	private void map_next() {
-		Intent intent = new Intent(MapActivity.this, TimeActivity.class);
-		startActivity(intent);
-		finish();
+		String StrAddress = edit_address.getText().toString();
+		if(StrAddress.length()>=9){
+			strCity = StrAddress.substring(0, 6);
+			strGeocodekey = StrAddress.substring(6);
+		}else{
+			Toast.makeText(MapActivity.this, "长度格式：福建省厦门市湖里区小学路", Toast.LENGTH_SHORT).show();
+			return;
+		}
+		Log.e("MapActivity", "StrAddress:"+StrAddress);
+		Log.e("MapActivity", "StrCity:"+strCity);
+		Log.e("MapActivity", "StrGeocodekey:"+strGeocodekey);
+		if(strCity!=null&&strGeocodekey!=null){
+			mSearch.geocode(new GeoCodeOption().city(strCity).address(strGeocodekey));
+		}
+	
+			Intent intent = new Intent(MapActivity.this, TimeActivity.class);
+			startActivity(intent);
+			finish();
 	}
 
 	private void map_back() {

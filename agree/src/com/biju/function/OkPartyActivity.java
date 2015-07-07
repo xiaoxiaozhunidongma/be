@@ -105,13 +105,13 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 		// 得到地址和经纬度
 		SharedPreferences sp = getSharedPreferences("isParty", 0);
 		address = sp.getString("isAddress", "");
+		Log.e("OkPartyActivity", "address======"+address);
 		float mLng_1 = sp.getFloat("mLng", 0);
 		float mLat_1 = sp.getFloat("mLat", 0);
 		mLng = mLng_1;
 		mLat = mLat_1;
 		// 得到年月日和选的时间
 		isCalendar = sp.getString("isCalendar", "");
-		Log.e("OkPartyActivity", "isCalendar======"+isCalendar);
 		String years = isCalendar.substring(0, 4);
 		String months = isCalendar.substring(5, 7);
 		String days = isCalendar.substring(8, 10);
