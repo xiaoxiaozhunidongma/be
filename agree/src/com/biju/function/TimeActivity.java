@@ -32,6 +32,8 @@ public class TimeActivity extends Activity implements OnClickListener {
 	private TextView mTime_next;
 	private int mHour;
 	private int mMinute;
+	private int h;
+	private int m;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,8 +76,8 @@ public class TimeActivity extends Activity implements OnClickListener {
 		mTime_next = (TextView) findViewById(R.id.time_next);
 		mTime_next.setOnClickListener(this);
 		mTimePicker = (TimePicker) findViewById(R.id.timePicker);
-//		OnChangeListener buc = new OnChangeListener();
-//		mTime_next.setOnClickListener(buc);
+		OnChangeListener buc = new OnChangeListener();
+		mTime_next.setOnClickListener(buc);
 		// 是否使用24小时制
 		mTimePicker.setIs24HourView(true);
 		TimeListener times = new TimeListener();
@@ -85,9 +87,10 @@ public class TimeActivity extends Activity implements OnClickListener {
 	class OnChangeListener implements OnClickListener {
 		@Override
 		public void onClick(View v) {
-			int h = mTimePicker.getCurrentHour();
-			int m = mTimePicker.getCurrentMinute();
+			h = mTimePicker.getCurrentHour();
+			m = mTimePicker.getCurrentMinute();
 			Log.e("TimeActivity", "h:" + h + "   m:" + m);
+			time_next();
 		}
 	}
 
@@ -106,7 +109,6 @@ public class TimeActivity extends Activity implements OnClickListener {
 
 	}
 
-	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -121,30 +123,30 @@ public class TimeActivity extends Activity implements OnClickListener {
 		case R.id.time_back:
 			time_back();
 			break;
-		case R.id.time_next_layout:
-		case R.id.time_next:
-			time_next();
-			break;
+		// case R.id.time_next_layout:
+		// case R.id.time_next:
+		// time_next();
+		// break;
 		default:
 			break;
 		}
 	}
 
 	private void time_next() {
-		SharedPreferences sp=getSharedPreferences("isParty", 0);
-		Editor editor=sp.edit();
+		SharedPreferences sp = getSharedPreferences("isParty", 0);
+		Editor editor = sp.edit();
 		editor.putInt("hour", mHour);
 		editor.putInt("minute", mMinute);
 		editor.putString("isCalendar", date);
 		editor.commit();
-		Intent intent=new Intent(TimeActivity.this, OkPartyActivity.class);
+		Intent intent = new Intent(TimeActivity.this, OkPartyActivity.class);
 		startActivity(intent);
 		finish();
 	}
 
 	private void time_back() {
 		finish();
-		Intent intent=new Intent(TimeActivity.this, MapActivity.class);
+		Intent intent = new Intent(TimeActivity.this, MapActivity.class);
 		startActivity(intent);
 	}
 

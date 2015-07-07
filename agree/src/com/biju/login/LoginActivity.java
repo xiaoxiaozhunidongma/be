@@ -236,60 +236,68 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onStart() {
-		boolean isWIFI = Ifwifi.getNetworkConnected(LoginActivity.this);
-		if (isWIFI) {
-			FileInputStream fis;
-			try {
-				Log.e("LoginActivity", "sd¿¨Â·¾¶" + fileName);
-				fis = new FileInputStream(fileName);
-				ObjectInputStream ois = new ObjectInputStream(fis);
-				Person person = (Person) ois.readObject();
-				mLogin_account.setText(person.pk_user);
-				mLogin_password.setText(person.password);
-				Log.e("person.pk_user", person.pk_user);
-				Log.e("person.password", person.password);
-				SharedPreferences sp = getSharedPreferences("isLogin", 0);
-				onelogin = sp.getBoolean("Login", false);
-				if (onelogin) {
-					manually_login.setVisibility(View.GONE);
-					auto_login.setVisibility(View.VISIBLE);
-					drawable = (AnimationDrawable) auto_login_image
-							.getDrawable();
-					drawable.start();
-					if (!("".equals(person.pk_user) && ""
-							.equals(person.password))) {
-						auto_ReadUser(Integer.valueOf(person.pk_user));
-						if (person.password.equals(password)) {
-							User autologinuser = new User();
-							autologinuser.setPk_user(pk_user);
-							autologinuser.setAvatar_path(avatar_path);
-							autologinuser.setNickname(nickname);
-							autologinuser.setPassword(person.password);
-							autologinuser.setPhone(phone);
-							readuserinter.userLogin(LoginActivity.this,
-									autologinuser);
+		SharedPreferences login_sp=getSharedPreferences("Logout", 0);
+		boolean isLogout=login_sp.getBoolean("isLogout", false);
+		if(!isLogout)
+		{
+			boolean isWIFI = Ifwifi.getNetworkConnected(LoginActivity.this);
+			if (isWIFI) {
+				FileInputStream fis;
+				try {
+					Log.e("LoginActivity", "sd¿¨Â·¾¶" + fileName);
+					fis = new FileInputStream(fileName);
+					ObjectInputStream ois = new ObjectInputStream(fis);
+					Person person = (Person) ois.readObject();
+					mLogin_account.setText(person.pk_user);
+					mLogin_password.setText(person.password);
+					Log.e("person.pk_user", person.pk_user);
+					Log.e("person.password", person.password);
+					SharedPreferences sp = getSharedPreferences("isLogin", 0);
+					onelogin = sp.getBoolean("Login", false);
+					if (onelogin) {
+						manually_login.setVisibility(View.GONE);
+						auto_login.setVisibility(View.VISIBLE);
+						drawable = (AnimationDrawable) auto_login_image
+								.getDrawable();
+						drawable.start();
+						if (!("".equals(person.pk_user) && ""
+								.equals(person.password))) {
+							auto_ReadUser(Integer.valueOf(person.pk_user));
+							if (person.password.equals(password)) {
+								User autologinuser = new User();
+								autologinuser.setPk_user(pk_user);
+								autologinuser.setAvatar_path(avatar_path);
+								autologinuser.setNickname(nickname);
+								autologinuser.setPassword(person.password);
+								autologinuser.setPhone(phone);
+								readuserinter.userLogin(LoginActivity.this,
+										autologinuser);
+							}
 						}
+					} else {
+						manually_login.setVisibility(View.VISIBLE);
+						auto_login.setVisibility(View.GONE);
 					}
-				} else {
-					manually_login.setVisibility(View.VISIBLE);
-					auto_login.setVisibility(View.GONE);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (StreamCorruptedException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
 				}
-			} catch (FileNotFoundException e) {
-				e.printStackTrace();
-			} catch (StreamCorruptedException e) {
-				e.printStackTrace();
-			} catch (IOException e) {
-				e.printStackTrace();
-			} catch (ClassNotFoundException e) {
-				e.printStackTrace();
+			} else {
+				manually_login.setVisibility(View.VISIBLE);
+				auto_login.setVisibility(View.GONE);
+				Toast.makeText(LoginActivity.this, "ÍøÂçÒì³££¬Çë¼ì²éÍøÂç!",
+						Toast.LENGTH_SHORT).show();
 			}
-		} else {
+		}else
+		{
 			manually_login.setVisibility(View.VISIBLE);
 			auto_login.setVisibility(View.GONE);
-			Toast.makeText(LoginActivity.this, "ÍøÂçÒì³££¬Çë¼ì²éÍøÂç!",
-					Toast.LENGTH_SHORT).show();
 		}
-
 		super.onStart();
 	}
 

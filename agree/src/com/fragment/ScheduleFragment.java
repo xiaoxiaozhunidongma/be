@@ -1,6 +1,8 @@
 package com.fragment;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.content.SharedPreferences;
@@ -61,7 +63,6 @@ public class ScheduleFragment extends Fragment {
 			Bundle savedInstanceState) {
 		mLayout = inflater
 				.inflate(R.layout.fragment_schedule, container, false);
-		initUI();
 		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
 				0);
 		isRegistered_one = sp.getBoolean("isRegistered_one", false);
@@ -71,6 +72,7 @@ public class ScheduleFragment extends Fragment {
 		login = sp1.getBoolean("Login", false);
 		initInterface();
 		initreadUserGroupParty();
+		initUI();
 		return mLayout;
 	}
 
@@ -79,17 +81,22 @@ public class ScheduleFragment extends Fragment {
 				.findViewById(R.id.Schedule_prompt_layout);// 提示
 		mPull_refresh_list = (PullToRefreshListView) mLayout
 				.findViewById(R.id.pull_refresh_list);
-		mPull_refresh_list.setOnRefreshListener(new OnRefreshListener<ListView>() {
+		mPull_refresh_list
+				.setOnRefreshListener(new OnRefreshListener<ListView>() {
 
 					@Override
 					public void onRefresh(
 							PullToRefreshBase<ListView> refreshView) {
-						if(partylist.size()>0)
-						{
+						SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
+						String label = sdf.format(new Date());
+						// 显示最后更新的时间
+						refreshView.getLoadingLayoutProxy()
+								.setLastUpdatedLabel(label);
+						if (partylist.size() > 0) {
 							new GetDataTask().execute();
-						}else
-						{
-							Toast.makeText(getActivity(), "暂无更新", Toast.LENGTH_SHORT).show();
+						} else {
+							Toast.makeText(getActivity(), "暂无更新",
+									Toast.LENGTH_SHORT).show();
 							mPull_refresh_list.onRefreshComplete();
 						}
 					}
@@ -110,10 +117,9 @@ public class ScheduleFragment extends Fragment {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				int pos=arg2-mSchedule_listView.getHeaderViewsCount();
-				if(pos>=0)
-				{
-					Log.e("ScheduleFragment", "所点击中的行数"+arg2);
+				int pos = arg2 - mSchedule_listView.getHeaderViewsCount();
+				if (pos >= 0) {
+					Log.e("ScheduleFragment", "所点击中的行数" + arg2);
 				}
 			}
 		});
@@ -178,7 +184,7 @@ public class ScheduleFragment extends Fragment {
 				holder.years_month = (TextView) inflater
 						.findViewById(R.id.years_month);
 				holder.name = (TextView) inflater.findViewById(R.id.name);
-				holder.times=(TextView) inflater.findViewById(R.id.times);
+				holder.times = (TextView) inflater.findViewById(R.id.times);
 				holder.address = (TextView) inflater.findViewById(R.id.address);
 				inflater.setTag(holder);
 			} else {
@@ -186,13 +192,17 @@ public class ScheduleFragment extends Fragment {
 				holder = (ViewHolder) inflater.getTag();
 			}
 			Party party = partylist.get(position);
-			String time=party.getBegin_time();
-			Log.e("ScheduleFragment", "时间的长度===="+time.length());
-			String yuars_month=time.substring(0, 10);
-			String times=time.substring(11, 16);
-			holder.years_month.setText(yuars_month);
+			String time = party.getBegin_time();
+			Log.e("ScheduleFragment", "时间的长度====" + time.length());
+			String yuars_month = time.substring(0, 10);
+			String years=yuars_month.substring(0, 4);
+			String months=yuars_month.substring(5, 7);
+			String days=yuars_month.substring(8, 10);
+			String times=years+"年"+months+"月"+days+"日";
+			String datetimes = time.substring(11, 16);
+			holder.years_month.setText(times);
 			holder.name.setText(party.getName());
-			holder.times.setText(times);
+			holder.times.setText(datetimes);
 			holder.address.setText(party.getLocation());
 
 			return inflater;
@@ -219,16 +229,14 @@ public class ScheduleFragment extends Fragment {
 					}
 					Log.e("ScheduleFragment", "读取出小组中的聚会信息===" + A);
 				}
-				if(partylist.size()>0)
-				{
+				if (partylist.size() > 0) {
 					mSchedule_prompt_layout.setVisibility(View.GONE);
 					mPull_refresh_list.setVisibility(View.VISIBLE);
-				}else
-				{
+				} else {
 					mSchedule_prompt_layout.setVisibility(View.VISIBLE);
 					mPull_refresh_list.setVisibility(View.GONE);
 				}
-				 adapter.notifyDataSetChanged();
+				adapter.notifyDataSetChanged();
 			}
 
 			@Override

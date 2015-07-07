@@ -362,7 +362,6 @@ public class MapActivity extends Activity implements
 	}
 
 
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -382,11 +381,15 @@ public class MapActivity extends Activity implements
 	private void map_next() {
 		Intent intent = new Intent(MapActivity.this, TimeActivity.class);
 		startActivity(intent);
+		finish();
 	}
 
 	private void map_back() {
 		finish();
+		Intent intent=new Intent(MapActivity.this, NewPartyActivity.class);
+		startActivity(intent);
 	}
+
 
 
 }

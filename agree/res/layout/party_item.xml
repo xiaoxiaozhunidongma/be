@@ -5,17 +5,40 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="60.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"
-            android:layout_width="85.0dp"
+            android:layout_width="100.0dp"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10.0dp" >
+            
+            <TextView
+            android:id="@+id/years_month"
+            android:layout_width="100.0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:gravity="left|center_vertical"
+            android:text="TextView"
+            android:textColor="#00aeae"
+            android:layout_marginTop="5.0dp"
+            android:textSize="13.0sp" />
+
+        <TextView
+            android:id="@+id/times"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/years_month"
+            android:text="TextView"
+            android:textColor="#00aeae"
+            android:gravity="left|center_vertical"
+            android:textSize="25.0sp"
+            ></TextView>
         </RelativeLayout>
 
         <RelativeLayout
@@ -34,6 +57,7 @@
                 android:layout_alignParentTop="true"
                 android:gravity="left|center_vertical"
                 android:text="TextView"
+                android:singleLine="true"
                 android:layout_marginTop="5.0dp"
                 android:textSize="17.0sp" />
 
@@ -91,33 +115,6 @@
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="#aaaaaa" />
-
-        <TextView
-            android:id="@+id/years_month"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_toLeftOf="@+id/relativeLayout2"
-            android:gravity="left|center_vertical"
-            android:text="TextView"
-            android:textColor="#00e3e3"
-            android:layout_marginLeft="10.0dp"
-            android:layout_marginTop="5.0dp"
-            android:textSize="13.0sp" />
-
-        <TextView
-            android:id="@+id/times"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/years_month"
-            android:layout_toLeftOf="@+id/relativeLayout2"
-            android:text="TextView"
-            android:textColor="#00e3e3"
-            android:layout_marginLeft="5.0dp"
-            android:gravity="left|center_vertical"
-            android:textSize="20.0sp"
-             />
 
     </RelativeLayout>
 
