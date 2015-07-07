@@ -195,10 +195,14 @@ public class ScheduleFragment extends Fragment {
 			String time = party.getBegin_time();
 			Log.e("ScheduleFragment", "时间的长度====" + time.length());
 			String yuars_month = time.substring(0, 10);
-			String times = time.substring(11, 16);
-			holder.years_month.setText(yuars_month);
+			String years=yuars_month.substring(0, 4);
+			String months=yuars_month.substring(5, 7);
+			String days=yuars_month.substring(8, 10);
+			String times=years+"年"+months+"月"+days+"日";
+			String datetimes = time.substring(11, 16);
+			holder.years_month.setText(times);
 			holder.name.setText(party.getName());
-			holder.times.setText(times);
+			holder.times.setText(datetimes);
 			holder.address.setText(party.getLocation());
 
 			return inflater;

@@ -25,9 +25,8 @@
             android:gravity="left|center_vertical"
             android:text="TextView"
             android:textColor="#00aeae"
-            android:layout_marginLeft="5.0dp"
             android:layout_marginTop="5.0dp"
-            android:textSize="15.0sp" />
+            android:textSize="13.0sp" />
 
         <TextView
             android:id="@+id/times"

@@ -155,7 +155,7 @@
         android:layout_below="@+id/textView9"
         android:layout_marginTop="36dp"
         android:layout_toLeftOf="@+id/textView5"
-        android:background="@drawable/login_1"
+        android:background="@drawable/login_selector"
         android:gravity="center"
         android:text="参与"
         android:textSize="18.0sp" />
@@ -167,7 +167,7 @@
         android:layout_below="@+id/textView11"
         android:layout_marginTop="36dp"
         android:layout_toRightOf="@+id/textView10"
-        android:background="@drawable/login_1"
+        android:background="@drawable/login_selector"
         android:gravity="center"
         android:text="拒绝"
         android:textSize="18.0sp" />
