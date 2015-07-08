@@ -66,7 +66,7 @@ public class MapActivity extends Activity implements
 	boolean isFirstLoc = true;// 是否首次定位
 	private double mLng;
 	private double mLat;
-	private float scale = 15.0f;
+	private float scale = 14.0f;
 	private LocationClient mLocClient;
 	private ArrayList<BitmapDescriptor> mOverLayList = new ArrayList<BitmapDescriptor>();
 	private GeoCoder mSearch;
@@ -224,7 +224,7 @@ public class MapActivity extends Activity implements
 		// MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(scale);
 		// mBaiduMap.setMapStatus(msu);
 		// 添加店铺坐标
-		addOverlay(mLat, mLng, R.drawable.shop_icon);
+		addOverlay(mLat, mLng, R.drawable.iconfont2);
 
 		// 开启定位图层
 		mBaiduMap.setMyLocationEnabled(true);

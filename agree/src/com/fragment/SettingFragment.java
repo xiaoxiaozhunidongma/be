@@ -25,6 +25,7 @@ import com.biju.Interface.UserInterface;
 import com.biju.R;
 import com.biju.function.AboutUsActivity;
 import com.biju.function.FeedbackActivity;
+import com.biju.function.PartyDetailsActivity;
 import com.biju.function.UserSettingActivity;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
