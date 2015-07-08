@@ -10,6 +10,8 @@ import com.baidu.location.LocationClientOption.LocationMode;
 import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
+import com.baidu.mapapi.map.MapPoi;
+import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
@@ -17,7 +19,17 @@ import com.baidu.mapapi.map.Marker;
 import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
+import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapDoubleClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
+import com.baidu.mapapi.map.BaiduMap.OnMapTouchListener;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.search.core.SearchResult;
+import com.baidu.mapapi.search.geocode.GeoCodeResult;
+import com.baidu.mapapi.search.geocode.GeoCoder;
+import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
+import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.R;
 import com.biju.function.MapActivity.MyLocationListenner;
 
@@ -25,12 +37,16 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.util.Log;
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
 import android.view.animation.Animation.AnimationListener;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
-public class PartyDetailsActivity extends Activity {
+public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResultListener {
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	public MyLocationListenner myListener = new MyLocationListenner();
@@ -43,6 +59,8 @@ public class PartyDetailsActivity extends Activity {
 	private LocationMode tempMode = LocationMode.Hight_Accuracy;
 	private ArrayList<BitmapDescriptor> mOverLayList = new ArrayList<BitmapDescriptor>();
 	private Marker mMarkerD;
+	private GeoCoder mSearch;
+	private EditText edit_show;
 	
 	/**
 	 * 定位SDK监听函数
@@ -87,7 +105,60 @@ public class PartyDetailsActivity extends Activity {
 		initMap();
 		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(scale);
 		mBaiduMap.setMapStatus(msu);
+		initListener(); 
+		// 初始化搜索模块，注册事件监听 
+		mSearch = GeoCoder.newInstance();
+		mSearch.setOnGetGeoCodeResultListener(this);
+		
+		initUI();
 	}
+
+	
+	private void initUI() {
+		edit_show = (EditText) findViewById(R.id.edit_show);
+	}
+
+
+	private void initListener() {
+
+		mBaiduMap.setOnMapTouchListener(new OnMapTouchListener() {
+
+			@Override
+			public void onTouch(MotionEvent event) {
+			}
+		});
+
+		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
+
+			public void onMapClick(LatLng point) {
+			}
+
+			public boolean onMapPoiClick(MapPoi poi) {
+				return false;
+			}
+		});
+		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
+			public void onMapLongClick(LatLng point) {
+			}
+		});
+		mBaiduMap.setOnMapDoubleClickListener(new OnMapDoubleClickListener() {
+			public void onMapDoubleClick(LatLng point) {
+
+			}
+		});
+		mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
+			public void onMapStatusChangeStart(MapStatus status) {
+			}
+
+			public void onMapStatusChangeFinish(MapStatus status) {
+			}
+
+			public void onMapStatusChange(MapStatus status) {
+			}
+		});
+
+	}
+
 
 	private void initMap() {
 		// 添加地图标点
@@ -123,6 +194,23 @@ public class PartyDetailsActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.party_details, menu);
 		return true;
+	}
+
+
+	@Override
+	public void onGetGeoCodeResult(GeoCodeResult arg0) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
+	@Override
+	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
+		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
+			Toast.makeText(PartyDetailsActivity .this, "抱歉，未能找到结果", Toast.LENGTH_LONG)
+					.show();
+			return;
+		}
 	}
 
 }
