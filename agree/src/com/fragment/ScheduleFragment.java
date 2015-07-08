@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -23,11 +24,13 @@ import android.widget.Toast;
 
 import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party;
+import com.BJ.javabean.Party_User;
 import com.BJ.javabean.Partyback;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
 import com.biju.function.GroupActivity;
+import com.biju.function.PartyDetailsActivity;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
@@ -48,7 +51,6 @@ public class ScheduleFragment extends Fragment {
 	private IDs ids;
 	private Interface scheduleInterface;
 	private RelativeLayout mSchedule_prompt_layout;
-	private RelativeLayout mSchedule_list_layout;
 	private ListView mSchedule_listView;
 	private ArrayList<Party> partylist = new ArrayList<Party>();
 	private MyAdapter adapter = null;
@@ -120,6 +122,10 @@ public class ScheduleFragment extends Fragment {
 				int pos = arg2 - mSchedule_listView.getHeaderViewsCount();
 				if (pos >= 0) {
 					Log.e("ScheduleFragment", "所点击中的行数" + arg2);
+					Party party = partylist.get(pos);
+					Intent intent=new Intent(getActivity(), PartyDetailsActivity.class);
+					intent.putExtra("oneParty", party);
+					startActivity(intent);
 				}
 			}
 		});
