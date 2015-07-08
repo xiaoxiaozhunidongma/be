@@ -70,6 +70,27 @@
         android:layout_height="150dp"
         android:layout_below="@+id/relativeLayout1"
         android:layout_centerHorizontal="true" >
+        <com.baidu.mapapi.map.MapView
+         android:id="@+id/bmapView"
+         android:layout_width="match_parent"
+         android:layout_height="match_parent"
+         android:layout_alignParentTop="true"
+         android:clickable="true" 
+          />
+
+        <EditText
+            android:id="@+id/edit_show"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:ems="10" 
+            android:background="#f0ffffff"
+            android:gravity="center">
+
+            <requestFocus />
+        </EditText>
+
     </RelativeLayout>
 
     <TextView
@@ -176,8 +197,8 @@
         android:layout_width="80.0dp"
         android:layout_height="80.0dp"
         android:layout_alignParentBottom="true"
-        android:layout_marginBottom="34dp"
-        android:layout_toRightOf="@+id/PartyDetails_name"
+        android:layout_alignRight="@+id/PartyDetails_did_not_say"
+        android:layout_marginBottom="32dp"
         android:background="@drawable/login_selector"
         android:gravity="center"
         android:text="拒绝"

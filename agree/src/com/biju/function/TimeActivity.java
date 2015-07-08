@@ -1,6 +1,9 @@
 package com.biju.function;
 
 import java.util.ArrayList;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -213,6 +216,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 							R.drawable.calendar_date_focused);
 					date = dateFormat;// 最后返回给全局 date
 					// Log.e("date", "date=========" + date);
+					Log.e("date", "date=========" + date);
 					SharedPreferences sp = getSharedPreferences("isdate", 0);
 					Editor editor = sp.edit();
 					editor.putString("dateFormat", dateFormat);

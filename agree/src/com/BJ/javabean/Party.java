@@ -7,10 +7,6 @@ import com.activeandroid.annotation.Table;
 
 @Table (name="t_party")
 public class Party implements Serializable{
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -570720089670112171L;
 	@Column
 	private String pk_party;
 	@Column

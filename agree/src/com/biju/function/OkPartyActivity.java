@@ -212,8 +212,7 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 		Log.e("OkPartyActivity", "新建日程的name=====" + name);
 		Log.e("OkPartyActivity", "新建日程的remark=====" + remark);
 		Log.e("OkPartyActivity", "新建日程的fk_group=====" + fk_group);
-		Log.e("OkPartyActivity", "新建日程的时间=====" + isCalendar + "    " + hour
-				+ ":" + minute);
+		Log.e("OkPartyActivity", "新建日程的时间=====" + isCalendar + "    " + hour+ ":" + minute);
 		Log.e("OkPartyActivity", "新建日程的mLng=====" + mLng);
 		Log.e("OkPartyActivity", "新建日程的mLat=====" + mLat);
 		Log.e("OkPartyActivity", "新建日程的地址=====" + address);

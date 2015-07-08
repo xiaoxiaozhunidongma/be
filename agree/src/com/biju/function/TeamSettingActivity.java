@@ -1,6 +1,7 @@
 package com.biju.function;
 
 import java.util.List;
+import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -178,6 +179,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 						Toast.makeText(TeamSettingActivity.this,
 								"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
 					}
+					Log.e("TeamSettingActivity", "更新完的返回结果"+A);
 
 				} else {
 					if (!isProduce) {
@@ -312,9 +314,9 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		if (!isPhone) {
 			mTeamSetting_phone.setText("未公开");
 			phone=0;
-		} else {
+		}  else {
 			mTeamSetting_phone.setText("已公开");
-			phone=1;
+			phone = 1;
 		}
 	}
 
@@ -337,7 +339,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		} else {
 			mTeamSetting_message.setText("已开启");
 			message=1;
-		}
+		} 
 	}
 
 	private void TeamSetting_requestcode() {
@@ -349,12 +351,10 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 				Group_teamsetting);
 	}
 
-	// 更新小组设置
+	//更新小组设置
 	private void TeamSetting_save() {
 		isupdate = true;
-		int pk_group_user=GroupActivity.pk_group_user;
 		Group_User group_user = new Group_User();
-		group_user.setPk_group_user(pk_group_user);
 		if (isRegistered_one) {
 			group_user.setFk_user(returndata);
 		} else {
