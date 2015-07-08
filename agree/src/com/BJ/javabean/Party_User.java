@@ -1,11 +1,17 @@
 package com.BJ.javabean;
 
+import java.io.Serializable;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table (name="tre_party_user")
-public class Party_User {
+public class Party_User implements Serializable{
 
+	/**
+	 * 
+	 */
+//	private static final long serialVersionUID = 5734380104721556852L;
 	@Column
 	private Integer pk_party_user;
 	@Column

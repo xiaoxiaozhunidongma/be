@@ -95,7 +95,7 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 		});
 	}
 
-	private static String getMyUUID() {
+	public static String getMyUUID() {
 		UUID uuid = UUID.randomUUID();
 		String uniqueId = uuid.toString();
 		return uniqueId;

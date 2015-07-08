@@ -1,10 +1,12 @@
 package com.BJ.javabean;
 
+import java.io.Serializable;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table (name="t_party")
-public class Party {
+public class Party implements Serializable{
 	@Column
 	private String pk_party;
 	@Column

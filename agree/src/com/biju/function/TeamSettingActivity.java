@@ -18,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.Group;
 import com.BJ.javabean.GroupCodeback;
@@ -25,6 +26,7 @@ import com.BJ.javabean.GroupCodeback2;
 import com.BJ.javabean.Group_Code2;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Loginback;
+import com.BJ.javabean.Teamupdateback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
@@ -53,9 +55,12 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	private TextView mTeamSetting_message;
 	private TextView mTeamSetting_chat;
 	private TextView mTeamSetting_phone;
-	private boolean ismessage;
-	private boolean ischat;
-	private boolean isphone;
+	private int ismessage;
+	private int ischat;
+	private int isphone;
+	private boolean isMessage;
+	private boolean isChat;
+	private boolean isPhone;
 	private int message = 0;
 	private int chat = 0;
 	private int phone = 0;
@@ -63,6 +68,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	private boolean isRegistered_one;
 	private boolean login;
 	private boolean isupdate;
+	private boolean test;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -87,29 +93,44 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 					completeURL, mTeamSetting_head);
 		}
 		SharedPreferences sp = getSharedPreferences("Switch", 0);
-		ismessage = sp.getBoolean("ismessage", false);
-		ischat = sp.getBoolean("ischat", false);
-		isphone = sp.getBoolean("isphone", false);
+		ismessage = sp.getInt("ismessage", 0);
+		Log.e("TeamSettingActivity", "小组的聚会信息的提醒--------" + ismessage);
+		ischat = sp.getInt("ischat", 0);
+		Log.e("TeamSettingActivity", "小组的聊天信息的提醒--------" + ischat);
+		isphone = sp.getInt("isphone", 0);
+		Log.e("TeamSettingActivity", "小组的公开手机号码--------" + isphone);
 		initSwitch();
 	}
 
 	private void initSwitch() {
-		if (ismessage) {
+		if (ismessage == 0) {
+			isMessage = false;
 			mTeamSetting_message.setText("已关闭");
+			message=0;
 		} else {
+			isMessage = true;
 			mTeamSetting_message.setText("已开启");
+			message=1;
 		}
 
-		if (ischat) {
+		if (ischat == 0) {
+			isChat = false;
 			mTeamSetting_chat.setText("已关闭");
+			chat=0;
 		} else {
+			isChat = true;
 			mTeamSetting_chat.setText("已开启");
+			chat=1;
 		}
 
-		if (isphone) {
+		if (isphone == 0) {
+			isPhone = false;
 			mTeamSetting_phone.setText("未公开");
+			phone = 0;
 		} else {
+			isPhone = true;
 			mTeamSetting_phone.setText("已公开");
+			phone = 1;
 		}
 	}
 
@@ -144,7 +165,20 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				if (isupdate) {
-					Log.e("TeamSettingActivity", "更新完的返回结果"+A);
+					Teamupdateback teamupdateback = GsonUtils.parseJson(A,
+							Teamupdateback.class);
+					int statusmsg = teamupdateback.getStatusMsg();
+					if (statusmsg == 1) {
+						Log.e("TeamSettingActivity", "更新完的返回结果" + A);
+						SharedPreferences teamsetting_sp=getSharedPreferences("Setting", 0);
+						Editor editor=teamsetting_sp.edit();
+						editor.putBoolean("setting", true);
+						editor.commit();
+						finish();
+					} else {
+						Toast.makeText(TeamSettingActivity.this,
+								"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
+					}
 
 				} else {
 					if (!isProduce) {
@@ -275,35 +309,35 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void TeamSetting_phone() {
-		isphone = !isphone;
-		if (isphone) {
+		isPhone = !isPhone;
+		if (!isPhone) {
 			mTeamSetting_phone.setText("未公开");
-			phone = 0;
+			phone=0;
 		} else {
 			mTeamSetting_phone.setText("已公开");
-			phone = 1;
+			phone=1;
 		}
 	}
 
 	private void TeamSetting_chat() {
-		ischat = !ischat;
-		if (ischat) {
+		isChat = !isChat;
+		if (!isChat) {
 			mTeamSetting_chat.setText("已关闭");
-			chat = 0;
+			chat=0;
 		} else {
 			mTeamSetting_chat.setText("已开启");
-			chat = 1;
+			chat=1;
 		}
 	}
 
 	private void TeamSetting_message() {
-		ismessage = !ismessage;
-		if (ismessage) {
+		isMessage = !isMessage;
+		if (!isMessage) {
 			mTeamSetting_message.setText("已关闭");
-			message = 0;
+			message=0;
 		} else {
 			mTeamSetting_message.setText("已开启");
-			message = 1;
+			message=1;
 		}
 	}
 
@@ -316,10 +350,12 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 				Group_teamsetting);
 	}
 
-	//更新小组设置
+	// 更新小组设置
 	private void TeamSetting_save() {
 		isupdate = true;
+		int pk_group_user=GroupActivity.pk_group_user;
 		Group_User group_user = new Group_User();
+		group_user.setPk_group_user(pk_group_user);
 		if (isRegistered_one) {
 			group_user.setFk_user(returndata);
 		} else {
@@ -331,9 +367,15 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 			}
 		}
 		group_user.setFk_group(pk_group);
-		group_user.setParty_warn(message);
+		group_user.setParty_warn(message);// 聚会信息
+		Log.e("TeamSettingActivity", "需要传入的聚会信息ID--------" + message);
 		group_user.setPublic_phone(phone);
-		group_user.setMessage_warn(chat);
+		Log.e("TeamSettingActivity", "需要传入的电话ID--------" + phone);
+		group_user.setMessage_warn(chat);// 聊天信息
+		Log.e("TeamSettingActivity", "需要传入的聊天信息ID--------" + chat);
+		group_user.setParty_update(1);
+		group_user.setPhoto_update(1);
+		group_user.setChat_update(1);
 		group_user.setRole(1);
 		group_user.setStatus(1);
 		readuserinter.updateGroupSet(TeamSettingActivity.this, group_user);
@@ -341,17 +383,6 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 
 	private void TeamSetting_back() {
 		finish();
-	}
-
-	@Override
-	protected void onStop() {
-		SharedPreferences sp = getSharedPreferences("Switch", 0);
-		Editor editor = sp.edit();
-		editor.putBoolean("ismessage", ismessage);
-		editor.putBoolean("ischat", ischat);
-		editor.putBoolean("isphone", isphone);
-		editor.commit();
-		super.onStop();
 	}
 
 }

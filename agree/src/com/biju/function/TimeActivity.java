@@ -1,8 +1,6 @@
 package com.biju.function;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -19,6 +17,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
+import android.widget.Toast;
 
 import com.BJ.utils.KCalendar;
 import com.BJ.utils.KCalendar.OnCalendarClickListener;
@@ -78,8 +77,8 @@ public class TimeActivity extends Activity implements OnClickListener {
 		mTime_next = (TextView) findViewById(R.id.time_next);
 		mTime_next.setOnClickListener(this);
 		mTimePicker = (TimePicker) findViewById(R.id.timePicker);
-//		OnChangeListener buc = new OnChangeListener();
-//		mTime_next.setOnClickListener(buc);
+		// OnChangeListener buc = new OnChangeListener();
+		// mTime_next.setOnClickListener(buc);
 		// 是否使用24小时制
 		mTimePicker.setIs24HourView(true);
 		TimeListener times = new TimeListener();
@@ -124,54 +123,42 @@ public class TimeActivity extends Activity implements OnClickListener {
 		case R.id.time_back:
 			time_back();
 			break;
-		 case R.id.time_next_layout:
-		 case R.id.time_next:
-		 time_next();
-		 break;
+		case R.id.time_next_layout:
+		case R.id.time_next:
+			time_next();
+			break;
 		default:
 			break;
 		}
 	}
 
 	private void time_next() {
-		SharedPreferences sp = getSharedPreferences("isParty", 0);
-		Editor editor = sp.edit();
-		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-		String Time=sdf.format(new Date());
-		String year_month=Time.substring(0, 10);
-		String hour=Time.substring(11, 13);
-		String minute=Time.substring(15, 16);
-		Log.e("TimeActivity", "Time========"+Time);
-		Log.e("TimeActivity", "year_month========"+year_month);
-		Log.e("TimeActivity", "hour========"+hour);
-		Log.e("TimeActivity", "minute========"+minute);
-		if(mHour==0)
-		{
-			editor.putInt("hour", Integer.valueOf(hour));
-		}else
-		{
-			editor.putInt("hour", mHour);
+		if (!(date != null)) {
+			Toast.makeText(TimeActivity.this, "请先选择日期!", Toast.LENGTH_SHORT)
+					.show();
+		} else {
+			if (!(mHour != 0)) {
+				Toast.makeText(TimeActivity.this, "请先选择时间__时!",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				if (!(mMinute != 0)) {
+					Toast.makeText(TimeActivity.this, "请先选择时间__分!",
+							Toast.LENGTH_SHORT).show();
+				} else {
+					SharedPreferences sp = getSharedPreferences("isParty", 0);
+					Editor editor = sp.edit();
+					editor.putInt("hour", mHour);
+					editor.putInt("minute", mMinute);
+					editor.putString("isCalendar", date);
+					Log.e("TimeActivity", "date=========" + date);
+					editor.commit();
+					Intent intent = new Intent(TimeActivity.this,
+							OkPartyActivity.class);
+					startActivity(intent);
+					finish();
+				}
+			}
 		}
-		
-		if(mMinute==0)
-		{
-			editor.putInt("minute", Integer.valueOf(minute));
-		}else
-		{
-			editor.putInt("minute", mMinute);
-		}
-		
-		if("".equals(date))
-		{
-			editor.putString("isCalendar", year_month);
-		}else
-		{
-			editor.putString("isCalendar", date);
-		}
-		editor.commit();
-		Intent intent = new Intent(TimeActivity.this, OkPartyActivity.class);
-		startActivity(intent);
-		finish();
 	}
 
 	private void time_back() {
@@ -225,7 +212,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 					calendar.setCalendarDayBgColor(dateFormat,
 							R.drawable.calendar_date_focused);
 					date = dateFormat;// 最后返回给全局 date
-					Log.e("date", "date=========" + date);
+					// Log.e("date", "date=========" + date);
 					SharedPreferences sp = getSharedPreferences("isdate", 0);
 					Editor editor = sp.edit();
 					editor.putString("dateFormat", dateFormat);
