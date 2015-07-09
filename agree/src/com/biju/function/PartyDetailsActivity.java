@@ -1,7 +1,7 @@
 package com.biju.function;
 
 import java.util.ArrayList;
-
+import java.util.List;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -43,11 +43,18 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.BJ.javabean.GroupCodeback2;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party_User;
+import com.BJ.javabean.ReadPartyback;
+import com.BJ.javabean.Relation;
+import com.BJ.javabean.ReturnData;
+import com.BJ.javabean.User;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.login.LoginActivity;
+import com.github.volley_examples.utils.GsonUtils;
+import com.google.gson.reflect.TypeToken;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -60,8 +67,8 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	public MyLocationListenner myListener = new MyLocationListenner();
 	private BDLocation mLocation;
 	boolean isFirstLoc = true;// 是否首次定位
-	private double mLng;
-	private double mLat;
+	private double mLat=24.497572;
+	private double mLng=118.17276;
 	private float scale = 15.0f;
 	private LocationClient mLocClient;
 	private LocationMode tempMode = LocationMode.Hight_Accuracy;
@@ -106,8 +113,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			if (isFirstLoc) {
 				// 设置定位的坐标
 				isFirstLoc = false;
-				LatLng ll = new LatLng(location.getLatitude(),
-						location.getLongitude());
+//				LatLng ll = new LatLng(location.getLatitude(),
+//						location.getLongitude());
+				LatLng ll = new LatLng(mLat,
+						mLng);
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				// 设置动画
 				mBaiduMap.animateMapStatus(u);
@@ -127,7 +136,6 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		mBaiduMap = mMapView.getMap();
 		//是否设置缩放控件
 		mMapView.showZoomControls(false);
-		initMap();
 		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(scale);
 		mBaiduMap.setMapStatus(msu);
 		initListener(); 
@@ -150,6 +158,8 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		initInterface();
 //		initcreatePartyRelation(uUID);
 		initReadParty(uUID);
+		//初始化地图
+		initMap();
 	}
 	
 	private void initcreatePartyRelation(String pk_party) {
@@ -184,10 +194,22 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 				if(isreadparty)
 				{
 					Log.e("PartyDetailsActivity", "返回的用户参与信息"+A);
+					java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
+					}.getType();
+					ReadPartyback partyback = GsonUtils.parseJsonArray(A, type);
+					 ReturnData returnData = partyback.getReturnData();
+					Log.e("PartyActivity", "当前returnData:"+returnData.toString());
+					 List<Relation> relationList = returnData.getRelation();
+					for (int i = 0; i < relationList.size(); i++) {
+						Relation relation = relationList.get(0);
+						String relationship = relation.getRelationship();
+						Log.e("PartyActivity", "每个relationship:"+relationship);
+					}
 					
 				}else
 				{
 					Log.e("PartyDetailsActivity", "返回新建立的聚会关系"+A);
+					
 				}
 			}
 
@@ -219,7 +241,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		readparty.setFk_group(fk_group);
 		readparty.setStatus(1);
 		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this, readparty);
-		initcreatePartyRelation(uUID);
+//		initcreatePartyRelation(uUID);
 	}
 
 	private void initOneParty() {
@@ -228,6 +250,14 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		uUID = oneParty.getPk_party();
 		mPartyDetails_name.setText(oneParty.getName());
 		mPartyDetails_time.setText(oneParty.getBegin_time());
+		
+		Double latitude = oneParty.getLatitude();
+		Double longitude = oneParty.getLongitude();
+		String location = oneParty.getLocation();
+		mLat=latitude;
+		mLng=longitude;
+		edit_show.setText(location);
+		
 	}
 
 	private void initUI() {
@@ -291,7 +321,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		// 添加地图标点
 		addOverlay(mLat, mLng, R.drawable.iconfont2);
 		// 开启定位图层
-		mBaiduMap.setMyLocationEnabled(true);
+		mBaiduMap.setMyLocationEnabled(false);
 		mLocClient = new LocationClient(this);
 		mLocClient.registerLocationListener(myListener);
 		LocationClientOption option = new LocationClientOption();

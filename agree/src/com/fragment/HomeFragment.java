@@ -54,13 +54,13 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private List<Group> users;
 	private ArrayList<Group> list = new ArrayList<Group>();
 	private MyGridviewAdapter adapter;
-	private boolean isTeam;
 	private boolean isRegistered_one;
 	private int returndata;
 	private boolean login;
 	private Interface homeInterface;
 	private boolean iscode;
 	private Integer fk_group;
+	private Group readhomeuser;
 
 	public HomeFragment() {
 	}
@@ -86,8 +86,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			filter.addAction("isRefresh");
 			MyReceiver receiver = new MyReceiver();
 			getActivity().registerReceiver(receiver, filter);
-			if(!iscode)
-			{
+			if (!iscode) {
 				initNewTeam();
 			}
 		}
@@ -100,10 +99,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		public void onReceive(Context context, Intent intent) {
 			String refresh = intent.getStringExtra("refresh");
 			iscode = intent.getBooleanExtra("isCode", false);
-			Group readhomeuser = (Group) intent
-					.getSerializableExtra("readhomeuser");
-			fk_group = readhomeuser.getPk_group();
-			Log.e("HomeFragment", "使用邀请码添加后的fk_group======" + fk_group);
 			if (!iscode) {
 				if ("ok".equals(refresh)) {
 					list.clear();
@@ -112,8 +107,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
 					Log.e("HomeFragment", "有接受到广播");
 				}
 			} else {
-//				list.add(0, readhomeuser);
-//				initNewTeam();
+				readhomeuser = (Group) intent
+						.getSerializableExtra("readhomeuser");
+				fk_group = readhomeuser.getPk_group();
+				Log.e("HomeFragment", "使用邀请码添加后的fk_group======" + fk_group);
+				// list.add(0, readhomeuser);
+				// initNewTeam();
 				Group_User group_User = new Group_User();
 				group_User.setFk_group(fk_group);
 				if (isRegistered_one) {
@@ -122,13 +121,13 @@ public class HomeFragment extends Fragment implements OnClickListener {
 					if (login) {
 						int pk_user = LoginActivity.pk_user;
 						group_User.setFk_user(pk_user);
-						Log.e("HomeFragment", "使用邀请码添加后的pk_user======" + pk_user);
+						Log.e("HomeFragment", "使用邀请码添加后的pk_user======"
+								+ pk_user);
 					} else {
 						group_User.setFk_user(returndata);
 					}
 				}
 				group_User.setRole(2);
-				group_User.setRole(1);
 				group_User.setStatus(1);
 				homeInterface.userJoin2gourp(getActivity(), group_User);
 				list.add(0, readhomeuser);
@@ -142,12 +141,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private void initNewTeam() {
 		if (isRegistered_one) {
 			ReadTeam(returndata);
-//			Log.e("HomeFragment", "进入注册的新建小组");
+			// Log.e("HomeFragment", "进入注册的新建小组");
 		} else {
 			if (login) {
 				int pk_user = LoginActivity.pk_user;
 				ReadTeam(pk_user);
-//				Log.e("HomeFragment", "进入登录的新建小组=======" + pk_user);
+				// Log.e("HomeFragment", "进入登录的新建小组=======" + pk_user);
 			} else {
 				ReadTeam(returndata);
 			}
@@ -170,13 +169,13 @@ public class HomeFragment extends Fragment implements OnClickListener {
 					if (homeStatusMsg == 1) {
 						Log.e("HomeFragment", "读取用户小组信息2===" + A);
 						users = homeback.getReturnData();
-//						Log.e("HomeFragment", "users的长度===" + users.size());
+						// Log.e("HomeFragment", "users的长度===" + users.size());
 						if (users.size() > 0) {
 							for (int i = 0; i < users.size(); i++) {
-								Group readhomeuser = users.get(i);
+								Group readhomeuser_1 = users.get(i);
 								Log.e("HomeFragment", "readhomeuser==="
-										+ readhomeuser);
-								list.add(readhomeuser);
+										+ readhomeuser_1.getPk_group());
+								list.add(readhomeuser_1);
 							}
 						}
 						adapter.notifyDataSetChanged();

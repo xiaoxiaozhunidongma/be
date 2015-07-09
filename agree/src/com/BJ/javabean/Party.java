@@ -97,6 +97,16 @@ public class Party implements Serializable{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+	@Override
+	public String toString() {
+		return "Party [pk_party=" + pk_party + ", fk_group=" + fk_group
+				+ ", fk_user=" + fk_user + ", name=" + name + ", remark="
+				+ remark + ", begin_time=" + begin_time + ", end_time="
+				+ end_time + ", longitude=" + longitude + ", latitude="
+				+ latitude + ", location=" + location + ", status=" + status
+				+ "]";
+	}
+	
 	
 
 }
