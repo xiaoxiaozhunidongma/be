@@ -1,7 +1,6 @@
 package com.biju.function;
 
 import java.util.List;
-import java.util.UUID;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -106,21 +105,21 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		if (ismessage == 0) {
 			isMessage = false;
 			mTeamSetting_message.setText("已关闭");
-			message=0;
+			message = 0;
 		} else {
 			isMessage = true;
 			mTeamSetting_message.setText("已开启");
-			message=1;
+			message = 1;
 		}
 
 		if (ischat == 0) {
 			isChat = false;
 			mTeamSetting_chat.setText("已关闭");
-			chat=0;
+			chat = 0;
 		} else {
 			isChat = true;
 			mTeamSetting_chat.setText("已开启");
-			chat=1;
+			chat = 1;
 		}
 
 		if (isphone == 0) {
@@ -170,8 +169,9 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 					int statusmsg = teamupdateback.getStatusMsg();
 					if (statusmsg == 1) {
 						Log.e("TeamSettingActivity", "更新完的返回结果" + A);
-						SharedPreferences teamsetting_sp=getSharedPreferences("Setting", 0);
-						Editor editor=teamsetting_sp.edit();
+						SharedPreferences teamsetting_sp = getSharedPreferences(
+								"Setting", 0);
+						Editor editor = teamsetting_sp.edit();
 						editor.putBoolean("setting", true);
 						editor.commit();
 						finish();
@@ -179,8 +179,6 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 						Toast.makeText(TeamSettingActivity.this,
 								"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
 					}
-					Log.e("TeamSettingActivity", "更新完的返回结果"+A);
-
 				} else {
 					if (!isProduce) {
 						// 读取用户资料成功
@@ -313,8 +311,8 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		isPhone = !isPhone;
 		if (!isPhone) {
 			mTeamSetting_phone.setText("未公开");
-			phone=0;
-		}  else {
+			phone = 0;
+		} else {
 			mTeamSetting_phone.setText("已公开");
 			phone = 1;
 		}
@@ -324,10 +322,10 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		isChat = !isChat;
 		if (!isChat) {
 			mTeamSetting_chat.setText("已关闭");
-			chat=0;
+			chat = 0;
 		} else {
 			mTeamSetting_chat.setText("已开启");
-			chat=1;
+			chat = 1;
 		}
 	}
 
@@ -335,11 +333,11 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		isMessage = !isMessage;
 		if (!isMessage) {
 			mTeamSetting_message.setText("已关闭");
-			message=0;
+			message = 0;
 		} else {
 			mTeamSetting_message.setText("已开启");
-			message=1;
-		} 
+			message = 1;
+		}
 	}
 
 	private void TeamSetting_requestcode() {
@@ -351,10 +349,11 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 				Group_teamsetting);
 	}
 
-	//更新小组设置
+	// 更新小组设置
 	private void TeamSetting_save() {
 		isupdate = true;
 		Group_User group_user = new Group_User();
+		group_user.setPk_group_user(GroupActivity.pk_group_user);
 		if (isRegistered_one) {
 			group_user.setFk_user(returndata);
 		} else {
