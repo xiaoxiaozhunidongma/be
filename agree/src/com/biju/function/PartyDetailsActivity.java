@@ -241,6 +241,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		mPartyDetails_refuse = (TextView) findViewById(R.id.PartyDetails_refuse);// Ñ¡Ôñ¾Ü¾ø
 		mPartyDetails_refuse.setOnClickListener(this);
 		edit_show = (EditText) findViewById(R.id.edit_show);
+		findViewById(R.id.PartyDetails_back_layout).setOnClickListener(this);
+		findViewById(R.id.PartyDetails_back).setOnClickListener(this);
+		findViewById(R.id.PartyDetails_more_layout).setOnClickListener(this);
+		findViewById(R.id.PartyDetails_more).setOnClickListener(this);
 	}
 
 	
@@ -344,7 +348,27 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	}
 	@Override
 	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.PartyDetails_back_layout:
+		case R.id.PartyDetails_back:
+			PartyDetails_back();
+			break;
+		case R.id.PartyDetails_more_layout:
+		case R.id.PartyDetails_more:
+			PartyDetails_more();
+			break;
+		default:
+			break;
+		}
+	}
 
+	private void PartyDetails_more() {
+		Intent intent=new Intent(PartyDetailsActivity.this, MoreActivity.class);
+		startActivity(intent);
+	}
+
+	private void PartyDetails_back() {
+		finish();
 	}
 
 }

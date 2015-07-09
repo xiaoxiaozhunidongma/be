@@ -30,13 +30,14 @@
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/PartyDetails_more_layout"
             android:layout_width="80.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >
 
             <TextView
-                android:id="@+id/textView1"
+                android:id="@+id/PartyDetails_more"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
@@ -65,18 +66,18 @@
     </RelativeLayout>
 
     <RelativeLayout
-        android:id="@+id/relativeLayout2"
+        android:id="@+id/map_layout"
         android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_height="250dp"
         android:layout_below="@+id/relativeLayout1"
         android:layout_centerHorizontal="true" >
+
         <com.baidu.mapapi.map.MapView
-         android:id="@+id/bmapView"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:layout_alignParentTop="true"
-         android:clickable="true" 
-          />
+            android:id="@+id/bmapView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:clickable="true" />
 
         <EditText
             android:id="@+id/edit_show"
@@ -84,110 +85,144 @@
             android:layout_height="50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:ems="10" 
-            android:background="#f0ffffff"
-            android:gravity="center">
+            android:background="#aaffffff"
+            android:ems="10"
+            android:enabled="false"
+            android:gravity="center" >
 
             <requestFocus />
         </EditText>
-
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/PartyDetails_name"
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="80.0dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/map_layout" >
+
+        <TextView
+            android:id="@+id/PartyDetails_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textColor="#00aeae"
+            android:textSize="30.0sp" />
+
+        <TextView
+            android:id="@+id/PartyDetails_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textSize="25.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/relativeLayout2"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="20dp"
-        android:gravity="center_vertical"
-        android:text="TextView"
-        android:textColor="#00aeae"
-        android:textSize="20.0sp" />
+        android:layout_marginTop="46dp" >
+    </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView6"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="参与"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="拒绝"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="未表态"
+            android:textSize="18.0sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="40.0dp"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/PartyDetails_time"
-        android:layout_marginLeft="30dp"
-        android:layout_marginTop="25dp"
-        android:text="参与"
-        android:textSize="17.0sp" />
+        android:layout_below="@+id/linearLayout1" >
 
-    <TextView
-        android:id="@+id/textView8"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView7"
-        android:layout_alignBottom="@+id/textView7"
-        android:layout_alignParentRight="true"
-        android:layout_marginRight="30dp"
-        android:text="未表态"
-        android:textSize="17.0sp" />
+        <TextView
+            android:id="@+id/PartyDetails_tv_partake"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="18.0sp" />
 
-    <TextView
-        android:id="@+id/textView7"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/textView6"
-        android:layout_alignBottom="@+id/textView6"
-        android:layout_centerHorizontal="true"
-        android:text="拒绝"
-        android:textSize="17.0sp" />
+        <TextView
+            android:id="@+id/PartyDetails_tv_refuse"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="18.0sp" />
 
-    <TextView
-        android:id="@+id/PartyDetails_did_not_say"
-        android:layout_width="30.0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/PartyDetails_tv_refuse"
-        android:layout_alignBottom="@+id/PartyDetails_tv_refuse"
-        android:layout_alignLeft="@+id/textView8"
-        android:gravity="center"
-        android:text="0"
-        android:textSize="17.0sp" />
+        <TextView
+            android:id="@+id/PartyDetails_did_not_say"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="18.0sp" />
+    </LinearLayout>
 
-    <TextView
-        android:id="@+id/PartyDetails_tv_partake"
-        android:layout_width="30.0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignRight="@+id/textView6"
-        android:layout_below="@+id/textView6"
-        android:layout_marginTop="30dp"
-        android:gravity="center"
-        android:text="0"
-        android:textSize="17.0sp" />
-
-    <TextView
-        android:id="@+id/PartyDetails_tv_refuse"
-        android:layout_width="30.0dp"
-        android:layout_height="wrap_content"
-        android:layout_alignBaseline="@+id/PartyDetails_tv_partake"
-        android:layout_alignBottom="@+id/PartyDetails_tv_partake"
-        android:layout_alignRight="@+id/textView7"
-        android:gravity="center"
-        android:text="0"
-        android:textSize="17.0sp" />
-
-    <TextView
-        android:id="@+id/PartyDetails_time"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:gravity="center_vertical"
-        android:text="TextView"
-        android:textSize="18.0sp" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/linearLayout2" >
 
     <TextView
         android:id="@+id/PartyDetails_partake"
         android:layout_width="80.0dp"
         android:layout_height="80.0dp"
-        android:layout_alignBaseline="@+id/PartyDetails_refuse"
-        android:layout_alignBottom="@+id/PartyDetails_refuse"
-        android:layout_toLeftOf="@+id/PartyDetails_time"
-        android:background="@drawable/login_selector"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="80dp"
+        android:background="@drawable/ok_2"
         android:gravity="center"
         android:text="参与"
         android:textSize="18.0sp" />
@@ -196,12 +231,14 @@
         android:id="@+id/PartyDetails_refuse"
         android:layout_width="80.0dp"
         android:layout_height="80.0dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignRight="@+id/PartyDetails_did_not_say"
-        android:layout_marginBottom="32dp"
-        android:background="@drawable/login_selector"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:layout_toRightOf="@+id/PartyDetails_partake"
+        android:background="@drawable/ok_2"
         android:gravity="center"
         android:text="拒绝"
         android:textSize="18.0sp" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

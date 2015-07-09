@@ -27,5 +27,6 @@
     <string name="title_activity_time">TimeActivity</string>
     <string name="title_activity_ok_party">OkPartyActivity</string>
     <string name="title_activity_party_details">PartyDetailsActivity</string>
+    <string name="title_activity_more">MoreActivity</string>
 
 </resources>

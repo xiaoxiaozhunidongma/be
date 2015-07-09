@@ -224,7 +224,6 @@ public class MapActivity extends Activity implements
 		// MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(scale);
 		// mBaiduMap.setMapStatus(msu);
 		// 添加店铺坐标
-		addOverlay(mLat, mLng, R.drawable.shop_icon);
 		addOverlay(mLat, mLng, R.drawable.iconfont2);
 
 		// 开启定位图层

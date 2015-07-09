@@ -112,6 +112,11 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
+            android:name="com.biju.function.RequestCode2Activity"
+            android:label="@string/title_activity_request_code"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
             android:name="com.biju.function.UserSettingActivity"
             android:label="@string/title_activity_user_setting" >
         </activity>
@@ -165,6 +170,12 @@
         <activity
             android:name="com.biju.function.PartyDetailsActivity"
             android:label="@string/title_activity_party_details" >
+        </activity>
+        <activity
+            android:name="com.biju.function.MoreActivity"
+            android:label="@string/title_activity_more" 
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            >
         </activity>
     </application>
 

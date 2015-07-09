@@ -7,11 +7,6 @@ import com.activeandroid.annotation.Table;
 
 @Table (name="t_group")
 public class Group implements Serializable{
-	
-	/**
-	 * 
-	 */
-	private static final long serialVersionUID = -4276756878654027138L;
 	@Column
 	private Integer pk_group;
 	@Column
