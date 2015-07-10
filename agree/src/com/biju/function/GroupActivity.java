@@ -2,7 +2,10 @@ package com.biju.function;
 
 import java.util.List;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -18,9 +21,11 @@ import android.widget.TextView;
 
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
+import com.BJ.javabean.IDs;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
+import com.biju.function.PartyDetailsActivity.MyReceiver;
 import com.biju.login.LoginActivity;
 import com.fragment.ChatFragment;
 import com.fragment.PhotoFragment;
@@ -31,14 +36,35 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 
 	private FragmentTabHost mTabhost;
 	public static int pk_group;
+
+	public static int getPk_group() {
+		return pk_group;
+	}
+
+	public static void setPk_group(int pk_group) {
+		GroupActivity.pk_group = pk_group;
+	}
+
 	private int returndata;
 	private boolean login;
 	private boolean isRegistered_one;
 	private Interface groupInterface;
 	public static Integer pk_group_user;
+
+	public static Integer getPk_group_user() {
+		return pk_group_user;
+	}
+
+	public static void setPk_group_user(Integer pk_group_user) {
+		GroupActivity.pk_group_user = pk_group_user;
+	}
+
 	private int isChat;
 	private int isMessage;
 	private int isPhone;
+	private MyReceiver receiver;
+	private boolean finish_1;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +82,27 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("pk_group", pk_group);
 		initInterface();
-		initreadUserGroupRelation();
+		if(!finish_1)
+		{
+			initreadUserGroupRelation();
+		}
 		Log.e("GroupActivity", "½øÈë+onCreate()");
+		initFinish();
+	}
+
+	private void initFinish() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("isFinish");
+		receiver = new MyReceiver();
+		registerReceiver(receiver, filter);
+	}
+
+	class MyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			finish_1 = intent.getBooleanExtra("finish", false);
+		}
 	}
 
 	private void initInterface() {
@@ -109,7 +154,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 			group_User.setFk_user(returndata);
 		} else {
 			if (login) {
-				int pk_user = LoginActivity.pk_user;
+				int pk_user = LoginActivity.getPk_user();
 				group_User.setFk_user(pk_user);
 			} else {
 				group_User.setFk_user(returndata);

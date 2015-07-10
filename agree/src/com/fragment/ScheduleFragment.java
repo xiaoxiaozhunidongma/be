@@ -10,6 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -51,13 +52,18 @@ public class ScheduleFragment extends Fragment {
 	private boolean login;
 	private boolean isRegistered_one;
 	private IDs ids;
+	private IDs ids1;
 	private Interface scheduleInterface;
 	private RelativeLayout mSchedule_prompt_layout;
 	private ListView mSchedule_listView;
 	private ArrayList<Party2> partylist = new ArrayList<Party2>();
 	private MyAdapter adapter = null;
 	private PullToRefreshListView mPull_refresh_list;
-//	private MyReceiver receiver;
+	private Integer id_group;
+	private MyReceiver receiver;
+	private Integer id_user_group;
+	private boolean isagain;
+	private boolean finish_1;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -76,37 +82,56 @@ public class ScheduleFragment extends Fragment {
 				.getSharedPreferences("isLogin", 0);
 		login = sp1.getBoolean("Login", false);
 		initInterface();
-		initreadUserGroupParty();
+		if(!finish_1)
+		{
+			initreadUserGroupParty();
+		}
 		initUI();
-//		initFinish();
+		initFinish();
 		return mLayout;
 	}
 	
-//	private void initFinish() {
-//		IntentFilter filter=new IntentFilter();
-//		filter.addAction("isFinish");
-//		receiver = new MyReceiver();
-//		getActivity().registerReceiver(receiver, filter);
-//	}
-//
-//	class MyReceiver extends BroadcastReceiver
-//	{
-//
-//		@Override
-//		public void onReceive(Context context, Intent intent) {
-//			boolean finish_1=intent.getBooleanExtra("finish", false);
-//			if(finish_1)
-//			{
-//				
-//			}
-//		}
-//		
-//	}
-//	@Override
-//	public void onDestroy() {
-//		getActivity().unregisterReceiver(receiver);
-//		super.onDestroy();
-//	}
+	private void initFinish() {
+		IntentFilter filter=new IntentFilter();
+		filter.addAction("isFinish");
+		receiver = new MyReceiver();
+		getActivity().registerReceiver(receiver, filter);
+	}
+
+	class MyReceiver extends BroadcastReceiver
+	{
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			finish_1 = intent.getBooleanExtra("finish", false);
+			if(finish_1)
+			{
+				Log.e("ScheduleFragment", "有进入到广播汇总来========");
+				isagain=true;
+				SharedPreferences schedule_sp=getActivity().getSharedPreferences("schedule", 0);
+				Integer id_group_1=schedule_sp.getInt("id_group", 0);
+				Integer id_user_group_1=schedule_sp.getInt("id_user_group", 0);
+				if (isRegistered_one) {
+					ids1 = new IDs(id_group_1, returndata, id_user_group_1);
+
+				} else {
+					if (login) {
+						int pk_user = LoginActivity.getPk_user();
+						ids1 = new IDs(id_group_1, pk_user, id_user_group_1);
+					} else {
+						ids1 = new IDs(id_group_1, returndata, id_user_group_1);
+					}
+				}
+				scheduleInterface.readUserGroupParty(getActivity(), ids1);
+			}
+		}
+		
+	}
+	@Override
+	public void onDestroy() {
+		getActivity().unregisterReceiver(receiver);
+		super.onDestroy();
+	}
 
 	private void initUI() {
 		mSchedule_prompt_layout = (RelativeLayout) mLayout
@@ -251,28 +276,56 @@ public class ScheduleFragment extends Fragment {
 
 			@Override
 			public void success(String A) {
-				partylist.clear();
-				Partyback partybackInterface = GsonUtils.parseJson(A,
-						Partyback.class);
-				Integer statusMsg = partybackInterface.getStatusMsg();
-				if (statusMsg == 1) {
-					List<Party2> partys = partybackInterface.getReturnData();
-					if (partys.size() > 0) {
-						for (int i = 0; i < partys.size(); i++) {
-							Party2 schedule = partys.get(i);
-							partylist.add(schedule);
+				if(isagain)
+				{
+					partylist.clear();
+					Partyback partybackInterface = GsonUtils.parseJson(A,
+							Partyback.class);
+					Integer statusMsg = partybackInterface.getStatusMsg();
+					if (statusMsg == 1) {
+						List<Party2> partys = partybackInterface.getReturnData();
+						if (partys.size() > 0) {
+							for (int i = 0; i < partys.size(); i++) {
+								Party2 schedule = partys.get(i);
+								partylist.add(schedule);
+							}
 						}
+						Log.e("ScheduleFragment", "读取出小组中的聚会信息===" + A);
 					}
-					Log.e("ScheduleFragment", "读取出小组中的聚会信息===" + A);
+					if (partylist.size() > 0) {
+						mSchedule_prompt_layout.setVisibility(View.GONE);
+						mPull_refresh_list.setVisibility(View.VISIBLE);
+					} else {
+						mSchedule_prompt_layout.setVisibility(View.VISIBLE);
+						mPull_refresh_list.setVisibility(View.GONE);
+					}
+					adapter.notifyDataSetChanged();
+					
+				}else
+				{
+					partylist.clear();
+					Partyback partybackInterface = GsonUtils.parseJson(A,
+							Partyback.class);
+					Integer statusMsg = partybackInterface.getStatusMsg();
+					if (statusMsg == 1) {
+						List<Party2> partys = partybackInterface.getReturnData();
+						if (partys.size() > 0) {
+							for (int i = 0; i < partys.size(); i++) {
+								Party2 schedule = partys.get(i);
+								partylist.add(schedule);
+							}
+						}
+						Log.e("ScheduleFragment", "读取出小组中的聚会信息===" + A);
+					}
+					if (partylist.size() > 0) {
+						mSchedule_prompt_layout.setVisibility(View.GONE);
+						mPull_refresh_list.setVisibility(View.VISIBLE);
+					} else {
+						mSchedule_prompt_layout.setVisibility(View.VISIBLE);
+						mPull_refresh_list.setVisibility(View.GONE);
+					}
+					adapter.notifyDataSetChanged();
 				}
-				if (partylist.size() > 0) {
-					mSchedule_prompt_layout.setVisibility(View.GONE);
-					mPull_refresh_list.setVisibility(View.VISIBLE);
-				} else {
-					mSchedule_prompt_layout.setVisibility(View.VISIBLE);
-					mPull_refresh_list.setVisibility(View.GONE);
-				}
-				adapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -283,14 +336,14 @@ public class ScheduleFragment extends Fragment {
 	}
 
 	private void initreadUserGroupParty() {
-		Integer id_group = GroupActivity.pk_group;
-		Integer id_user_group = GroupActivity.pk_group_user;
+		id_group = GroupActivity.getPk_group();
+		id_user_group = GroupActivity.getPk_group_user();
 		if (isRegistered_one) {
 			ids = new IDs(id_group, returndata, id_user_group);
 
 		} else {
 			if (login) {
-				int pk_user = LoginActivity.pk_user;
+				int pk_user = LoginActivity.getPk_user();
 				ids = new IDs(id_group, pk_user, id_user_group);
 				Log.e("ScheduleFragment", "id_group====" + id_group);
 				Log.e("ScheduleFragment", "pk_user====" + pk_user);
@@ -300,6 +353,15 @@ public class ScheduleFragment extends Fragment {
 			}
 		}
 		scheduleInterface.readUserGroupParty(getActivity(), ids);
+	}
+	@Override
+	public void onStop() {
+		SharedPreferences schedule_sp=getActivity().getSharedPreferences("schedule", 0);
+		Editor editor=schedule_sp.edit();
+		editor.putInt("id_group", id_group);
+		editor.putInt("id_user_group", id_user_group);
+		editor.commit();
+		super.onStop();
 	}
 
 }

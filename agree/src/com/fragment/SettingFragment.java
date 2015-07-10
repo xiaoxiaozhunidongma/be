@@ -90,7 +90,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		} else {
 			if(login)
 			{
-				int returndata_2 = LoginActivity.pk_user;
+				int returndata_2 = LoginActivity.getPk_user();
 				setting_number.setText("±Ø¾ÛºÅ:" + returndata_2);
 				ReadUser(returndata_2);
 			}else

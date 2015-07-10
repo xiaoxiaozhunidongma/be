@@ -1,6 +1,14 @@
 package com.biju.function;
 
-import java.io.Serializable;
+import android.app.Activity;
+import android.content.Intent;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.Window;
 
 import com.BJ.javabean.Moreback;
 import com.BJ.javabean.Party;
@@ -10,17 +18,7 @@ import com.biju.Interface.UserInterface;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
-import android.os.Bundle;
-import android.app.Activity;
-import android.content.Intent;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MotionEvent;
-import android.view.View;
-import android.view.View.OnClickListener;
-import android.view.Window;
-
-public class MoreActivity extends Activity implements OnClickListener{
+public class MoreActivity extends Activity implements OnClickListener {
 
 	private Party2 moreparty;
 	private Interface moreinterface;
@@ -39,26 +37,22 @@ public class MoreActivity extends Activity implements OnClickListener{
 	private void initInterface() {
 		moreinterface = new Interface();
 		moreinterface.setPostListener(new UserInterface() {
-			
+
 			@Override
 			public void success(String A) {
-				Moreback moreback=GsonUtils.parseJson(A, Moreback.class);
-				Integer status=moreback.getStatusMsg();
-				if(status==1)
-				{
-					Log.e("MoreActivity", "返回是否删除成功"+A);
-					Intent intent=new Intent();
-					intent.setAction("isFinish");
-					intent.putExtra("finish", true);
-					sendBroadcast(intent);
+				Moreback moreback = GsonUtils.parseJson(A, Moreback.class);
+				Integer status = moreback.getStatusMsg();
+				if (status == 1) {
+					Log.e("MoreActivity", "返回是否删除成功" + A);
 					finish();
 				}
+
 			}
-			
+
 			@Override
 			public void defail(Object B) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 	}
@@ -80,7 +74,7 @@ public class MoreActivity extends Activity implements OnClickListener{
 		finish();
 		return super.onTouchEvent(event);
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -95,9 +89,17 @@ public class MoreActivity extends Activity implements OnClickListener{
 	}
 
 	private void more_cancel_layout() {
-		Party more_party=new Party();
+		Finish();
+		Party more_party = new Party();
 		more_party.setPk_party(moreparty.getPk_party());
 		moreinterface.userCancleParty(MoreActivity.this, more_party);
+	}
+
+	private void Finish() {
+		Intent intent = new Intent();
+		intent.setAction("isFinish");
+		intent.putExtra("finish", true);
+		sendBroadcast(intent);
 	}
 
 }

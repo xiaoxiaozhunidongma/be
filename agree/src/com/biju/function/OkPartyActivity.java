@@ -194,7 +194,7 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 			Log.e("OkPartyActivity", "新建日程的returndata=====" + returndata);
 		} else {
 			if (login) {
-				int pk_user = LoginActivity.pk_user;
+				int pk_user = LoginActivity.getPk_user();
 				party.setFk_user(pk_user);
 				Log.e("OkPartyActivity", "新建日程的pk_user=====" + pk_user);
 			} else {

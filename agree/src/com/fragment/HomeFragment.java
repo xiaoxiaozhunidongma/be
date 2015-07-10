@@ -119,7 +119,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 					group_User.setFk_user(returndata);
 				} else {
 					if (login) {
-						int pk_user = LoginActivity.pk_user;
+						int pk_user = LoginActivity.getPk_user();
 						group_User.setFk_user(pk_user);
 						Log.e("HomeFragment", "使用邀请码添加后的pk_user======"
 								+ pk_user);
@@ -144,7 +144,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			// Log.e("HomeFragment", "进入注册的新建小组");
 		} else {
 			if (login) {
-				int pk_user = LoginActivity.pk_user;
+				int pk_user = LoginActivity.getPk_user();
 				ReadTeam(pk_user);
 				// Log.e("HomeFragment", "进入登录的新建小组=======" + pk_user);
 			} else {

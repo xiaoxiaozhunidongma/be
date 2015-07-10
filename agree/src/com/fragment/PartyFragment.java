@@ -72,7 +72,7 @@ public class PartyFragment extends Fragment implements OnClickListener {
 			partyuser.setPk_user(returndata);
 		} else {
 			if (login) {
-				int pk_user = LoginActivity.pk_user;
+				int pk_user = LoginActivity.getPk_user();
 				partyuser.setPk_user(pk_user);
 				Log.e("PartyFragment", "pk_user===="+pk_user);
 			} else {
