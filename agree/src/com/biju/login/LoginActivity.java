@@ -47,6 +47,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private AnimationDrawable drawable;
 
 	public static Integer pk_user;
+	public static Integer getPk_user() {
+		return pk_user;
+	}
+
+	public static void setPk_user(Integer pk_user) {
+		LoginActivity.pk_user = pk_user;
+	}
+
 	private String nickname;
 	private String avatar_path;
 	private String phone;

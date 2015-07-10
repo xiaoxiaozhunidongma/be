@@ -144,9 +144,9 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			// Log.e("HomeFragment", "进入注册的新建小组");
 		} else {
 			if (login) {
-				int pk_user = LoginActivity.pk_user;
-				ReadTeam(pk_user);
-				// Log.e("HomeFragment", "进入登录的新建小组=======" + pk_user);
+					int pk_user = LoginActivity.getPk_user();
+					ReadTeam(pk_user);
+					Log.e("HomeFragment", "进入登录的新建小组=======" + pk_user);
 			} else {
 				ReadTeam(returndata);
 			}

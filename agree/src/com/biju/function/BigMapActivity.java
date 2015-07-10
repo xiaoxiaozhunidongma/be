@@ -1,8 +1,6 @@
 package com.biju.function;
 
 import com.biju.R;
-import com.biju.R.layout;
-import com.biju.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;

@@ -192,7 +192,6 @@ public class PartyDetailsActivity extends Activity implements
 		initReadParty();
 		// ≥ı ºªØµÿÕº
 		initMap();
-
 		initFinish();
 	}
 

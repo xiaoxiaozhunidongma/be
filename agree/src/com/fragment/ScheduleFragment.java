@@ -5,11 +5,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,8 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BJ.javabean.IDs;
-import com.BJ.javabean.Party;
-import com.BJ.javabean.Party_User;
+import com.BJ.javabean.Party2;
 import com.BJ.javabean.Partyback;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
@@ -52,9 +55,11 @@ public class ScheduleFragment extends Fragment {
 	private Interface scheduleInterface;
 	private RelativeLayout mSchedule_prompt_layout;
 	private ListView mSchedule_listView;
-	private ArrayList<Party> partylist = new ArrayList<Party>();
+	private ArrayList<Party2> partylist = new ArrayList<Party2>();
 	private MyAdapter adapter = null;
 	private PullToRefreshListView mPull_refresh_list;
+
+	// private MyReceiver receiver;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -63,20 +68,50 @@ public class ScheduleFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mLayout = inflater
-				.inflate(R.layout.fragment_schedule, container, false);
-		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
-				0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getActivity()
-				.getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
-		initInterface();
-		initreadUserGroupParty();
-		initUI();
+		if (mLayout == null) {
+
+			mLayout = inflater.inflate(R.layout.fragment_schedule, container,
+					false);
+			SharedPreferences sp = getActivity().getSharedPreferences(
+					"Registered", 0);
+			isRegistered_one = sp.getBoolean("isRegistered_one", false);
+			returndata = sp.getInt("returndata", returndata);
+			SharedPreferences sp1 = getActivity().getSharedPreferences(
+					"isLogin", 0);
+			login = sp1.getBoolean("Login", false);
+			initInterface();
+			initreadUserGroupParty();
+			initUI();
+			// initFinish();
+		}
 		return mLayout;
 	}
+
+	// private void initFinish() {
+	// IntentFilter filter=new IntentFilter();
+	// filter.addAction("isFinish");
+	// receiver = new MyReceiver();
+	// getActivity().registerReceiver(receiver, filter);
+	// }
+	//
+	// class MyReceiver extends BroadcastReceiver
+	// {
+	//
+	// @Override
+	// public void onReceive(Context context, Intent intent) {
+	// boolean finish_1=intent.getBooleanExtra("finish", false);
+	// if(finish_1)
+	// {
+	//
+	// }
+	// }
+	//
+	// }
+	// @Override
+	// public void onDestroy() {
+	// getActivity().unregisterReceiver(receiver);
+	// super.onDestroy();
+	// }
 
 	private void initUI() {
 		mSchedule_prompt_layout = (RelativeLayout) mLayout
@@ -122,8 +157,9 @@ public class ScheduleFragment extends Fragment {
 				int pos = arg2 - mSchedule_listView.getHeaderViewsCount();
 				if (pos >= 0) {
 					Log.e("ScheduleFragment", "所点击中的行数" + arg2);
-					Party party = partylist.get(pos);
-					Intent intent=new Intent(getActivity(), PartyDetailsActivity.class);
+					Party2 party = partylist.get(pos);
+					Intent intent = new Intent(getActivity(),
+							PartyDetailsActivity.class);
 					intent.putExtra("oneParty", party);
 					startActivity(intent);
 				}
@@ -197,14 +233,14 @@ public class ScheduleFragment extends Fragment {
 				inflater = convertView;
 				holder = (ViewHolder) inflater.getTag();
 			}
-			Party party = partylist.get(position);
+			Party2 party = partylist.get(position);
 			String time = party.getBegin_time();
 			Log.e("ScheduleFragment", "时间的长度====" + time.length());
 			String yuars_month = time.substring(0, 10);
-			String years=yuars_month.substring(0, 4);
-			String months=yuars_month.substring(5, 7);
-			String days=yuars_month.substring(8, 10);
-			String times=years+"年"+months+"月"+days+"日";
+			String years = yuars_month.substring(0, 4);
+			String months = yuars_month.substring(5, 7);
+			String days = yuars_month.substring(8, 10);
+			String times = years + "年" + months + "月" + days + "日";
 			String datetimes = time.substring(11, 16);
 			holder.years_month.setText(times);
 			holder.name.setText(party.getName());
@@ -226,10 +262,10 @@ public class ScheduleFragment extends Fragment {
 						Partyback.class);
 				Integer statusMsg = partybackInterface.getStatusMsg();
 				if (statusMsg == 1) {
-					List<Party> partys = partybackInterface.getReturnData();
+					List<Party2> partys = partybackInterface.getReturnData();
 					if (partys.size() > 0) {
 						for (int i = 0; i < partys.size(); i++) {
-							Party schedule = partys.get(i);
+							Party2 schedule = partys.get(i);
 							partylist.add(schedule);
 						}
 					}
@@ -255,6 +291,7 @@ public class ScheduleFragment extends Fragment {
 	private void initreadUserGroupParty() {
 		Integer id_group = GroupActivity.pk_group;
 		Integer id_user_group = GroupActivity.pk_group_user;
+
 		if (isRegistered_one) {
 			ids = new IDs(id_group, returndata, id_user_group);
 
@@ -270,6 +307,7 @@ public class ScheduleFragment extends Fragment {
 			}
 		}
 		scheduleInterface.readUserGroupParty(getActivity(), ids);
+
 	}
 
 }
