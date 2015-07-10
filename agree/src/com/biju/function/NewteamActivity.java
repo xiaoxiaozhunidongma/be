@@ -9,7 +9,10 @@ import java.util.Date;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -30,9 +33,12 @@ import android.widget.TextView;
 
 import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Newteamback;
+import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.Utils;
+import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
@@ -62,6 +68,12 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private ProgressBar newteam_progressBar;
 	private Interface cregrouInter;
 	private String format1;
+	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
+	private String endStr = "/original";
+	// 完整路径completeURL=beginStr+result.filepath+endStr;
+	private String completeURL = "";
+	private boolean iscode;
+	private Group readhomeuser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +88,14 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
 		login = sp1.getBoolean("Login", false);
+
 		initUI();
 		initUpload();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("isRefresh2");
+		MyReceiver receiver = new MyReceiver();
+		registerReceiver(receiver, filter);
+
 		newteam_tv_head.setVisibility(View.VISIBLE);// 显示小组头像选择
 		mNewteam_head.setVisibility(View.GONE);
 		cregrouInter = new Interface();
@@ -106,6 +124,27 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		});
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
 		format1 = sdf.format(new Date());
+	}
+
+	class MyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			iscode = intent.getBooleanExtra("isCode2", false);
+			if (iscode) {
+				newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
+				mNewteam_head.setVisibility(View.VISIBLE);
+				readhomeuser = (Group) intent
+						.getSerializableExtra("readhomeuser");
+				mNewteam_name.setText(readhomeuser.getName());
+				completeURL = beginStr + readhomeuser.getAvatar_path() + endStr;
+				PreferenceUtils.saveImageCache(NewteamActivity.this,
+						completeURL);
+				homeImageLoaderUtils.getInstance().LoadImage(
+						NewteamActivity.this, completeURL, mNewteam_head);
+			}
+		}
+
 	}
 
 	private void initUpload() {
@@ -162,7 +201,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private void newteam_requsetcode() {
 		// 跳转至邀请码搜索界面
 		Intent intent = new Intent(NewteamActivity.this,
-				RequestCodeActivity.class);
+				RequestCode2Activity.class);
 		startActivity(intent);
 	}
 
@@ -174,17 +213,26 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private void newteam_OK() {
-		newteam_name = mNewteam_name.getText().toString().trim();
-		Group group = new Group();
-		group.setName(newteam_name);
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
-		String format2 = sdf.format(new Date());
+		if (iscode) {
+			Intent intent = new Intent();
+			intent.setAction("isRefresh");
+			intent.putExtra("isCode", true);
+			intent.putExtra("readhomeuser", readhomeuser);
+			sendBroadcast(intent);
+			finish();
+		} else {
+			newteam_name = mNewteam_name.getText().toString().trim();
+			Group group = new Group();
+			group.setName(newteam_name);
+			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
+			String format2 = sdf.format(new Date());
 
-		group.setSetup_time(format1);
-		group.setLast_post_time(format2);
-		group.setLast_post_message("asdfsd");
-		// 上传图片
-		upload(group);
+			group.setSetup_time(format1);
+			group.setLast_post_time(format2);
+			group.setLast_post_message("asdfsd");
+			// 上传图片
+			upload(group);
+		}
 	}
 
 	private String tmpFilePath;

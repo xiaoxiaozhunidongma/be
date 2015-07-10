@@ -45,18 +45,16 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_tab);
-		SharedPreferences sp = getSharedPreferences(
-				"Registered", 0);
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
 		isRegistered_one = sp.getBoolean("isRegistered_one", false);
 		Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
 		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getSharedPreferences(
-				"isLogin", 0);
+		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
 		login = sp1.getBoolean("Login", false);
-		
+
 		initUI();
 		Intent intent = getIntent();
-		pk_group = intent.getIntExtra("pk_group",pk_group);
+		pk_group = intent.getIntExtra("pk_group", pk_group);
 		initInterface();
 		initreadUserGroupRelation();
 		Log.e("GroupActivity", "进入+onCreate()");
@@ -67,62 +65,58 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		groupInterface.setPostListener(new UserInterface() {
 			@Override
 			public void success(String A) {
-					Groupuserback groupuserback=GsonUtils.parseJson(A, Groupuserback.class);
-					Integer statusMsg = groupuserback.getStatusMsg();
-					if(statusMsg==1)
-					{
-						Log.e("GroupActivity", "返回小组关系ID===="+A);
-						List<Group_User> groupuser_returnData = groupuserback.getReturnData();
-						if(groupuser_returnData.size()>0)
-						{
-							Group_User group_user=groupuser_returnData.get(0);
-							pk_group_user = group_user.getPk_group_user();
-							int ischat = group_user.getMessage_warn();
-							int ismessage = group_user.getParty_warn();
-							int isphone = group_user.getPublic_phone();
-							Log.e("GroupActivity", "小组的聚会信息的提醒--------"+ismessage);
-							Log.e("GroupActivity", "小组的聊天信息的提醒--------"+ischat);
-							Log.e("GroupActivity", "小组的公开手机号码--------"+isphone);
-							isChat=ischat;
-							isMessage=ismessage;
-							isPhone=isphone;
-						}
-						SharedPreferences sp = getSharedPreferences("Switch", 0);
-						Editor editor = sp.edit();
-						editor.putInt("ismessage", isMessage);
-						editor.putInt("ischat", isChat);
-						editor.putInt("isphone", isPhone);
-						editor.commit();
+				Groupuserback groupuserback = GsonUtils.parseJson(A,
+						Groupuserback.class);
+				Integer statusMsg = groupuserback.getStatusMsg();
+				if (statusMsg == 1) {
+					Log.e("GroupActivity", "返回小组关系ID====" + A);
+					List<Group_User> groupuser_returnData = groupuserback
+							.getReturnData();
+					if (groupuser_returnData.size() > 0) {
+						Group_User group_user = groupuser_returnData.get(0);
+						pk_group_user = group_user.getPk_group_user();
+						int ischat = group_user.getMessage_warn();
+						int ismessage = group_user.getParty_warn();
+						int isphone = group_user.getPublic_phone();
+						Log.e("GroupActivity", "小组的聚会信息的提醒--------" + ismessage);
+						Log.e("GroupActivity", "小组的聊天信息的提醒--------" + ischat);
+						Log.e("GroupActivity", "小组的公开手机号码--------" + isphone);
+						isChat = ischat;
+						isMessage = ismessage;
+						isPhone = isphone;
 					}
+					SharedPreferences sp = getSharedPreferences("Switch", 0);
+					Editor editor = sp.edit();
+					editor.putInt("ismessage", isMessage);
+					editor.putInt("ischat", isChat);
+					editor.putInt("isphone", isPhone);
+					editor.commit();
+				}
 			}
-			
+
 			@Override
 			public void defail(Object B) {
 				// TODO Auto-generated method stub
-				
+
 			}
 		});
 	}
 
 	private void initreadUserGroupRelation() {
-		Group_User group_User=new Group_User();
+		Group_User group_User = new Group_User();
 		group_User.setFk_group(pk_group);
-		if(isRegistered_one)
-		{
+		if (isRegistered_one) {
 			group_User.setFk_user(returndata);
-		}else
-		{
-			if(login)
-			{
+		} else {
+			if (login) {
 				int pk_user = LoginActivity.pk_user;
 				group_User.setFk_user(pk_user);
-			}else
-			{
+			} else {
 				group_User.setFk_user(returndata);
 			}
 		}
 		groupInterface.readUserGroupRelation(GroupActivity.this, group_User);
-		
+
 	}
 
 	private void initUI() {
@@ -173,8 +167,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void group_setting() {
-		Intent intent=new Intent(GroupActivity.this, TeamSettingActivity.class);
-		intent.putExtra("Group",pk_group);
+		Intent intent = new Intent(GroupActivity.this,
+				TeamSettingActivity.class);
+		intent.putExtra("Group", pk_group);
 		startActivity(intent);
 	}
 

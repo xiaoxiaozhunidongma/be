@@ -6,13 +6,14 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class PhotoFragment extends Fragment {
+public class PhotoFragment extends Fragment implements OnClickListener{
 
 	public PhotoFragment() {
 		// Required empty public constructor
@@ -23,6 +24,12 @@ public class PhotoFragment extends Fragment {
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		return inflater.inflate(R.layout.fragment_photo, container, false);
+	}
+
+	@Override
+	public void onClick(View v) {
+		// TODO Auto-generated method stub
+		
 	}
 
 }
