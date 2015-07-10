@@ -209,7 +209,6 @@ public class PartyDetailsActivity extends Activity implements
 			boolean finish_1 = intent.getBooleanExtra("finish", false);
 			if (finish_1) {
 				PartyDetails_back();
-				Log.e("PartyDetailsActivity", "有广播发送进了=====");
 			}
 		}
 

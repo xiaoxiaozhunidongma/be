@@ -40,13 +40,20 @@ public class MoreActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				Moreback moreback = GsonUtils.parseJson(A, Moreback.class);
-				Integer status = moreback.getStatusMsg();
-				if (status == 1) {
+//				Moreback moreback = GsonUtils.parseJson(A, Moreback.class);
+//				Integer status = moreback.getStatusMsg();
+//				if (status == 1) {
+				Integer id_group = GroupActivity.getPk_group();
+				Integer id_user_group = GroupActivity.getPk_group_user();
 					Log.e("MoreActivity", "返回是否删除成功" + A);
+					Intent intent = new Intent();
+					intent.setAction("isFinish");
+					intent.putExtra("finish", true);
+					intent.putExtra("id_group", id_group);
+					intent.putExtra("id_user_group", id_user_group);
+					sendBroadcast(intent);
 					finish();
-				}
-
+//				}
 			}
 
 			@Override
@@ -89,17 +96,9 @@ public class MoreActivity extends Activity implements OnClickListener {
 	}
 
 	private void more_cancel_layout() {
-		Finish();
 		Party more_party = new Party();
 		more_party.setPk_party(moreparty.getPk_party());
 		moreinterface.userCancleParty(MoreActivity.this, more_party);
-	}
-
-	private void Finish() {
-		Intent intent = new Intent();
-		intent.setAction("isFinish");
-		intent.putExtra("finish", true);
-		sendBroadcast(intent);
 	}
 
 }

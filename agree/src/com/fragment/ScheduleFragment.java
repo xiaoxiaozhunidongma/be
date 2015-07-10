@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -60,10 +59,12 @@ public class ScheduleFragment extends Fragment {
 	private MyAdapter adapter = null;
 	private PullToRefreshListView mPull_refresh_list;
 	private Integer id_group;
-	private MyReceiver receiver;
 	private Integer id_user_group;
-	private boolean isagain;
 	private boolean finish_1;
+	private MyReceiver receiver;
+	private Integer id_group_1;
+	private Integer id_user_group_1;
+
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -81,56 +82,48 @@ public class ScheduleFragment extends Fragment {
 		SharedPreferences sp1 = getActivity()
 				.getSharedPreferences("isLogin", 0);
 		login = sp1.getBoolean("Login", false);
+		id_group = GroupActivity.getPk_group();
+		id_user_group = GroupActivity.getPk_group_user();
+
 		initInterface();
-		if(!finish_1)
-		{
-			initreadUserGroupParty();
-		}
+		initreadUserGroupParty(id_group, id_user_group);
 		initUI();
 		initFinish();
+		if(finish_1)
+		{
+			initreadUserGroupParty(id_group_1, id_user_group_1);
+			Log.e("ScheduleFragment", "有广播发送进了222222222222=====");
+		}
 		return mLayout;
 	}
 	
 	private void initFinish() {
-		IntentFilter filter=new IntentFilter();
+		IntentFilter filter = new IntentFilter();
 		filter.addAction("isFinish");
 		receiver = new MyReceiver();
 		getActivity().registerReceiver(receiver, filter);
 	}
 
-	class MyReceiver extends BroadcastReceiver
-	{
-
+	class MyReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			finish_1 = intent.getBooleanExtra("finish", false);
-			if(finish_1)
-			{
-				Log.e("ScheduleFragment", "有进入到广播汇总来========");
-				isagain=true;
-				SharedPreferences schedule_sp=getActivity().getSharedPreferences("schedule", 0);
-				Integer id_group_1=schedule_sp.getInt("id_group", 0);
-				Integer id_user_group_1=schedule_sp.getInt("id_user_group", 0);
-				if (isRegistered_one) {
-					ids1 = new IDs(id_group_1, returndata, id_user_group_1);
-
-				} else {
-					if (login) {
-						int pk_user = LoginActivity.getPk_user();
-						ids1 = new IDs(id_group_1, pk_user, id_user_group_1);
-					} else {
-						ids1 = new IDs(id_group_1, returndata, id_user_group_1);
-					}
-				}
-				scheduleInterface.readUserGroupParty(getActivity(), ids1);
-			}
+			Log.e("ScheduleFragment", "有广播发送进了finish_1====="+finish_1);
+			id_group_1 = intent.getIntExtra("id_group", 0);
+			Log.e("ScheduleFragment", "有广播发送进了id_group_1====="+id_group_1);
+			id_user_group_1 = intent.getIntExtra("id_user_group", 0);
+			Log.e("ScheduleFragment", "有广播发送进了id_user_group_1====="+id_user_group_1);
 		}
-		
 	}
+
 	@Override
-	public void onDestroy() {
-		getActivity().unregisterReceiver(receiver);
-		super.onDestroy();
+	public void onStart() {
+		if(finish_1)
+		{
+			initreadUserGroupParty(id_group_1, id_user_group_1);
+			Log.e("ScheduleFragment", "有广播发送进了111111111=====");
+		}
+		super.onStart();
 	}
 
 	private void initUI() {
@@ -178,7 +171,8 @@ public class ScheduleFragment extends Fragment {
 				if (pos >= 0) {
 					Log.e("ScheduleFragment", "所点击中的行数" + arg2);
 					Party2 party = partylist.get(pos);
-					Intent intent=new Intent(getActivity(), PartyDetailsActivity.class);
+					Intent intent = new Intent(getActivity(),
+							PartyDetailsActivity.class);
 					intent.putExtra("oneParty", party);
 					startActivity(intent);
 				}
@@ -218,6 +212,7 @@ public class ScheduleFragment extends Fragment {
 	}
 
 	class MyAdapter extends BaseAdapter {
+
 		@Override
 		public int getCount() {
 			return partylist.size();
@@ -256,10 +251,10 @@ public class ScheduleFragment extends Fragment {
 			String time = party.getBegin_time();
 			Log.e("ScheduleFragment", "时间的长度====" + time.length());
 			String yuars_month = time.substring(0, 10);
-			String years=yuars_month.substring(0, 4);
-			String months=yuars_month.substring(5, 7);
-			String days=yuars_month.substring(8, 10);
-			String times=years+"年"+months+"月"+days+"日";
+			String years = yuars_month.substring(0, 4);
+			String months = yuars_month.substring(5, 7);
+			String days = yuars_month.substring(8, 10);
+			String times = years + "年" + months + "月" + days + "日";
 			String datetimes = time.substring(11, 16);
 			holder.years_month.setText(times);
 			holder.name.setText(party.getName());
@@ -276,7 +271,7 @@ public class ScheduleFragment extends Fragment {
 
 			@Override
 			public void success(String A) {
-				if(isagain)
+				if(finish_1)
 				{
 					partylist.clear();
 					Partyback partybackInterface = GsonUtils.parseJson(A,
@@ -335,9 +330,9 @@ public class ScheduleFragment extends Fragment {
 		});
 	}
 
-	private void initreadUserGroupParty() {
-		id_group = GroupActivity.getPk_group();
-		id_user_group = GroupActivity.getPk_group_user();
+	private void initreadUserGroupParty(Integer id_group, Integer id_user_group) {
+		// id_group = GroupActivity.getPk_group();
+		// id_user_group = GroupActivity.getPk_group_user();
 		if (isRegistered_one) {
 			ids = new IDs(id_group, returndata, id_user_group);
 
@@ -354,14 +349,17 @@ public class ScheduleFragment extends Fragment {
 		}
 		scheduleInterface.readUserGroupParty(getActivity(), ids);
 	}
-	@Override
-	public void onStop() {
-		SharedPreferences schedule_sp=getActivity().getSharedPreferences("schedule", 0);
-		Editor editor=schedule_sp.edit();
-		editor.putInt("id_group", id_group);
-		editor.putInt("id_user_group", id_user_group);
-		editor.commit();
-		super.onStop();
-	}
+
+//	@Override
+//	public void onStop() {
+//		SharedPreferences schedule_sp = getActivity().getSharedPreferences(
+//				"schedule", 0);
+//		Editor editor = schedule_sp.edit();
+//		editor.putInt("id_group", id_group);
+//		editor.putInt("id_user_group", id_user_group);
+//		editor.putBoolean("isOut", true);
+//		editor.commit();
+//		super.onStop();
+//	}
 
 }
