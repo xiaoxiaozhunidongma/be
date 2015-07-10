@@ -71,27 +71,27 @@
         android:layout_height="250dp"
         android:layout_below="@+id/relativeLayout1"
         android:layout_centerHorizontal="true" >
+<!-- 代码中已经new出一个MapView -->
+<!--         <com.baidu.mapapi.map.MapView -->
+<!--             android:id="@+id/bmapView" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:layout_alignParentTop="true" -->
+<!--             android:clickable="true" /> -->
 
-        <com.baidu.mapapi.map.MapView
-            android:id="@+id/bmapView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:clickable="true" />
+<!--         <EditText -->
+<!--             android:id="@+id/edit_show" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="50dp" -->
+<!--             android:layout_alignParentBottom="true" -->
+<!--             android:layout_centerHorizontal="true" -->
+<!--             android:background="#aaffffff" -->
+<!--             android:ems="10" -->
+<!--             android:enabled="false" -->
+<!--             android:gravity="center" > -->
 
-        <EditText
-            android:id="@+id/edit_show"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="#aaffffff"
-            android:ems="10"
-            android:enabled="false"
-            android:gravity="center" >
-
-            <requestFocus />
-        </EditText>
+<!--             <requestFocus /> -->
+<!--         </EditText> -->
     </RelativeLayout>
 
     <RelativeLayout

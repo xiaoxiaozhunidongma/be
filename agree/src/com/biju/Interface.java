@@ -20,6 +20,7 @@ import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party;
+import com.BJ.javabean.Party2;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.StringCreGroup;
 import com.BJ.javabean.User;

@@ -173,9 +173,12 @@
         </activity>
         <activity
             android:name="com.biju.function.MoreActivity"
-            android:label="@string/title_activity_more" 
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            >
+            android:label="@string/title_activity_more"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.biju.function.BigMapActivity"
+            android:label="@string/title_activity_big_map" >
         </activity>
     </application>
 
