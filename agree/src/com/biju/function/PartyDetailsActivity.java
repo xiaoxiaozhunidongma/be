@@ -214,11 +214,11 @@ public class PartyDetailsActivity extends Activity implements
 
 	}
 
-	@Override
-	protected void onStop() {
-		unregisterReceiver(receiver);
-		super.onStop();
-	}
+//	@Override
+//	protected void onStop() {
+//		unregisterReceiver(receiver);
+//		super.onStop();
+//	}
 
 	private void initcreatePartyRelation() {
 		isreadparty = false;

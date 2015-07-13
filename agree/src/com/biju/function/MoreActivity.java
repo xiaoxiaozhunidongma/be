@@ -40,20 +40,17 @@ public class MoreActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-//				Moreback moreback = GsonUtils.parseJson(A, Moreback.class);
-//				Integer status = moreback.getStatusMsg();
-//				if (status == 1) {
-				Integer id_group = GroupActivity.getPk_group();
-				Integer id_user_group = GroupActivity.getPk_group_user();
+				Moreback moreback = GsonUtils.parseJson(A, Moreback.class);
+				Integer status = moreback.getStatusMsg();
+				if (status == 1) {
 					Log.e("MoreActivity", "返回是否删除成功" + A);
 					Intent intent = new Intent();
 					intent.setAction("isFinish");
 					intent.putExtra("finish", true);
-					intent.putExtra("id_group", id_group);
-					intent.putExtra("id_user_group", id_user_group);
 					sendBroadcast(intent);
+
 					finish();
-//				}
+				}
 			}
 
 			@Override
