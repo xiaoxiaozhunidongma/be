@@ -163,7 +163,8 @@ public class PartyDetailsActivity extends Activity implements
 		params_show.setMargins(0, DensityUtil.dip2px(this, 200), 0, 0);
 		edit_show.setBackgroundColor(android.graphics.Color
 				.parseColor("#aaffffff"));
-		edit_show.setTextColor(android.graphics.Color.parseColor("#cdcdcd"));
+		edit_show.setTextColor(android.graphics.Color.parseColor("#ababab"));
+		edit_show.setEnabled(false);
 		bd_mapView_container.addView(edit_show, params_show);
 
 		mBaiduMap = mMapView.getMap();
@@ -171,7 +172,7 @@ public class PartyDetailsActivity extends Activity implements
 		mMapView.showZoomControls(false);
 		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(scale);
 		mBaiduMap.setMapStatus(msu);
-
+		//初始化监听
 		initListener();
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();
@@ -216,9 +217,9 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	@Override
-	protected void onStop() {
+	protected void onDestroy() {
 		unregisterReceiver(receiver);
-		super.onStop();
+		super.onDestroy();
 	}
 
 	private void initcreatePartyRelation() {
@@ -408,8 +409,11 @@ public class PartyDetailsActivity extends Activity implements
 		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
 
 			public void onMapClick(LatLng point) {
-				startActivity(new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class));
+				Intent intent = new Intent(PartyDetailsActivity.this,
+						BigMapActivity.class);
+				intent.putExtra("mLat", mLat);
+				intent.putExtra("mLng", mLng);
+				startActivity(intent);
 			}
 
 			public boolean onMapPoiClick(MapPoi poi) {
@@ -418,14 +422,20 @@ public class PartyDetailsActivity extends Activity implements
 		});
 		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
 			public void onMapLongClick(LatLng point) {
-				startActivity(new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class));
+				Intent intent = new Intent(PartyDetailsActivity.this,
+						BigMapActivity.class);
+				intent.putExtra("mLat", mLat);
+				intent.putExtra("mLng", mLng);
+				startActivity(intent);
 			}
 		});
 		mBaiduMap.setOnMapDoubleClickListener(new OnMapDoubleClickListener() {
 			public void onMapDoubleClick(LatLng point) {
-				startActivity(new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class));
+				Intent intent = new Intent(PartyDetailsActivity.this,
+						BigMapActivity.class);
+				intent.putExtra("mLat", mLat);
+				intent.putExtra("mLng", mLng);
+				startActivity(intent);
 
 			}
 		});
@@ -446,7 +456,6 @@ public class PartyDetailsActivity extends Activity implements
 		// 添加地图标点
 		addOverlay(mLat, mLng, R.drawable.iconfont2);
 		// 开启定位图层
-		mBaiduMap.setMyLocationEnabled(true);
 		mBaiduMap.setMyLocationEnabled(false);
 		mLocClient = new LocationClient(this);
 		mLocClient.registerLocationListener(myListener);

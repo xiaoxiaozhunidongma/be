@@ -149,7 +149,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 			user_User.setFk_user_from(returndata);
 		} else {
 			if (login) {
-				int user = LoginActivity.pk_user;
+				int user = LoginActivity.getPk_user();
 				user_User.setFk_user_from(user);
 			} else {
 				user_User.setFk_user_from(returndata);

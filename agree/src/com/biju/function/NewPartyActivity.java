@@ -87,7 +87,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 		} else {
 			if(login)
 			{
-				int pk_user = LoginActivity.pk_user;
+				int pk_user = LoginActivity.getPk_user();
 				ReadTeam(pk_user);
 			}else
 			{

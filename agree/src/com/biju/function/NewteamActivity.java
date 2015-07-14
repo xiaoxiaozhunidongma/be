@@ -265,7 +265,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 							Log.e("NewteamActivity", "进入注册的");
 						} else {
 							if (login) {
-								int returndata_2 = LoginActivity.pk_user;
+								int returndata_2 = LoginActivity.getPk_user();
 								Log.e("NewteamActivity", "进入登录的");
 								group_User.setFk_user(returndata_2);
 							} else {

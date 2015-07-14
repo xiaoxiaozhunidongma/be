@@ -111,7 +111,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 				Log.e("UserSettingActivity", "进注册的");
 			} else {
 				if (login) {
-					int returndata_2 = LoginActivity.pk_user;
+					int returndata_2 = LoginActivity.getPk_user();
 					ReadUser(returndata_2);
 					Log.e("UserSettingActivity", "进登录 的");
 				} else {
@@ -390,7 +390,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			} else {
 				if(login)
 				{
-					int returndata_2 = LoginActivity.pk_user;
+					int returndata_2 = LoginActivity.getPk_user();
 					usersetting.setPk_user(returndata_2);
 				}else
 				{

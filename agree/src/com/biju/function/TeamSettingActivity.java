@@ -144,7 +144,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 			ReadUser(returndata_1);
 		} else {
 			if (login) {
-				int returndata_2 = LoginActivity.pk_user;
+				int returndata_2 = LoginActivity.getPk_user();
 				mTeamSetting_number.setText("" + returndata_2);
 				ReadUser(returndata_2);
 			} else {
@@ -358,7 +358,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 			group_user.setFk_user(returndata);
 		} else {
 			if (login) {
-				int fk_user = LoginActivity.pk_user;
+				int fk_user = LoginActivity.getPk_user();
 				group_user.setFk_user(fk_user);
 			} else {
 				group_user.setFk_user(returndata);
