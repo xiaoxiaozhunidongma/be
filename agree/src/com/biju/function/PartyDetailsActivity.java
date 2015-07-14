@@ -188,12 +188,12 @@ public class PartyDetailsActivity extends Activity implements
 		// 得到fk_group
 		SharedPreferences sp3 = getSharedPreferences("isParty_fk_group", 0);
 		fk_group = sp3.getInt("fk_group", 0);
-		
-		if (relationship != null) {
-			isreadparty=true;
-//			initReadParty();
-			Log.e("PartyDetailsActivity", "已经有关系的小组进入=========");
-		}
+
+		// if (relationship != null) {
+		// isreadparty = true;
+		initReadParty();
+		Log.e("PartyDetailsActivity", "已经有关系的小组进入=========");
+		// }
 		// 初始化地图
 		initMap();
 		initFinish();
@@ -220,11 +220,12 @@ public class PartyDetailsActivity extends Activity implements
 
 	private void initcreatePartyRelation(Integer fk_user, Integer pk_party_user) {
 		isParty = true;
+		isreadparty = false;
 		Party_User readuserparty = new Party_User();
 		readuserparty.setPk_party_user(pk_party_user);
 		readuserparty.setFk_party(pk_party);
 		readuserparty.setFk_user(fk_user);
-		readuserparty.setStatus(status);
+		readuserparty.setStatus(1);
 		readpartyInterface.createPartyRelation(PartyDetailsActivity.this,
 				readuserparty);
 	}
@@ -244,41 +245,75 @@ public class PartyDetailsActivity extends Activity implements
 						Integer statusMsg = partyRelationshipback
 								.getStatusMsg();
 						if (statusMsg == 1) {
-							Log.e("PartyDetailsActivity", "返回新建立的聚会关系========" + A);
-							Log.e("PartyDetailsActivity", "应该是进入这里的========" );
-//							initReadParty();
-//							isreadparty = false;
+							Log.e("PartyDetailsActivity", "返回新建立的聚会关系========"
+									+ A);
+							Log.e("PartyDetailsActivity", "应该是进入这里的========");
 						}
-					} 
-					
-						if(isreadparty)
-						{
-							Log.e("PartyDetailsActivity", "返回的用户参与信息" + A);
-							Log.e("PartyDetailsActivity", "不应该是进入这里的========说明错了" );
-							java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
-							}.getType();
-							ReadPartyback partyback = GsonUtils.parseJsonArray(A,
-									type);
-							ReturnData returnData = partyback.getReturnData();
-							Log.e("PartyActivity",
-									"当前returnData:" + returnData.toString());
-							List<Relation> relationList = returnData.getRelation();
+					}
+
+					if (isreadparty) {
+						Log.e("PartyDetailsActivity", "返回的用户参与信息" + A);
+						java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
+						}.getType();
+						ReadPartyback partyback = GsonUtils.parseJsonArray(A,
+								type);
+						ReturnData returnData = partyback.getReturnData();
+						Log.e("PartyActivity",
+								"当前returnData:" + returnData.toString());
+						List<Relation> relationList = returnData.getRelation();
+						if (relationList.size() > 0) {
 							for (int i = 0; i < relationList.size(); i++) {
 								Relation relation = relationList.get(i);
 								Integer read_pk_user = relation.getPk_user();
-								// if (String.valueOf(fk_user).equals(
-								// String.valueOf(read_pk_user))) {
-								// Log.e("PartyActivity", "可以进行判断=======");
-								Integer read_relationship = relation
-										.getRelationship();
-								Log.e("PartyActivity", "每个relationship:"
-										+ read_relationship);
-								Log.e("PartyActivity", "每个read_pk_user:"
-										+ read_pk_user);
-								// }
+								if (String.valueOf(fk_user).equals(
+										String.valueOf(read_pk_user))) {
+									Log.e("PartyActivity", "可以进行判断=======");
+									Integer read_relationship = relation
+											.getRelationship();
+									switch (read_relationship) {
+									case 0:
+										mPartyDetails_partake
+												.setBackgroundResource(R.drawable.ok_2);
+										mPartyDetails_refuse
+												.setBackgroundResource(R.drawable.ok_2);
+										Log.e("PartyDetailsActivity",
+												"用户未表态======" + relationship);
+										break;
+									case 1:
+										mPartyDetails_partake
+												.setBackgroundResource(R.drawable.ok_1);
+										mPartyDetails_refuse
+												.setBackgroundResource(R.drawable.ok_2);
+										Log.e("PartyDetailsActivity",
+												"用户已参与=======" + relationship);
+										break;
+									case 2:
+										mPartyDetails_partake
+												.setBackgroundResource(R.drawable.ok_2);
+										mPartyDetails_refuse
+												.setBackgroundResource(R.drawable.ok_1);
+										Log.e("PartyDetailsActivity",
+												"用户已拒绝=========="
+														+ relationship);
+										break;
+									default:
+										break;
+									}
+
+									Log.e("PartyActivity", "每个relationship:"
+											+ read_relationship);
+									Log.e("PartyActivity", "每个read_pk_user:"
+											+ read_pk_user);
+								}
+
 							}
+						} else {
+							Log.e("PartyDetailsActivity", "用户未建立关系===");
+							initcreatePartyRelation(fk_user, pk_party_user);
+
 						}
 					}
+				}
 			}
 
 			@Override
@@ -289,6 +324,7 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	private void initReadParty() {
+		isreadparty = true;
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
 		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,
@@ -305,8 +341,8 @@ public class PartyDetailsActivity extends Activity implements
 		Log.e("PartyDetailsActivity", "用户的ID======" + fk_user);
 		status = oneParty.getStatus();
 		if (relationship == null) {
-			Log.e("PartyDetailsActivity", "用户未建立关系===");
-			initcreatePartyRelation(fk_user,pk_party_user);
+			// Log.e("PartyDetailsActivity", "用户未建立关系===");
+			// initcreatePartyRelation(fk_user, pk_party_user);
 		} else {
 			switch (relationship) {
 			case 0:
@@ -457,7 +493,6 @@ public class PartyDetailsActivity extends Activity implements
 
 	@Override
 	public void onGetGeoCodeResult(GeoCodeResult arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -500,10 +535,7 @@ public class PartyDetailsActivity extends Activity implements
 		party_user.setPk_party_user(pk_party_user);
 		party_user.setFk_party(pk_party);
 		party_user.setFk_user(fk_user);
-		party_user.setType(1);
 		party_user.setRelationship(1);
-		party_user.setStatus(status);
-		party_user.setSyn_calendar(1);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
 				party_user);
 	}
@@ -514,12 +546,7 @@ public class PartyDetailsActivity extends Activity implements
 		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
-		party_user.setFk_party(pk_party);
-		party_user.setFk_user(fk_user);
-		party_user.setType(1);
 		party_user.setRelationship(2);
-		party_user.setStatus(status);
-		party_user.setSyn_calendar(1);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
 				party_user);
 	}

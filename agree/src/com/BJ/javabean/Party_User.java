@@ -21,6 +21,9 @@ public class Party_User implements Serializable{
 	private Integer syn_calendar;
 	@Column
 	private Integer status;
+	
+	public Party_User()
+	{}
 	public Integer getPk_party_user() {
 		return pk_party_user;
 	}
@@ -62,6 +65,13 @@ public class Party_User implements Serializable{
 	}
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+	@Override
+	public String toString() {
+		return "Party_User [pk_party_user=" + pk_party_user + ", fk_party="
+				+ fk_party + ", fk_user=" + fk_user + ", type=" + type
+				+ ", relationship=" + relationship + ", syn_calendar="
+				+ syn_calendar + ", status=" + status + "]";
 	}
 	
 	

@@ -2,12 +2,15 @@ package com.biju.function;
 
 import java.util.List;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
@@ -30,6 +33,8 @@ import com.fragment.PhotoFragment;
 import com.fragment.ScheduleFragment;
 import com.github.volley_examples.utils.GsonUtils;
 
+@TargetApi(Build.VERSION_CODES.HONEYCOMB)
+@SuppressLint("NewApi")
 public class GroupActivity extends FragmentActivity implements OnClickListener {
 
 	private FragmentTabHost mTabhost;
@@ -107,24 +112,24 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 			}
 		}
 
-		private void initreadUserGroupRelation1() {
-			SharedPreferences Group_sp = getSharedPreferences("group", 0);
-			Integer pk_group = Group_sp.getInt("pk_group", 0);
-			Group_User group_User = new Group_User();
-			group_User.setFk_group(pk_group);
-			if (isRegistered_one) {
-				group_User.setFk_user(returndata);
+	}
+
+	private void initreadUserGroupRelation1() {
+		SharedPreferences Group_sp = getSharedPreferences("group", 0);
+		Integer pk_group = Group_sp.getInt("pk_group", 0);
+		Group_User group_User = new Group_User();
+		group_User.setFk_group(pk_group);
+		if (isRegistered_one) {
+			group_User.setFk_user(returndata);
+		} else {
+			if (login) {
+				int pk_user = LoginActivity.getPk_user();
+				group_User.setFk_user(pk_user);
 			} else {
-				if (login) {
-					int pk_user = LoginActivity.getPk_user();
-					group_User.setFk_user(pk_user);
-				} else {
-					group_User.setFk_user(returndata);
-				}
+				group_User.setFk_user(returndata);
 			}
-			groupInterface
-					.readUserGroupRelation(GroupActivity.this, group_User);
 		}
+		groupInterface.readUserGroupRelation(GroupActivity.this, group_User);
 	}
 
 	private void initInterface() {
@@ -151,6 +156,10 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 						isChat = ischat;
 						isMessage = ismessage;
 						isPhone = isphone;
+						// if(finish_2)
+						// {
+						// mTabhost.setCurrentTab(1);
+						// }
 					}
 					SharedPreferences sp = getSharedPreferences("Switch", 0);
 					Editor editor = sp.edit();
@@ -240,16 +249,12 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		startActivity(intent);
 	}
 
-	private void group_back() {
+	public void group_back() {
 		finish();
 	}
 
 	@Override
 	protected void onStop() {
-		SharedPreferences Group_sp = getSharedPreferences("group", 0);
-		Editor editor = Group_sp.edit();
-		editor.putInt("pk_group", pk_group);
-		editor.commit();
 		super.onStop();
 	}
 

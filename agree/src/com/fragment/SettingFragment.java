@@ -121,10 +121,13 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						User readuser = Users.get(0);
 						useravatar_path = readuser.getAvatar_path();
 					}
-					completeURL = beginStr + useravatar_path + endStr;
-					PreferenceUtils.saveImageCache(getActivity(), completeURL);// ¥ÊSP
-					ImageLoaderUtils.getInstance().LoadImage(getActivity(),
-							completeURL, mSetting_head);
+					if(useravatar_path!=null)
+					{
+						completeURL = beginStr + useravatar_path + endStr;
+						PreferenceUtils.saveImageCache(getActivity(), completeURL);// ¥ÊSP
+						ImageLoaderUtils.getInstance().LoadImage(getActivity(),
+								completeURL, mSetting_head);
+					}
 				}
 			}
 
