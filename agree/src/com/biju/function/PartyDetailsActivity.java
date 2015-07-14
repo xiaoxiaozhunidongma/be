@@ -518,7 +518,7 @@ public class PartyDetailsActivity extends Activity implements
 		party_user.setFk_user(fk_user);
 		party_user.setType(1);
 		party_user.setRelationship(2);
-		party_user.setStatus(1);
+		party_user.setStatus(status);
 		party_user.setSyn_calendar(1);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
 				party_user);
