@@ -48,9 +48,9 @@ public class MoreActivity extends Activity implements OnClickListener {
 					intent.setAction("isFinish");
 					intent.putExtra("finish", true);
 					sendBroadcast(intent);
+
 					finish();
 				}
-
 			}
 
 			@Override

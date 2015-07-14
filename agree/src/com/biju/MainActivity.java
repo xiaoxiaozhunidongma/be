@@ -5,12 +5,14 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import cn.jpush.android.api.JPushInterface;
 
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
@@ -28,9 +30,6 @@ public class MainActivity extends FragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_tabs);
-		// ≤‚ ‘
-		// new Interface().testIf(this);
-
 		initUI();// ≥ı ºªØTabhost
 	}
 
@@ -67,9 +66,9 @@ public class MainActivity extends FragmentActivity {
 		Editor editor = sp.edit();
 		editor.putBoolean("isRegistered_one", false);
 		editor.commit();
-		
-		SharedPreferences login_sp=getSharedPreferences("Logout", 0);
-		Editor login_editor=login_sp.edit();
+
+		SharedPreferences login_sp = getSharedPreferences("Logout", 0);
+		Editor login_editor = login_sp.edit();
 		login_editor.putBoolean("isLogout", false);
 		login_editor.commit();
 		super.onStop();

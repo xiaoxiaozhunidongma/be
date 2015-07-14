@@ -88,6 +88,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private String setup_time;
+	private String Userjpush_id;
+	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -165,6 +167,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 							Usernickname = readuser.getNickname();
 							Useravatar_path = readuser.getAvatar_path();
 							Userphone = readuser.getPhone();
+							Userjpush_id = readuser.getJpush_id();
 							Log.e("UserSettingActivity", "µç»°ºÅÂë1 ==  "
 									+ Userphone);
 							Userpassword = readuser.getPassword();
@@ -397,6 +400,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 					usersetting.setPk_user(returndata_1);
 				}
 			}
+			usersetting.setJpush_id(Userjpush_id);
 			usersetting.setNickname(Usernickname);
 			usersetting.setPassword(password);
 			usersetting.setSex(sex);

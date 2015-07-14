@@ -28,6 +28,7 @@ import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.biju.APP.MyApplication;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
@@ -47,7 +48,17 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
-	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
+//	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
+//	public static String SIGN = "x8gJ5EjEXIH8RyzKWX59Oia23oVhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0Mzk0NDgzOTgmdD0xNDM2ODU2Mzk4JnI9ODk5OTcxNjM0JnU9JmY9";
+	public static String SIGN;
+	public static String getSIGN() {
+		return SIGN;
+	}
+
+	public static void setSIGN(String sIGN) {
+		SIGN = sIGN;
+	}
+
 	private UploadManager uploadManager;
 	private TextView textView;
 	private Interface regInter;
@@ -71,6 +82,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 
 	private void initUpload() {
 		// 注册签名
+		SIGN = RegisteredActivity.getSIGN();
 		UploadManager.authorize(APPID, USERID, SIGN);
 		uploadManager = new UploadManager(RegisteredActivity.this,
 				"persistenceId");
@@ -165,8 +177,10 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 
 			// 把昵称传到接口
 			String nickname = mNickname.getText().toString().trim();
+			String jpush_id=MyApplication.getRegId();
 			User user = new User();
 			user.setNickname(nickname);
+			user.setJpush_id(jpush_id);
 			if (ishead) {
 				// 上传图片
 				upload(user);

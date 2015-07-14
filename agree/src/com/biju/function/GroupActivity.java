@@ -21,11 +21,9 @@ import android.widget.TextView;
 
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
-import com.BJ.javabean.IDs;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
-import com.biju.function.PartyDetailsActivity.MyReceiver;
 import com.biju.login.LoginActivity;
 import com.fragment.ChatFragment;
 import com.fragment.PhotoFragment;
@@ -65,7 +63,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private MyReceiver receiver;
 	private boolean finish_1;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -82,11 +79,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("pk_group", pk_group);
 		initInterface();
-		if(!finish_1)
-		{
+		if (!finish_1) {
 			initreadUserGroupRelation();
 		}
-		Log.e("GroupActivity", "½øÈë+onCreate()");
 		initFinish();
 	}
 
@@ -102,6 +97,33 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			finish_1 = intent.getBooleanExtra("finish", false);
+			if (finish_1) {
+				group_back();
+				Intent intent1 = new Intent(GroupActivity.this,
+						GroupActivity.class);
+				startActivity(intent1);
+				overridePendingTransition(0, 0);
+				initreadUserGroupRelation1();
+			}
+		}
+
+		private void initreadUserGroupRelation1() {
+			SharedPreferences Group_sp = getSharedPreferences("group", 0);
+			Integer pk_group = Group_sp.getInt("pk_group", 0);
+			Group_User group_User = new Group_User();
+			group_User.setFk_group(pk_group);
+			if (isRegistered_one) {
+				group_User.setFk_user(returndata);
+			} else {
+				if (login) {
+					int pk_user = LoginActivity.getPk_user();
+					group_User.setFk_user(pk_user);
+				} else {
+					group_User.setFk_user(returndata);
+				}
+			}
+			groupInterface
+					.readUserGroupRelation(GroupActivity.this, group_User);
 		}
 	}
 
@@ -220,6 +242,15 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 
 	private void group_back() {
 		finish();
+	}
+
+	@Override
+	protected void onStop() {
+		SharedPreferences Group_sp = getSharedPreferences("group", 0);
+		Editor editor = Group_sp.edit();
+		editor.putInt("pk_group", pk_group);
+		editor.commit();
+		super.onStop();
 	}
 
 }

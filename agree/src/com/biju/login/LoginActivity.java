@@ -61,6 +61,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private String password;
 	private boolean onelogin = false;
 	private Interface readuserinter;
+	private String jpush_id;
 
 	private String fileName = getSDPath() + "/" + "saveData";
 
@@ -108,6 +109,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						avatar_path = readuser.getAvatar_path();
 						phone = readuser.getPhone();
 						password = readuser.getPassword();
+						jpush_id = readuser.getJpush_id();
 					}
 					String mPassword = mLogin_password.getText().toString()
 							.trim();
@@ -211,6 +213,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				loginuser.setNickname(nickname);
 				loginuser.setPassword(mPassword);
 				loginuser.setPhone(phone);
+				loginuser.setJpush_id(jpush_id);
 				readuserinter.userLogin(LoginActivity.this, loginuser);
 			}
 
@@ -278,6 +281,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 								autologinuser.setNickname(nickname);
 								autologinuser.setPassword(person.password);
 								autologinuser.setPhone(phone);
+								autologinuser.setJpush_id(jpush_id);
 								readuserinter.userLogin(LoginActivity.this,
 										autologinuser);
 							}
