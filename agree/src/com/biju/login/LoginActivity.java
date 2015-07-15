@@ -126,6 +126,11 @@ public class LoginActivity extends Activity implements OnClickListener {
 									if (drawable != null) {
 										drawable.stop();
 									}
+									SharedPreferences sp = getSharedPreferences("isLogin", 0);
+									Editor editor = sp.edit();
+									editor.putBoolean("Login", true);
+									editor.commit();
+									
 									Intent intent = new Intent(
 											LoginActivity.this,
 											MainActivity.class);

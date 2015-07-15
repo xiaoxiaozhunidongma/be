@@ -5,8 +5,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -127,6 +131,7 @@ public class ScheduleFragment extends Fragment {
 							PartyDetailsActivity.class);
 					intent.putExtra("oneParty", party);
 					startActivity(intent);
+					getActivity().finish();
 				}
 			}
 		});
@@ -255,24 +260,31 @@ public class ScheduleFragment extends Fragment {
 			}
 		});
 	}
-
+	
+	private Integer pk_user_1;
 	private void initreadUserGroupParty() {
 		Integer id_group = GroupActivity.getPk_group();
 		Integer id_user_group = GroupActivity.getPk_group_user();
 		if (isRegistered_one) {
 			ids = new IDs(id_group, returndata, id_user_group);
-
+			pk_user_1=returndata;
 		} else {
 			if (login) {
 				int pk_user = LoginActivity.getPk_user();
 				ids = new IDs(id_group, pk_user, id_user_group);
+				pk_user_1=pk_user;
 				Log.e("ScheduleFragment", "id_group====" + id_group);
 				Log.e("ScheduleFragment", "pk_user====" + pk_user);
 				Log.e("ScheduleFragment", "id_user_group====" + id_user_group);
 			} else {
 				ids = new IDs(id_group, returndata, id_user_group);
+				pk_user_1=returndata;
 			}
 		}
 		scheduleInterface.readUserGroupParty(getActivity(), ids);
+		SharedPreferences sp=getActivity().getSharedPreferences("isPk_user", 0);
+		Editor editor=sp.edit();
+		editor.putInt("Pk_user", pk_user_1);
+		editor.commit();
 	}
 }
