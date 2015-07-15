@@ -67,6 +67,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private int isPhone;
 	private MyReceiver receiver;
 	private boolean finish_1;
+	private boolean update = false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,6 +89,13 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 			initreadUserGroupRelation();
 		}
 		initFinish();
+		Log.e("GroupActivity", "进入了=========+onCreate");
+	}
+
+	@Override
+	protected void onStart() {
+		Log.e("GroupActivity", "进入了=========+onStart");
+		super.onStart();
 	}
 
 	private void initFinish() {
@@ -156,10 +164,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 						isChat = ischat;
 						isMessage = ismessage;
 						isPhone = isphone;
-						// if(finish_2)
-						// {
-						// mTabhost.setCurrentTab(1);
-						// }
 					}
 					SharedPreferences sp = getSharedPreferences("Switch", 0);
 					Editor editor = sp.edit();
@@ -252,10 +256,4 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	public void group_back() {
 		finish();
 	}
-
-	@Override
-	protected void onStop() {
-		super.onStop();
-	}
-
 }

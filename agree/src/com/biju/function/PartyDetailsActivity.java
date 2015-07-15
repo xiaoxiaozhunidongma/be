@@ -91,9 +91,6 @@ public class PartyDetailsActivity extends Activity implements
 	private TextView mPartyDetails_did_not_say;
 	private TextView mPartyDetails_partake;
 	private TextView mPartyDetails_refuse;
-	private int returndata;
-	private boolean isRegistered_one;
-	private boolean login;
 	private int fk_group;
 	private Interface readpartyInterface;
 	private boolean isreadparty;
@@ -178,12 +175,6 @@ public class PartyDetailsActivity extends Activity implements
 		// 初始化搜索模块，注册事件监听
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
-
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
 
 		// 得到fk_group
 		SharedPreferences sp3 = getSharedPreferences("isParty_fk_group", 0);
@@ -300,11 +291,17 @@ public class PartyDetailsActivity extends Activity implements
 										break;
 									}
 
-									Log.e("PartyActivity", "每个relationship:"
-											+ read_relationship);
-									Log.e("PartyActivity", "每个read_pk_user:"
-											+ read_pk_user);
+									Log.e("PartyDetailsActivity",
+											"每个relationship:"
+													+ read_relationship);
 								}
+								Integer relationship = relation
+										.getRelationship();
+								List<Integer> list = new ArrayList<Integer>();
+								list.add(relationship);
+								Log.e("PartyDetailsActivity",
+										"得到的relationship的个数" + list.size()
+												+ "         " + list.toString());
 
 							}
 						} else {
@@ -327,6 +324,8 @@ public class PartyDetailsActivity extends Activity implements
 		isreadparty = true;
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
+//		readparty.setFk_group(fk_group);
+//		readparty.setFk_user(fk_user);
 		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,
 				readparty);
 	}

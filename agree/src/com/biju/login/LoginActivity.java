@@ -134,6 +134,21 @@ public class LoginActivity extends Activity implements OnClickListener {
 									finish();
 								}
 							}, 1000);
+							
+							String pk_user = mLogin_account.getText().toString().trim();
+							String password = mLogin_password.getText().toString().trim();
+							Person person1 = new Person(pk_user, password);
+							try {
+								ObjectOutputStream oos = new ObjectOutputStream(
+										new FileOutputStream(fileName));
+								oos.writeObject(person1);
+								oos.close();
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
+							
 							// 取第一个Users[0]
 							// List<User> Users = loginback.getReturnData();
 							// if (Users.size() >= 1) {
