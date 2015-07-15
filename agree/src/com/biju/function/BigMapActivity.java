@@ -18,17 +18,23 @@ import com.baidu.mapapi.map.MarkerOptions;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.map.OverlayOptions;
 import com.baidu.mapapi.model.LatLng;
+import com.baidu.mapapi.navi.BaiduMapAppNotSupportNaviException;
+import com.baidu.mapapi.navi.BaiduMapNavigation;
+import com.baidu.mapapi.navi.NaviPara;
 import com.biju.R;
 import com.biju.function.PartyDetailsActivity.MyLocationListenner;
 
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.DialogInterface.OnClickListener;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 
-public class BigMapActivity extends Activity {
+public class BigMapActivity extends Activity implements android.view.View.OnClickListener {
 
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
@@ -37,6 +43,8 @@ public class BigMapActivity extends Activity {
 	boolean isFirstLoc = true;// 是否首次定位
 	private double mLat = 24.497572;
 	private double mLng = 118.17276;
+	private double mlocLat ;
+	private double mlocLng ;
 	private float scale = 15.0f;
 	private LocationClient mLocClient;
 	private LocationMode tempMode = LocationMode.Hight_Accuracy;
@@ -61,7 +69,9 @@ public class BigMapActivity extends Activity {
 				// 设置定位的坐标
 				isFirstLoc = false;
 				// LatLng ll = new LatLng(location.getLatitude(),
-				// location.getLongitude());
+//				 location.getLongitude());
+				mlocLat=location.getLatitude();
+				mlocLng=location.getLongitude();
 				LatLng ll = new LatLng(mLat, mLng);
 				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
 				// 设置动画
@@ -91,6 +101,12 @@ public class BigMapActivity extends Activity {
 		mBaiduMap.setMapStatus(msu);
 
 		initMap();
+		
+		initUI();
+	}
+
+	private void initUI() {
+		findViewById(R.id.btn_navi).setOnClickListener(this);
 	}
 
 	private void initMap() {
@@ -127,6 +143,71 @@ public class BigMapActivity extends Activity {
 		// Inflate the menu; this adds items to the action bar if it is present.
 		getMenuInflater().inflate(R.menu.big_map, menu);
 		return true;
+	}
+	
+	/**
+	 * 开始导航
+	 * 
+	 * @param view
+	 */
+	public void startNavi(View view) {
+		LatLng pt1 = new LatLng(mLat, mLng);
+		LatLng pt2 = new LatLng(mlocLat, mlocLng);
+		// 构建 导航参数
+		NaviPara para = new NaviPara();
+		para.startPoint = pt1;
+		para.startName = "从这里开始";
+		para.endPoint = pt2;
+		para.endName = "到这里结束";
+
+		try {
+
+			BaiduMapNavigation.openBaiduMapNavi(para, this);
+
+		} catch (BaiduMapAppNotSupportNaviException e) {
+			e.printStackTrace();
+			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+			builder.setMessage("您尚未安装百度地图app或app版本过低，点击确认安装？");
+			builder.setTitle("提示");
+			builder.setPositiveButton("确认", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+					BaiduMapNavigation.getLatestBaiduMapApp(BigMapActivity.this);
+				}
+			});
+
+			builder.setNegativeButton("取消", new OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.dismiss();
+				}
+			});
+
+			builder.create().show();
+		}
+	}
+
+	public void startWebNavi(View view) {
+		LatLng pt1 = new LatLng(mLat, mLng);
+		LatLng pt2 = new LatLng(mlocLat, mlocLng);
+		// 构建 导航参数
+		NaviPara para = new NaviPara();
+		para.startPoint = pt1;
+		para.endPoint = pt2;
+		BaiduMapNavigation.openWebBaiduMapNavi(para, this);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.btn_navi:
+			startNavi(v);
+			break;
+
+		default:
+			break;
+		}
 	}
 
 }

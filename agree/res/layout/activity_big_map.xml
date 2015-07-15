@@ -3,12 +3,33 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".BigMapActivity" >
-        <com.baidu.mapapi.map.MapView
-         android:id="@+id/bmapView"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:layout_alignParentTop="true"
-         android:clickable="true" 
-         />
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" >
+
+        <TextView
+            android:id="@+id/btn_navi"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:text="导航" 
+            android:layout_marginRight="10dp"/>
+
+    </RelativeLayout>
+
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/bmapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout1"
+        android:clickable="true" >
+    </com.baidu.mapapi.map.MapView>
+
 
 </RelativeLayout>

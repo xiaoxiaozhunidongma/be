@@ -64,7 +64,6 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
@@ -92,9 +91,6 @@ public class PartyDetailsActivity extends Activity implements
 	private TextView mPartyDetails_did_not_say;
 	private TextView mPartyDetails_partake;
 	private TextView mPartyDetails_refuse;
-	private int returndata;
-	private boolean isRegistered_one;
-	private boolean login;
 	private int fk_group;
 	private Interface readpartyInterface;
 	private boolean isreadparty;
@@ -166,8 +162,7 @@ public class PartyDetailsActivity extends Activity implements
 		params_show.setMargins(0, DensityUtil.dip2px(this, 200), 0, 0);
 		edit_show.setBackgroundColor(android.graphics.Color
 				.parseColor("#aaffffff"));
-		edit_show.setTextColor(android.graphics.Color.parseColor("#ababab"));
-		edit_show.setEnabled(false);
+		edit_show.setTextColor(android.graphics.Color.parseColor("#cdcdcd"));
 		bd_mapView_container.addView(edit_show, params_show);
 
 		mBaiduMap = mMapView.getMap();
@@ -181,21 +176,15 @@ public class PartyDetailsActivity extends Activity implements
 		mSearch = GeoCoder.newInstance();
 		mSearch.setOnGetGeoCodeResultListener(this);
 
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
-
 		// 得到fk_group
 		SharedPreferences sp3 = getSharedPreferences("isParty_fk_group", 0);
 		fk_group = sp3.getInt("fk_group", 0);
-		
-		if (relationship != null) {
-			isreadparty=true;
-//			initReadParty();
-			Log.e("PartyDetailsActivity", "已经有关系的小组进入=========");
-		}
+
+		// if (relationship != null) {
+		// isreadparty = true;
+		initReadParty();
+		Log.e("PartyDetailsActivity", "已经有关系的小组进入=========");
+		// }
 		// 初始化地图
 		initMap();
 		initFinish();
@@ -222,11 +211,12 @@ public class PartyDetailsActivity extends Activity implements
 
 	private void initcreatePartyRelation(Integer fk_user, Integer pk_party_user) {
 		isParty = true;
+		isreadparty = false;
 		Party_User readuserparty = new Party_User();
 		readuserparty.setPk_party_user(pk_party_user);
 		readuserparty.setFk_party(pk_party);
 		readuserparty.setFk_user(fk_user);
-		readuserparty.setStatus(status);
+		readuserparty.setStatus(1);
 		readpartyInterface.createPartyRelation(PartyDetailsActivity.this,
 				readuserparty);
 	}
@@ -246,41 +236,81 @@ public class PartyDetailsActivity extends Activity implements
 						Integer statusMsg = partyRelationshipback
 								.getStatusMsg();
 						if (statusMsg == 1) {
-							Log.e("PartyDetailsActivity", "返回新建立的聚会关系========" + A);
-							Log.e("PartyDetailsActivity", "应该是进入这里的========" );
-//							initReadParty();
-//							isreadparty = false;
+							Log.e("PartyDetailsActivity", "返回新建立的聚会关系========"
+									+ A);
+							Log.e("PartyDetailsActivity", "应该是进入这里的========");
 						}
-					} 
-					
-						if(isreadparty)
-						{
-							Log.e("PartyDetailsActivity", "返回的用户参与信息" + A);
-							Log.e("PartyDetailsActivity", "不应该是进入这里的========说明错了" );
-							java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
-							}.getType();
-							ReadPartyback partyback = GsonUtils.parseJsonArray(A,
-									type);
-							ReturnData returnData = partyback.getReturnData();
-							Log.e("PartyActivity",
-									"当前returnData:" + returnData.toString());
-							List<Relation> relationList = returnData.getRelation();
+					}
+
+					if (isreadparty) {
+						Log.e("PartyDetailsActivity", "返回的用户参与信息" + A);
+						java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
+						}.getType();
+						ReadPartyback partyback = GsonUtils.parseJsonArray(A,
+								type);
+						ReturnData returnData = partyback.getReturnData();
+						Log.e("PartyActivity",
+								"当前returnData:" + returnData.toString());
+						List<Relation> relationList = returnData.getRelation();
+						if (relationList.size() > 0) {
 							for (int i = 0; i < relationList.size(); i++) {
 								Relation relation = relationList.get(i);
 								Integer read_pk_user = relation.getPk_user();
-								// if (String.valueOf(fk_user).equals(
-								// String.valueOf(read_pk_user))) {
-								// Log.e("PartyActivity", "可以进行判断=======");
-								Integer read_relationship = relation
+								if (String.valueOf(fk_user).equals(
+										String.valueOf(read_pk_user))) {
+									Log.e("PartyActivity", "可以进行判断=======");
+									Integer read_relationship = relation
+											.getRelationship();
+									switch (read_relationship) {
+									case 0:
+										mPartyDetails_partake
+												.setBackgroundResource(R.drawable.ok_2);
+										mPartyDetails_refuse
+												.setBackgroundResource(R.drawable.ok_2);
+										Log.e("PartyDetailsActivity",
+												"用户未表态======" + relationship);
+										break;
+									case 1:
+										mPartyDetails_partake
+												.setBackgroundResource(R.drawable.ok_1);
+										mPartyDetails_refuse
+												.setBackgroundResource(R.drawable.ok_2);
+										Log.e("PartyDetailsActivity",
+												"用户已参与=======" + relationship);
+										break;
+									case 2:
+										mPartyDetails_partake
+												.setBackgroundResource(R.drawable.ok_2);
+										mPartyDetails_refuse
+												.setBackgroundResource(R.drawable.ok_1);
+										Log.e("PartyDetailsActivity",
+												"用户已拒绝=========="
+														+ relationship);
+										break;
+									default:
+										break;
+									}
+
+									Log.e("PartyDetailsActivity",
+											"每个relationship:"
+													+ read_relationship);
+								}
+								Integer relationship = relation
 										.getRelationship();
-								Log.e("PartyActivity", "每个relationship:"
-										+ read_relationship);
-								Log.e("PartyActivity", "每个read_pk_user:"
-										+ read_pk_user);
-								// }
+								List<Integer> list = new ArrayList<Integer>();
+								list.add(relationship);
+								Log.e("PartyDetailsActivity",
+										"得到的relationship的个数" + list.size()
+												+ "         " + list.toString());
+
 							}
+						} else {
+							Log.e("PartyDetailsActivity", "用户未建立关系===");
+							initcreatePartyRelation(fk_user, pk_party_user);
+
 						}
 					}
+				}
 			}
 
 			@Override
@@ -291,8 +321,11 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	private void initReadParty() {
+		isreadparty = true;
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
+//		readparty.setFk_group(fk_group);
+//		readparty.setFk_user(fk_user);
 		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,
 				readparty);
 	}
@@ -307,8 +340,8 @@ public class PartyDetailsActivity extends Activity implements
 		Log.e("PartyDetailsActivity", "用户的ID======" + fk_user);
 		status = oneParty.getStatus();
 		if (relationship == null) {
-			Log.e("PartyDetailsActivity", "用户未建立关系===");
-			initcreatePartyRelation(fk_user,pk_party_user);
+			// Log.e("PartyDetailsActivity", "用户未建立关系===");
+			// initcreatePartyRelation(fk_user, pk_party_user);
 		} else {
 			switch (relationship) {
 			case 0:
@@ -386,11 +419,8 @@ public class PartyDetailsActivity extends Activity implements
 		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
 
 			public void onMapClick(LatLng point) {
-				Intent intent = new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class);
-				intent.putExtra("mLat", mLat);
-				intent.putExtra("mLng", mLng);
-				startActivity(intent);
+				startActivity(new Intent(PartyDetailsActivity.this,
+						BigMapActivity.class));
 			}
 
 			public boolean onMapPoiClick(MapPoi poi) {
@@ -399,20 +429,14 @@ public class PartyDetailsActivity extends Activity implements
 		});
 		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
 			public void onMapLongClick(LatLng point) {
-				Intent intent = new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class);
-				intent.putExtra("mLat", mLat);
-				intent.putExtra("mLng", mLng);
-				startActivity(intent);
+				startActivity(new Intent(PartyDetailsActivity.this,
+						BigMapActivity.class));
 			}
 		});
 		mBaiduMap.setOnMapDoubleClickListener(new OnMapDoubleClickListener() {
 			public void onMapDoubleClick(LatLng point) {
-				Intent intent = new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class);
-				intent.putExtra("mLat", mLat);
-				intent.putExtra("mLng", mLng);
-				startActivity(intent);
+				startActivity(new Intent(PartyDetailsActivity.this,
+						BigMapActivity.class));
 
 			}
 		});
@@ -433,6 +457,7 @@ public class PartyDetailsActivity extends Activity implements
 		// 添加地图标点
 		addOverlay(mLat, mLng, R.drawable.iconfont2);
 		// 开启定位图层
+		mBaiduMap.setMyLocationEnabled(true);
 		mBaiduMap.setMyLocationEnabled(false);
 		mLocClient = new LocationClient(this);
 		mLocClient.registerLocationListener(myListener);
@@ -467,7 +492,6 @@ public class PartyDetailsActivity extends Activity implements
 
 	@Override
 	public void onGetGeoCodeResult(GeoCodeResult arg0) {
-		// TODO Auto-generated method stub
 
 	}
 
@@ -510,10 +534,7 @@ public class PartyDetailsActivity extends Activity implements
 		party_user.setPk_party_user(pk_party_user);
 		party_user.setFk_party(pk_party);
 		party_user.setFk_user(fk_user);
-		party_user.setType(1);
 		party_user.setRelationship(1);
-		party_user.setStatus(status);
-		party_user.setSyn_calendar(1);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
 				party_user);
 	}
@@ -524,12 +545,7 @@ public class PartyDetailsActivity extends Activity implements
 		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
-		party_user.setFk_party(pk_party);
-		party_user.setFk_user(fk_user);
-		party_user.setType(1);
 		party_user.setRelationship(2);
-		party_user.setStatus(status);
-		party_user.setSyn_calendar(1);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
 				party_user);
 	}

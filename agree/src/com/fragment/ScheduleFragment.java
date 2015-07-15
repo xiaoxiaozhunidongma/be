@@ -54,6 +54,7 @@ public class ScheduleFragment extends Fragment {
 	private ArrayList<Party2> partylist = new ArrayList<Party2>();
 	private MyAdapter adapter = null;
 	private PullToRefreshListView mPull_refresh_list;
+	private boolean isData;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
