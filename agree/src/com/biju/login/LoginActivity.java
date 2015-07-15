@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.BJ.javabean.Loginback;
+import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.Person;
@@ -95,11 +96,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
+					
+				Log.e("LoginActivity", "用户资料" + A);
 				Loginback loginbackread = GsonUtils.parseJson(A,
 						Loginback.class);
 				int aa = loginbackread.getStatusMsg();
 				if (aa == 1) {
-					Log.e("LoginActivity", "用户资料" + A);
 					// 取第一个Users[0]
 					List<User> Users = loginbackread.getReturnData();
 					if (Users.size() >= 1) {
@@ -195,9 +197,28 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	private void Login_registered() {
-		Intent intent = new Intent(LoginActivity.this, RegisteredActivity.class);
-		startActivity(intent);
-		finish();
+		
+		Interface getSigninter = new Interface();
+		getSigninter.setPostListener(new UserInterface() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("LoginActivity", "签名字符串："+A);
+				PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+				String returnData = picSignBack.getReturnData();
+				RegisteredActivity.setSIGN(returnData);
+				
+				Intent intent = new Intent(LoginActivity.this, RegisteredActivity.class);
+				startActivity(intent);
+				finish();
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
+		getSigninter.getPicSign(this, new User());
 	}
 
 	private void Login_OK() {
