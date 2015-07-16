@@ -327,8 +327,29 @@ public class LoginActivity extends Activity implements OnClickListener {
 			}
 		}else
 		{
-			manually_login.setVisibility(View.VISIBLE);
-			auto_login.setVisibility(View.GONE);
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream(fileName);
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				Person person = (Person) ois.readObject();
+				mLogin_account.setText(person.pk_user);
+				mLogin_password.setText(person.password);
+				manually_login.setVisibility(View.VISIBLE);
+				auto_login.setVisibility(View.GONE);
+			} catch (FileNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (StreamCorruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
 		}
 		super.onStart();
 	}
