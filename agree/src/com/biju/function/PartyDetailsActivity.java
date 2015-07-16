@@ -64,6 +64,7 @@ import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
+import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
@@ -91,6 +92,9 @@ public class PartyDetailsActivity extends Activity implements
 	private TextView mPartyDetails_did_not_say;
 	private TextView mPartyDetails_partake;
 	private TextView mPartyDetails_refuse;
+	private int returndata;
+	private boolean isRegistered_one;
+	private boolean login;
 	private int fk_group;
 	private Interface readpartyInterface;
 	private boolean isreadparty;
@@ -100,7 +104,7 @@ public class PartyDetailsActivity extends Activity implements
 	private MyReceiver receiver;
 	private Integer relationship;
 	private Integer pk_party_user;
-	private Integer fk_user;
+	private Integer fk_user1;
 	private Integer status;
 	private boolean isParty;;
 
@@ -142,6 +146,12 @@ public class PartyDetailsActivity extends Activity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		isRegistered_one = sp.getBoolean("isRegistered_one", false);
+		returndata = sp.getInt("returndata", returndata);
+		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
+		login = sp1.getBoolean("Login", false);
+		
 		initUI();
 		initInterface();
 		initOneParty();
@@ -180,11 +190,11 @@ public class PartyDetailsActivity extends Activity implements
 		SharedPreferences sp3 = getSharedPreferences("isParty_fk_group", 0);
 		fk_group = sp3.getInt("fk_group", 0);
 
-		// if (relationship != null) {
-		// isreadparty = true;
-		initReadParty();
-		Log.e("PartyDetailsActivity", "已经有关系的小组进入=========");
-		// }
+		if (relationship != null) {
+			isreadparty = true;
+			initReadParty();
+			Log.e("PartyDetailsActivity", "已经有关系的小组进入=========");
+		}
 		// 初始化地图
 		initMap();
 		initFinish();
@@ -209,13 +219,15 @@ public class PartyDetailsActivity extends Activity implements
 
 	}
 
-	private void initcreatePartyRelation(Integer fk_user, Integer pk_party_user) {
+	private void initcreatePartyRelation(Integer pk_party_user) {
+		SharedPreferences sp=getSharedPreferences("isPk_user", 0);
+		Integer pk_user_1=sp.getInt("Pk_user", 0);
 		isParty = true;
-		isreadparty = false;
 		Party_User readuserparty = new Party_User();
 		readuserparty.setPk_party_user(pk_party_user);
 		readuserparty.setFk_party(pk_party);
-		readuserparty.setFk_user(fk_user);
+		readuserparty.setFk_user(pk_user_1);
+		Log.e("PartyDetailsActivity", "返回得到的用户ID111========"+pk_user_1);
 		readuserparty.setStatus(1);
 		readpartyInterface.createPartyRelation(PartyDetailsActivity.this,
 				readuserparty);
@@ -256,7 +268,8 @@ public class PartyDetailsActivity extends Activity implements
 							for (int i = 0; i < relationList.size(); i++) {
 								Relation relation = relationList.get(i);
 								Integer read_pk_user = relation.getPk_user();
-								if (String.valueOf(fk_user).equals(
+								//
+								if (String.valueOf(fk_user1).equals(
 										String.valueOf(read_pk_user))) {
 									Log.e("PartyActivity", "可以进行判断=======");
 									Integer read_relationship = relation
@@ -291,23 +304,12 @@ public class PartyDetailsActivity extends Activity implements
 										break;
 									}
 
-									Log.e("PartyDetailsActivity",
-											"每个relationship:"
-													+ read_relationship);
+									Log.e("PartyActivity", "每个relationship:"
+											+ read_relationship);
+									Log.e("PartyActivity", "每个read_pk_user:"
+											+ read_pk_user);
 								}
-								Integer relationship = relation
-										.getRelationship();
-								List<Integer> list = new ArrayList<Integer>();
-								list.add(relationship);
-								Log.e("PartyDetailsActivity",
-										"得到的relationship的个数" + list.size()
-												+ "         " + list.toString());
-
 							}
-						} else {
-							Log.e("PartyDetailsActivity", "用户未建立关系===");
-							initcreatePartyRelation(fk_user, pk_party_user);
-
 						}
 					}
 				}
@@ -324,8 +326,6 @@ public class PartyDetailsActivity extends Activity implements
 		isreadparty = true;
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
-//		readparty.setFk_group(fk_group);
-//		readparty.setFk_user(fk_user);
 		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,
 				readparty);
 	}
@@ -336,12 +336,10 @@ public class PartyDetailsActivity extends Activity implements
 		relationship = oneParty.getRelationship();
 		pk_party_user = oneParty.getPk_party_user();
 		pk_party = oneParty.getPk_party();
-		fk_user = oneParty.getFk_user();
-		Log.e("PartyDetailsActivity", "用户的ID======" + fk_user);
 		status = oneParty.getStatus();
 		if (relationship == null) {
-			// Log.e("PartyDetailsActivity", "用户未建立关系===");
-			// initcreatePartyRelation(fk_user, pk_party_user);
+			Log.e("PartyDetailsActivity", "用户未建立关系===");
+			initcreatePartyRelation(pk_party_user);
 		} else {
 			switch (relationship) {
 			case 0:
@@ -532,8 +530,6 @@ public class PartyDetailsActivity extends Activity implements
 		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
-		party_user.setFk_party(pk_party);
-		party_user.setFk_user(fk_user);
 		party_user.setRelationship(1);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
 				party_user);
@@ -558,6 +554,8 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	private void PartyDetails_back() {
+		Intent intent=new Intent(PartyDetailsActivity.this, GroupActivity.class);
+		startActivity(intent);
 		finish();
 	}
 }
