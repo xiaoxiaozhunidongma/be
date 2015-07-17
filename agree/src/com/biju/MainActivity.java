@@ -71,6 +71,11 @@ public class MainActivity extends FragmentActivity {
 		Editor login_editor = login_sp.edit();
 		login_editor.putBoolean("isLogout", false);
 		login_editor.commit();
+		
+		SharedPreferences sp1=getSharedPreferences("isPhoto", 0);
+		Editor editor1=sp.edit();
+		editor1.putBoolean("Photo", false);
+		editor1.commit();
 		super.onStop();
 	}
 

@@ -365,7 +365,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-
 		}
 		super.onStart();
 	}

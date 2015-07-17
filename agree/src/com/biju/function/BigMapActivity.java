@@ -1,5 +1,11 @@
 package com.biju.function;
 
+import com.biju.R;
+
+import android.os.Bundle;
+import android.app.Activity;
+import android.view.Menu;
+
 import java.util.ArrayList;
 
 import com.baidu.location.BDLocation;
@@ -107,6 +113,8 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 
 	private void initUI() {
 		findViewById(R.id.btn_navi).setOnClickListener(this);
+		findViewById(R.id.Bigmap_back_layout).setOnClickListener(this);
+		findViewById(R.id.Bigmap_back).setOnClickListener(this);
 	}
 
 	private void initMap() {
@@ -204,10 +212,17 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 		case R.id.btn_navi:
 			startNavi(v);
 			break;
-
+		case R.id.Bigmap_back_layout:
+		case R.id.Bigmap_back:
+			Bigmap_back();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void Bigmap_back() {
+		finish();
 	}
 
 }
