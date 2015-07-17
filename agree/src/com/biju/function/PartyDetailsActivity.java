@@ -237,10 +237,15 @@ public class PartyDetailsActivity extends Activity implements
 		readpartyInterface = new Interface();
 		readpartyInterface.setPostListener(new UserInterface() {
 
+			private int partakeNum;
+			private int refuseNum;
+			private int not_sayNum;
+
 			@Override
 			public void success(String A) {
 				if (updateUserJoinMsg) {
 					Log.e("PartyDetailsActivity", "返回的是否更新成功" + A);
+					initReadParty();
 				} else {
 					if (isParty) {
 						PartyRelationshipback partyRelationshipback = GsonUtils
@@ -268,7 +273,22 @@ public class PartyDetailsActivity extends Activity implements
 							for (int i = 0; i < relationList.size(); i++) {
 								Relation relation = relationList.get(i);
 								Integer read_pk_user = relation.getPk_user();
-								//
+								//判断参与、拒绝数
+								Integer relationship = relation.getRelationship();
+								switch (relationship) {
+								case 0:
+									not_sayNum++;
+									break;
+								case 1:
+									partakeNum++;
+									break;
+								case 2:
+									refuseNum++;
+									break;
+								default:
+									break;
+								}
+								//当前用户
 								if (String.valueOf(fk_user1).equals(
 										String.valueOf(read_pk_user))) {
 									Log.e("PartyActivity", "可以进行判断=======");
@@ -310,6 +330,12 @@ public class PartyDetailsActivity extends Activity implements
 											+ read_pk_user);
 								}
 							}
+							mPartyDetails_tv_partake.setText(String.valueOf(partakeNum));
+							mPartyDetails_tv_refuse.setText(String.valueOf(refuseNum));
+							mPartyDetails_did_not_say.setText(String.valueOf(not_sayNum));
+							partakeNum=0;
+							refuseNum=0;
+							not_sayNum=0;
 						}
 					}
 				}
@@ -324,6 +350,7 @@ public class PartyDetailsActivity extends Activity implements
 
 	private void initReadParty() {
 		isreadparty = true;
+		updateUserJoinMsg=false;
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
 		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,

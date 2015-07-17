@@ -58,11 +58,15 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
+		mLayout = inflater.inflate(R.layout.fragment_setting, container,
+				false);
+		User4head();
+		return mLayout;
+	}
+
+	private void User4head() {
 		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
 		completeURL = Cacheurl;
-		if (mLayout == null) {
-			mLayout = inflater.inflate(R.layout.fragment_setting, container,
-					false);
 			SharedPreferences sp = getActivity().getSharedPreferences(
 					"Registered", 0);
 			returndata_1 = sp.getInt("returndata", returndata_1);
@@ -79,8 +83,12 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						completeURL, mSetting_head);
 				Log.e("SettingFragment", "没有网络进入这里" + isWIFI);
 			}
-		}
-		return mLayout;
+	}
+	
+	@Override
+	public void onStart() {
+		User4head();
+		super.onStart();
 	}
 
 	private void returndata() {

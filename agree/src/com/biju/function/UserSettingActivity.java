@@ -26,6 +26,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BJ.javabean.Loginback;
+import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
 import com.BJ.utils.Ifwifi;
@@ -37,6 +38,7 @@ import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.R;
 import com.biju.login.LoginActivity;
+import com.biju.login.RegisteredActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
@@ -61,7 +63,16 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
-	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
+//	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ";
+	public static String SIGN ;
+	public static String getSIGN() {
+		return SIGN;
+	}
+
+	public static void setSIGN(String sIGN) {
+		SIGN = sIGN;
+	}
+
 	private UploadManager uploadManager;
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
@@ -89,6 +100,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private String setup_time;
 	private String Userjpush_id;
+	private int Flag;
 	
 
 	@Override
@@ -127,7 +139,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		}
 
 		mUsersetting_tv_password.setText("请输入想要设置的密码");
-		initUpload();
+//		initUpload();
 	}
 
 	@Override
@@ -144,6 +156,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void ReadUser(int returndata) {
+		Flag=0;
 		readuserinter = new Interface();
 		User readuser = new User();
 		readuser.setPk_user(returndata);
@@ -152,8 +165,9 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				if (!isRead) {
-
+				
+				switch (Flag) {
+				case 0:
 					// 读取用户资料成功
 					Loginback usersettingback = GsonUtils.parseJson(A,
 							Loginback.class);
@@ -200,7 +214,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 							SimpleDateFormat sdf = new SimpleDateFormat(
 									"yyyy-MM-dd hh:mm:ss");
 							setup_time = sdf.format(new Date());
-
+							
 							Log.e("UserSettingActivity", "昵称显示" + "====="
 									+ Usernickname);
 						}
@@ -211,7 +225,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 								UserSettingActivity.this, completeURL,
 								mUsersetting_head);
 					}
-				} else {
+					break;
+				case 1:
 					// 更新用户资料成功
 					updateback usersetting_updateback = GsonUtils.parseJson(A,
 							updateback.class);
@@ -220,6 +235,19 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 						Log.e("UserSettingActivity", "更新成功" + A);
 						finish();
 					}
+
+					break;
+				case 2:
+					Log.e("Usersetting", "签名字符串："+A);
+					PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+					String returnData = picSignBack.getReturnData();
+					UserSettingActivity.setSIGN(returnData);
+					
+					UploadManager.authorize(APPID, USERID, SIGN);
+					break;
+
+				default:
+					break;
 				}
 			}
 
@@ -231,8 +259,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUpload() {
-		// 注册签名
-		UploadManager.authorize(APPID, USERID, SIGN);
+		Flag=2;
+		readuserinter.getPicSign(this, new User());
 		uploadManager = new UploadManager(UserSettingActivity.this,
 				"persistenceId");
 	}
@@ -381,11 +409,15 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			ishead = !ishead;
 		} catch (Exception e) {
 		}
+		//初始化图片签名
+		initUpload();
 	}
 
 	private void usersetting_save_1() {
+		
 		if (isSetting) {
 			isRead = true;
+			Flag=1;
 			Usernickname = mUsersetting_nickname.getText().toString().trim();
 			User usersetting = new User();
 			if (isRegistered_one) {
