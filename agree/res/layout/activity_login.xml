@@ -48,9 +48,9 @@
             android:layout_marginTop="37dp"
             android:background="#ffffff"
             android:ems="10"
-            android:password="true"
             android:gravity="center"
-            android:hint="请输入密码" />
+            android:hint="请输入密码" 
+            android:password="true"/>
 
         <TextView
             android:id="@+id/Login_OK"

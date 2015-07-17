@@ -395,6 +395,5 @@ public class Interface {
 	
 	public static void requestError(VolleyError error) {
 		listener.defail(error);
-		//1............
 	}
 }

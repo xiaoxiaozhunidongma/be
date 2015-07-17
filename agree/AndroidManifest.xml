@@ -7,6 +7,13 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
+    
+    <uses-feature android:name="android.hardware.camera" />
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    
     <!--极光推送  -->
     <permission
         android:name="com.biju.permission.JPUSH_MESSAGE"
@@ -208,6 +215,27 @@
             android:name="com.biju.function.BigMapActivity"
             android:label="@string/title_activity_big_map" >
         </activity>
+        
+        <activity
+            android:name="com.BJ.photo.ImageFile" 
+            android:screenOrientation="portrait" >
+        </activity>
+        <activity
+            android:name="com.BJ.photo.AlbumActivity"
+            android:screenOrientation="portrait">
+        </activity>
+        <activity
+            android:name="com.BJ.photo.ShowAllPhoto" >
+        </activity>
+        <activity
+            android:name="com.BJ.photo.GalleryActivity"
+            >
+        </activity>
+        <activity
+            android:name="com.BJ.photo.BitmapCache"
+            >
+        </activity>
+        
         
         <!--极光推送  -->
         <!-- Required -->

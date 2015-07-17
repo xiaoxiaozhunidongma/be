@@ -28,6 +28,7 @@ import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import com.BJ.javabean.Loginback;
+import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.Person;
@@ -95,11 +96,12 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
+					
+				Log.e("LoginActivity", "用户资料" + A);
 				Loginback loginbackread = GsonUtils.parseJson(A,
 						Loginback.class);
 				int aa = loginbackread.getStatusMsg();
 				if (aa == 1) {
-					Log.e("LoginActivity", "用户资料" + A);
 					// 取第一个Users[0]
 					List<User> Users = loginbackread.getReturnData();
 					if (Users.size() >= 1) {
@@ -126,11 +128,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 									if (drawable != null) {
 										drawable.stop();
 									}
-									SharedPreferences sp = getSharedPreferences("isLogin", 0);
-									Editor editor = sp.edit();
-									editor.putBoolean("Login", true);
-									editor.commit();
-									
 									Intent intent = new Intent(
 											LoginActivity.this,
 											MainActivity.class);
@@ -142,18 +139,17 @@ public class LoginActivity extends Activity implements OnClickListener {
 							
 							String pk_user = mLogin_account.getText().toString().trim();
 							String password = mLogin_password.getText().toString().trim();
-							Person person1 = new Person(pk_user, password);
+							Person person = new Person(pk_user, password);
 							try {
 								ObjectOutputStream oos = new ObjectOutputStream(
 										new FileOutputStream(fileName));
-								oos.writeObject(person1);
+								oos.writeObject(person);
 								oos.close();
 							} catch (FileNotFoundException e) {
 								e.printStackTrace();
 							} catch (IOException e) {
 								e.printStackTrace();
 							}
-							
 							// 取第一个Users[0]
 							// List<User> Users = loginback.getReturnData();
 							// if (Users.size() >= 1) {
@@ -215,9 +211,28 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	private void Login_registered() {
-		Intent intent = new Intent(LoginActivity.this, RegisteredActivity.class);
-		startActivity(intent);
-		finish();
+		
+		Interface getSigninter = new Interface();
+		getSigninter.setPostListener(new UserInterface() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("LoginActivity", "签名字符串："+A);
+				PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+				String returnData = picSignBack.getReturnData();
+				RegisteredActivity.setSIGN(returnData);
+				
+				Intent intent = new Intent(LoginActivity.this, RegisteredActivity.class);
+				startActivity(intent);
+				finish();
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
+		getSigninter.getPicSign(this, new User());
 	}
 
 	private void Login_OK() {
@@ -349,7 +364,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
-			
 		}
 		super.onStart();
 	}
