@@ -157,8 +157,8 @@ public class GalleryActivity extends Activity {
 			editor.putBoolean("Photo", true);
 			editor.commit();
 			finish();
-			intent.setClass(mContext,GroupActivity.class);
-			startActivity(intent);
+//			intent.setClass(mContext,GroupActivity.class);
+//			startActivity(intent);
 		}
 
 	}

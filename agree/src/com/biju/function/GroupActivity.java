@@ -69,12 +69,14 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private boolean finish_1;
 	private boolean update = false;
 	private boolean photo;
+	private Bundle savedInstanceState;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_tab);
+		savedInstanceState=savedInstanceState;
 		SharedPreferences sp = getSharedPreferences("Registered", 0);
 		isRegistered_one = sp.getBoolean("isRegistered_one", false);
 		Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
@@ -108,7 +110,13 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		receiver = new MyReceiver();
 		registerReceiver(receiver, filter);
 	}
-
+	//×¢Ïú¹ã²¥
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		unregisterReceiver(receiver);
+		super.onDestroy();
+	}
 	class MyReceiver extends BroadcastReceiver {
 
 		@Override
@@ -172,6 +180,15 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 						{
 							mTabhost.setCurrentTab(2);
 						}
+						
+						if (savedInstanceState != null) {  
+							mTabhost.setCurrentTabByTag(savedInstanceState.getString("tab"));  
+				        }  
+				        Intent intent1 = getIntent();  
+				        int id = intent1.getIntExtra("fragid",-1);  
+				        if (id==3){  
+				        	mTabhost.setCurrentTab(1);  
+				        }
 					}
 					SharedPreferences sp = getSharedPreferences("Switch", 0);
 					Editor editor = sp.edit();

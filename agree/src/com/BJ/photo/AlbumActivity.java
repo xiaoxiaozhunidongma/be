@@ -3,10 +3,6 @@ package com.BJ.photo;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.biju.R;
-import com.biju.function.GroupActivity;
-import com.fragment.PhotoFragment;
-
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -24,10 +20,13 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.Button;
 import android.widget.GridView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.ToggleButton;
+
+import com.biju.R;
+import com.biju.function.GroupActivity;
+import com.fragment.PhotoFragment;
 
 
 /**
@@ -78,7 +77,8 @@ public class AlbumActivity extends Activity {
 		  
         @Override  
         public void onReceive(Context context, Intent intent) {  
-        	//mContext.unregisterReceiver(this);
+        	//注销广播
+        	mContext.unregisterReceiver(this);
             // TODO Auto-generated method stub  
         	gridImageAdapter.notifyDataSetChanged();
         }  
@@ -99,13 +99,16 @@ public class AlbumActivity extends Activity {
 	// 完成按钮的监听
 	private class AlbumSendListener implements OnClickListener {
 		public void onClick(View v) {
+			
+			PhotoFragment.beginUpload.begin();
+			
 			SharedPreferences sp=getSharedPreferences("isPhoto", 0);
 			Editor editor=sp.edit();
 			editor.putBoolean("Photo", true);
 			editor.commit();
 			overridePendingTransition(R.anim.activity_translate_in, R.anim.activity_translate_out);
-			intent.setClass(mContext, GroupActivity.class);
-			startActivity(intent);
+//			intent.setClass(mContext, GroupActivity.class);
+//			startActivity(intent);
 			finish();
 		}
 
@@ -237,7 +240,8 @@ public class AlbumActivity extends Activity {
 			Editor editor=sp.edit();
 			editor.putBoolean("Photo", true);
 			editor.commit();
-			Bimp.tempSelectBitmap.clear();
+//			Bimp.tempSelectBitmap.clear();
+			
 			finish();
 			intent.setClass(mContext, GroupActivity.class);
 			startActivity(intent);
@@ -245,6 +249,7 @@ public class AlbumActivity extends Activity {
 		return false;
 
 	}
+	
 @Override
 protected void onRestart() {
 	isShowOkBt();
