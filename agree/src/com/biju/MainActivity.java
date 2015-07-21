@@ -14,10 +14,14 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 
+import com.BJ.javabean.PicSignBack;
+import com.BJ.javabean.User;
+import com.biju.Interface.UserInterface;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
 import com.fragment.SettingFragment;
+import com.github.volley_examples.utils.GsonUtils;
 
 public class MainActivity extends FragmentActivity {
 	private FragmentTabHost mTabhost;
