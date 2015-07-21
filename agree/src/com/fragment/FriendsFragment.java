@@ -4,6 +4,7 @@ import com.biju.R;
 import com.biju.function.AddFriendsActivity;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -27,7 +28,13 @@ public class FriendsFragment extends Fragment implements OnClickListener{
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_friends, container, false);
-		initUI();
+		SharedPreferences tab_sp = getActivity().getSharedPreferences(
+				"TabParge", 0);
+		int a = tab_sp.getInt("tabpager", 0);
+		if(a==2)
+		{
+			initUI();
+		}
 		return mLayout;
 	}
 

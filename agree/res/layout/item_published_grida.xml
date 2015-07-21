@@ -6,8 +6,8 @@
 
     <ImageView
         android:id="@+id/item_grida_image"
-        android:layout_width="68dp"
-        android:layout_height="68dp"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
         android:scaleType="centerCrop"
         android:src="@drawable/ic_launcher" >
     </ImageView>
@@ -16,10 +16,7 @@
         android:id="@+id/tv_progress"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginBottom="28dp"
-        android:gravity="center"
         android:text="TextView"
-        android:visibility="gone"
-        android:textColor="#D3D3D3" />
+        android:visibility="gone" />
 
 </LinearLayout>

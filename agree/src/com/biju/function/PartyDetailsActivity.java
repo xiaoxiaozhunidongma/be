@@ -9,6 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
@@ -107,6 +108,7 @@ public class PartyDetailsActivity extends Activity implements
 	private Integer fk_user1;
 	private Integer status;
 	private boolean isParty;;
+	private boolean finish_1;
 
 	/**
 	 * 定位SDK监听函数
@@ -151,7 +153,7 @@ public class PartyDetailsActivity extends Activity implements
 		returndata = sp.getInt("returndata", returndata);
 		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
 		login = sp1.getBoolean("Login", false);
-		
+
 		initUI();
 		initInterface();
 		initOneParty();
@@ -207,11 +209,16 @@ public class PartyDetailsActivity extends Activity implements
 		registerReceiver(receiver, filter);
 	}
 
-	class MyReceiver extends BroadcastReceiver {
+	@Override
+	protected void onStop() {
+		unregisterReceiver(receiver);
+		super.onStop();
+	}
 
+	class MyReceiver extends BroadcastReceiver {
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			boolean finish_1 = intent.getBooleanExtra("finish", false);
+			finish_1 = intent.getBooleanExtra("finish", false);
 			if (finish_1) {
 				PartyDetails_back();
 			}
@@ -220,14 +227,14 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	private void initcreatePartyRelation(Integer pk_party_user) {
-		SharedPreferences sp=getSharedPreferences("isPk_user", 0);
-		Integer pk_user_1=sp.getInt("Pk_user", 0);
+		SharedPreferences sp = getSharedPreferences("isPk_user", 0);
+		Integer pk_user_1 = sp.getInt("Pk_user", 0);
 		isParty = true;
 		Party_User readuserparty = new Party_User();
 		readuserparty.setPk_party_user(pk_party_user);
 		readuserparty.setFk_party(pk_party);
 		readuserparty.setFk_user(pk_user_1);
-		Log.e("PartyDetailsActivity", "返回得到的用户ID111========"+pk_user_1);
+		Log.e("PartyDetailsActivity", "返回得到的用户ID111========" + pk_user_1);
 		readuserparty.setStatus(1);
 		readpartyInterface.createPartyRelation(PartyDetailsActivity.this,
 				readuserparty);
@@ -236,7 +243,6 @@ public class PartyDetailsActivity extends Activity implements
 	private void initInterface() {
 		readpartyInterface = new Interface();
 		readpartyInterface.setPostListener(new UserInterface() {
-
 			private int partakeNum;
 			private int refuseNum;
 			private int not_sayNum;
@@ -273,8 +279,9 @@ public class PartyDetailsActivity extends Activity implements
 							for (int i = 0; i < relationList.size(); i++) {
 								Relation relation = relationList.get(i);
 								Integer read_pk_user = relation.getPk_user();
-								//判断参与、拒绝数
-								Integer relationship = relation.getRelationship();
+								// 判断参与、拒绝数
+								Integer relationship = relation
+										.getRelationship();
 								switch (relationship) {
 								case 0:
 									not_sayNum++;
@@ -288,7 +295,7 @@ public class PartyDetailsActivity extends Activity implements
 								default:
 									break;
 								}
-								//当前用户
+								// 当前用户
 								if (String.valueOf(fk_user1).equals(
 										String.valueOf(read_pk_user))) {
 									Log.e("PartyActivity", "可以进行判断=======");
@@ -350,7 +357,7 @@ public class PartyDetailsActivity extends Activity implements
 
 	private void initReadParty() {
 		isreadparty = true;
-		updateUserJoinMsg=false;
+		updateUserJoinMsg = false;
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
 		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,
@@ -581,8 +588,11 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	private void PartyDetails_back() {
-		Intent intent=new Intent(PartyDetailsActivity.this, GroupActivity.class);
-		startActivity(intent);
+		SharedPreferences PartyDetails_sp = getSharedPreferences(
+				"isPartyDetails_", 0);
+		Editor editor = PartyDetails_sp.edit();
+		editor.putBoolean("PartyDetails", true);
+		editor.commit();
 		finish();
 	}
 }

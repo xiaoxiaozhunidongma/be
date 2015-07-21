@@ -58,33 +58,39 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mLayout = inflater.inflate(R.layout.fragment_setting, container,
-				false);
-		User4head();
+		mLayout = inflater.inflate(R.layout.fragment_setting, container, false);
+		SharedPreferences tab_sp = getActivity().getSharedPreferences(
+				"TabParge", 0);
+		int a = tab_sp.getInt("tabpager", 0);
+		if(a==3)
+		{
+			User4head();
+		}
 		return mLayout;
 	}
 
 	private void User4head() {
 		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
 		completeURL = Cacheurl;
-			SharedPreferences sp = getActivity().getSharedPreferences(
-					"Registered", 0);
-			returndata_1 = sp.getInt("returndata", returndata_1);
-			isRegistered_one = sp.getBoolean("isRegistered_one", false);
-			SharedPreferences sp1 = getActivity().getSharedPreferences("isLogin", 0);
-			login = sp1.getBoolean("Login", false);
-			initUI();
-			boolean isWIFI = Ifwifi.getNetworkConnected(getActivity());
-			if (isWIFI) {
-				returndata();
-				Log.e("SettingFragment", "有网络进入这里" + isWIFI);
-			} else {
-				ImageLoaderUtils.getInstance().LoadImage(getActivity(),
-						completeURL, mSetting_head);
-				Log.e("SettingFragment", "没有网络进入这里" + isWIFI);
-			}
+		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
+				0);
+		returndata_1 = sp.getInt("returndata", returndata_1);
+		isRegistered_one = sp.getBoolean("isRegistered_one", false);
+		SharedPreferences sp1 = getActivity()
+				.getSharedPreferences("isLogin", 0);
+		login = sp1.getBoolean("Login", false);
+		initUI();
+		boolean isWIFI = Ifwifi.getNetworkConnected(getActivity());
+		if (isWIFI) {
+			returndata();
+			Log.e("SettingFragment", "有网络进入这里" + isWIFI);
+		} else {
+			ImageLoaderUtils.getInstance().LoadImage(getActivity(),
+					completeURL, mSetting_head);
+			Log.e("SettingFragment", "没有网络进入这里" + isWIFI);
+		}
 	}
-	
+
 	@Override
 	public void onStart() {
 		User4head();
@@ -96,13 +102,11 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			setting_number.setText("必聚号:" + returndata_1);
 			ReadUser(returndata_1);
 		} else {
-			if(login)
-			{
+			if (login) {
 				int returndata_2 = LoginActivity.getPk_user();
 				setting_number.setText("必聚号:" + returndata_2);
 				ReadUser(returndata_2);
-			}else
-			{
+			} else {
 				setting_number.setText("必聚号:" + returndata_1);
 				ReadUser(returndata_1);
 			}
@@ -150,15 +154,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		mSetting_head.setOnClickListener(this);
 		mLayout.findViewById(R.id.setting_feedback).setOnClickListener(this);
 		mLayout.findViewById(R.id.setting_about_us).setOnClickListener(this);
-		mLayout.findViewById(R.id.tab_setting_cancle_layout).setOnClickListener(this);//注销登录
+		mLayout.findViewById(R.id.tab_setting_cancle_layout)
+				.setOnClickListener(this);// 注销登录
 		mLayout.findViewById(R.id.tab_setting_cancle).setOnClickListener(this);
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ViewGroup parent = (ViewGroup) mLayout.getParent();
-		parent.removeView(mLayout);
 	}
 
 	@Override
@@ -183,14 +181,15 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	private void tab_setting_cancle() {
-		SharedPreferences login_sp=getActivity().getSharedPreferences("Logout", 0);
-		Editor login_editor=login_sp.edit();
+		SharedPreferences login_sp = getActivity().getSharedPreferences(
+				"Logout", 0);
+		Editor login_editor = login_sp.edit();
 		login_editor.putBoolean("isLogout", true);
 		login_editor.commit();
-		Intent intent=new Intent(getActivity(), LoginActivity.class);
+		Intent intent = new Intent(getActivity(), LoginActivity.class);
 		startActivity(intent);
 		getActivity().finish();
-		
+
 	}
 
 	private void setting_about_us() {

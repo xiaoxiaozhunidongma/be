@@ -5,7 +5,7 @@
     android:background="@color/albumback"
     >
 
-    <RelativeLayout
+    <!-- <RelativeLayout
         android:id="@+id/showallphoto_headview"
         android:layout_width="fill_parent"
         android:layout_height="45dp"
@@ -47,7 +47,7 @@
         	android:textSize="15dp"
 			android:background="@drawable/plugin_camera_title_btn_cancel"
             />
-    </RelativeLayout>
+    </RelativeLayout> -->
 
     <RelativeLayout
         android:id="@+id/showallphoto_bottom_layout"
@@ -56,41 +56,57 @@
         android:layout_alignParentBottom="true"
         android:background="@drawable/plugin_camera_bottom_bar" >
 
-        <Button
-            android:id="@+id/showallphoto_preview"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+            <Button
+            android:id="@+id/preview"
+            android:layout_width="wrap_content"
+            android:layout_height="40.0dp"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:text="@string/preview"
-            android:background="@drawable/plugin_camera_title_btn_preview"
+            android:background="@drawable/preview_selector"
+            android:layout_marginTop="5.0dp"
+            android:text="@string/preview" 
+            android:textColor="#000000"
             />
-        <Button
-            android:id="@+id/showallphoto_ok_button"
-            android:layout_width="90dp"
-            android:layout_height="wrap_content"
-             android:layout_marginRight="10dp"
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:text="@string/unfinished"
-            android:background="@drawable/plugin_camera_ok_btn_state"
-            android:gravity="center"
-            />
+            
+             >
+
+             <Button
+                 android:id="@+id/showallphoto_ok_button"
+                 android:layout_width="40dp"
+                 android:layout_height="40dp"
+                 android:layout_centerHorizontal="true"
+                 android:layout_centerVertical="true"
+                 android:background="@drawable/ok_button"
+                 android:gravity="center"
+                 />
+
+        </RelativeLayout>
+        
     </RelativeLayout>
 
     <GridView
         android:id="@+id/showallphoto_myGrid"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@id/showallphoto_bottom_layout"
-        android:layout_below="@id/showallphoto_headview"
-        android:layout_centerInParent="true"
+        android:layout_above="@+id/showallphoto_bottom_layout"
+        android:layout_centerHorizontal="true"
         android:layout_marginTop="2dp"
+        android:background="@color/albumback"
         android:horizontalSpacing="10dp"
         android:numColumns="4"
-        android:verticalSpacing="10dp"
-        android:background="@color/albumback" />
+        android:verticalSpacing="10dp" />
 
     <ProgressBar
         android:id="@+id/showallphoto_progressbar"
