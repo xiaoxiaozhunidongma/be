@@ -111,6 +111,7 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 		}
 		return mLayout;
 	}
+	
 
 	private void initBeginUplistener() {
 		BeginUpload upload = new BeginUpload() {
@@ -203,7 +204,8 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 	}
 
 	public void Init(LayoutInflater inflater) {
-
+		//ÉÏ´«Í¼Æ¬
+		mLayout.findViewById(R.id.photo_upload).setOnClickListener(this);
 		pop = new PopupWindow(getActivity());
 
 		View view = inflater.inflate(R.layout.item_popupwindows, null);
