@@ -33,6 +33,7 @@ import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.TextView;
 
 import com.BJ.photo.AlbumActivity;
 import com.BJ.photo.Bimp;
@@ -48,14 +49,14 @@ import com.biju.function.GroupActivity;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class PhotoFragment extends Fragment implements OnClickListener{
+public class PhotoFragment extends Fragment implements OnClickListener {
 
 	private GridView noScrollgridview;
 	private GridAdapter adapter;
 	private View mLayout;
 	private PopupWindow pop = null;
 	private LinearLayout ll_popup;
-	public static Bitmap bimap ;
+	public static Bitmap bimap;
 
 	public PhotoFragment() {
 		// Required empty public constructor
@@ -64,42 +65,58 @@ public class PhotoFragment extends Fragment implements OnClickListener{
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mLayout = inflater.inflate(R.layout.activity_selectimg, container, false);
+		mLayout = inflater.inflate(R.layout.activity_selectimg, container,
+				false);
 		Res.init(getActivity());
-		bimap = BitmapFactory.decodeResource(
-				getResources(),
+		bimap = BitmapFactory.decodeResource(getResources(),
 				R.drawable.icon_addpic_unfocused);
 		PublicWay.activityList.add(getActivity());
-//		mLayout =inflater.inflate(R.layout.activity_selectimg, null);
-//		setContentView(mLayout);
 		Init(inflater);
+		
 		return mLayout;
 	}
 
-public void Init(LayoutInflater inflater) {
+	@Override
+	public void onStart() {
+		SharedPreferences sp=getActivity().getSharedPreferences("isPhoto", 0);
+		boolean photo = sp.getBoolean("Photo", false);
+		if(photo)
+		{
+			adapter.notifyDataSetChanged();
+		}
+		
+		if(Bimp.tempSelectBitmap.size()>0)
+		{
+			mPhoto_upload_layout.setVisibility(View.VISIBLE);
+		}
+		super.onStart();
+	}
+	
+	public void Init(LayoutInflater inflater) {
+		//上传图片
+		mPhoto_upload_layout = (RelativeLayout) mLayout.findViewById(R.id.photo_upload_layout);
+		mPhoto_upload_layout.setOnClickListener(this);
+		mLayout.findViewById(R.id.photo_upload).setOnClickListener(this);
 		
 		pop = new PopupWindow(getActivity());
-		
+
 		View view = inflater.inflate(R.layout.item_popupwindows, null);
 
 		ll_popup = (LinearLayout) view.findViewById(R.id.ll_popup);
-		
+
 		pop.setWidth(LayoutParams.MATCH_PARENT);
 		pop.setHeight(LayoutParams.WRAP_CONTENT);
 		pop.setBackgroundDrawable(new BitmapDrawable());
 		pop.setFocusable(true);
 		pop.setOutsideTouchable(true);
 		pop.setContentView(view);
-		
+
 		RelativeLayout parent = (RelativeLayout) view.findViewById(R.id.parent);
-		Button bt1 = (Button) view
-				.findViewById(R.id.item_popupwindows_camera);
-		Button bt2 = (Button) view
-				.findViewById(R.id.item_popupwindows_Photo);
-		Button bt3 = (Button) view
-				.findViewById(R.id.item_popupwindows_cancel);
+		Button bt1 = (Button) view.findViewById(R.id.item_popupwindows_camera);
+		Button bt2 = (Button) view.findViewById(R.id.item_popupwindows_Photo);
+		Button bt3 = (Button) view.findViewById(R.id.item_popupwindows_cancel);
 		parent.setOnClickListener(new OnClickListener() {
-			
+
 			@Override
 			public void onClick(View v) {
 				// TODO Auto-generated method stub
@@ -116,12 +133,14 @@ public void Init(LayoutInflater inflater) {
 		});
 		bt2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				//点击图库的时候关闭自身
-				getActivity().finish();
-				Intent intent = new Intent(getActivity(),
-						AlbumActivity.class);
+				// 点击图库的时候关闭自身
+//				 getActivity().finish();
+				Intent intent = new Intent(getActivity(), AlbumActivity.class);
 				startActivity(intent);
-				getActivity().overridePendingTransition(R.anim.activity_translate_in, R.anim.activity_translate_out);
+				//打开时的动画
+				getActivity().overridePendingTransition(
+						R.anim.activity_translate_in,
+						R.anim.activity_translate_out);
 				pop.dismiss();
 				ll_popup.clearAnimation();
 			}
@@ -132,8 +151,9 @@ public void Init(LayoutInflater inflater) {
 				ll_popup.clearAnimation();
 			}
 		});
-		
-		noScrollgridview = (GridView) mLayout.findViewById(R.id.noScrollgridview);	
+
+		noScrollgridview = (GridView) mLayout
+				.findViewById(R.id.noScrollgridview);
 		noScrollgridview.setSelector(new ColorDrawable(Color.TRANSPARENT));
 		adapter = new GridAdapter(getActivity());
 		adapter.update();
@@ -144,10 +164,12 @@ public void Init(LayoutInflater inflater) {
 					long arg3) {
 				if (arg2 == Bimp.tempSelectBitmap.size()) {
 					Log.i("ddddddd", "----------");
-					ll_popup.startAnimation(AnimationUtils.loadAnimation(getActivity(),R.anim.activity_translate_in));
+					ll_popup.startAnimation(AnimationUtils.loadAnimation(
+							getActivity(), R.anim.activity_translate_in));
 					pop.showAtLocation(mLayout, Gravity.BOTTOM, 0, 0);
 				} else {
-					Intent intent = new Intent(getActivity(),GalleryActivity.class);
+					Intent intent = new Intent(getActivity(),
+							GalleryActivity.class);
 					intent.putExtra("position", "1");
 					intent.putExtra("ID", arg2);
 					startActivity(intent);
@@ -180,7 +202,7 @@ public void Init(LayoutInflater inflater) {
 		}
 
 		public int getCount() {
-			if(Bimp.tempSelectBitmap.size() == 9){
+			if (Bimp.tempSelectBitmap.size() == 9) {
 				return 9;
 			}
 			return (Bimp.tempSelectBitmap.size() + 1);
@@ -215,16 +237,15 @@ public void Init(LayoutInflater inflater) {
 				holder = (ViewHolder) convertView.getTag();
 			}
 
-			if (position ==Bimp.tempSelectBitmap.size()) {
+			if (position == Bimp.tempSelectBitmap.size()) {
 				holder.image.setImageBitmap(BitmapFactory.decodeResource(
 						getResources(), R.drawable.icon_addpic_unfocused));
 				if (position == 9) {
 					holder.image.setVisibility(View.GONE);
 				}
 			} else {
-//				holder.image.setImageBitmap(Bimp.tempSelectBitmap.get(position).getBitmap());
-				holder.image.setImageBitmap(BitmapFactory.decodeResource(
-						getResources(), R.drawable.icon_addpic_unfocused));
+				holder.image.setImageBitmap(Bimp.tempSelectBitmap.get(position)
+						.getBitmap());
 			}
 
 			return convertView;
@@ -282,6 +303,7 @@ public void Init(LayoutInflater inflater) {
 	}
 
 	private static final int TAKE_PICTURE = 0x000001;
+	private RelativeLayout mPhoto_upload_layout;
 
 	public void photo() {
 		Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -292,31 +314,33 @@ public void Init(LayoutInflater inflater) {
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		switch (requestCode) {
 		case TAKE_PICTURE:
-			if (Bimp.tempSelectBitmap.size() < 9 && resultCode == getActivity().RESULT_OK) {
-				
+			if (Bimp.tempSelectBitmap.size() < 9
+					&& resultCode == getActivity().RESULT_OK) {
+
 				String fileName = String.valueOf(System.currentTimeMillis());
 				Bitmap bm = (Bitmap) data.getExtras().get("data");
 				FileUtils.saveBitmap(bm, fileName);
-				
+
 				ImageItem takePhoto = new ImageItem();
 				takePhoto.setBitmap(bm);
 				Bimp.tempSelectBitmap.add(takePhoto);
-				//拍完照片让其马上显示出来
-				SharedPreferences sp=getActivity().getSharedPreferences("isPhoto", 0);
-				Editor editor=sp.edit();
+				// 拍完照片让其马上显示出来
+				SharedPreferences sp = getActivity().getSharedPreferences(
+						"isPhoto", 0);
+				Editor editor = sp.edit();
 				editor.putBoolean("Photo", true);
 				editor.commit();
-				getActivity().finish();
-				Intent intent=new Intent(getActivity(), GroupActivity.class);
-				startActivity(intent);
+//				getActivity().finish();
+//				Intent intent = new Intent(getActivity(), GroupActivity.class);
+//				startActivity(intent);
 			}
 			break;
 		}
 	}
-	
+
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			for(int i=0;i<PublicWay.activityList.size();i++){
+			for (int i = 0; i < PublicWay.activityList.size(); i++) {
 				if (null != PublicWay.activityList.get(i)) {
 					PublicWay.activityList.get(i).finish();
 				}
@@ -325,12 +349,11 @@ public void Init(LayoutInflater inflater) {
 		}
 		return true;
 	}
-	
+
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		
+
 	}
-	
 
 }

@@ -42,12 +42,18 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_party, container, false);
-		initUI();
-		initPk_user();
-		initInterface();
-		initParty();
+		SharedPreferences tab_sp = getActivity().getSharedPreferences(
+				"TabParge", 0);
+		int a = tab_sp.getInt("tabpager", 0);
+		if (a == 1) {
+			initUI();
+			initPk_user();
+			initInterface();
+			initParty();
+		}
 		return mLayout;
 	}
+
 
 	private void initInterface() {
 		tab_party_interface = new Interface();

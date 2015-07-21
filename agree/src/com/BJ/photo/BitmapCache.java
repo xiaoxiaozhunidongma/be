@@ -72,7 +72,10 @@ public class BitmapCache extends Activity {
 
 				try {
 					if (isThumbPath) {
-						thumb = BitmapFactory.decodeFile(thumbPath);
+						if(thumb!=null)
+						{
+							thumb = BitmapFactory.decodeFile(thumbPath);
+						}
 						if (thumb == null) {
 							thumb = revitionImageSize(sourcePath);						
 						}						

@@ -231,10 +231,10 @@
             android:name="com.BJ.photo.GalleryActivity"
             >
         </activity>
-        <activity
+        <!-- <activity
             android:name="com.BJ.photo.BitmapCache"
             >
-        </activity>
+        </activity> -->
         
         
         <!--极光推送  -->

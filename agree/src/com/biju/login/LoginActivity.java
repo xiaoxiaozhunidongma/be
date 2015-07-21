@@ -36,6 +36,7 @@ import com.biju.Interface;
 import com.biju.Interface.UserInterface;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.biju.function.UserSettingActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class LoginActivity extends Activity implements OnClickListener {

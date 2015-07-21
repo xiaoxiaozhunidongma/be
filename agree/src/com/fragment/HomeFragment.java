@@ -1,5 +1,6 @@
 package com.fragment;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +12,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -28,6 +30,7 @@ import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
+import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
@@ -62,6 +65,22 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private Integer fk_group;
 	private Group readhomeuser;
 
+	private String fileName = getSDPath() + "/" + "saveData";
+	private Person person;
+	private MyReceiver receiver;
+
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
+
 	public HomeFragment() {
 	}
 
@@ -71,23 +90,28 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		if (mLayout == null) {
 			mLayout = inflater
 					.inflate(R.layout.fragment_home, container, false);
-			SharedPreferences sp = getActivity().getSharedPreferences(
-					"Registered", 0);
-			isRegistered_one = sp.getBoolean("isRegistered_one", false);
-			Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
-			returndata = sp.getInt("returndata", returndata);
-			SharedPreferences sp1 = getActivity().getSharedPreferences(
-					"isLogin", 0);
-			login = sp1.getBoolean("Login", false);
+			SharedPreferences tab_sp = getActivity().getSharedPreferences(
+					"TabParge", 0);
+			int a = tab_sp.getInt("tabpager", 0);
+			if (a == 0) {
+				SharedPreferences sp = getActivity().getSharedPreferences(
+						"Registered", 0);
+				isRegistered_one = sp.getBoolean("isRegistered_one", false);
+				Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
+				returndata = sp.getInt("returndata", returndata);
+				SharedPreferences sp1 = getActivity().getSharedPreferences(
+						"isLogin", 0);
+				login = sp1.getBoolean("Login", false);
 
-			initUI(inflater);
-			adapter.notifyDataSetChanged();
-			IntentFilter filter = new IntentFilter();
-			filter.addAction("isRefresh");
-			MyReceiver receiver = new MyReceiver();
-			getActivity().registerReceiver(receiver, filter);
-			if (!iscode) {
-				initNewTeam();
+				initUI(inflater);
+				adapter.notifyDataSetChanged();
+				IntentFilter filter = new IntentFilter();
+				filter.addAction("isRefresh");
+				receiver = new MyReceiver();
+				getActivity().registerReceiver(receiver, filter);
+				if (!iscode) {
+					initNewTeam();
+				}
 			}
 		}
 		return mLayout;
@@ -146,7 +170,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			if (login) {
 				int pk_user = LoginActivity.getPk_user();
 				ReadTeam(pk_user);
-				// Log.e("HomeFragment", "进入登录的新建小组=======" + pk_user);
+				Log.e("HomeFragment", "进入登录的新建小组=======" + pk_user);
 			} else {
 				ReadTeam(returndata);
 			}
@@ -350,5 +374,8 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		super.onDestroyView();
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
+		if (iscode) {
+			getActivity().unregisterReceiver(receiver);
+		}
 	}
 }

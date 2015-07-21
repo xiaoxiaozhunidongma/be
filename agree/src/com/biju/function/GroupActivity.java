@@ -67,8 +67,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private int isPhone;
 	private MyReceiver receiver;
 	private boolean finish_1;
-	private boolean update = false;
 	private boolean photo;
+
+	private boolean partyDetails;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -85,7 +86,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		initUI();
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("pk_group", pk_group);
-		
+
 		initInterface();
 		if (!finish_1) {
 			initreadUserGroupRelation();
@@ -97,8 +98,12 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	@Override
 	protected void onStart() {
 		Log.e("GroupActivity", "ฝ๘ศ๋มห=========+onStart");
-		SharedPreferences sp=getSharedPreferences("isPhoto", 0);
+		SharedPreferences sp = getSharedPreferences("isPhoto", 0);
 		photo = sp.getBoolean("Photo", false);
+
+		SharedPreferences PartyDetails_sp = getSharedPreferences(
+				"isPartyDetails_", 0);
+		partyDetails = PartyDetails_sp.getBoolean("PartyDetails", false);
 		super.onStart();
 	}
 
@@ -168,10 +173,14 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 						isChat = ischat;
 						isMessage = ismessage;
 						isPhone = isphone;
-						if(photo)
-						{
+						if (photo) {
 							mTabhost.setCurrentTab(2);
 						}
+
+						if (partyDetails) {
+							mTabhost.setCurrentTab(1);
+						}
+
 					}
 					SharedPreferences sp = getSharedPreferences("Switch", 0);
 					Editor editor = sp.edit();
@@ -264,13 +273,19 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	public void group_back() {
 		finish();
 	}
-	
+
 	@Override
 	protected void onStop() {
-		SharedPreferences sp=getSharedPreferences("isPhoto", 0);
-		Editor editor=sp.edit();
+		SharedPreferences sp = getSharedPreferences("isPhoto", 0);
+		Editor editor = sp.edit();
 		editor.putBoolean("Photo", false);
 		editor.commit();
+
+		SharedPreferences PartyDetails_sp = getSharedPreferences(
+				"isPartyDetails_", 0);
+		Editor PartyDetails_editor = PartyDetails_sp.edit();
+		PartyDetails_editor.putBoolean("PartyDetails", false);
+		PartyDetails_editor.commit();
 		super.onStop();
 	}
 }
