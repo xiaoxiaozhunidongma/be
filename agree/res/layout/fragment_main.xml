@@ -7,9 +7,7 @@
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" 
-          
-        >
+        android:layout_height="match_parent" >
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -26,14 +24,20 @@
                 android:id="@+id/pager"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-                android:layout_weight="1"
-                android:background="#C0C0C0" />
+                android:layout_weight="1" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="0.50dp"
+                android:background="#aaaaaa" />
 
             <TabWidget
                 android:id="@android:id/tabs"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-              >
+                android:background="#f0f0f0"
+                android:divider="@null" >
             </TabWidget>
 
             <LinearLayout
@@ -44,11 +48,9 @@
                 <ImageView
                     android:id="@+id/img_scrollbar"
                     android:layout_width="match_parent"
-                    android:layout_height="4dp"
-                    android:layout_weight="4"
+                    android:layout_height="3dp"
+                    android:layout_weight="3"
                     android:scaleType="fitXY"
-                    android:paddingLeft="10dp"
-                    android:paddingRight="10dp"
                     android:src="@drawable/scrollbar" />
 
                 <View

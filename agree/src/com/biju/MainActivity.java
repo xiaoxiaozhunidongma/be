@@ -30,7 +30,6 @@ public class MainActivity extends FragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
-
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		fragment = new com.fragment.TabPagerFragment();
@@ -47,12 +46,10 @@ public class MainActivity extends FragmentActivity {
 
 		fragment.setArg(labels, tabIcons, fragments);
 		ft.commit();
-		// initUI();// ≥ı ºªØTabhost
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
 		super.onNewIntent(intent);
 		// Intent intent = getIntent();
 		int id = intent.getIntExtra("HomeFragment", -1);
@@ -71,6 +68,7 @@ public class MainActivity extends FragmentActivity {
 		}
 
 	}
+
 
 	// private void initUI() {
 	// mTabhost = (FragmentTabHost) findViewById(android.R.id.tabhost);
@@ -121,6 +119,11 @@ public class MainActivity extends FragmentActivity {
 		Editor PartyDetails_editor = PartyDetails_sp.edit();
 		PartyDetails_editor.putBoolean("PartyDetails", false);
 		PartyDetails_editor.commit();
+		
+		SharedPreferences sp2 = getSharedPreferences("isLogin", 0);
+		Editor editor2 = sp2.edit();
+		editor2.putBoolean("Login", true);
+		editor2.commit();
 		super.onStop();
 	}
 

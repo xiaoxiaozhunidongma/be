@@ -42,23 +42,11 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_party, container, false);
-		SharedPreferences tab_sp = getActivity().getSharedPreferences(
-				"TabParge", 0);
-		int a = tab_sp.getInt("tabpager", 0);
-//		if (a == 1) {
-			initUI();
-			initPk_user();
-			initInterface();
-			initParty();
-//		}
+		initUI();
+		initPk_user();
+		initInterface();
+		initParty();
 		return mLayout;
-	}
-
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ViewGroup parent = (ViewGroup) mLayout.getParent();
-		parent.removeView(mLayout);
 	}
 
 	private void initInterface() {
@@ -72,7 +60,6 @@ public class PartyFragment extends Fragment implements OnClickListener {
 
 			@Override
 			public void defail(Object B) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -86,7 +73,7 @@ public class PartyFragment extends Fragment implements OnClickListener {
 			if (login) {
 				int pk_user = LoginActivity.getPk_user();
 				partyuser.setPk_user(pk_user);
-				Log.e("PartyFragment", "pk_user===="+pk_user);
+				Log.e("PartyFragment", "pk_user====" + pk_user);
 			} else {
 				partyuser.setPk_user(returndata);
 			}
@@ -135,7 +122,5 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		Intent intent = new Intent(getActivity(), NewPartyActivity.class);
 		startActivity(intent);
 	}
-
-
 
 }

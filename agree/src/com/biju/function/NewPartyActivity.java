@@ -100,6 +100,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 		Interface homeInterface = Interface.getInstance();
 		User homeuser = new User();
 		homeuser.setPk_user(pk_user);
+		homeInterface.readUserGroupMsg(NewPartyActivity.this, homeuser);
 		homeInterface.setPostListener(new readUserGroupMsgListenner() {
 
 			@Override

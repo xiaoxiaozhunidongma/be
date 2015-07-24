@@ -56,6 +56,7 @@ public class ScheduleFragment extends Fragment {
 	private MyAdapter adapter = null;
 	private PullToRefreshListView mPull_refresh_list;
 	private boolean isData;
+	private Integer pk_user_1;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -256,8 +257,6 @@ public class ScheduleFragment extends Fragment {
 			}
 		});
 	}
-
-	private Integer pk_user_1;
 
 	private void initreadUserGroupParty() {
 		Integer id_group = GroupActivity.getPk_group();

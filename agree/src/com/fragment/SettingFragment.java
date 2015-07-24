@@ -25,7 +25,6 @@ import com.biju.Interface.readUserListenner;
 import com.biju.R;
 import com.biju.function.AboutUsActivity;
 import com.biju.function.FeedbackActivity;
-import com.biju.function.PartyDetailsActivity;
 import com.biju.function.UserSettingActivity;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
@@ -59,23 +58,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_setting, container, false);
-		SharedPreferences tab_sp = getActivity().getSharedPreferences(
-				"TabParge", 0);
-		int a = tab_sp.getInt("tabpager", 0);
-//		if(a==3)
-//		{
-			User4head();
-//		}
+		User4head();
 		return mLayout;
 	}
 
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ViewGroup parent = (ViewGroup) mLayout.getParent();
-		parent.removeView(mLayout);
-	}
-	
 	private void User4head() {
 		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
 		completeURL = Cacheurl;

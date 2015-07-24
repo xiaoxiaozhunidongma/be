@@ -52,14 +52,13 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-			mLayout = inflater.inflate(R.layout.fragment_main, null);
-			mImgScrollbar = (ImageView) mLayout.findViewById(R.id.img_scrollbar);
-			initTab(inflater, mLayout);
-			initPager(mLayout);
-		return mLayout;
+		View layout = inflater.inflate(R.layout.fragment_main, null);
+		mImgScrollbar = (ImageView) layout.findViewById(R.id.img_scrollbar);
+		initTab(inflater, layout);
+		initPager(layout);
+		return layout;
 	}
 
-	
 	private void initTab(LayoutInflater inflater, View layout) {
 		mTabHost = (TabHost) layout.findViewById(android.R.id.tabhost);
 		mTabHost.setup();
@@ -88,20 +87,18 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 		FragmentManager fm = getChildFragmentManager();
 		mPager.setAdapter(new MyPagerAdapter(fm));
 		mPager.setOnPageChangeListener(this);
-		mPager.setOffscreenPageLimit(1);
-		mPager.setCurrentItem(0);
-		
+		mPager.setOffscreenPageLimit(0);
 	}
-
+	
+	
 	class MyPagerAdapter extends FragmentPagerAdapter {
 
 		public MyPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
-
+ 
 		@Override
 		public Fragment getItem(int position) {
-			Log.e("TabPagerFragment", "µ±Ç°pager"+position);
 			return fragments.get(position);
 
 		}
@@ -110,7 +107,6 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 		public int getCount() {
 			return fragments.size();
 		}
-		
 	}
 
 	@Override
@@ -126,10 +122,13 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 		int position = mTabHost.getCurrentTab();
 		mPager.setCurrentItem(position);
 		
-		SharedPreferences tab_sp=getActivity().getSharedPreferences("TabParge", 0);
-		Editor editor=tab_sp.edit();
-		editor.putInt("tabpager", position);
-		editor.commit();
+		if(position==1)
+		{
+			SharedPreferences tab_sp=getActivity().getSharedPreferences("TabParge", 0);
+			Editor editor=tab_sp.edit();
+			editor.putBoolean("tabpager", true);
+			editor.commit();
+		}
 		
 		WindowManager windowMgr = (WindowManager) getActivity()
 				.getSystemService(Context.WINDOW_SERVICE);
@@ -144,7 +143,6 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 	}
 
 	private int lastOffset;
-	private View mLayout;
 
 	@Override
 	public void onPageScrolled(int position, float positionOffset,

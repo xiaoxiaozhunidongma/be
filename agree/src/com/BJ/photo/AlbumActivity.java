@@ -26,9 +26,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.biju.R;
-import com.biju.function.GroupActivity;
-import com.fragment.PhotoFragment;
-
 
 /**
  * 这个是进入相册显示所有图片的界面
