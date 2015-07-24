@@ -63,7 +63,9 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.updateUserJoinMsgListenner;
+import com.biju.Interface.createPartyRelationListenner;
+import com.biju.Interface.readPartyJoinMsgListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
@@ -241,116 +243,132 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	private void initInterface() {
-		readpartyInterface = new Interface();
-		readpartyInterface.setPostListener(new UserInterface() {
-			private int partakeNum;
-			private int refuseNum;
-			private int not_sayNum;
+		readpartyInterface = Interface.getInstance();
+		readpartyInterface.setPostListener(new updateUserJoinMsgListenner() {
 
 			@Override
 			public void success(String A) {
-				if (updateUserJoinMsg) {
-					Log.e("PartyDetailsActivity", "返回的是否更新成功" + A);
-					initReadParty();
-				} else {
-					if (isParty) {
-						PartyRelationshipback partyRelationshipback = GsonUtils
-								.parseJson(A, PartyRelationshipback.class);
-						Integer statusMsg = partyRelationshipback
-								.getStatusMsg();
-						if (statusMsg == 1) {
-							Log.e("PartyDetailsActivity", "返回新建立的聚会关系========"
-									+ A);
-							Log.e("PartyDetailsActivity", "应该是进入这里的========");
-						}
-					}
-
-					if (isreadparty) {
-						Log.e("PartyDetailsActivity", "返回的用户参与信息" + A);
-						java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
-						}.getType();
-						ReadPartyback partyback = GsonUtils.parseJsonArray(A,
-								type);
-						ReturnData returnData = partyback.getReturnData();
-						Log.e("PartyActivity",
-								"当前returnData:" + returnData.toString());
-						List<Relation> relationList = returnData.getRelation();
-						if (relationList.size() > 0) {
-							for (int i = 0; i < relationList.size(); i++) {
-								Relation relation = relationList.get(i);
-								Integer read_pk_user = relation.getPk_user();
-								// 判断参与、拒绝数
-								Integer relationship = relation
-										.getRelationship();
-								switch (relationship) {
-								case 0:
-									not_sayNum++;
-									break;
-								case 1:
-									partakeNum++;
-									break;
-								case 2:
-									refuseNum++;
-									break;
-								default:
-									break;
-								}
-								// 当前用户
-								if (String.valueOf(fk_user1).equals(
-										String.valueOf(read_pk_user))) {
-									Log.e("PartyActivity", "可以进行判断=======");
-									Integer read_relationship = relation
-											.getRelationship();
-									switch (read_relationship) {
-									case 0:
-										mPartyDetails_partake
-												.setBackgroundResource(R.drawable.ok_2);
-										mPartyDetails_refuse
-												.setBackgroundResource(R.drawable.ok_2);
-										Log.e("PartyDetailsActivity",
-												"用户未表态======" + relationship);
-										break;
-									case 1:
-										mPartyDetails_partake
-												.setBackgroundResource(R.drawable.ok_1);
-										mPartyDetails_refuse
-												.setBackgroundResource(R.drawable.ok_2);
-										Log.e("PartyDetailsActivity",
-												"用户已参与=======" + relationship);
-										break;
-									case 2:
-										mPartyDetails_partake
-												.setBackgroundResource(R.drawable.ok_2);
-										mPartyDetails_refuse
-												.setBackgroundResource(R.drawable.ok_1);
-										Log.e("PartyDetailsActivity",
-												"用户已拒绝=========="
-														+ relationship);
-										break;
-									default:
-										break;
-									}
-
-									Log.e("PartyActivity", "每个relationship:"
-											+ read_relationship);
-									Log.e("PartyActivity", "每个read_pk_user:"
-											+ read_pk_user);
-								}
-							}
-							mPartyDetails_tv_partake.setText(String.valueOf(partakeNum));
-							mPartyDetails_tv_refuse.setText(String.valueOf(refuseNum));
-							mPartyDetails_did_not_say.setText(String.valueOf(not_sayNum));
-							partakeNum=0;
-							refuseNum=0;
-							not_sayNum=0;
-						}
-					}
-				}
+				Log.e("PartyDetailsActivity", "返回的是否更新成功" + A);
+				initReadParty();
 			}
 
 			@Override
 			public void defail(Object B) {
 
+			}
+		});
+		
+		readpartyInterface.setPostListener(new createPartyRelationListenner() {
+			
+			@Override
+			public void success(String A) {
+				PartyRelationshipback partyRelationshipback = GsonUtils
+						.parseJson(A, PartyRelationshipback.class);
+				Integer statusMsg = partyRelationshipback
+						.getStatusMsg();
+				if (statusMsg == 1) {
+					Log.e("PartyDetailsActivity", "返回新建立的聚会关系========"
+							+ A);
+					Log.e("PartyDetailsActivity", "应该是进入这里的========");
+				}
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
+		
+		readpartyInterface.setPostListener(new readPartyJoinMsgListenner() {
+			private int partakeNum;
+			private int refuseNum;
+			private int not_sayNum;
+			
+			@Override
+			public void success(String A) {
+				Log.e("PartyDetailsActivity", "返回的用户参与信息" + A);
+				java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
+				}.getType();
+				ReadPartyback partyback = GsonUtils.parseJsonArray(A,
+						type);
+				ReturnData returnData = partyback.getReturnData();
+				Log.e("PartyActivity",
+						"当前returnData:" + returnData.toString());
+				List<Relation> relationList = returnData.getRelation();
+				if (relationList.size() > 0) {
+					for (int i = 0; i < relationList.size(); i++) {
+						Relation relation = relationList.get(i);
+						Integer read_pk_user = relation.getPk_user();
+						// 判断参与、拒绝数
+						Integer relationship = relation
+								.getRelationship();
+						switch (relationship) {
+						case 0:
+							not_sayNum++;
+							break;
+						case 1:
+							partakeNum++;
+							break;
+						case 2:
+							refuseNum++;
+							break;
+						default:
+							break;
+						}
+						// 当前用户
+						if (String.valueOf(fk_user1).equals(
+								String.valueOf(read_pk_user))) {
+							Log.e("PartyActivity", "可以进行判断=======");
+							Integer read_relationship = relation
+									.getRelationship();
+							switch (read_relationship) {
+							case 0:
+								mPartyDetails_partake
+										.setBackgroundResource(R.drawable.ok_2);
+								mPartyDetails_refuse
+										.setBackgroundResource(R.drawable.ok_2);
+								Log.e("PartyDetailsActivity",
+										"用户未表态======" + relationship);
+								break;
+							case 1:
+								mPartyDetails_partake
+										.setBackgroundResource(R.drawable.ok_1);
+								mPartyDetails_refuse
+										.setBackgroundResource(R.drawable.ok_2);
+								Log.e("PartyDetailsActivity",
+										"用户已参与=======" + relationship);
+								break;
+							case 2:
+								mPartyDetails_partake
+										.setBackgroundResource(R.drawable.ok_2);
+								mPartyDetails_refuse
+										.setBackgroundResource(R.drawable.ok_1);
+								Log.e("PartyDetailsActivity",
+										"用户已拒绝=========="
+												+ relationship);
+								break;
+							default:
+								break;
+							}
+
+							Log.e("PartyActivity", "每个relationship:"
+									+ read_relationship);
+							Log.e("PartyActivity", "每个read_pk_user:"
+									+ read_pk_user);
+						}
+					}
+					mPartyDetails_tv_partake.setText(String.valueOf(partakeNum));
+					mPartyDetails_tv_refuse.setText(String.valueOf(refuseNum));
+					mPartyDetails_did_not_say.setText(String.valueOf(not_sayNum));
+					partakeNum=0;
+					refuseNum=0;
+					not_sayNum=0;
+				}
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
 			}
 		});
 	}

@@ -31,7 +31,9 @@ import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.produceRequestCodeListenner;
+import com.biju.Interface.readUserListenner;
+import com.biju.Interface.updateGroupSetListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
@@ -50,7 +52,6 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	private int pk_group;
 	private TextView mTeamSetting_requestcode;
 	private Interface readuserinter;
-	private boolean isProduce;
 	private TextView mTeamSetting_message;
 	private TextView mTeamSetting_chat;
 	private TextView mTeamSetting_phone;
@@ -66,7 +67,6 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	private int returndata;
 	private boolean isRegistered_one;
 	private boolean login;
-	private boolean isupdate;
 	private boolean test;
 
 	@Override
@@ -155,15 +155,14 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void ReadUser(int returndata) {
-		readuserinter = new Interface();
+		readuserinter = Interface.getInstance();
 		User readuser = new User();
 		readuser.setPk_user(returndata);
 		readuserinter.readUser(TeamSettingActivity.this, readuser);
-		readuserinter.setPostListener(new UserInterface() {
+		readuserinter.setPostListener(new updateGroupSetListenner() {
 
 			@Override
 			public void success(String A) {
-				if (isupdate) {
 					Teamupdateback teamupdateback = GsonUtils.parseJson(A,
 							Teamupdateback.class);
 					int statusmsg = teamupdateback.getStatusMsg();
@@ -179,78 +178,104 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 						Toast.makeText(TeamSettingActivity.this,
 								"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
 					}
-				} else {
-					if (!isProduce) {
-						// 读取用户资料成功
-						Loginback usersettingback = GsonUtils.parseJson(A,
-								Loginback.class);
-						int userStatusmsg = usersettingback.getStatusMsg();
-						if (userStatusmsg == 1) {
-							List<User> Users = usersettingback.getReturnData();
-							if (Users.size() >= 1) {
-								User readuser = Users.get(0);
-								useravatar_path = readuser.getAvatar_path();
-							}
-							completeURL = beginStr + useravatar_path + endStr;
-							PreferenceUtils.saveImageCache(
-									TeamSettingActivity.this, completeURL);// 存SP
-							ImageLoaderUtils.getInstance().LoadImage(
-									TeamSettingActivity.this, completeURL,
-									mTeamSetting_head);
-						}
-					} else {
-						Log.e("TeamSettingActivity", "=========" + A);
-						try {
-							JSONObject jsonObject = new JSONObject(A);
-							Object object = jsonObject.get("returnData");
-							Log.e("TeamSettingActivity", "object====" + object);
-							Log.e("TeamSettingActivity",
-									"object.toString()====" + object.toString());
-							Log.e("TeamSettingActivity",
-									"object.toString().length()===="
-											+ object.toString().length());
-							if (object.toString().length() > 4) {
-								Log.e("TeamSettingActivity", "进入第二次====");
-								java.lang.reflect.Type type = new TypeToken<GroupCodeback2>() {
-								}.getType();
-								GroupCodeback2 groupcodeback2 = GsonUtils
-										.parseJsonArray(A, type);
-								int Group_statusmsg2 = groupcodeback2
-										.getStatusMsg();
-								List<Group_Code2> grouplsit = (List<Group_Code2>) groupcodeback2
-										.getReturnData();
-								if (Group_statusmsg2 == 1) {
-									Group_Code2 groupcode = grouplsit.get(0);
-									String requestcode = groupcode
-											.getPk_group_code();
-									mTeamSetting_requestcode
-											.setText(requestcode);
-								}
-							} else {
-								Log.e("TeamSettingActivity", "进入第一次====");
-								GroupCodeback groupcodeback = GsonUtils
-										.parseJson(A, GroupCodeback.class);
-								int Group_statusmsg = groupcodeback
-										.getStatusMsg();
-								if (Group_statusmsg == 1) {
-									String requestcode = groupcodeback
-											.getReturnData();
-									mTeamSetting_requestcode
-											.setText(requestcode);
-								}
-							}
-						} catch (JSONException e) {
-							e.printStackTrace();
-						}
-
-					}
-				}
-
+					
 			}
 
 			@Override
 			public void defail(Object B) {
 
+			}
+		});
+		
+		readuserinter.setPostListener(new readUserListenner() {
+			
+			@Override
+			public void success(String A) {
+
+				// 读取用户资料成功
+				Loginback usersettingback = GsonUtils.parseJson(A,
+						Loginback.class);
+				int userStatusmsg = usersettingback.getStatusMsg();
+				if (userStatusmsg == 1) {
+					List<User> Users = usersettingback.getReturnData();
+					if (Users.size() >= 1) {
+						User readuser = Users.get(0);
+						useravatar_path = readuser.getAvatar_path();
+					}
+					completeURL = beginStr + useravatar_path + endStr;
+					PreferenceUtils.saveImageCache(
+							TeamSettingActivity.this, completeURL);// 存SP
+					ImageLoaderUtils.getInstance().LoadImage(
+							TeamSettingActivity.this, completeURL,
+							mTeamSetting_head);
+				}
+			
+				
+			}
+			
+			@Override
+			public void defail(Object B) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		readuserinter.setPostListener(new produceRequestCodeListenner() {
+			
+			@Override
+			public void success(String A) {
+
+				Log.e("TeamSettingActivity", "=========" + A);
+				try {
+					JSONObject jsonObject = new JSONObject(A);
+					Object object = jsonObject.get("returnData");
+					Log.e("TeamSettingActivity", "object====" + object);
+					Log.e("TeamSettingActivity",
+							"object.toString()====" + object.toString());
+					Log.e("TeamSettingActivity",
+							"object.toString().length()===="
+									+ object.toString().length());
+					if (object.toString().length() > 4) {
+						Log.e("TeamSettingActivity", "进入第二次====");
+						java.lang.reflect.Type type = new TypeToken<GroupCodeback2>() {
+						}.getType();
+						GroupCodeback2 groupcodeback2 = GsonUtils
+								.parseJsonArray(A, type);
+						int Group_statusmsg2 = groupcodeback2
+								.getStatusMsg();
+						List<Group_Code2> grouplsit = (List<Group_Code2>) groupcodeback2
+								.getReturnData();
+						if (Group_statusmsg2 == 1) {
+							Group_Code2 groupcode = grouplsit.get(0);
+							String requestcode = groupcode
+									.getPk_group_code();
+							mTeamSetting_requestcode
+									.setText(requestcode);
+						}
+					} else {
+						Log.e("TeamSettingActivity", "进入第一次====");
+						GroupCodeback groupcodeback = GsonUtils
+								.parseJson(A, GroupCodeback.class);
+						int Group_statusmsg = groupcodeback
+								.getStatusMsg();
+						if (Group_statusmsg == 1) {
+							String requestcode = groupcodeback
+									.getReturnData();
+							mTeamSetting_requestcode
+									.setText(requestcode);
+						}
+					}
+				} catch (JSONException e) {
+					e.printStackTrace();
+				}
+
+			
+				
+			}
+			
+			@Override
+			public void defail(Object B) {
+				// TODO Auto-generated method stub
+				
 			}
 		});
 	}
@@ -341,7 +366,6 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void TeamSetting_requestcode() {
-		isProduce = true;
 		Group Group_teamsetting = new Group();
 		Group_teamsetting.setPk_group(pk_group);
 		Log.e("TeamSettingActivity", "Group_teamsetting" + pk_group);
@@ -351,7 +375,6 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 
 	// 更新小组设置
 	private void TeamSetting_save() {
-		isupdate = true;
 		Group_User group_user = new Group_User();
 		group_user.setPk_group_user(GroupActivity.pk_group_user);
 		if (isRegistered_one) {

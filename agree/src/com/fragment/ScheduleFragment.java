@@ -27,7 +27,7 @@ import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.Partyback;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.readUserGroupPartyListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.PartyDetailsActivity;
@@ -221,8 +221,8 @@ public class ScheduleFragment extends Fragment {
 	}
 
 	private void initInterface() {
-		scheduleInterface = new Interface();
-		scheduleInterface.setPostListener(new UserInterface() {
+		scheduleInterface = Interface.getInstance();
+		scheduleInterface.setPostListener(new readUserGroupPartyListenner() {
 
 			@Override
 			public void success(String A) {

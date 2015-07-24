@@ -21,7 +21,7 @@ import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.readUserListenner;
 import com.biju.R;
 import com.biju.function.AboutUsActivity;
 import com.biju.function.FeedbackActivity;
@@ -62,13 +62,20 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		SharedPreferences tab_sp = getActivity().getSharedPreferences(
 				"TabParge", 0);
 		int a = tab_sp.getInt("tabpager", 0);
-		if(a==3)
-		{
+//		if(a==3)
+//		{
 			User4head();
-		}
+//		}
 		return mLayout;
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
+	}
+	
 	private void User4head() {
 		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
 		completeURL = Cacheurl;
@@ -114,11 +121,11 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	private void ReadUser(int returndata) {
-		Interface readuserinter = new Interface();
+		Interface readuserinter = Interface.getInstance();
 		User readuser = new User();
 		readuser.setPk_user(returndata);
 		readuserinter.readUser(getActivity(), readuser);
-		readuserinter.setPostListener(new UserInterface() {
+		readuserinter.setPostListener(new readUserListenner() {
 
 			@Override
 			public void success(String A) {

@@ -41,7 +41,8 @@ import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.Utils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.createGroupListenner;
+import com.biju.Interface.getPicSignListenner;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.login.LoginActivity;
@@ -101,8 +102,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 		newteam_tv_head.setVisibility(View.VISIBLE);// 显示小组头像选择
 		mNewteam_head.setVisibility(View.GONE);
-		cregrouInter = new Interface();
-		cregrouInter.setPostListener(new UserInterface() {
+		cregrouInter = Interface.getInstance();
+		cregrouInter.setPostListener(new createGroupListenner() {
 
 			@Override
 			public void success(String A) {
@@ -123,14 +124,14 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					}
 					
 					break;
-				case 1:
-					PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
-					String returnData = picSignBack.getReturnData();
-					SIGN=returnData;
-					initUpload();
-					upload(group);
-					
-					break;
+//				case 1:
+//					PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+//					String returnData = picSignBack.getReturnData();
+//					SIGN=returnData;
+//					initUpload();
+//					upload(group);
+//					
+//					break;
 
 				default:
 					break;
@@ -252,9 +253,26 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			group.setLast_post_time(format2);
 			group.setLast_post_message("asdfsd");
 			
-			Interface interface1 = new Interface();
+			Interface interface1 = Interface.getInstance();
 			interface1.getPicSign(this, new User());
-			flag = 1;
+			interface1.setPostListener(new getPicSignListenner() {
+				
+				@Override
+				public void success(String A) {
+					PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+					String returnData = picSignBack.getReturnData();
+					SIGN=returnData;
+					initUpload();
+					upload(group);	 
+					
+				}
+				
+				@Override
+				public void defail(Object B) {
+					
+				}
+			});
+//			flag = 1;
 //			initUpload();
 //			// 上传图片
 //			upload(group);

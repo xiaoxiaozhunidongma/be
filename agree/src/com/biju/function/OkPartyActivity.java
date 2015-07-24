@@ -18,7 +18,7 @@ import android.widget.TextView;
 import com.BJ.javabean.Party;
 import com.BJ.utils.Weeks;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.addPartyListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 
@@ -71,8 +71,8 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 	}
 
 	private void initInterface() {
-		okPartyInterface = new Interface();
-		okPartyInterface.setPostListener(new UserInterface() {
+		okPartyInterface = Interface.getInstance();
+		okPartyInterface.setPostListener(new addPartyListenner() {
 
 			@Override
 			public void success(String A) {

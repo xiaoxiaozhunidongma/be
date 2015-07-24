@@ -14,7 +14,7 @@ import android.widget.RelativeLayout;
 
 import com.BJ.javabean.User;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.readUserAllPartyListenner;
 import com.biju.R;
 import com.biju.function.NewPartyActivity;
 import com.biju.login.LoginActivity;
@@ -45,19 +45,25 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		SharedPreferences tab_sp = getActivity().getSharedPreferences(
 				"TabParge", 0);
 		int a = tab_sp.getInt("tabpager", 0);
-		if (a == 1) {
+//		if (a == 1) {
 			initUI();
 			initPk_user();
 			initInterface();
 			initParty();
-		}
+//		}
 		return mLayout;
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
+	}
 
 	private void initInterface() {
-		tab_party_interface = new Interface();
-		tab_party_interface.setPostListener(new UserInterface() {
+		tab_party_interface = Interface.getInstance();
+		tab_party_interface.setPostListener(new readUserAllPartyListenner() {
 
 			@Override
 			public void success(String A) {
@@ -129,5 +135,7 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		Intent intent = new Intent(getActivity(), NewPartyActivity.class);
 		startActivity(intent);
 	}
+
+
 
 }

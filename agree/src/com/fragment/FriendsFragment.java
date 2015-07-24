@@ -31,11 +31,18 @@ public class FriendsFragment extends Fragment implements OnClickListener{
 		SharedPreferences tab_sp = getActivity().getSharedPreferences(
 				"TabParge", 0);
 		int a = tab_sp.getInt("tabpager", 0);
-		if(a==2)
-		{
+//		if(a==2)
+//		{
 			initUI();
-		}
+//		}
 		return mLayout;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
 	}
 
 	private void initUI() {

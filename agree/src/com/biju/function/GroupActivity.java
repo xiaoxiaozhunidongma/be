@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 import com.fragment.ChatFragment;
@@ -157,8 +157,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void initInterface() {
-		groupInterface = new Interface();
-		groupInterface.setPostListener(new UserInterface() {
+		groupInterface = Interface.getInstance();
+		groupInterface.setPostListener(new readUserGroupRelationListenner() {
 			@Override
 			public void success(String A) {
 				Groupuserback groupuserback = GsonUtils.parseJson(A,

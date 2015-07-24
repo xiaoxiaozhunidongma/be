@@ -6,7 +6,7 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Groupback;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.useRequestCode2JoinListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -41,8 +41,8 @@ public class RequestCode2Activity extends Activity implements OnClickListener {
 	}
 
 	private void initInterface() {
-		requestcode_interface = new Interface();
-		requestcode_interface.setPostListener(new UserInterface() {
+		requestcode_interface = Interface.getInstance();
+		requestcode_interface.setPostListener(new useRequestCode2JoinListenner() {
 
 			@Override
 			public void success(String A) {
