@@ -1,6 +1,5 @@
 package com.fragment;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,7 +11,6 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -30,11 +28,11 @@ import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
-import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.readUserGroupMsgListenner;
+import com.biju.Interface.useRequestCode2JoinListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.NewteamActivity;
@@ -65,21 +63,8 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private Integer fk_group;
 	private Group readhomeuser;
 
-	private String fileName = getSDPath() + "/" + "saveData";
-	private Person person;
 	private MyReceiver receiver;
-
-	public String getSDPath() {
-		File sdDir = null;
-		boolean sdCardExist = Environment.getExternalStorageState().equals(
-				android.os.Environment.MEDIA_MOUNTED);
-		// 判断sd卡是否存在
-		if (sdCardExist) {
-			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
-		}
-		return sdDir.toString();
-
-	}
+	private boolean isParty;
 
 	public HomeFragment() {
 	}
@@ -90,31 +75,58 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		if (mLayout == null) {
 			mLayout = inflater
 					.inflate(R.layout.fragment_home, container, false);
-			SharedPreferences tab_sp = getActivity().getSharedPreferences(
-					"TabParge", 0);
-			int a = tab_sp.getInt("tabpager", 0);
-			if (a == 0) {
-				SharedPreferences sp = getActivity().getSharedPreferences(
-						"Registered", 0);
-				isRegistered_one = sp.getBoolean("isRegistered_one", false);
-				Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
-				returndata = sp.getInt("returndata", returndata);
-				SharedPreferences sp1 = getActivity().getSharedPreferences(
-						"isLogin", 0);
-				login = sp1.getBoolean("Login", false);
-
-				initUI(inflater);
-				adapter.notifyDataSetChanged();
-				IntentFilter filter = new IntentFilter();
-				filter.addAction("isRefresh");
-				receiver = new MyReceiver();
-				getActivity().registerReceiver(receiver, filter);
-				if (!iscode) {
-					initNewTeam();
-				}
-			}
+			// SharedPreferences sp = getActivity().getSharedPreferences(
+			// "Registered", 0);
+			// isRegistered_one = sp.getBoolean("isRegistered_one", false);
+			// Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
+			// returndata = sp.getInt("returndata", returndata);
+			// SharedPreferences sp1 = getActivity().getSharedPreferences(
+			// "isLogin", 0);
+			// login = sp1.getBoolean("Login", false);
+			//
+			initUI(inflater);
+			// adapter.notifyDataSetChanged();
+			// IntentFilter filter = new IntentFilter();
+			// filter.addAction("isRefresh");
+			// receiver = new MyReceiver();
+			// getActivity().registerReceiver(receiver, filter);
+			// if (!iscode) {
+			// initNewTeam();
+			// }
 		}
 		return mLayout;
+	}
+
+	@Override
+	public void onStart() {
+		if (!isParty) {
+			Log.e("HomeFragment", "有进入onStart=======");
+			SharedPreferences sp = getActivity().getSharedPreferences(
+					"Registered", 0);
+			isRegistered_one = sp.getBoolean("isRegistered_one", false);
+			Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
+			returndata = sp.getInt("returndata", returndata);
+			SharedPreferences sp1 = getActivity().getSharedPreferences(
+					"isLogin", 0);
+			login = sp1.getBoolean("Login", false);
+
+			IntentFilter filter = new IntentFilter();
+			filter.addAction("isRefresh");
+			receiver = new MyReceiver();
+			getActivity().registerReceiver(receiver, filter);
+			if (!iscode) {
+				initNewTeam();
+			}
+		}
+		super.onStart();
+	}
+
+	public void prepareData(Integer pk_user) {
+		ReadTeam(pk_user);
+	}
+
+	public void prepareParty(Boolean isparty) {
+		isParty = isparty;
 	}
 
 	class MyReceiver extends BroadcastReceiver {
@@ -125,10 +137,10 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			iscode = intent.getBooleanExtra("isCode", false);
 			if (!iscode) {
 				if ("ok".equals(refresh)) {
-					list.clear();
+					LoginActivity.list.clear();
 					initNewTeam();
 					adapter.notifyDataSetChanged();
-					Log.e("HomeFragment", "有接受到广播");
+					Log.e("HomeFragment", "有接受到广播123456789======");
 				}
 			} else {
 				readhomeuser = (Group) intent
@@ -154,7 +166,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 				group_User.setRole(2);
 				group_User.setStatus(2);
 				homeInterface.userJoin2gourp(getActivity(), group_User);
-				list.add(0, readhomeuser);
+				LoginActivity.list.add(0, readhomeuser);
 				initNewTeam();
 				adapter.notifyDataSetChanged();
 			}
@@ -162,7 +174,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 	}
 
-	private void initNewTeam() {
+	public void initNewTeam() {
 		if (isRegistered_one) {
 			ReadTeam(returndata);
 			// Log.e("HomeFragment", "进入注册的新建小组");
@@ -178,35 +190,44 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	}
 
 	private void ReadTeam(int pk_user) {
-		homeInterface = new Interface();
+		homeInterface = Interface.getInstance();
 		User homeuser = new User();
 		homeuser.setPk_user(pk_user);
 		homeInterface.readUserGroupMsg(getActivity(), homeuser);
-		homeInterface.setPostListener(new UserInterface() {
+		homeInterface.setPostListener(new readUserGroupMsgListenner() {
 
 			@Override
 			public void success(String A) {
-				if (!iscode) {
-					Groupback homeback = GsonUtils
-							.parseJson(A, Groupback.class);
-					int homeStatusMsg = homeback.getStatusMsg();
-					if (homeStatusMsg == 1) {
-						Log.e("HomeFragment", "读取用户小组信息2===" + A);
-						users = homeback.getReturnData();
-						// Log.e("HomeFragment", "users的长度===" + users.size());
-						if (users.size() > 0) {
-							for (int i = 0; i < users.size(); i++) {
-								Group readhomeuser_1 = users.get(i);
-								Log.e("HomeFragment", "readhomeuser==="
-										+ readhomeuser_1.getPk_group());
-								list.add(readhomeuser_1);
-							}
+				LoginActivity.list.clear();
+				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
+				int homeStatusMsg = homeback.getStatusMsg();
+				if (homeStatusMsg == 1) {
+					Log.e("HomeFragment", "读取用户小组信息2===" + A);
+					users = homeback.getReturnData();
+					if (users.size() > 0) {
+						for (int i = 0; i < users.size(); i++) {
+							Group readhomeuser_1 = users.get(i);
+							Log.e("HomeFragment", "readhomeuser==="
+									+ readhomeuser_1.getPk_group());
+							LoginActivity.list.add(readhomeuser_1);
 						}
-						adapter.notifyDataSetChanged();
+						Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="
+								+ LoginActivity.list.toString());
 					}
-				} else {
-					Log.e("HomeFragment", "读取用户小组信息使用邀请码添加后的===" + A);
 				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+
+		homeInterface.setPostListener(new useRequestCode2JoinListenner() {
+
+			@Override
+			public void success(String A) {
+				Log.e("HomeFragment", "读取用户小组信息使用邀请码添加后的===" + A);
 			}
 
 			@Override
@@ -228,14 +249,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				// Log.e("HomeFragment", "(list.size()+1)==="+(list.size()+1));
-				// Log.e("HomeFragment", "arg2==="+arg2);
-				if (list.size() == arg2) {
+				if (LoginActivity.list.size() == arg2) {
 					Intent intent = new Intent(getActivity(),
 							NewteamActivity.class);
 					startActivity(intent);
 				} else {
-					Group group = list.get(arg2);
+					Group group = LoginActivity.list.get(arg2);
 					int pk_group = group.getPk_group();
 					Intent intent = new Intent(getActivity(),
 							GroupActivity.class);
@@ -272,7 +291,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 		@Override
 		public int getCount() {
-			return (list.size() + 1);
+			return (LoginActivity.list.size() + 1);
 		}
 
 		@Override
@@ -287,23 +306,19 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			// Log.e("HomeFragment", "position  1=====" + position);
-			// Log.e("HomeFragment", "(list.size() + 1)=====" + (list.size() +
-			// 1));
-			// Log.e("HomeFragment", "(list.size())=====" + list.size());
 			View inflater = null;
 			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 			if (isRegistered_one) {
-				if (list.size() > 0) {
-					if (position < list.size()) {
+				if (LoginActivity.list.size() > 0) {
+					if (position < LoginActivity.list.size()) {
 						inflater = layoutInflater.inflate(
 								R.layout.home_gridview_item, null);
 						home_item_head = (ImageView) inflater
 								.findViewById(R.id.home_item_head);
 						home_item_name = (TextView) inflater
 								.findViewById(R.id.home_item_name);
-						Group homeuser_gridview = list.get(position);
-						Log.e("HomeFragment", "position  2=====" + position);
+						Group homeuser_gridview = LoginActivity.list
+								.get(position);
 						String homeAvatar_path = homeuser_gridview
 								.getAvatar_path();
 						String homenickname = homeuser_gridview.getName();
@@ -313,7 +328,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
 								completeURL);
 						homeImageLoaderUtils.getInstance().LoadImage(
 								getActivity(), completeURL, home_item_head);
-						Log.e("HomeFragment", "进这来1");
 					} else {
 						inflater = layoutInflater.inflate(
 								R.layout.home_teamadd_item, null);
@@ -323,15 +337,14 @@ public class HomeFragment extends Fragment implements OnClickListener {
 							R.layout.home_teamadd_item, null);
 				}
 			} else {
-				if (position < list.size()) {
+				if (position < LoginActivity.list.size()) {
 					inflater = layoutInflater.inflate(
 							R.layout.home_gridview_item, null);
 					home_item_head = (ImageView) inflater
 							.findViewById(R.id.home_item_head);
 					home_item_name = (TextView) inflater
 							.findViewById(R.id.home_item_name);
-					Group homeuser_gridview = list.get(position);
-					Log.e("HomeFragment", "position  2=====" + position);
+					Group homeuser_gridview = LoginActivity.list.get(position);
 					String homeAvatar_path = homeuser_gridview.getAvatar_path();
 					String homenickname = homeuser_gridview.getName();
 					home_item_name.setText(homenickname);
@@ -339,7 +352,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
 					PreferenceUtils.saveImageCache(getActivity(), completeURL);
 					homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
 							completeURL, home_item_head);
-					Log.e("HomeFragment", "进这来1");
 
 				} else {
 					inflater = layoutInflater.inflate(
@@ -378,4 +390,5 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			getActivity().unregisterReceiver(receiver);
 		}
 	}
+
 }

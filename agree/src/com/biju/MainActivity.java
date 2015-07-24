@@ -9,7 +9,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.Window;
@@ -21,7 +20,6 @@ import com.fragment.SettingFragment;
 import com.fragment.TabPagerFragment;
 
 public class MainActivity extends FragmentActivity {
-	private FragmentTabHost mTabhost;
 	private TabPagerFragment fragment;
 	private ArrayList<Fragment> fragments;
 
@@ -30,7 +28,6 @@ public class MainActivity extends FragmentActivity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_map);
-
 		FragmentManager fm = getSupportFragmentManager();
 		FragmentTransaction ft = fm.beginTransaction();
 		fragment = new com.fragment.TabPagerFragment();
@@ -47,12 +44,10 @@ public class MainActivity extends FragmentActivity {
 
 		fragment.setArg(labels, tabIcons, fragments);
 		ft.commit();
-		// initUI();// 初始化Tabhost
 	}
 
 	@Override
 	protected void onNewIntent(Intent intent) {
-		// TODO Auto-generated method stub
 		super.onNewIntent(intent);
 		// Intent intent = getIntent();
 		int id = intent.getIntExtra("HomeFragment", -1);
@@ -71,26 +66,6 @@ public class MainActivity extends FragmentActivity {
 		}
 
 	}
-
-	// private void initUI() {
-	// mTabhost = (FragmentTabHost) findViewById(android.R.id.tabhost);
-	// mTabhost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
-	// AddTab("1", "小组", 0, HomeFragment.class);
-	// AddTab("2", "聚会", 1, PartyFragment.class);
-	// AddTab("3", "好友", 2, FriendsFragment.class);
-	// AddTab("4", "我", 3, SettingFragment.class);
-	// }
-
-	// private void AddTab(String tag, String title, int i, Class cls) {
-	// TabSpec tabSpec = mTabhost.newTabSpec(tag);
-	// View view = getLayoutInflater().inflate(R.layout.tabhost_item, null);
-	// ImageView tab_image = (ImageView) view.findViewById(R.id.tab_image);
-	// TextView tab_text = (TextView) view.findViewById(R.id.tab_name);
-	// tab_text.setText(title);
-	// tab_text.setTextSize(10);
-	// tab_image.setImageResource(tab_imagelist[i]);
-	// mTabhost.addTab(tabSpec.setIndicator(view), cls, null);
-	// }
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -121,6 +96,11 @@ public class MainActivity extends FragmentActivity {
 		Editor PartyDetails_editor = PartyDetails_sp.edit();
 		PartyDetails_editor.putBoolean("PartyDetails", false);
 		PartyDetails_editor.commit();
+		
+		SharedPreferences sp2 = getSharedPreferences("isLogin", 0);
+		Editor editor2 = sp2.edit();
+		editor2.putBoolean("Login", true);
+		editor2.commit();
 		super.onStop();
 	}
 

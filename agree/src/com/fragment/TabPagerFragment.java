@@ -87,15 +87,16 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 		FragmentManager fm = getChildFragmentManager();
 		mPager.setAdapter(new MyPagerAdapter(fm));
 		mPager.setOnPageChangeListener(this);
-		mPager.setOffscreenPageLimit(2);
+		mPager.setOffscreenPageLimit(0);
 	}
-
+	
+	
 	class MyPagerAdapter extends FragmentPagerAdapter {
 
 		public MyPagerAdapter(FragmentManager fm) {
 			super(fm);
 		}
-
+ 
 		@Override
 		public Fragment getItem(int position) {
 			return fragments.get(position);
@@ -121,10 +122,13 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 		int position = mTabHost.getCurrentTab();
 		mPager.setCurrentItem(position);
 		
-		SharedPreferences tab_sp=getActivity().getSharedPreferences("TabParge", 0);
-		Editor editor=tab_sp.edit();
-		editor.putInt("tabpager", position);
-		editor.commit();
+		if(position==1)
+		{
+			SharedPreferences tab_sp=getActivity().getSharedPreferences("TabParge", 0);
+			Editor editor=tab_sp.edit();
+			editor.putBoolean("tabpager", true);
+			editor.commit();
+		}
 		
 		WindowManager windowMgr = (WindowManager) getActivity()
 				.getSystemService(Context.WINDOW_SERVICE);

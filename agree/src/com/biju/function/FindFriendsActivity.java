@@ -22,9 +22,9 @@ import com.BJ.javabean.User_User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
 import com.biju.R;
 import com.biju.login.LoginActivity;
+import com.biju.Interface.findUserListenner;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class FindFriendsActivity extends Activity implements OnClickListener {
@@ -51,8 +51,8 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 	}
 
 	private void initInterface() {
-		findfriends_inter_before = new Interface();
-		findfriends_inter_before.setPostListener(new UserInterface() {
+		findfriends_inter_before = Interface.getInstance();
+		findfriends_inter_before.setPostListener(new findUserListenner() {
 
 			private String userAvatar_path;
 
@@ -156,7 +156,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 			}
 		}
 		user_User.setFk_user_to(Integer.valueOf(pk_user));
-		findfriends_inter_before.addFriend(FindFriendsActivity.this, user_User);
+//		findfriends_inter_before.addFriend(FindFriendsActivity.this, user_User);
 	}
 
 	private void findfriends_againfind() {

@@ -25,7 +25,7 @@ import com.BJ.utils.Ifwifi;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.regNewAccountListenner;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
@@ -41,16 +41,19 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
-	public static ImageView registered_head;
+	public static ImageView mRegistered_head;
 	private EditText mNickname;
-	private TextView registered_tv_nickname;
+	private TextView mRegistered_tv_nickname;
 	protected String mFilePath = null;
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
-//	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
-//	public static String SIGN = "x8gJ5EjEXIH8RyzKWX59Oia23oVhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0Mzk0NDgzOTgmdD0xNDM2ODU2Mzk4JnI9ODk5OTcxNjM0JnU9JmY9";
+	// public static String SIGN =
+	// "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
+	// public static String SIGN =
+	// "x8gJ5EjEXIH8RyzKWX59Oia23oVhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0Mzk0NDgzOTgmdD0xNDM2ODU2Mzk4JnI9ODk5OTcxNjM0JnU9JmY9";
 	public static String SIGN;
+
 	public static String getSIGN() {
 		return SIGN;
 	}
@@ -59,10 +62,10 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		SIGN = sIGN;
 	}
 
-	private UploadManager uploadManager;
-	private TextView textView;
-	private Interface regInter;
-	private boolean ishead;
+	private UploadManager mUploadManager;
+	private TextView mTextView;
+	private Interface mRegistered_Inter;
+	private boolean isHead;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +78,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	}
 
 	private void get4Sign() {
-		Interface interface2 = new Interface();
+		Interface interface2 = Interface.getInstance();
 		User user = new User();
 		interface2.getPicSign(RegisteredActivity.this, user);
 	}
@@ -84,21 +87,21 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		// 注册签名
 		SIGN = RegisteredActivity.getSIGN();
 		UploadManager.authorize(APPID, USERID, SIGN);
-		uploadManager = new UploadManager(RegisteredActivity.this,
+		mUploadManager = new UploadManager(RegisteredActivity.this,
 				"persistenceId");
 
 	}
 
 	private void initUI() {
-		registered_head = (ImageView) findViewById(R.id.registered_head);
-		registered_head.setOnClickListener(this);
+		mRegistered_head = (ImageView) findViewById(R.id.registered_head);
+		mRegistered_head.setOnClickListener(this);
 		mNickname = (EditText) findViewById(R.id.registered_nickname);
 		findViewById(R.id.registered_back).setOnClickListener(this);
 		findViewById(R.id.registered_OK).setOnClickListener(this);
-		registered_tv_nickname = (TextView) findViewById(R.id.registered_tv_nickname);
-		registered_tv_nickname.setOnClickListener(this);
-		regInter = new Interface();
-		regInter.setPostListener(new UserInterface() {
+		mRegistered_tv_nickname = (TextView) findViewById(R.id.registered_tv_nickname);
+		mRegistered_tv_nickname.setOnClickListener(this);
+		mRegistered_Inter = Interface.getInstance();
+		mRegistered_Inter.setPostListener(new regNewAccountListenner() {
 
 			@Override
 			public void success(String A) {
@@ -131,7 +134,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 
 			}
 		});
-		textView = (TextView) findViewById(R.id.textView1);
+		mTextView = (TextView) findViewById(R.id.textView1);
 	}
 
 	@Override
@@ -162,7 +165,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	}
 
 	private void registered_tv_nickname() {
-		registered_tv_nickname.setVisibility(View.GONE);
+		mRegistered_tv_nickname.setVisibility(View.GONE);
 		mNickname.setVisibility(View.VISIBLE);
 
 	}
@@ -177,15 +180,15 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 
 			// 把昵称传到接口
 			String nickname = mNickname.getText().toString().trim();
-			String jpush_id=MyApplication.getRegId();
+			String jpush_id = MyApplication.getRegId();
 			User user = new User();
 			user.setNickname(nickname);
 			user.setJpush_id(jpush_id);
-			if (ishead) {
+			if (isHead) {
 				// 上传图片
 				upload(user);
 			} else {
-				regInter.regNewAccount(RegisteredActivity.this, user);
+				mRegistered_Inter.regNewAccount(RegisteredActivity.this, user);
 			}
 		} else {
 			Toast.makeText(RegisteredActivity.this, "网络异常，请检查网络!",
@@ -199,16 +202,17 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 					@Override
 					public void onUploadSucceed(final FileInfo result) {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
-						textView.post(new Runnable() {
+						mTextView.post(new Runnable() {
 
 							@Override
 							public void run() {
-								textView.setVisibility(View.GONE);
+								mTextView.setVisibility(View.GONE);
 							}
 						});
 						// 上传完成后注册
 						user.setAvatar_path(result.fileId);
-						regInter.regNewAccount(RegisteredActivity.this, user);
+						mRegistered_Inter.regNewAccount(
+								RegisteredActivity.this, user);
 					}
 
 					@Override
@@ -219,12 +223,12 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 					public void onUploadProgress(long totalSize, long sendSize) {
 						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
 						// Log.e("上传进度", "上传进度: " + p + "%");
-						textView.post(new Runnable() {
+						mTextView.post(new Runnable() {
 
 							@Override
 							public void run() {
-								textView.setVisibility(View.VISIBLE);
-								textView.setText(p + "%");
+								mTextView.setVisibility(View.VISIBLE);
+								mTextView.setText(p + "%");
 							}
 						});
 					}
@@ -236,7 +240,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 								+ errorMsg);
 					}
 				});
-		uploadManager.upload(task); // 开始上传
+		mUploadManager.upload(task); // 开始上传
 
 	}
 
@@ -246,7 +250,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		editor.putBoolean("Login", false);
 		editor.commit();
 		finish();
-		Intent intent=new Intent(RegisteredActivity.this, LoginActivity.class);
+		Intent intent = new Intent(RegisteredActivity.this, LoginActivity.class);
 		startActivity(intent);
 	}
 
@@ -273,7 +277,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
 			InitHead.initHead(bmp);// 画圆形头像
-			ishead = !ishead;
+			isHead = !isHead;
 		} catch (Exception e) {
 			Log.e("Demo", "choose file error!", e);
 		}

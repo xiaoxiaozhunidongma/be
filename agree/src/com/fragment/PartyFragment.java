@@ -2,6 +2,7 @@ package com.fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -14,7 +15,7 @@ import android.widget.RelativeLayout;
 
 import com.BJ.javabean.User;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.readUserAllPartyListenner;
 import com.biju.R;
 import com.biju.function.NewPartyActivity;
 import com.biju.login.LoginActivity;
@@ -33,6 +34,7 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	private boolean isRegistered_one;
 	private boolean login;
 	private Interface tab_party_interface;
+	private boolean isParty=true;
 
 	public PartyFragment() {
 		// Required empty public constructor
@@ -42,10 +44,10 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_party, container, false);
-		SharedPreferences tab_sp = getActivity().getSharedPreferences(
-				"TabParge", 0);
-		int a = tab_sp.getInt("tabpager", 0);
-		if (a == 1) {
+//		SharedPreferences tab_sp=getActivity().getSharedPreferences("TabParge", 0);
+//		isParty = tab_sp.getBoolean("tabpager", false);
+		if(isParty)
+		{
 			initUI();
 			initPk_user();
 			initInterface();
@@ -54,10 +56,13 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		return mLayout;
 	}
 
-
+	public void prepareData(boolean party) {
+		isParty=party;
+	}
+	
 	private void initInterface() {
-		tab_party_interface = new Interface();
-		tab_party_interface.setPostListener(new UserInterface() {
+		tab_party_interface = Interface.getInstance();
+		tab_party_interface.setPostListener(new readUserAllPartyListenner() {
 
 			@Override
 			public void success(String A) {
@@ -66,7 +71,6 @@ public class PartyFragment extends Fragment implements OnClickListener {
 
 			@Override
 			public void defail(Object B) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -80,7 +84,7 @@ public class PartyFragment extends Fragment implements OnClickListener {
 			if (login) {
 				int pk_user = LoginActivity.getPk_user();
 				partyuser.setPk_user(pk_user);
-				Log.e("PartyFragment", "pk_user===="+pk_user);
+				Log.e("PartyFragment", "pk_user====" + pk_user);
 			} else {
 				partyuser.setPk_user(returndata);
 			}

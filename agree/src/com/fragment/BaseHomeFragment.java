@@ -33,13 +33,15 @@ public class BaseHomeFragment extends Fragment {
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_base_home, container,
 				false);
-		FragmentManager fm = getChildFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		ft.add(R.id.framelayout, new HomeFragment());
-		ft.commit();
+//		FragmentManager fm = getChildFragmentManager();
+//		FragmentTransaction ft = fm.beginTransaction();
+//		ft.add(R.id.framelayout, new HomeFragment());
+//		ft.commit();
 		
 		return mLayout;
 	}
+	
+	
 
 	
 }

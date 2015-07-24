@@ -33,14 +33,17 @@ import android.widget.TextView;
 
 import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.Group;
-import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Newteamback;
+import com.BJ.javabean.PicSignBack;
+import com.BJ.javabean.User;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.Utils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.createGroupListenner;
+import com.biju.Interface.getPicSignListenner;
+import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
@@ -59,7 +62,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
-	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
+//	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
+	public static String SIGN;
 	private UploadManager uploadManager;
 	protected String mFilePath = null;
 	private final String IMAGE_TYPE = "image/*";
@@ -90,7 +94,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		login = sp1.getBoolean("Login", false);
 
 		initUI();
-		initUpload();
+//		initUpload();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("isRefresh2");
 		MyReceiver receiver = new MyReceiver();
@@ -98,23 +102,41 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 		newteam_tv_head.setVisibility(View.VISIBLE);// 显示小组头像选择
 		mNewteam_head.setVisibility(View.GONE);
-		cregrouInter = new Interface();
-		cregrouInter.setPostListener(new UserInterface() {
+		cregrouInter = Interface.getInstance();
+		cregrouInter.setPostListener(new createGroupListenner() {
 
 			@Override
 			public void success(String A) {
-				Newteamback newteamback = GsonUtils.parseJson(A,
-						Newteamback.class);
-				int newteamStatusMsg = newteamback.getStatusMsg();
-				if (newteamStatusMsg == 1) {
-					Log.e("NewteamActivity", "小组ID" + A);
-					// 发广播进行更新gridviw
-					Intent intent = new Intent();
-					intent.setAction("isRefresh");
-					intent.putExtra("refresh", "ok");
-					sendBroadcast(intent);
-					Log.e("NewteamActivity", "有广播发出");
+					
+				switch (flag) {
+				case 0:
+					Newteamback newteamback = GsonUtils.parseJson(A,
+							Newteamback.class);
+					int newteamStatusMsg = newteamback.getStatusMsg();
+					if (newteamStatusMsg == 1) {
+						Log.e("NewteamActivity", "小组ID" + A);
+						// 发广播进行更新gridviw
+						Intent intent = new Intent();
+						intent.setAction("isRefresh");
+						intent.putExtra("refresh", "ok");
+						sendBroadcast(intent);
+						Log.e("NewteamActivity", "有广播发出");
+					}
+					
+					break;
+//				case 1:
+//					PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+//					String returnData = picSignBack.getReturnData();
+//					SIGN=returnData;
+//					initUpload();
+//					upload(group);
+//					
+//					break;
+
+				default:
+					break;
 				}
+				
 			}
 
 			@Override
@@ -222,7 +244,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			finish();
 		} else {
 			newteam_name = mNewteam_name.getText().toString().trim();
-			Group group = new Group();
+			group = new Group();
 			group.setName(newteam_name);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
 			String format2 = sdf.format(new Date());
@@ -230,8 +252,30 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			group.setSetup_time(format1);
 			group.setLast_post_time(format2);
 			group.setLast_post_message("asdfsd");
-			// 上传图片
-			upload(group);
+			
+			Interface interface1 = Interface.getInstance();
+			interface1.getPicSign(this, new User());
+			interface1.setPostListener(new getPicSignListenner() {
+				
+				@Override
+				public void success(String A) {
+					PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+					String returnData = picSignBack.getReturnData();
+					SIGN=returnData;
+					initUpload();
+					upload(group);	 
+					
+				}
+				
+				@Override
+				public void defail(Object B) {
+					
+				}
+			});
+//			flag = 1;
+//			initUpload();
+//			// 上传图片
+//			upload(group);
 		}
 	}
 
@@ -242,6 +286,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private boolean isRegistered_one;
 	private boolean isno1;
 	private boolean login;
+	private int flag;
+	private Group group;
 
 	private void upload(final Group group) {
 		tmpFilePath = Environment.getExternalStorageDirectory()
@@ -279,6 +325,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						Log.e("NewteamActivity", "group:" + group.toString());
 						cregrouInter.createGroup(NewteamActivity.this,
 								creatGroup);// 测试
+						flag=0;
 						finish();
 					}
 

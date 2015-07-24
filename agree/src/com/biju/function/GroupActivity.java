@@ -25,7 +25,7 @@ import android.widget.TextView;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 import com.fragment.ChatFragment;
@@ -67,8 +67,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private int isPhone;
 	private MyReceiver receiver;
 	private boolean finish_1;
+	private boolean update = false;
 	private boolean photo;
-
+	private Bundle savedInstanceState;
 	private boolean partyDetails;
 
 	@Override
@@ -113,7 +114,13 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		receiver = new MyReceiver();
 		registerReceiver(receiver, filter);
 	}
-
+	//×¢Ïú¹ã²¥
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		unregisterReceiver(receiver);
+		super.onDestroy();
+	}
 	class MyReceiver extends BroadcastReceiver {
 
 		@Override
@@ -150,8 +157,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private void initInterface() {
-		groupInterface = new Interface();
-		groupInterface.setPostListener(new UserInterface() {
+		groupInterface = Interface.getInstance();
+		groupInterface.setPostListener(new readUserGroupRelationListenner() {
 			@Override
 			public void success(String A) {
 				Groupuserback groupuserback = GsonUtils.parseJson(A,

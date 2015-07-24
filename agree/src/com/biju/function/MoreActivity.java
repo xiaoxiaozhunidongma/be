@@ -14,7 +14,7 @@ import com.BJ.javabean.Moreback;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.userCanclePartyListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -35,8 +35,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 	}
 
 	private void initInterface() {
-		moreinterface = new Interface();
-		moreinterface.setPostListener(new UserInterface() {
+		moreinterface =Interface.getInstance();
+		moreinterface.setPostListener(new userCanclePartyListenner() {
 
 			@Override
 			public void success(String A) {

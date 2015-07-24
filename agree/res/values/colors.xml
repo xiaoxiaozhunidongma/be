@@ -159,4 +159,7 @@
  
  <color name="style_red">#ff4c41</color>
  <color name="style_divider_color">#C9C7CD</color>
+ 
+ 
+ <color name="darker_gray">#aaa</color>
 </resources>

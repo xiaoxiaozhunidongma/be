@@ -11,7 +11,7 @@ import android.widget.EditText;
 
 import com.BJ.javabean.FeedBack;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.feedBackListenner;
 import com.biju.R;
 
 public class FeedbackActivity extends Activity implements OnClickListener {
@@ -29,8 +29,8 @@ public class FeedbackActivity extends Activity implements OnClickListener {
 	}
 
 	private void initInterface() {
-		feedbackinterface = new Interface();
-		feedbackinterface.setPostListener(new UserInterface() {
+		feedbackinterface = Interface.getInstance();
+		feedbackinterface.setPostListener(new feedBackListenner() {
 
 			@Override
 			public void success(String A) {

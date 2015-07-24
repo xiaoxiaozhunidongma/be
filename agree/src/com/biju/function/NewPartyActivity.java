@@ -11,7 +11,7 @@ import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
 import com.biju.R;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.download.core.strategy.DownloadGlobalStrategy.StrategyInfo;
@@ -97,11 +97,11 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 	}
 
 	private void ReadTeam(int pk_user) {
-		Interface homeInterface = new Interface();
+		Interface homeInterface = Interface.getInstance();
 		User homeuser = new User();
 		homeuser.setPk_user(pk_user);
 		homeInterface.readUserGroupMsg(NewPartyActivity.this, homeuser);
-		homeInterface.setPostListener(new UserInterface() {
+		homeInterface.setPostListener(new readUserGroupMsgListenner() {
 
 			@Override
 			public void success(String A) {

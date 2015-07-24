@@ -43,9 +43,9 @@ public class InitHead {
 
 
 	private static void Registered(Bitmap resultBmp) {
-		if(RegisteredActivity.registered_head!=null)
+		if(RegisteredActivity.mRegistered_head!=null)
 		{
-			RegisteredActivity.registered_head.setImageBitmap(resultBmp);
+			RegisteredActivity.mRegistered_head.setImageBitmap(resultBmp);
 		}
 	}
 	private static void usersetting(Bitmap resultBmp) {

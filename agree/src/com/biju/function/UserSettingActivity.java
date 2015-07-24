@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -35,7 +36,9 @@ import com.BJ.utils.InitHead;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
-import com.biju.Interface.UserInterface;
+import com.biju.Interface.updateUserListenner;
+import com.biju.Interface.readUserListenner;
+import com.biju.Interface.getPicSignListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 import com.biju.login.RegisteredActivity;
@@ -100,7 +103,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private String setup_time;
 	private String Userjpush_id;
-	private int Flag;
 	
 
 	@Override
@@ -140,6 +142,26 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 		mUsersetting_tv_password.setText("请输入想要设置的密码");
 //		initUpload();
+		readuserinter.setPostListener(new getPicSignListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("UserSettingActivity", "新的方法签名字符串："+A);
+				PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+				String returnData = picSignBack.getReturnData();
+				UserSettingActivity.setSIGN(returnData);
+				
+				UploadManager.authorize(APPID, USERID, SIGN);
+				uploadManager = new UploadManager(UserSettingActivity.this,
+						"persistenceId");
+
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
 	}
 
 	@Override
@@ -156,98 +178,70 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void ReadUser(int returndata) {
-		Flag=0;
-		readuserinter = new Interface();
+		readuserinter = Interface.getInstance();
 		User readuser = new User();
 		readuser.setPk_user(returndata);
 		readuserinter.readUser(UserSettingActivity.this, readuser);
-		readuserinter.setPostListener(new UserInterface() {
+		readuserinter.setPostListener(new readUserListenner() {
 
 			@Override
 			public void success(String A) {
-				
-				switch (Flag) {
-				case 0:
-					// 读取用户资料成功
-					Loginback usersettingback = GsonUtils.parseJson(A,
-							Loginback.class);
-					int userStatusmsg = usersettingback.getStatusMsg();
-					if (userStatusmsg == 1) {
-						Log.e("UserSettingActivity", "用户资料" + A);
-						List<User> Users = usersettingback.getReturnData();
-						if (Users.size() >= 1) {
-							User readuser = Users.get(0);
-							Userpk_user = readuser.getPk_user();
-							Usernickname = readuser.getNickname();
-							Useravatar_path = readuser.getAvatar_path();
-							Userphone = readuser.getPhone();
-							Userjpush_id = readuser.getJpush_id();
-							Log.e("UserSettingActivity", "电话号码1 ==  "
-									+ Userphone);
-							Userpassword = readuser.getPassword();
-							Log.e("UserSettingActivity", "读取出来的" + Userpk_user
-									+ Usernickname + Useravatar_path
-									+ Userphone + Userpassword);
-							mUsersetting_nickname.setText(Usernickname);
-							mUsersetting_edt_password_1.setText(Userpassword);
-							mUsersetting_edt_password_2.setText(Userpassword);
-							mUsersetting_phone.setText(Userphone);
-							password = Userpassword;
-							int Usersex = readuser.getSex();
-							Log.e("UserSettingActivity", "性别" + Usersex);
-							switch (Usersex) {
-							case 0:
-								mUsersetting_sex.setText("性别");
-								sex = Usersex;
-								break;
-							case 1:
-								mUsersetting_sex.setText("男");
-								sex = Usersex;
-								break;
-							case 2:
-								mUsersetting_sex.setText("女");
-								sex = Usersex;
-								break;
-							default:
-								break;
-							}
-							SimpleDateFormat sdf = new SimpleDateFormat(
-									"yyyy-MM-dd hh:mm:ss");
-							setup_time = sdf.format(new Date());
-							
-							Log.e("UserSettingActivity", "昵称显示" + "====="
-									+ Usernickname);
+				// 读取用户资料成功
+				Loginback usersettingback = GsonUtils.parseJson(A,
+						Loginback.class);
+				int userStatusmsg = usersettingback.getStatusMsg();
+				if (userStatusmsg == 1) {
+					Log.e("UserSettingActivity", "用户资料" + A);
+					List<User> Users = usersettingback.getReturnData();
+					if (Users.size() >= 1) {
+						User readuser = Users.get(0);
+						Userpk_user = readuser.getPk_user();
+						Usernickname = readuser.getNickname();
+						Useravatar_path = readuser.getAvatar_path();
+						Userphone = readuser.getPhone();
+						Userjpush_id = readuser.getJpush_id();
+						Log.e("UserSettingActivity", "电话号码1 ==  "
+								+ Userphone);
+						Userpassword = readuser.getPassword();
+						Log.e("UserSettingActivity", "读取出来的" + Userpk_user
+								+ Usernickname + Useravatar_path
+								+ Userphone + Userpassword);
+						mUsersetting_nickname.setText(Usernickname);
+						mUsersetting_edt_password_1.setText(Userpassword);
+						mUsersetting_edt_password_2.setText(Userpassword);
+						mUsersetting_phone.setText(Userphone);
+						password = Userpassword;
+						int Usersex = readuser.getSex();
+						Log.e("UserSettingActivity", "性别" + Usersex);
+						switch (Usersex) {
+						case 0:
+							mUsersetting_sex.setText("性别");
+							sex = Usersex;
+							break;
+						case 1:
+							mUsersetting_sex.setText("男");
+							sex = Usersex;
+							break;
+						case 2:
+							mUsersetting_sex.setText("女");
+							sex = Usersex;
+							break;
+						default:
+							break;
 						}
-						completeURL = beginStr + Useravatar_path + endStr;
-						PreferenceUtils.saveImageCache(
-								UserSettingActivity.this, completeURL);
-						ImageLoaderUtils.getInstance().LoadImage(
-								UserSettingActivity.this, completeURL,
-								mUsersetting_head);
+						SimpleDateFormat sdf = new SimpleDateFormat(
+								"yyyy-MM-dd hh:mm:ss");
+						setup_time = sdf.format(new Date());
+						
+						Log.e("UserSettingActivity", "昵称显示" + "====="
+								+ Usernickname);
 					}
-					break;
-				case 1:
-					// 更新用户资料成功
-					updateback usersetting_updateback = GsonUtils.parseJson(A,
-							updateback.class);
-					int a = usersetting_updateback.getStatusMsg();
-					if (a == 1) {
-						Log.e("UserSettingActivity", "更新成功" + A);
-						finish();
-					}
-
-					break;
-				case 2:
-					Log.e("Usersetting", "签名字符串："+A);
-					PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
-					String returnData = picSignBack.getReturnData();
-					UserSettingActivity.setSIGN(returnData);
-					
-					UploadManager.authorize(APPID, USERID, SIGN);
-					break;
-
-				default:
-					break;
+					completeURL = beginStr + Useravatar_path + endStr;
+					PreferenceUtils.saveImageCache(
+							UserSettingActivity.this, completeURL);
+					ImageLoaderUtils.getInstance().LoadImage(
+							UserSettingActivity.this, completeURL,
+							mUsersetting_head);
 				}
 			}
 
@@ -256,13 +250,33 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 			}
 		});
+		
+		readuserinter.setPostListener(new updateUserListenner() {
+			
+			@Override
+			public void success(String A) {
+				// 更新用户资料成功
+				updateback usersetting_updateback = GsonUtils.parseJson(A,
+						updateback.class);
+				int a = usersetting_updateback.getStatusMsg();
+				if (a == 1) {
+					Log.e("UserSettingActivity", "更新成功" + A);
+					finish();
+				}
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
 	}
 
 	private void initUpload() {
-		Flag=2;
+//		Flag=2;
 		readuserinter.getPicSign(this, new User());
-		uploadManager = new UploadManager(UserSettingActivity.this,
-				"persistenceId");
+//		uploadManager = new UploadManager(UserSettingActivity.this,
+//				"persistenceId");
 	}
 
 	private void initUI() {
@@ -284,6 +298,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		findViewById(R.id.usersetting_save_2).setOnClickListener(this);
 		mUsersetting_phone_layout = (RelativeLayout) findViewById(R.id.usersetting_phone_layout);// 电话号码设置界面
 		mUsersetting_phone = (EditText) findViewById(R.id.usersetting_phone);// 输入电话号码
+		mUsersetting_phone.setInputType(EditorInfo.TYPE_CLASS_PHONE);//点击电话号码时直接弹出数字键盘
 		findViewById(R.id.usersetting_tv_phone).setOnClickListener(this);
 		mUsersetting_sex = (TextView) findViewById(R.id.usersetting_sex);// 设置性别
 		mUsersetting_sex.setOnClickListener(this);
@@ -408,6 +423,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			InitHead.initHead(bmp);// 画圆形头像
 			ishead = !ishead;
 		} catch (Exception e) {
+			Log.e("", "catch:"+e.getMessage());
 		}
 		//初始化图片签名
 		initUpload();
@@ -417,7 +433,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		
 		if (isSetting) {
 			isRead = true;
-			Flag=1;
 			Usernickname = mUsersetting_nickname.getText().toString().trim();
 			User usersetting = new User();
 			if (isRegistered_one) {
@@ -443,7 +458,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			usersetting.setSetup_time(setup_time);
 			usersetting.setLast_login_time(sdf1.format(new Date()));
 			if (ishead) {
-				upload(usersetting);
+				upload(usersetting);//上传
 			} else {
 				usersetting.setAvatar_path(Useravatar_path);
 				readuserinter.updateUser(UserSettingActivity.this, usersetting);
