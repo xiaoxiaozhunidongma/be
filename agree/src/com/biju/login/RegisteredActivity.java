@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.Registeredback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
@@ -26,6 +27,7 @@ import com.BJ.utils.InitHead;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.regNewAccountListenner;
+import com.biju.Interface.getPicSignListenner;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
@@ -72,16 +74,32 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_registered);
-		// get4Sign();
+		get4Sign();
 		initUI();
-		initUpload();
+//		initUpload();
 	}
 
 	private void get4Sign() {
-		Interface interface2 = Interface.getInstance();
-		User user = new User();
-		interface2.getPicSign(RegisteredActivity.this, user);
+		Interface getSigninter =Interface.getInstance();
+		getSigninter.setPostListener(new getPicSignListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("RegisteredActivity", "Ç©Ãû×Ö·û´®£º"+A);
+				PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+				String returnData = picSignBack.getReturnData();
+				RegisteredActivity.setSIGN(returnData);
+				initUpload();
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
+		getSigninter.getPicSign(this, new User());
 	}
+
 
 	private void initUpload() {
 		// ×¢²áÇ©Ãû

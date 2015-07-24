@@ -2,7 +2,6 @@ package com.fragment;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -34,7 +33,6 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	private boolean isRegistered_one;
 	private boolean login;
 	private Interface tab_party_interface;
-	private boolean isParty=true;
 
 	public PartyFragment() {
 		// Required empty public constructor
@@ -44,22 +42,13 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_party, container, false);
-//		SharedPreferences tab_sp=getActivity().getSharedPreferences("TabParge", 0);
-//		isParty = tab_sp.getBoolean("tabpager", false);
-		if(isParty)
-		{
-			initUI();
-			initPk_user();
-			initInterface();
-			initParty();
-		}
+		initUI();
+		initPk_user();
+		initInterface();
+		initParty();
 		return mLayout;
 	}
 
-	public void prepareData(boolean party) {
-		isParty=party;
-	}
-	
 	private void initInterface() {
 		tab_party_interface = Interface.getInstance();
 		tab_party_interface.setPostListener(new readUserAllPartyListenner() {

@@ -1,5 +1,8 @@
 package com.fragment;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -35,6 +38,8 @@ import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
+import com.BJ.javabean.PicSignBack;
+import com.BJ.javabean.User;
 import com.BJ.photo.AlbumActivity;
 import com.BJ.photo.Bimp;
 import com.BJ.photo.FileUtils;
@@ -42,8 +47,17 @@ import com.BJ.photo.GalleryActivity;
 import com.BJ.photo.ImageItem;
 import com.BJ.photo.PublicWay;
 import com.BJ.photo.Res;
+import com.biju.Interface;
+import com.biju.Interface.getPicSignListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
+import com.github.volley_examples.utils.GsonUtils;
+import com.tencent.upload.UploadManager;
+import com.tencent.upload.task.IUploadTaskListener;
+import com.tencent.upload.task.UploadTask;
+import com.tencent.upload.task.ITask.TaskState;
+import com.tencent.upload.task.data.FileInfo;
+import com.tencent.upload.task.impl.PhotoUploadTask;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -58,24 +72,54 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 	private LinearLayout ll_popup;
 	public static Bitmap bimap;
 
+	public static String APP_VERSION = "1.0.0";
+	public static String APPID = "201139";
+	public static String USERID = "";
+	public static String SIGN;
+	private UploadManager uploadManager;
+	String fileId = "";
+	HashMap<Integer, UploadTask> hashMap = new HashMap<Integer, UploadTask>();
+
 	public PhotoFragment() {
 		// Required empty public constructor
 	}
 
+//	public static BeginUpload beginUpload;
+
+//	public interface BeginUpload {
+//		void begin();
+//	}
+	private RelativeLayout mPhoto_upload_layout;
+
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mLayout = inflater.inflate(R.layout.activity_selectimg, container,
-				false);
-		Res.init(getActivity());
-		bimap = BitmapFactory.decodeResource(getResources(),
-				R.drawable.icon_addpic_unfocused);
-		PublicWay.activityList.add(getActivity());
-		Init(inflater);
-		
+
+		if (mLayout == null) {
+
+			mLayout = inflater.inflate(R.layout.activity_selectimg, container,
+					false);
+			Res.init(getActivity());
+			bimap = BitmapFactory.decodeResource(getResources(),
+					R.drawable.icon_addpic_unfocused);
+			PublicWay.activityList.add(getActivity());
+			// mLayout =inflater.inflate(R.layout.activity_selectimg, null);
+			// setContentView(mLayout);
+			Init(inflater);
+			get4PicSign();
+//			initBeginUplistener();
+
+		}
 		return mLayout;
 	}
-
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
+	}
+	
 	@Override
 	public void onStart() {
 		SharedPreferences sp=getActivity().getSharedPreferences("isPhoto", 0);
@@ -91,13 +135,115 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 		}
 		super.onStart();
 	}
-	
+
+//	private void initBeginUplistener() {
+//		BeginUpload upload = new BeginUpload() {
+//
+//			private TextView textView;
+//
+//			@Override
+//			public void begin() {
+//				// 刷新立即显示照片
+//				adapter.notifyDataSetChanged();
+//				for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
+//					String imagePath = Bimp.tempSelectBitmap.get(i)
+//							.getImagePath();
+//					Log.e("PhotoFragment", "每个图片路径：" + imagePath);
+//					// upload(imagePath);
+//				}
+//			}
+//		};
+//		beginUpload = upload;
+//	}
+
+	private void upload(String imagePath, final TextView textView, final int position) {
+		 UploadTask task = new PhotoUploadTask(imagePath, new IUploadTaskListener() {
+			@Override
+			public void onUploadSucceed(final FileInfo result) {
+				Log.e("上传结果", "upload succeed: " + result.fileId);
+				textView.post(new Runnable() {
+
+					@Override
+					public void run() {
+						textView.setVisibility(View.GONE);
+					}
+				});
+			}
+
+			@Override
+			public void onUploadStateChange(TaskState state) {
+			}
+
+			@Override
+			public void onUploadProgress(long totalSize, long sendSize) {
+				final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
+				// Log.e("上传进度", "上传进度: " + p + "%");
+				textView.post(new Runnable() {
+
+					@Override
+					public void run() {
+						textView.setVisibility(View.VISIBLE);
+						textView.setText(p + "%");
+					}
+				});
+			}
+
+			@Override
+			public void onUploadFailed(final int errorCode,
+					final String errorMsg) {
+				Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
+				textView.post(new Runnable() {
+
+					@Override
+					public void run() {
+						textView.setVisibility(View.VISIBLE);
+						textView.setText("上传失败");
+						//上传失败就删除那个任务重新上传
+						UploadTask uploadTask = hashMap.get(position);
+						hashMap.remove(uploadTask);
+					}
+				});
+			}
+		});
+		 //存入容器
+		hashMap.put(position, task);
+		uploadManager.upload(task); // 开始上传
+
+	}
+
+	private void get4PicSign() {
+		Interface interface1 = Interface.getInstance();
+		interface1.setPostListener(new getPicSignListenner() {
+
+			@Override
+			public void success(String A) {
+				PicSignBack picSignBack = GsonUtils.parseJson(A,
+						PicSignBack.class);
+				String returnData = picSignBack.getReturnData();
+				SIGN = returnData;
+				initUpload();
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		interface1.getPicSign(getActivity(), new User());
+	}
+
+	private void initUpload() {
+		// 注册签名
+		UploadManager.authorize(APPID, USERID, SIGN);
+		uploadManager = new UploadManager(getActivity(), "persistenceId");
+
+	}
+
 	public void Init(LayoutInflater inflater) {
 		//上传图片
 		mPhoto_upload_layout = (RelativeLayout) mLayout.findViewById(R.id.photo_upload_layout);
 		mPhoto_upload_layout.setOnClickListener(this);
 		mLayout.findViewById(R.id.photo_upload).setOnClickListener(this);
-		
 		pop = new PopupWindow(getActivity());
 
 		View view = inflater.inflate(R.layout.item_popupwindows, null);
@@ -133,11 +279,10 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 		});
 		bt2.setOnClickListener(new OnClickListener() {
 			public void onClick(View v) {
-				// 点击图库的时候关闭自身
-//				 getActivity().finish();
+				// // 点击图库的时候关闭自身
+				// getActivity().finish();
 				Intent intent = new Intent(getActivity(), AlbumActivity.class);
 				startActivity(intent);
-				//打开时的动画
 				getActivity().overridePendingTransition(
 						R.anim.activity_translate_in,
 						R.anim.activity_translate_out);
@@ -232,6 +377,8 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 				holder = new ViewHolder();
 				holder.image = (ImageView) convertView
 						.findViewById(R.id.item_grida_image);
+				holder.tv_progress = (TextView) convertView
+						.findViewById(R.id.tv_progress);
 				convertView.setTag(holder);
 			} else {
 				holder = (ViewHolder) convertView.getTag();
@@ -246,12 +393,24 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 			} else {
 				holder.image.setImageBitmap(Bimp.tempSelectBitmap.get(position)
 						.getBitmap());
+				//上传部分
+				if(isbeginUpload){
+					UploadTask uploadTask = hashMap.get(position);
+					if (uploadTask == null) {
+							Log.e("photofragment", "position:" + position);
+							final String imagePath = Bimp.tempSelectBitmap.get(
+									position).getImagePath();
+							upload(imagePath, holder.tv_progress,position);
+					}
+				}
+				// .....................................................................................................
 			}
 
 			return convertView;
 		}
 
 		public class ViewHolder {
+			public TextView tv_progress;
 			public ImageView image;
 		}
 
@@ -303,7 +462,7 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 	}
 
 	private static final int TAKE_PICTURE = 0x000001;
-	private RelativeLayout mPhoto_upload_layout;
+	private boolean isbeginUpload;
 
 	public void photo() {
 		Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -351,9 +510,27 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 	}
 
 	@Override
+	public void onStop() {
+		super.onStop();
+		isbeginUpload=false;
+	}
+	
+	@Override
 	public void onClick(View v) {
-		// TODO Auto-generated method stub
+		switch (v.getId()) {
+		case R.id.photo_upload_layout:
+			for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
+				String imagePath = Bimp.tempSelectBitmap.get(i)
+						.getImagePath();
+				Log.e("PhotoFragment", "每个图片路径：" + imagePath);
+			}
+			isbeginUpload = true;
+			adapter.notifyDataSetChanged();
+			break;
 
+		default:
+			break;
+		}
 	}
 
 }

@@ -122,6 +122,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						mPassword = readuser.getPassword();
 						mJpush_id = readuser.getJpush_id();
 					}
+					loadBaseNeedLoginMethod(pk_user);
 					String mPassword = mLogin_password.getText().toString()
 							.trim();
 					if (mPassword.equals(mPassword)) {
@@ -212,6 +213,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						mPassword = readuser.getPassword();
 						mJpush_id = readuser.getJpush_id();
 					}
+					loadBaseNeedLoginMethod(pk_user);
 					String mPassword = mLogin_password.getText().toString()
 							.trim();
 					if (mPassword.equals(mPassword)) {
@@ -285,10 +287,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			mHomeFragmen.prepareParty(true);
 		}
 
-		if (mPartyFragment != null) {
-			mPartyFragment.prepareData(false);
-		}
-
 	}
 
 	private void initUI() {
@@ -323,6 +321,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	private void Login_registered() {
+		Login_ReadUserInter=Interface.getInstance();
 		Login_ReadUserInter.setPostListener(new getPicSignListenner() {
 
 			@Override
