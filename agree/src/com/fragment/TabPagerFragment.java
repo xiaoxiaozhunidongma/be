@@ -62,7 +62,7 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 	private void initTab(LayoutInflater inflater, View layout) {
 		mTabHost = (TabHost) layout.findViewById(android.R.id.tabhost);
 		mTabHost.setup();
-
+		Log.e("TabPagerFragment", "labels³¤¶È"+labels.length);
 		for (int i = 0; i < labels.length; i++) {
 			View tabIndicator = inflater.inflate(R.layout.tabhost_item, null);
 			ImageView tabIcon = (ImageView) tabIndicator

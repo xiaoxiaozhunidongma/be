@@ -1,7 +1,9 @@
 package com.fragment;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -38,6 +40,9 @@ import android.widget.RelativeLayout;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
+import com.BJ.javabean.Group;
+import com.BJ.javabean.Photo;
+import com.BJ.javabean.Photosback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.photo.AlbumActivity;
@@ -47,10 +52,14 @@ import com.BJ.photo.GalleryActivity;
 import com.BJ.photo.ImageItem;
 import com.BJ.photo.PublicWay;
 import com.BJ.photo.Res;
+import com.BJ.utils.ImageLoaderUtils;
 import com.biju.Interface;
+import com.biju.Interface.uploadingPhotoListenner;
+import com.biju.Interface.readPartyPhotosListenner;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
+import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -58,12 +67,13 @@ import com.tencent.upload.task.UploadTask;
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.data.FileInfo;
 import com.tencent.upload.task.impl.PhotoUploadTask;
+import com.biju.Interface.uploadingPhotoListenner;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class PhotoFragment extends Fragment implements OnClickListener {
+public class PhotoFragment extends Fragment  {
 
 	private GridView noScrollgridview;
 	private GridAdapter adapter;
@@ -78,18 +88,26 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 	public static String SIGN;
 	private UploadManager uploadManager;
 	String fileId = "";
-	HashMap<Integer, UploadTask> hashMap = new HashMap<Integer, UploadTask>();
+//	HashMap<Integer, UploadTask> hashMap = new HashMap<Integer, UploadTask>();
+	private static final int TAKE_PICTURE = 0x000001;
+//	private boolean isbeginUpload;
+	private Interface instance;
+	private ArrayList<Photo> listphotos=new ArrayList<Photo>();
+	// 完整路径completeURL=beginStr+result.filepath+endStr;
+	private String completeURL;
+	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
+	private String endStr = "/original";
+
 
 	public PhotoFragment() {
 		// Required empty public constructor
 	}
 
-//	public static BeginUpload beginUpload;
+	public static BeginUpload beginUpload;
 
-//	public interface BeginUpload {
-//		void begin();
-//	}
-	private RelativeLayout mPhoto_upload_layout;
+	public interface BeginUpload {
+		void begin();
+	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -107,12 +125,62 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 			// setContentView(mLayout);
 			Init(inflater);
 			get4PicSign();
-//			initBeginUplistener();
-
+			initBeginUplistener();
+			initPhotoUplisten();
+			initGroupPhotoListen();
 		}
 		return mLayout;
 	}
 	
+
+	private void initGroupPhotoListen() {
+		instance.setPostListener(new readPartyPhotosListenner() {
+			
+
+			@Override
+			public void success(String A) {
+				Log.e("PhotoFragment", "返回的图片数组："+A);
+
+				Photosback photosback = GsonUtils.parseJsonArray(A, Photosback.class);
+				listphotos = photosback.getReturnData();
+				if(listphotos!=null&&listphotos.size()>0){
+					String pk_photo = listphotos.get(0).getPk_photo();
+					Log.e("PhotoFragment", "第一个图片路径："+pk_photo);
+				}
+				//刷新
+				adapter.notifyDataSetChanged();
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
+	}
+
+
+	private void initPhotoUplisten() {
+		 instance = Interface.getInstance();
+		 instance.setPostListener(new uploadingPhotoListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("PhotoFragment", "图片是否上传："+A);
+				//读取小组相册
+				Group group=new Group();
+				group.setPk_group(GroupActivity.getPk_group());
+				group.setStatus(1);
+				instance.readPartyPhotos(getActivity(), group);
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
+	}
+
+
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -129,43 +197,53 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 			adapter.notifyDataSetChanged();
 		}
 		
-		if(Bimp.tempSelectBitmap.size()>0)
-		{
-			mPhoto_upload_layout.setVisibility(View.VISIBLE);
-		}
 		super.onStart();
+		//读取小组相册
+		Group group=new Group();
+		group.setPk_group(GroupActivity.getPk_group());
+		group.setStatus(1);
+		instance.readPartyPhotos(getActivity(), group);
 	}
 
-//	private void initBeginUplistener() {
-//		BeginUpload upload = new BeginUpload() {
-//
-//			private TextView textView;
-//
-//			@Override
-//			public void begin() {
-//				// 刷新立即显示照片
-//				adapter.notifyDataSetChanged();
-//				for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
-//					String imagePath = Bimp.tempSelectBitmap.get(i)
-//							.getImagePath();
-//					Log.e("PhotoFragment", "每个图片路径：" + imagePath);
-//					// upload(imagePath);
-//				}
-//			}
-//		};
-//		beginUpload = upload;
-//	}
+	private void initBeginUplistener() {
+		BeginUpload upload = new BeginUpload() {
 
-	private void upload(String imagePath, final TextView textView, final int position) {
+			private TextView textView;
+
+			@Override
+			public void begin() {
+				// 刷新立即显示照片
+				adapter.notifyDataSetChanged();
+				for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
+					String imagePath = Bimp.tempSelectBitmap.get(i)
+							.getImagePath();
+					Log.e("PhotoFragment", "每个图片路径：" + imagePath);
+					 upload(imagePath);
+				}
+			}
+		};
+		beginUpload = upload;
+	}
+
+	private void upload(String imagePath) {
 		 UploadTask task = new PhotoUploadTask(imagePath, new IUploadTaskListener() {
 			@Override
 			public void onUploadSucceed(final FileInfo result) {
 				Log.e("上传结果", "upload succeed: " + result.fileId);
-				textView.post(new Runnable() {
-
+				
+				Photo photo = new Photo();
+				photo.setFk_group(GroupActivity.getPk_group());
+				photo.setFk_user(LoginActivity.getPk_user());
+//				photo.setPath(result.fileId);
+				photo.setPk_photo(result.fileId);
+				photo.setStatus(1);
+				instance.uploadingPhoto(getActivity(), photo);
+				
+				new Thread(new Runnable() {
+					
 					@Override
 					public void run() {
-						textView.setVisibility(View.GONE);
+						adapter.notifyDataSetChanged();
 					}
 				});
 			}
@@ -178,35 +256,28 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 			public void onUploadProgress(long totalSize, long sendSize) {
 				final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
 				// Log.e("上传进度", "上传进度: " + p + "%");
-				textView.post(new Runnable() {
-
-					@Override
-					public void run() {
-						textView.setVisibility(View.VISIBLE);
-						textView.setText(p + "%");
-					}
-				});
 			}
 
 			@Override
 			public void onUploadFailed(final int errorCode,
 					final String errorMsg) {
 				Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
-				textView.post(new Runnable() {
-
-					@Override
-					public void run() {
-						textView.setVisibility(View.VISIBLE);
-						textView.setText("上传失败");
-						//上传失败就删除那个任务重新上传
-						UploadTask uploadTask = hashMap.get(position);
-						hashMap.remove(uploadTask);
-					}
-				});
+//				textView.post(new Runnable() {
+//
+//					@Override
+//					public void run() {
+//						textView.setVisibility(View.VISIBLE);
+//						textView.setText("上传失败");
+//						//上传失败就删除那个任务重新上传
+//						UploadTask uploadTask = hashMap.get(position);
+//						hashMap.remove(uploadTask);
+//					}
+//				});
 			}
 		});
-		 //存入容器
-		hashMap.put(position, task);
+//		 //存入容器
+//		hashMap.put(position, task);
+		 
 		uploadManager.upload(task); // 开始上传
 
 	}
@@ -241,9 +312,9 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 
 	public void Init(LayoutInflater inflater) {
 		//上传图片
-		mPhoto_upload_layout = (RelativeLayout) mLayout.findViewById(R.id.photo_upload_layout);
-		mPhoto_upload_layout.setOnClickListener(this);
-		mLayout.findViewById(R.id.photo_upload).setOnClickListener(this);
+//		mPhoto_upload_layout = (RelativeLayout) mLayout.findViewById(R.id.photo_upload_layout);
+//		mPhoto_upload_layout.setOnClickListener(this);
+//		mLayout.findViewById(R.id.photo_upload).setOnClickListener(this);
 		pop = new PopupWindow(getActivity());
 
 		View view = inflater.inflate(R.layout.item_popupwindows, null);
@@ -307,7 +378,7 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				if (arg2 == Bimp.tempSelectBitmap.size()) {
+				if (arg2 == listphotos.size()) {
 					Log.i("ddddddd", "----------");
 					ll_popup.startAnimation(AnimationUtils.loadAnimation(
 							getActivity(), R.anim.activity_translate_in));
@@ -319,6 +390,18 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 					intent.putExtra("ID", arg2);
 					startActivity(intent);
 				}
+//				if (arg2 == Bimp.tempSelectBitmap.size()) {
+//					Log.i("ddddddd", "----------");
+//					ll_popup.startAnimation(AnimationUtils.loadAnimation(
+//							getActivity(), R.anim.activity_translate_in));
+//					pop.showAtLocation(mLayout, Gravity.BOTTOM, 0, 0);
+//				} else {
+//					Intent intent = new Intent(getActivity(),
+//							GalleryActivity.class);
+//					intent.putExtra("position", "1");
+//					intent.putExtra("ID", arg2);
+//					startActivity(intent);
+//				}
 			}
 		});
 
@@ -347,10 +430,24 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 		}
 
 		public int getCount() {
-			if (Bimp.tempSelectBitmap.size() == 9) {
-				return 9;
+//			if(Bimp.tempSelectBitmap.size()!=0){
+//				if (Bimp.tempSelectBitmap.size() == 9) {
+//					return 9;
+//				}
+//				return (Bimp.tempSelectBitmap.size() + 1);
+//			}else{
+//				if(listphotos!=null){
+//					return listphotos.size()+1;
+//				}else{
+//					return 1;
+//				}
+//			}
+			
+			if(listphotos!=null){
+				return listphotos.size()+1;
+			}else{
+				return 1;
 			}
-			return (Bimp.tempSelectBitmap.size() + 1);
 		}
 
 		public Object getItem(int arg0) {
@@ -383,27 +480,44 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 			} else {
 				holder = (ViewHolder) convertView.getTag();
 			}
-
-			if (position == Bimp.tempSelectBitmap.size()) {
+//			if(Bimp.tempSelectBitmap.size()!=0){
+//				
+//				if (position == Bimp.tempSelectBitmap.size()) {
+//					holder.image.setImageBitmap(BitmapFactory.decodeResource(
+//							getResources(), R.drawable.icon_addpic_unfocused));
+//					if (position == 9) {
+//						holder.image.setVisibility(View.GONE);
+//					}
+//				} else {
+//					holder.image.setImageBitmap(Bimp.tempSelectBitmap.get(position)
+//							.getBitmap());
+//					//上传部分
+////					if(isbeginUpload){
+////						UploadTask uploadTask = hashMap.get(position);
+////						if (uploadTask == null) {
+////							Log.e("photofragment", "position:" + position);
+////							final String imagePath = Bimp.tempSelectBitmap.get(
+////									position).getImagePath();
+////							upload(imagePath, holder.tv_progress,position);
+////						}
+////					}
+//				}
+//				
+//			}
+			
+			if(listphotos!=null){
+				if(position==listphotos.size()){
+					holder.image.setImageBitmap(BitmapFactory.decodeResource(
+							getResources(), R.drawable.icon_addpic_unfocused));
+				}else{
+					String url=beginStr+listphotos.get(position).getPk_photo()+endStr;//完整路径
+					ImageLoaderUtils.getInstance().LoadImage(getActivity(), url, holder.image);
+				}
+			}
+			//默认为加号图片
+			if(listphotos==null){
 				holder.image.setImageBitmap(BitmapFactory.decodeResource(
 						getResources(), R.drawable.icon_addpic_unfocused));
-				if (position == 9) {
-					holder.image.setVisibility(View.GONE);
-				}
-			} else {
-				holder.image.setImageBitmap(Bimp.tempSelectBitmap.get(position)
-						.getBitmap());
-				//上传部分
-				if(isbeginUpload){
-					UploadTask uploadTask = hashMap.get(position);
-					if (uploadTask == null) {
-							Log.e("photofragment", "position:" + position);
-							final String imagePath = Bimp.tempSelectBitmap.get(
-									position).getImagePath();
-							upload(imagePath, holder.tv_progress,position);
-					}
-				}
-				// .....................................................................................................
 			}
 
 			return convertView;
@@ -461,8 +575,6 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 		super.onResume();
 	}
 
-	private static final int TAKE_PICTURE = 0x000001;
-	private boolean isbeginUpload;
 
 	public void photo() {
 		Intent openCameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
@@ -512,25 +624,26 @@ public class PhotoFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onStop() {
 		super.onStop();
-		isbeginUpload=false;
+//		isbeginUpload=false;
+		//此处情况临时列表
 	}
 	
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.photo_upload_layout:
-			for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
-				String imagePath = Bimp.tempSelectBitmap.get(i)
-						.getImagePath();
-				Log.e("PhotoFragment", "每个图片路径：" + imagePath);
-			}
-			isbeginUpload = true;
-			adapter.notifyDataSetChanged();
-			break;
-
-		default:
-			break;
-		}
-	}
+//	@Override
+//	public void onClick(View v) {
+//		switch (v.getId()) {
+//		case R.id.photo_upload_layout:
+//			for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
+//				String imagePath = Bimp.tempSelectBitmap.get(i)
+//						.getImagePath();
+//				Log.e("PhotoFragment", "每个图片路径：" + imagePath);
+//			}
+//			isbeginUpload = true;
+//			adapter.notifyDataSetChanged();
+//			break;
+//
+//		default:
+//			break;
+//		}
+//	}
 
 }

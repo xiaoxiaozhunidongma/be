@@ -26,6 +26,7 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.biju.R;
+import com.fragment.PhotoFragment;
 
 /**
  * 这个是进入相册显示所有图片的界面
@@ -93,7 +94,7 @@ public class AlbumActivity extends Activity {
 	// 完成按钮的监听
 	private class AlbumSendListener implements OnClickListener {
 		public void onClick(View v) {
-//			PhotoFragment.beginUpload.begin();
+			PhotoFragment.beginUpload.begin();
 			
 			SharedPreferences sp=getSharedPreferences("isPhoto", 0);
 			Editor editor=sp.edit();

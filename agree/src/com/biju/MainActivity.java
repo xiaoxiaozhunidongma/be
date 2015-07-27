@@ -11,6 +11,7 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTabHost;
 import android.support.v4.app.FragmentTransaction;
+import android.util.Log;
 import android.view.Menu;
 import android.view.Window;
 
@@ -43,7 +44,7 @@ public class MainActivity extends FragmentActivity {
 		int[] tabIcons = new int[] { R.drawable.tab_home_selector,
 				R.drawable.tab_party_selector, R.drawable.tab_friends_selector,
 				R.drawable.tab_setting_selector };
-
+		Log.e("MainActivity", "有没有setlabels====有");
 		fragment.setArg(labels, tabIcons, fragments);
 		ft.commit();
 	}
