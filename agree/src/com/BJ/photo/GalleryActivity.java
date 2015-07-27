@@ -167,7 +167,6 @@ public class GalleryActivity extends Activity {
 		private ArrayList<View> listViews;
 
 		private int size;
-
 		public MyPageAdapter(ArrayList<View> listViews) {
 			this.listViews = listViews;
 			size = listViews == null ? 0 : listViews.size();

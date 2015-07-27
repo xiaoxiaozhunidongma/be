@@ -124,6 +124,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 
 			}
 		});
+		homeInterface.readUserGroupMsg(NewPartyActivity.this, homeuser);
 	}
 
 	private void initUI() {

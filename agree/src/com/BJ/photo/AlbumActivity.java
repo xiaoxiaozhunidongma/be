@@ -26,6 +26,9 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.biju.R;
+import com.biju.function.GroupActivity;
+import com.fragment.PhotoFragment;
+
 
 /**
  * 这个是进入相册显示所有图片的界面
@@ -93,13 +96,14 @@ public class AlbumActivity extends Activity {
 	// 完成按钮的监听
 	private class AlbumSendListener implements OnClickListener {
 		public void onClick(View v) {
-			SharedPreferences sp = getSharedPreferences("isPhoto", 0);
-			Editor editor = sp.edit();
+			SharedPreferences sp=getSharedPreferences("isPhoto", 0);
+			Editor editor=sp.edit();
 			editor.putBoolean("Photo", true);
 			editor.commit();
-			finish();
-//			Intent intent=new Intent(mContext, GroupActivity.class);
+			overridePendingTransition(R.anim.activity_translate_in, R.anim.activity_translate_out);
+//			intent.setClass(mContext, GroupActivity.class);
 //			startActivity(intent);
+			finish();
 		}
 
 	}

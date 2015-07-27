@@ -19,6 +19,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.javabean.Exitback;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.GroupCodeback;
 import com.BJ.javabean.GroupCodeback2;
@@ -67,7 +68,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	private int returndata;
 	private boolean isRegistered_one;
 	private boolean login;
-	private boolean test;
+	private boolean isExit;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -163,6 +164,29 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
+				if(isExit)
+				{
+					Exitback exitback=GsonUtils.parseJson(A, Exitback.class);
+					Integer exitstatus=exitback.getStatusMsg();
+					if(exitstatus==1)
+					{
+						Log.e("TeamSettingActivity", "返回是否退出成功的结果-------" + A);
+						// 发广播进行更新gridview
+						Intent intent = new Intent();
+						intent.setAction("isRefresh");
+						intent.putExtra("refresh", true);
+						sendBroadcast(intent);
+//						GroupActivity groupActivity=new GroupActivity();
+//						groupActivity.group_back();
+						
+						Intent intent1=new Intent();
+						intent1.setAction("isFinish");
+						intent1.putExtra("isExitFinish", true);
+						sendBroadcast(intent1);
+						finish();
+					}
+				}else
+				{
 					Teamupdateback teamupdateback = GsonUtils.parseJson(A,
 							Teamupdateback.class);
 					int statusmsg = teamupdateback.getStatusMsg();
@@ -178,6 +202,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 						Toast.makeText(TeamSettingActivity.this,
 								"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
 					}
+				}
 					
 			}
 
@@ -295,6 +320,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		mTeamSetting_chat.setOnClickListener(this);
 		mTeamSetting_phone = (TextView) findViewById(R.id.TeamSetting_phone);// 公开手机号码开关
 		mTeamSetting_phone.setOnClickListener(this);
+		findViewById(R.id.TeamSetting_exit).setOnClickListener(this);//退出小组
 	}
 
 	@Override
@@ -327,9 +353,32 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		case R.id.TeamSetting_phone:
 			TeamSetting_phone();
 			break;
+		case R.id.TeamSetting_exit:
+			TeamSetting_exit();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void TeamSetting_exit() {
+		isExit=true;
+		Group_User group_user = new Group_User();
+		group_user.setPk_group_user(GroupActivity.pk_group_user);
+		if (isRegistered_one) {
+			group_user.setFk_user(returndata);
+		} else {
+			if (login) {
+				int fk_user = LoginActivity.getPk_user();
+				group_user.setFk_user(fk_user);
+			} else {
+				group_user.setFk_user(returndata);
+			}
+		}
+		group_user.setFk_group(pk_group);
+		group_user.setRole(0);
+		group_user.setStatus(0);
+		readuserinter.updateGroupSet(TeamSettingActivity.this, group_user);
 	}
 
 	private void TeamSetting_phone() {

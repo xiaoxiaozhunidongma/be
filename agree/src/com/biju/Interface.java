@@ -213,7 +213,7 @@ public class Interface {
 //			}
 //		});	
 //	}
-	public void regNewAccountPost(Context context,Map<String, String> params) {
+	private void regNewAccountPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -228,7 +228,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void checkNicknamePost(Context context,Map<String, String> params) {
+	private void checkNicknamePost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -243,7 +243,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void userLoginPost(Context context,Map<String, String> params) {
+	private void userLoginPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -258,7 +258,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void updateUserPost(Context context,Map<String, String> params) {
+	private void updateUserPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -273,7 +273,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void readUserPost(Context context,Map<String, String> params) {
+	private void readUserPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -288,7 +288,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void requestVerCodePost(Context context,Map<String, String> params) {
+	private void requestVerCodePost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -303,7 +303,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void findUserPost(Context context,Map<String, String> params) {
+	private void findUserPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -318,7 +318,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void createGroupPost(Context context,Map<String, String> params) {
+	private void createGroupPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -333,7 +333,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void readUserGroupMsgPost(Context context,Map<String, String> params) {
+	private void readUserGroupMsgPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -348,7 +348,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void readUserGroupRelationPost(Context context,Map<String, String> params) {
+	private void readUserGroupRelationPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -363,7 +363,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void updateGroupSetPost(Context context,Map<String, String> params) {
+	private void updateGroupSetPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			//26？？？？
@@ -378,7 +378,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void readAllPerRelationPost(Context context,Map<String, String> params) {
+	private void readAllPerRelationPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -393,7 +393,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void produceRequestCodePost(Context context,Map<String, String> params) {
+	private void produceRequestCodePost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -408,7 +408,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void useRequestCode2JoinPost(Context context,Map<String, String> params) {
+	private void useRequestCode2JoinPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -423,7 +423,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void userJoin2gourpPost(Context context,Map<String, String> params) {
+	private void userJoin2gourpPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -438,7 +438,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void readUserAllPartyPost(Context context,Map<String, String> params) {
+	private void readUserAllPartyPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -453,7 +453,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void readUserGroupPartyPost(Context context,Map<String, String> params) {
+	private void readUserGroupPartyPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -468,7 +468,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void updateUserJoinMsgPost(Context context,Map<String, String> params) {
+	private void updateUserJoinMsgPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -483,7 +483,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void userCanclePartyPost(Context context,Map<String, String> params) {
+	private void userCanclePartyPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -498,7 +498,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void addPartyPost(Context context,Map<String, String> params) {
+	private void addPartyPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -513,7 +513,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void readPartyJoinMsgPost(Context context,Map<String, String> params) {
+	private void readPartyJoinMsgPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -528,7 +528,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void createPartyRelationPost(Context context,Map<String, String> params) {
+	private void createPartyRelationPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -543,7 +543,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void addChatdataPost(Context context,Map<String, String> params) {
+	private void addChatdataPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -558,7 +558,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void readPartyPhotosPost(Context context,Map<String, String> params) {
+	private void readPartyPhotosPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -573,7 +573,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void uploadingPhotoPost(Context context,Map<String, String> params) {
+	private void uploadingPhotoPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -588,7 +588,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void deletePhotoPost(Context context,Map<String, String> params) {
+	private void deletePhotoPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -603,7 +603,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void addFriendPost(Context context,Map<String, String> params) {
+	private void addFriendPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -618,7 +618,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void readFriendPost(Context context,Map<String, String> params) {
+	private void readFriendPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -633,7 +633,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void mateComBookPost(Context context,Map<String, String> params) {
+	private void mateComBookPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -648,7 +648,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void becomeFriendPost(Context context,Map<String, String> params) {
+	private void becomeFriendPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -663,7 +663,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void checkFriendPost(Context context,Map<String, String> params) {
+	private void checkFriendPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -678,7 +678,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void releaseFriendPost(Context context,Map<String, String> params) {
+	private void releaseFriendPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -693,7 +693,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void addChatMsgPost(Context context,Map<String, String> params) {
+	private void addChatMsgPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -708,7 +708,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void feedBackPost(Context context,Map<String, String> params) {
+	private void feedBackPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -723,7 +723,7 @@ public class Interface {
 			}
 		});	
 	}
-	public void getPicSigntPost(Context context,Map<String, String> params) {
+	private void getPicSigntPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
 			
@@ -952,10 +952,10 @@ public class Interface {
 	private static getPicSignListenner signListenner;
 
 	
-	public interface UserInterface{
-		void success(String A);
-		void defail(Object B);
-	}
+//	public interface UserInterface{
+//		void success(String A);
+//		void defail(Object B);
+//	}
 	public interface regNewAccountListenner{
 		void success(String A);
 		void defail(Object B);
@@ -1441,7 +1441,7 @@ public class Interface {
 	}
 	//读取用户小组信息
 	public static void requestDone29(String theObject) {
-		userGroupMsgListenner.success(theObject);
+			userGroupMsgListenner.success(theObject);
 	}
 	public static void requestError29(VolleyError error) {
 		userGroupMsgListenner.defail(error);
