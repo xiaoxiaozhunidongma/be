@@ -22,6 +22,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.EditorInfo;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -287,12 +288,14 @@ public class LoginActivity extends Activity implements OnClickListener {
 			mHomeFragmen.prepareParty(true);
 		}
 
+
 	}
 
 	private void initUI() {
 		findViewById(R.id.Login_OK).setOnClickListener(this);
 		findViewById(R.id.Login_registered).setOnClickListener(this);
 		mLogin_account = (EditText) findViewById(R.id.Login_account);
+		mLogin_account.setInputType(EditorInfo.TYPE_CLASS_PHONE);//点击账号时直接弹出数字键盘
 		mLogin_password = (EditText) findViewById(R.id.Login_password);
 		mAuto_login_image = (ImageView) findViewById(R.id.Auto_login_image);
 		mManually_login = (RelativeLayout) findViewById(R.id.Manually_login);

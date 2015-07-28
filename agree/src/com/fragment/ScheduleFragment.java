@@ -129,6 +129,7 @@ public class ScheduleFragment extends Fragment {
 							PartyDetailsActivity.class);
 					intent.putExtra("oneParty", party);
 					startActivity(intent);
+					getActivity().finish();
 				}
 			}
 		});

@@ -15,12 +15,17 @@ import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
@@ -35,7 +40,8 @@ import com.github.volley_examples.utils.GsonUtils;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressLint("NewApi")
-public class GroupActivity extends FragmentActivity implements OnClickListener {
+public class GroupActivity extends FragmentActivity implements OnClickListener,
+		OnTouchListener, OnGestureListener {
 
 	private FragmentTabHost mTabhost;
 	public static int pk_group;
@@ -69,8 +75,11 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private boolean finish_1;
 	private boolean update = false;
 	private boolean photo;
-	private Bundle savedInstanceState;
 	private boolean partyDetails;
+
+	private GestureDetector mGestureDetector;
+	private int verticalMinDistance = 180;
+	private int minVelocity = 0;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,12 +97,84 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("pk_group", pk_group);
 
+		SharedPreferences PartyDetails_sp = getSharedPreferences(
+				"isPartyDetails_", 0);
+		partyDetails = PartyDetails_sp.getBoolean("PartyDetails", false);
+		if (partyDetails) {
+			mTabhost.setCurrentTab(1);
+			i=1;
+		}
+		
 		initInterface();
 		if (!finish_1) {
 			initreadUserGroupRelation();
 		}
 		initFinish();
 		Log.e("GroupActivity", "进入了=========+onCreate");
+		initGesture();
+	}
+
+	private void initGesture() {
+		mGestureDetector = new GestureDetector((OnGestureListener) this);
+	}
+
+	private int i=0;
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		if (e1.getX() - e2.getX() > verticalMinDistance
+				&& Math.abs(velocityX) > minVelocity) {
+			// 切换Activity
+			if(i<3)
+			{
+				i++;
+				mTabhost.setCurrentTab(i);
+			}
+		} else if (e2.getX() - e1.getX() > verticalMinDistance
+				&& Math.abs(velocityX) > minVelocity) {
+			if(i>=0)
+			{
+				i--;
+				mTabhost.setCurrentTab(i);
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent arg0) {
+
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent arg0, MotionEvent arg1, float arg2,
+			float arg3) {
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent arg0) {
+
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent arg0) {
+		return false;
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		return mGestureDetector.onTouchEvent(event);
+	}
+
+	@Override
+	public boolean onDown(MotionEvent arg0) {
+		return false;
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		mGestureDetector.onTouchEvent(ev);
+		return super.dispatchTouchEvent(ev);
 	}
 
 	@Override
@@ -102,9 +183,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		SharedPreferences sp = getSharedPreferences("isPhoto", 0);
 		photo = sp.getBoolean("Photo", false);
 
-		SharedPreferences PartyDetails_sp = getSharedPreferences(
-				"isPartyDetails_", 0);
-		partyDetails = PartyDetails_sp.getBoolean("PartyDetails", false);
 		super.onStart();
 	}
 
@@ -114,18 +192,20 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		receiver = new MyReceiver();
 		registerReceiver(receiver, filter);
 	}
-	//注销广播
+
+	// 注销广播
 	@Override
 	protected void onDestroy() {
-		// TODO Auto-generated method stub
 		unregisterReceiver(receiver);
 		super.onDestroy();
 	}
+
 	class MyReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			finish_1 = intent.getBooleanExtra("finish", false);
+			boolean isExitFinish=intent.getBooleanExtra("isExitFinish", false);
 			if (finish_1) {
 				group_back();
 				Intent intent1 = new Intent(GroupActivity.this,
@@ -133,6 +213,10 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 				startActivity(intent1);
 				overridePendingTransition(0, 0);
 				initreadUserGroupRelation1();
+			}
+			if(isExitFinish)
+			{
+				group_back();
 			}
 		}
 
@@ -182,12 +266,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 						isPhone = isphone;
 						if (photo) {
 							mTabhost.setCurrentTab(2);
+							i=2;
 						}
-
-						if (partyDetails) {
-							mTabhost.setCurrentTab(1);
-						}
-
 					}
 					SharedPreferences sp = getSharedPreferences("Switch", 0);
 					Editor editor = sp.edit();
@@ -200,7 +280,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 
 			@Override
 			public void defail(Object B) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -295,4 +374,5 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		PartyDetails_editor.commit();
 		super.onStop();
 	}
+
 }

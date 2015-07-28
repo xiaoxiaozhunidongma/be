@@ -35,6 +35,7 @@ import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.Utils;
+import com.biju.BindingPhoneActivity;
 import com.biju.Interface;
 import com.biju.Interface.updateUserListenner;
 import com.biju.Interface.readUserListenner;
@@ -82,10 +83,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	protected String mFilePath = null;
 	private TextView mUsersetting_progress;
 	private String password = "";
-	private RelativeLayout mUsersetting_phone_layout;
-	private EditText mUsersetting_phone;
+//	private EditText mUsersetting_phone;
 	private RelativeLayout mUsersetting_save_1_layout;
-	private RelativeLayout mUsersetting_save_2_layout;
 	private TextView mUsersetting_sex;
 	private Integer Userpk_user;
 	private String Usernickname;
@@ -103,7 +102,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private String setup_time;
 	private String Userjpush_id;
-	
+	private User readuser;
+
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -179,9 +179,9 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 	private void ReadUser(int returndata) {
 		readuserinter = Interface.getInstance();
-		User readuser = new User();
-		readuser.setPk_user(returndata);
-		readuserinter.readUser(UserSettingActivity.this, readuser);
+		User ReadUser = new User();
+		ReadUser.setPk_user(returndata);
+		readuserinter.readUser(UserSettingActivity.this, ReadUser);
 		readuserinter.setPostListener(new readUserListenner() {
 
 			@Override
@@ -194,7 +194,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 					Log.e("UserSettingActivity", "用户资料" + A);
 					List<User> Users = usersettingback.getReturnData();
 					if (Users.size() >= 1) {
-						User readuser = Users.get(0);
+						readuser = Users.get(0);
 						Userpk_user = readuser.getPk_user();
 						Usernickname = readuser.getNickname();
 						Useravatar_path = readuser.getAvatar_path();
@@ -209,7 +209,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 						mUsersetting_nickname.setText(Usernickname);
 						mUsersetting_edt_password_1.setText(Userpassword);
 						mUsersetting_edt_password_2.setText(Userpassword);
-						mUsersetting_phone.setText(Userphone);
+//						mUsersetting_phone.setText(Userphone);
 						password = Userpassword;
 						int Usersex = readuser.getSex();
 						Log.e("UserSettingActivity", "性别" + Usersex);
@@ -293,12 +293,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		mUsersetting_save_1_layout.setOnClickListener(this);// 保存1
 		findViewById(R.id.usersetting_save_1).setOnClickListener(this);
 		mUsersetting_progress = (TextView) findViewById(R.id.usersetting_progress);// 显示上传进度
-		mUsersetting_save_2_layout = (RelativeLayout) findViewById(R.id.usersetting_save_2_layout);
-		mUsersetting_save_2_layout.setOnClickListener(this);// 保存2
-		findViewById(R.id.usersetting_save_2).setOnClickListener(this);
-		mUsersetting_phone_layout = (RelativeLayout) findViewById(R.id.usersetting_phone_layout);// 电话号码设置界面
-		mUsersetting_phone = (EditText) findViewById(R.id.usersetting_phone);// 输入电话号码
-		mUsersetting_phone.setInputType(EditorInfo.TYPE_CLASS_PHONE);//点击电话号码时直接弹出数字键盘
+//		mUsersetting_phone.setInputType(EditorInfo.TYPE_CLASS_PHONE);//点击电话号码时直接弹出数字键盘
 		findViewById(R.id.usersetting_tv_phone).setOnClickListener(this);
 		mUsersetting_sex = (TextView) findViewById(R.id.usersetting_sex);// 设置性别
 		mUsersetting_sex.setOnClickListener(this);
@@ -329,10 +324,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		case R.id.usersetting_tv_phone:
 			usersetting_tv_phone();
 			break;
-		case R.id.usersetting_save_2_layout:
-		case R.id.usersetting_save_2:
-			usersetting_save_2();
-			break;
 		case R.id.usersetting_sex:
 			usersetting_sex();
 			break;
@@ -343,6 +334,12 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		default:
 			break;
 		}
+	}
+
+	private void usersetting_tv_phone() {
+		Intent intent=new Intent(UserSettingActivity.this, BindingPhoneActivity.class);
+		intent.putExtra("UserData", readuser);
+		startActivity(intent);
 	}
 
 	private void usersetting_back() {
@@ -377,27 +374,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private void usersetting_save_2() {
-		String userphone = mUsersetting_phone.getText().toString().trim();
-		if (userphone.equals(Userphone)) {
-			phone = userphone;
-			Log.e("UserSettingActivity", "电话号码2 ==  " + phone);
-		} else {
-			phone = userphone;
-			Log.e("UserSettingActivity", "电话号码3 ==  " + phone);
-		}
-		mUsersetting.setVisibility(View.VISIBLE);
-		mUsersetting_save_1_layout.setVisibility(View.VISIBLE);
-		mUsersetting_phone_layout.setVisibility(View.GONE);
-		mUsersetting_save_2_layout.setVisibility(View.GONE);
-	}
-
-	private void usersetting_tv_phone() {
-		mUsersetting.setVisibility(View.GONE);
-		mUsersetting_save_1_layout.setVisibility(View.GONE);
-		mUsersetting_phone_layout.setVisibility(View.VISIBLE);
-		mUsersetting_save_2_layout.setVisibility(View.VISIBLE);
-	}
 
 	private void usersetting_head() {
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片

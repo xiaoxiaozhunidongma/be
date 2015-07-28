@@ -38,8 +38,8 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 	private TabHost mTabHost;
 	private ViewPager mPager;
 	private ArrayList<Fragment> fragments;
-	private String[] labels;
-	private int[] tabIcons;
+	private String[] labels=new String[]{};
+	private int[] tabIcons=new int[]{};
 	private ImageView mImgScrollbar;
 
 	public void setArg(String[] labels, int[] tabIcons,
@@ -62,7 +62,7 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 	private void initTab(LayoutInflater inflater, View layout) {
 		mTabHost = (TabHost) layout.findViewById(android.R.id.tabhost);
 		mTabHost.setup();
-		Log.e("TabPagerFragment", "labels³¤¶È"+labels.length);
+
 		for (int i = 0; i < labels.length; i++) {
 			View tabIndicator = inflater.inflate(R.layout.tabhost_item, null);
 			ImageView tabIcon = (ImageView) tabIndicator

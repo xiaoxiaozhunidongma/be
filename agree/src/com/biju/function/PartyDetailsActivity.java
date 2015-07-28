@@ -611,6 +611,8 @@ public class PartyDetailsActivity extends Activity implements
 		Editor editor = PartyDetails_sp.edit();
 		editor.putBoolean("PartyDetails", true);
 		editor.commit();
+		Intent intent=new Intent(PartyDetailsActivity.this, GroupActivity.class);
+		startActivity(intent);
 		finish();
 	}
 }

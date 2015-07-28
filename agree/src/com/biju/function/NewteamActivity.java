@@ -5,7 +5,9 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -30,10 +32,12 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
+import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Newteamback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
@@ -43,7 +47,7 @@ import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
 import com.biju.Interface.createGroupListenner;
 import com.biju.Interface.getPicSignListenner;
-import com.biju.MainActivity;
+import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
@@ -62,7 +66,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
-//	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
+	// public static String SIGN =
+	// "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ==";
 	public static String SIGN;
 	private UploadManager uploadManager;
 	protected String mFilePath = null;
@@ -78,6 +83,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private String completeURL = "";
 	private boolean iscode;
 	private Group readhomeuser;
+	private ArrayList<Group> readuesrlist = new ArrayList<Group>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -88,26 +94,31 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		isRegistered_one = sp.getBoolean("isRegistered_one", true);
 		Log.e("NewteamActivity", "isRegistered_one" + isRegistered_one);
 		returndata_1 = sp.getInt("returndata", returndata_1);
-		Log.e("NewteamActivity", "进入注册的" + returndata_1);
 
 		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
 		login = sp1.getBoolean("Login", false);
 
 		initUI();
-//		initUpload();
+		// initUpload();
 		IntentFilter filter = new IntentFilter();
 		filter.addAction("isRefresh2");
-		MyReceiver receiver = new MyReceiver();
+		receiver = new MyReceiver();
 		registerReceiver(receiver, filter);
 
 		newteam_tv_head.setVisibility(View.VISIBLE);// 显示小组头像选择
 		mNewteam_head.setVisibility(View.GONE);
+		Interface();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
+		format1 = sdf.format(new Date());
+	}
+
+	private void Interface() {
 		cregrouInter = Interface.getInstance();
 		cregrouInter.setPostListener(new createGroupListenner() {
 
 			@Override
 			public void success(String A) {
-					
+
 				switch (flag) {
 				case 0:
 					Newteamback newteamback = GsonUtils.parseJson(A,
@@ -115,28 +126,29 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					int newteamStatusMsg = newteamback.getStatusMsg();
 					if (newteamStatusMsg == 1) {
 						Log.e("NewteamActivity", "小组ID" + A);
-						// 发广播进行更新gridviw
+						// 发广播进行更新gridview
 						Intent intent = new Intent();
 						intent.setAction("isRefresh");
-						intent.putExtra("refresh", "ok");
+						intent.putExtra("refresh", true);
 						sendBroadcast(intent);
 						Log.e("NewteamActivity", "有广播发出");
 					}
-					
+
 					break;
-//				case 1:
-//					PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
-//					String returnData = picSignBack.getReturnData();
-//					SIGN=returnData;
-//					initUpload();
-//					upload(group);
-//					
-//					break;
+				// case 1:
+				// PicSignBack picSignBack = GsonUtils.parseJson(A,
+				// PicSignBack.class);
+				// String returnData = picSignBack.getReturnData();
+				// SIGN=returnData;
+				// initUpload();
+				// upload(group);
+				//
+				// break;
 
 				default:
 					break;
 				}
-				
+
 			}
 
 			@Override
@@ -144,8 +156,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 			}
 		});
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
-		format1 = sdf.format(new Date());
 	}
 
 	class MyReceiver extends BroadcastReceiver {
@@ -164,9 +174,73 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						completeURL);
 				homeImageLoaderUtils.getInstance().LoadImage(
 						NewteamActivity.this, completeURL, mNewteam_head);
+				readUser();
 			}
 		}
+	}
 
+	private void readUser() {
+		if (isRegistered_one) {
+			ReadTeam(returndata_1);
+		} else {
+			if (login) {
+				int pk_user = LoginActivity.getPk_user();
+				ReadTeam(pk_user);
+			} else {
+				ReadTeam(returndata_1);
+			}
+		}
+	}
+
+	private boolean isreaduser;
+
+	private void ReadTeam(int pk_user) {
+		cregrouInter = Interface.getInstance();
+		User homeuser = new User();
+		homeuser.setPk_user(pk_user);
+		cregrouInter.readUserGroupMsg(NewteamActivity.this, homeuser);
+		cregrouInter.setPostListener(new readUserGroupMsgListenner() {
+
+			@Override
+			public void success(String A) {
+				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
+				int homeStatusMsg = homeback.getStatusMsg();
+				if (homeStatusMsg == 1) {
+					Log.e("NewteamActivity", "读取出的用户小组信息==========" + A);
+					List<Group> users = homeback.getReturnData();
+					if (users.size() > 0) {
+						for (int i = 0; i < users.size(); i++) {
+							Group readhomeuser_1 = users.get(i);
+							readuesrlist.add(readhomeuser_1);
+						}
+					}
+					for (int i = 0; i < readuesrlist.size(); i++) {
+						pk_group = readuesrlist.get(i).getPk_group();
+						Log.e("NewteamActivity", "读取的pk_group======="
+								+ pk_group);
+						Log.e("NewteamActivity",
+								"读取的readhomeuser.getPk_group()======="
+										+ readhomeuser.getPk_group());
+
+						// Log.e("NewteamActivity",
+						// "读取的String.valueOf(pk_group)======="+String.valueOf(pk_group));
+						// Log.e("NewteamActivity",
+						// "读取的String.valueOf(readhomeuser.getPk_group())======="+String.valueOf(readhomeuser.getPk_group()));
+						if (String.valueOf(pk_group).equals(
+								String.valueOf(readhomeuser.getPk_group()))) {
+							isreaduser = true;
+							Log.e("NewteamActivity", "有进入说明两个数据相等了=========");
+						}
+					}
+				}
+
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
 	}
 
 	private void initUpload() {
@@ -236,12 +310,19 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	private void newteam_OK() {
 		if (iscode) {
-			Intent intent = new Intent();
-			intent.setAction("isRefresh");
-			intent.putExtra("isCode", true);
-			intent.putExtra("readhomeuser", readhomeuser);
-			sendBroadcast(intent);
-			finish();
+			if (!isreaduser) {
+				Log.e("NewteamActivity", "相等后进入这里说明错了=========");
+				Intent intent = new Intent();
+				intent.setAction("isRefresh");
+				intent.putExtra("isCode", true);
+				intent.putExtra("readhomeuser", readhomeuser);
+				sendBroadcast(intent);
+				finish();
+			} else {
+				Log.e("NewteamActivity", "相等后进入这里说明对了=========");
+				Toast.makeText(NewteamActivity.this, "已经加入过该小组",
+						Toast.LENGTH_SHORT).show();
+			}
 		} else {
 			newteam_name = mNewteam_name.getText().toString().trim();
 			group = new Group();
@@ -252,30 +333,31 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			group.setSetup_time(format1);
 			group.setLast_post_time(format2);
 			group.setLast_post_message("asdfsd");
-			
+
 			Interface interface1 = Interface.getInstance();
 			interface1.getPicSign(this, new User());
 			interface1.setPostListener(new getPicSignListenner() {
-				
+
 				@Override
 				public void success(String A) {
-					PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
+					PicSignBack picSignBack = GsonUtils.parseJson(A,
+							PicSignBack.class);
 					String returnData = picSignBack.getReturnData();
-					SIGN=returnData;
+					SIGN = returnData;
 					initUpload();
-					upload(group);	 
-					
+					upload(group);
+
 				}
-				
+
 				@Override
 				public void defail(Object B) {
-					
+
 				}
 			});
-//			flag = 1;
-//			initUpload();
-//			// 上传图片
-//			upload(group);
+			// flag = 1;
+			// initUpload();
+			// // 上传图片
+			// upload(group);
 		}
 	}
 
@@ -288,6 +370,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private boolean login;
 	private int flag;
 	private Group group;
+	private MyReceiver receiver;
+	private Integer pk_group;
 
 	private void upload(final Group group) {
 		tmpFilePath = Environment.getExternalStorageDirectory()
@@ -325,7 +409,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						Log.e("NewteamActivity", "group:" + group.toString());
 						cregrouInter.createGroup(NewteamActivity.this,
 								creatGroup);// 测试
-						flag=0;
+						flag = 0;
 						finish();
 					}
 
@@ -365,8 +449,10 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			mFilePath = cursor.getString(columnIndex);
 			cursor.close();
 			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+			
 			saveMyBitmap(bmp, newteam_name);
 			mFilePath = sDpath;// 图片在SD卡中的路径
+			
 			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
 			mNewteam_head.setVisibility(View.VISIBLE);
 			newteam_progressBar.setVisibility(View.VISIBLE);
@@ -429,7 +515,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			editor.putBoolean("isRegistered_one", true);
 			editor.commit();
 		}
-
+		if (iscode) {
+			unregisterReceiver(receiver);
+		}
 		super.onStop();
 	}
 }

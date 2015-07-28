@@ -32,7 +32,7 @@ import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupMsgListenner;
-import com.biju.Interface.useRequestCode2JoinListenner;
+import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.NewteamActivity;
@@ -54,6 +54,8 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private GridViewWithHeaderAndFooter home_gridview;
 	private List<Group> users;
 	private ArrayList<Group> list = new ArrayList<Group>();
+	private ArrayList<Group> Codelist = new ArrayList<Group>();
+	private ArrayList<String> pk_group_list=new ArrayList<String>();
 	private MyGridviewAdapter adapter;
 	private boolean isRegistered_one;
 	private int returndata;
@@ -65,6 +67,7 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 	private MyReceiver receiver;
 	private boolean isParty;
+	private boolean refresh;
 
 	public HomeFragment() {
 	}
@@ -75,32 +78,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		if (mLayout == null) {
 			mLayout = inflater
 					.inflate(R.layout.fragment_home, container, false);
-			// SharedPreferences sp = getActivity().getSharedPreferences(
-			// "Registered", 0);
-			// isRegistered_one = sp.getBoolean("isRegistered_one", false);
-			// Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
-			// returndata = sp.getInt("returndata", returndata);
-			// SharedPreferences sp1 = getActivity().getSharedPreferences(
-			// "isLogin", 0);
-			// login = sp1.getBoolean("Login", false);
-			//
-			initUI(inflater);
-			// adapter.notifyDataSetChanged();
-			// IntentFilter filter = new IntentFilter();
-			// filter.addAction("isRefresh");
-			// receiver = new MyReceiver();
-			// getActivity().registerReceiver(receiver, filter);
-			// if (!iscode) {
-			// initNewTeam();
-			// }
-		}
-		return mLayout;
-	}
-
-	@Override
-	public void onStart() {
-		if (!isParty) {
-			Log.e("HomeFragment", "有进入onStart=======");
 			SharedPreferences sp = getActivity().getSharedPreferences(
 					"Registered", 0);
 			isRegistered_one = sp.getBoolean("isRegistered_one", false);
@@ -110,6 +87,8 @@ public class HomeFragment extends Fragment implements OnClickListener {
 					"isLogin", 0);
 			login = sp1.getBoolean("Login", false);
 
+			initUI(inflater);
+			adapter.notifyDataSetChanged();
 			IntentFilter filter = new IntentFilter();
 			filter.addAction("isRefresh");
 			receiver = new MyReceiver();
@@ -118,8 +97,32 @@ public class HomeFragment extends Fragment implements OnClickListener {
 				initNewTeam();
 			}
 		}
-		super.onStart();
+		return mLayout;
 	}
+
+	// @Override
+	// public void onStart() {
+	// if (!isParty) {
+	// Log.e("HomeFragment", "有进入onStart=======");
+	// SharedPreferences sp = getActivity().getSharedPreferences(
+	// "Registered", 0);
+	// isRegistered_one = sp.getBoolean("isRegistered_one", false);
+	// Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
+	// returndata = sp.getInt("returndata", returndata);
+	// SharedPreferences sp1 = getActivity().getSharedPreferences(
+	// "isLogin", 0);
+	// login = sp1.getBoolean("Login", false);
+	//
+	// IntentFilter filter = new IntentFilter();
+	// filter.addAction("isRefresh");
+	// receiver = new MyReceiver();
+	// getActivity().registerReceiver(receiver, filter);
+	// if (!iscode) {
+	// initNewTeam();
+	// }
+	// }
+	// super.onStart();
+	// }
 
 	public void prepareData(Integer pk_user) {
 		ReadTeam(pk_user);
@@ -133,11 +136,11 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
-			String refresh = intent.getStringExtra("refresh");
+			refresh = intent.getBooleanExtra("refresh", false);
 			iscode = intent.getBooleanExtra("isCode", false);
 			if (!iscode) {
-				if ("ok".equals(refresh)) {
-					LoginActivity.list.clear();
+				if (refresh) {
+					list.clear();
 					initNewTeam();
 					adapter.notifyDataSetChanged();
 					Log.e("HomeFragment", "有接受到广播123456789======");
@@ -147,8 +150,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
 						.getSerializableExtra("readhomeuser");
 				fk_group = readhomeuser.getPk_group();
 				Log.e("HomeFragment", "使用邀请码添加后的fk_group======" + fk_group);
-				// list.add(0, readhomeuser);
-				// initNewTeam();
 				Group_User group_User = new Group_User();
 				group_User.setFk_group(fk_group);
 				if (isRegistered_one) {
@@ -164,10 +165,10 @@ public class HomeFragment extends Fragment implements OnClickListener {
 					}
 				}
 				group_User.setRole(2);
-				group_User.setStatus(2);
+				group_User.setStatus(1);
 				homeInterface.userJoin2gourp(getActivity(), group_User);
-				LoginActivity.list.add(0, readhomeuser);
 				initNewTeam();
+				Codelist.add(0, readhomeuser);
 				adapter.notifyDataSetChanged();
 			}
 		}
@@ -177,7 +178,6 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	public void initNewTeam() {
 		if (isRegistered_one) {
 			ReadTeam(returndata);
-			// Log.e("HomeFragment", "进入注册的新建小组");
 		} else {
 			if (login) {
 				int pk_user = LoginActivity.getPk_user();
@@ -198,23 +198,71 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				LoginActivity.list.clear();
-				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
-				int homeStatusMsg = homeback.getStatusMsg();
-				if (homeStatusMsg == 1) {
-					Log.e("HomeFragment", "读取用户小组信息2===" + A);
-					users = homeback.getReturnData();
-					if (users.size() > 0) {
-						for (int i = 0; i < users.size(); i++) {
-							Group readhomeuser_1 = users.get(i);
-							Log.e("HomeFragment", "readhomeuser==="
-									+ readhomeuser_1.getPk_group());
-							LoginActivity.list.add(readhomeuser_1);
+				if (iscode) {
+					Codelist.clear();
+					Groupback homeback = GsonUtils
+							.parseJson(A, Groupback.class);
+					int homeStatusMsg = homeback.getStatusMsg();
+					if (homeStatusMsg == 1) {
+						Log.e("HomeFragment", "读取用户小组信息2===" + A);
+						users = homeback.getReturnData();
+						if (users.size() > 0) {
+							for (int i = 0; i < users.size(); i++) {
+								Group readhomeuser_1 = users.get(i);
+								Log.e("HomeFragment", "readhomeuser==="
+										+ readhomeuser_1.getPk_group());
+								Codelist.add(readhomeuser_1);
+							}
+							Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="
+									+ Codelist.toString());
 						}
-						Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="
-								+ LoginActivity.list.toString());
+					}
+					adapter.notifyDataSetChanged();
+
+				} else {
+					if (refresh) {
+						list.clear();
+						Groupback homeback = GsonUtils.parseJson(A,
+								Groupback.class);
+						int homeStatusMsg = homeback.getStatusMsg();
+						if (homeStatusMsg == 1) {
+							Log.e("HomeFragment", "读取用户小组信息2===" + A);
+							users = homeback.getReturnData();
+							if (users.size() > 0) {
+								for (int i = 0; i < users.size(); i++) {
+									Group readhomeuser_1 = users.get(i);
+									Log.e("HomeFragment", "readhomeuser==="
+											+ readhomeuser_1.getPk_group());
+									list.add(readhomeuser_1);
+								}
+								Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="
+										+ list.toString());
+							}
+						}
+						adapter.notifyDataSetChanged();
+
+					} else {
+						LoginActivity.list.clear();
+						Groupback homeback = GsonUtils.parseJson(A,
+								Groupback.class);
+						int homeStatusMsg = homeback.getStatusMsg();
+						if (homeStatusMsg == 1) {
+							Log.e("HomeFragment", "读取用户小组信息2===" + A);
+							users = homeback.getReturnData();
+							if (users.size() > 0) {
+								for (int i = 0; i < users.size(); i++) {
+									Group readhomeuser_1 = users.get(i);
+									Log.e("HomeFragment", "readhomeuser==="
+											+ readhomeuser_1.getPk_group());
+									LoginActivity.list.add(readhomeuser_1);
+								}
+								Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="
+										+ LoginActivity.list.toString());
+							}
+						}
 					}
 				}
+
 			}
 
 			@Override
@@ -223,11 +271,12 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			}
 		});
 
-		homeInterface.setPostListener(new useRequestCode2JoinListenner() {
+		homeInterface.setPostListener(new userJoin2gourpListenner() {
 
 			@Override
 			public void success(String A) {
 				Log.e("HomeFragment", "读取用户小组信息使用邀请码添加后的===" + A);
+				adapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -249,19 +298,53 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				if (LoginActivity.list.size() == arg2) {
-					Intent intent = new Intent(getActivity(),
-							NewteamActivity.class);
-					startActivity(intent);
+				if (iscode) {
+					if (Codelist.size() == arg2) {
+						Intent intent = new Intent(getActivity(),
+								NewteamActivity.class);
+						startActivity(intent);
+					} else {
+						Group group = Codelist.get(arg2);
+						int pk_group = group.getPk_group();
+						Intent intent = new Intent(getActivity(),
+								GroupActivity.class);
+						intent.putExtra("pk_group", pk_group);
+						Log.e("HomeFragment", "pk_group1111111111" + pk_group);
+						startActivity(intent);
+					}
 				} else {
-					Group group = LoginActivity.list.get(arg2);
-					int pk_group = group.getPk_group();
-					Intent intent = new Intent(getActivity(),
-							GroupActivity.class);
-					intent.putExtra("pk_group", pk_group);
-					Log.e("HomeFragment", "pk_group" + pk_group);
-					startActivity(intent);
+					if (refresh) {
+						if (list.size() == arg2) {
+							Intent intent = new Intent(getActivity(),
+									NewteamActivity.class);
+							startActivity(intent);
+						} else {
+							Group group = list.get(arg2);
+							int pk_group = group.getPk_group();
+							Intent intent = new Intent(getActivity(),
+									GroupActivity.class);
+							intent.putExtra("pk_group", pk_group);
+							Log.e("HomeFragment", "pk_group2222222222" + pk_group);
+							startActivity(intent);
+						}
+
+					} else {
+						if (LoginActivity.list.size() == arg2) {
+							Intent intent = new Intent(getActivity(),
+									NewteamActivity.class);
+							startActivity(intent);
+						} else {
+							Group group = LoginActivity.list.get(arg2);
+							int pk_group = group.getPk_group();
+							Intent intent = new Intent(getActivity(),
+									GroupActivity.class);
+							intent.putExtra("pk_group", pk_group);
+							Log.e("HomeFragment", "pk_group333333333" + pk_group);
+							startActivity(intent);
+						}
+					}
 				}
+
 			}
 		});
 
@@ -291,7 +374,15 @@ public class HomeFragment extends Fragment implements OnClickListener {
 
 		@Override
 		public int getCount() {
-			return (LoginActivity.list.size() + 1);
+			if (iscode) {
+				return (Codelist.size() + 1);
+			} else {
+				if (refresh) {
+					return (list.size() + 1);
+				} else {
+					return (LoginActivity.list.size() + 1);
+				}
+			}
 		}
 
 		@Override
@@ -308,17 +399,43 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View inflater = null;
 			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-			if (isRegistered_one) {
-				if (LoginActivity.list.size() > 0) {
-					if (position < LoginActivity.list.size()) {
+			if (iscode) {
+				if (isRegistered_one) {
+					if (Codelist.size() > 0) {
+						if (position < Codelist.size()) {
+							inflater = layoutInflater.inflate(
+									R.layout.home_gridview_item, null);
+							home_item_head = (ImageView) inflater
+									.findViewById(R.id.home_item_head);
+							home_item_name = (TextView) inflater
+									.findViewById(R.id.home_item_name);
+							Group homeuser_gridview = Codelist.get(position);
+							String homeAvatar_path = homeuser_gridview
+									.getAvatar_path();
+							String homenickname = homeuser_gridview.getName();
+							home_item_name.setText(homenickname);
+							completeURL = beginStr + homeAvatar_path + endStr;
+							PreferenceUtils.saveImageCache(getActivity(),
+									completeURL);
+							homeImageLoaderUtils.getInstance().LoadImage(
+									getActivity(), completeURL, home_item_head);
+						} else {
+							inflater = layoutInflater.inflate(
+									R.layout.home_teamadd_item, null);
+						}
+					} else {
+						inflater = layoutInflater.inflate(
+								R.layout.home_teamadd_item, null);
+					}
+				} else {
+					if (position < Codelist.size()) {
 						inflater = layoutInflater.inflate(
 								R.layout.home_gridview_item, null);
 						home_item_head = (ImageView) inflater
 								.findViewById(R.id.home_item_head);
 						home_item_name = (TextView) inflater
 								.findViewById(R.id.home_item_name);
-						Group homeuser_gridview = LoginActivity.list
-								.get(position);
+						Group homeuser_gridview = Codelist.get(position);
 						String homeAvatar_path = homeuser_gridview
 								.getAvatar_path();
 						String homenickname = homeuser_gridview.getName();
@@ -328,36 +445,129 @@ public class HomeFragment extends Fragment implements OnClickListener {
 								completeURL);
 						homeImageLoaderUtils.getInstance().LoadImage(
 								getActivity(), completeURL, home_item_head);
+
 					} else {
 						inflater = layoutInflater.inflate(
 								R.layout.home_teamadd_item, null);
 					}
-				} else {
-					inflater = layoutInflater.inflate(
-							R.layout.home_teamadd_item, null);
 				}
-			} else {
-				if (position < LoginActivity.list.size()) {
-					inflater = layoutInflater.inflate(
-							R.layout.home_gridview_item, null);
-					home_item_head = (ImageView) inflater
-							.findViewById(R.id.home_item_head);
-					home_item_name = (TextView) inflater
-							.findViewById(R.id.home_item_name);
-					Group homeuser_gridview = LoginActivity.list.get(position);
-					String homeAvatar_path = homeuser_gridview.getAvatar_path();
-					String homenickname = homeuser_gridview.getName();
-					home_item_name.setText(homenickname);
-					completeURL = beginStr + homeAvatar_path + endStr;
-					PreferenceUtils.saveImageCache(getActivity(), completeURL);
-					homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-							completeURL, home_item_head);
 
+			} else {
+				if (refresh) {
+					if (isRegistered_one) {
+						if (list.size() > 0) {
+							if (position < list.size()) {
+								inflater = layoutInflater.inflate(
+										R.layout.home_gridview_item, null);
+								home_item_head = (ImageView) inflater
+										.findViewById(R.id.home_item_head);
+								home_item_name = (TextView) inflater
+										.findViewById(R.id.home_item_name);
+								Group homeuser_gridview = list.get(position);
+								String homeAvatar_path = homeuser_gridview
+										.getAvatar_path();
+								String homenickname = homeuser_gridview
+										.getName();
+								home_item_name.setText(homenickname);
+								completeURL = beginStr + homeAvatar_path
+										+ endStr;
+								PreferenceUtils.saveImageCache(getActivity(),
+										completeURL);
+								homeImageLoaderUtils.getInstance().LoadImage(
+										getActivity(), completeURL,
+										home_item_head);
+							} else {
+								inflater = layoutInflater.inflate(
+										R.layout.home_teamadd_item, null);
+							}
+						} else {
+							inflater = layoutInflater.inflate(
+									R.layout.home_teamadd_item, null);
+						}
+					} else {
+						if (position < list.size()) {
+							inflater = layoutInflater.inflate(
+									R.layout.home_gridview_item, null);
+							home_item_head = (ImageView) inflater
+									.findViewById(R.id.home_item_head);
+							home_item_name = (TextView) inflater
+									.findViewById(R.id.home_item_name);
+							Group homeuser_gridview = list.get(position);
+							String homeAvatar_path = homeuser_gridview
+									.getAvatar_path();
+							String homenickname = homeuser_gridview.getName();
+							home_item_name.setText(homenickname);
+							completeURL = beginStr + homeAvatar_path + endStr;
+							PreferenceUtils.saveImageCache(getActivity(),
+									completeURL);
+							homeImageLoaderUtils.getInstance().LoadImage(
+									getActivity(), completeURL, home_item_head);
+
+						} else {
+							inflater = layoutInflater.inflate(
+									R.layout.home_teamadd_item, null);
+						}
+					}
 				} else {
-					inflater = layoutInflater.inflate(
-							R.layout.home_teamadd_item, null);
+					if (isRegistered_one) {
+						if (LoginActivity.list.size() > 0) {
+							if (position < LoginActivity.list.size()) {
+								inflater = layoutInflater.inflate(
+										R.layout.home_gridview_item, null);
+								home_item_head = (ImageView) inflater
+										.findViewById(R.id.home_item_head);
+								home_item_name = (TextView) inflater
+										.findViewById(R.id.home_item_name);
+								Group homeuser_gridview = LoginActivity.list
+										.get(position);
+								String homeAvatar_path = homeuser_gridview
+										.getAvatar_path();
+								String homenickname = homeuser_gridview
+										.getName();
+								home_item_name.setText(homenickname);
+								completeURL = beginStr + homeAvatar_path
+										+ endStr;
+								PreferenceUtils.saveImageCache(getActivity(),
+										completeURL);
+								homeImageLoaderUtils.getInstance().LoadImage(
+										getActivity(), completeURL,
+										home_item_head);
+							} else {
+								inflater = layoutInflater.inflate(
+										R.layout.home_teamadd_item, null);
+							}
+						} else {
+							inflater = layoutInflater.inflate(
+									R.layout.home_teamadd_item, null);
+						}
+					} else {
+						if (position < LoginActivity.list.size()) {
+							inflater = layoutInflater.inflate(
+									R.layout.home_gridview_item, null);
+							home_item_head = (ImageView) inflater
+									.findViewById(R.id.home_item_head);
+							home_item_name = (TextView) inflater
+									.findViewById(R.id.home_item_name);
+							Group homeuser_gridview = LoginActivity.list
+									.get(position);
+							String homeAvatar_path = homeuser_gridview
+									.getAvatar_path();
+							String homenickname = homeuser_gridview.getName();
+							home_item_name.setText(homenickname);
+							completeURL = beginStr + homeAvatar_path + endStr;
+							PreferenceUtils.saveImageCache(getActivity(),
+									completeURL);
+							homeImageLoaderUtils.getInstance().LoadImage(
+									getActivity(), completeURL, home_item_head);
+
+						} else {
+							inflater = layoutInflater.inflate(
+									R.layout.home_teamadd_item, null);
+						}
+					}
 				}
 			}
+
 			return inflater;
 		}
 
@@ -386,9 +596,18 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		super.onDestroyView();
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
-		if (iscode) {
-			getActivity().unregisterReceiver(receiver);
-		}
 	}
 
+	// @Override
+	// public void onStop() {
+	// if (iscode) {
+	// getActivity().unregisterReceiver(receiver);
+	// Log.e("HomeFragment", "有进入到onStop==========");
+	// }
+	// if(refresh)
+	// {
+	// getActivity().unregisterReceiver(receiver);
+	// }
+	// super.onStop();
+	// }
 }

@@ -25,7 +25,8 @@
             android:id="@+id/usersetting_save_1_layout"
             android:layout_width="80.0dp"
             android:layout_height="match_parent"
-            android:layout_alignParentRight="true" >
+            android:layout_alignParentRight="true"
+             >
 
             <TextView
                 android:id="@+id/usersetting_save_1"
@@ -65,25 +66,6 @@
             android:layout_alignParentBottom="true"
             android:background="#aaaaaa" />
 
-        <RelativeLayout
-            android:id="@+id/usersetting_save_2_layout"
-            android:layout_width="80.0dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:visibility="gone" >
-
-            <TextView
-                android:id="@+id/usersetting_save_2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:gravity="center"
-                android:text="保存2"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
-        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -91,7 +73,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/usersetting_layout"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true" 
+        >
 
         <ImageView
             android:id="@+id/usersetting_head"
@@ -219,38 +202,5 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/usersetting_phone_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/usersetting_layout"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone" >
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:gravity="center"
-            android:text="请输入你的电话号码"
-            android:textSize="20.0sp" />
-
-        <EditText
-            android:id="@+id/usersetting_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView2"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
-            android:background="#ffffff"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="电话号码:" >
-        <requestFocus />
-        </EditText>
-    </RelativeLayout>
 
 </RelativeLayout>

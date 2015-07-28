@@ -43,7 +43,7 @@ public class ImageFile extends Activity {
 		GridView gridView = (GridView) findViewById(Res.getWidgetID("fileGridView"));
 		TextView textView = (TextView) findViewById(Res.getWidgetID("headerTitle"));
 		textView.setText(Res.getString("photo"));
-		folderAdapter = new FolderAdapter(this);
+//		folderAdapter = new FolderAdapter(this);
 		gridView.setAdapter(folderAdapter);
 	}
 

@@ -53,6 +53,7 @@ import com.BJ.photo.ImageItem;
 import com.BJ.photo.PublicWay;
 import com.BJ.photo.Res;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.biju.Interface;
 import com.biju.Interface.uploadingPhotoListenner;
 import com.biju.Interface.readPartyPhotosListenner;
@@ -143,10 +144,6 @@ public class PhotoFragment extends Fragment  {
 
 				Photosback photosback = GsonUtils.parseJsonArray(A, Photosback.class);
 				listphotos = photosback.getReturnData();
-				if(listphotos!=null&&listphotos.size()>0){
-					String pk_photo = listphotos.get(0).getPk_photo();
-					Log.e("PhotoFragment", "第一个图片路径："+pk_photo);
-				}
 				//刷新
 				adapter.notifyDataSetChanged();
 			}
@@ -209,23 +206,34 @@ public class PhotoFragment extends Fragment  {
 		BeginUpload upload = new BeginUpload() {
 
 			private TextView textView;
+			private boolean isload;
 
 			@Override
 			public void begin() {
-				// 刷新立即显示照片
-				adapter.notifyDataSetChanged();
 				for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
+					isload=false;
 					String imagePath = Bimp.tempSelectBitmap.get(i)
 							.getImagePath();
 					Log.e("PhotoFragment", "每个图片路径：" + imagePath);
-					 upload(imagePath);
+					Log.e("PhotoFragment", "listphotos.size()====" + listphotos.size());
+					for (int j = 0; j < listphotos.size(); j++) {
+						String path = listphotos.get(j).getPath();
+						if(imagePath.equals(path)){
+							isload = true;
+						}
+					}
+					//解决重复上传
+					if(!isload){
+						//开始上传
+						upload(imagePath);
+					}
 				}
 			}
 		};
 		beginUpload = upload;
 	}
 
-	private void upload(String imagePath) {
+	private void upload(final String imagePath) {
 		 UploadTask task = new PhotoUploadTask(imagePath, new IUploadTaskListener() {
 			@Override
 			public void onUploadSucceed(final FileInfo result) {
@@ -237,6 +245,7 @@ public class PhotoFragment extends Fragment  {
 //				photo.setPath(result.fileId);
 				photo.setPk_photo(result.fileId);
 				photo.setStatus(1);
+				photo.setPath(imagePath);//设置内存路径
 				instance.uploadingPhoto(getActivity(), photo);
 				
 				new Thread(new Runnable() {
@@ -507,17 +516,15 @@ public class PhotoFragment extends Fragment  {
 			
 			if(listphotos!=null){
 				if(position==listphotos.size()){
-					holder.image.setImageBitmap(BitmapFactory.decodeResource(
-							getResources(), R.drawable.icon_addpic_unfocused));
+					holder.image.setImageResource(R.drawable.icon_addpic_unfocused);
 				}else{
 					String url=beginStr+listphotos.get(position).getPk_photo()+endStr;//完整路径
-					ImageLoaderUtils.getInstance().LoadImage(getActivity(), url, holder.image);
+					ImageLoaderUtils4Photos.getInstance().LoadImage(getActivity(), url, holder.image);
 				}
 			}
 			//默认为加号图片
 			if(listphotos==null){
-				holder.image.setImageBitmap(BitmapFactory.decodeResource(
-						getResources(), R.drawable.icon_addpic_unfocused));
+				holder.image.setImageResource(R.drawable.icon_addpic_unfocused);
 			}
 
 			return convertView;
@@ -624,26 +631,7 @@ public class PhotoFragment extends Fragment  {
 	@Override
 	public void onStop() {
 		super.onStop();
-//		isbeginUpload=false;
-		//此处情况临时列表
 	}
 	
-//	@Override
-//	public void onClick(View v) {
-//		switch (v.getId()) {
-//		case R.id.photo_upload_layout:
-//			for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
-//				String imagePath = Bimp.tempSelectBitmap.get(i)
-//						.getImagePath();
-//				Log.e("PhotoFragment", "每个图片路径：" + imagePath);
-//			}
-//			isbeginUpload = true;
-//			adapter.notifyDataSetChanged();
-//			break;
-//
-//		default:
-//			break;
-//		}
-//	}
 
 }
