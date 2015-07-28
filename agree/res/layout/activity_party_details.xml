@@ -140,9 +140,9 @@
         android:layout_centerHorizontal="true" >
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/PartyDetails_tv_partake_prompt"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
@@ -150,9 +150,9 @@
             android:textSize="18.0sp" />
 
         <TextView
-            android:id="@+id/textView5"
+            android:id="@+id/PartyDetails_tv_refuse_prompt"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
@@ -160,11 +160,11 @@
             android:textSize="18.0sp" />
 
         <TextView
-            android:id="@+id/textView6"
+            android:id="@+id/PartyDetails_did_not_say_prompt"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
-            android:layout_weight="1"
+            android:layout_weight="0.7"
             android:gravity="center"
             android:text="未表态"
             android:textSize="18.0sp" />
@@ -180,7 +180,7 @@
         <TextView
             android:id="@+id/PartyDetails_tv_partake"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
@@ -190,7 +190,7 @@
         <TextView
             android:id="@+id/PartyDetails_tv_refuse"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"
@@ -200,7 +200,7 @@
         <TextView
             android:id="@+id/PartyDetails_did_not_say"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_gravity="center_vertical"
             android:layout_weight="1"
             android:gravity="center"

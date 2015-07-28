@@ -305,8 +305,12 @@
         <!-- 极光推送 -->
         <!-- 7e243519bad6fd8b93860d6e -->
         <activity
-            android:name="com.biju.BindingPhoneActivity"
+            android:name="com.biju.function.BindingPhoneActivity"
             android:label="@string/title_activity_binding_phone" >
+        </activity>
+        <activity
+            android:name="com.biju.function.CommentsListActivity"
+            android:label="@string/title_activity_comments_list" >
         </activity>
     </application>
 

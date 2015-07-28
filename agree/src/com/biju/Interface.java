@@ -9,7 +9,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import android.content.Context;
-import android.provider.ContactsContract.CommonDataKinds.Photo;
 import android.util.Log;
 
 import com.BJ.javabean.Chat;
@@ -22,6 +21,8 @@ import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.Party_User;
+import com.BJ.javabean.Phone;
+import com.BJ.javabean.Photo;
 import com.BJ.javabean.StringCreGroup;
 import com.BJ.javabean.User;
 import com.BJ.javabean.User_Chat;
@@ -779,8 +780,8 @@ public class Interface {
 	 * @param context
 	 * @param user this user can be null!(这个对象可以是空的)
 	 */
-	public void requestVerCode(Context context,User user) {//传入为??
-		requestVerCodePost(context,packParams(user, kRequestVerCode));
+	public void requestVerCode(Context context,Phone phone) {//传入为??
+		requestVerCodePost(context,packParams(phone, kRequestVerCode));
 	}
 	//根据手机号或者账户ID查找用户
 	public void findUser(Context context,User user) {

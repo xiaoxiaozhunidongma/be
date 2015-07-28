@@ -6,7 +6,10 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
@@ -19,7 +22,6 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -35,15 +37,15 @@ import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.Utils;
-import com.biju.BindingPhoneActivity;
 import com.biju.Interface;
-import com.biju.Interface.updateUserListenner;
-import com.biju.Interface.readUserListenner;
 import com.biju.Interface.getPicSignListenner;
+import com.biju.Interface.readUserListenner;
+import com.biju.Interface.updateUserListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
-import com.biju.login.RegisteredActivity;
 import com.github.volley_examples.utils.GsonUtils;
+import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
+import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -67,8 +69,10 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
-//	public static String SIGN = "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ";
-	public static String SIGN ;
+	// public static String SIGN =
+	// "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ";
+	public static String SIGN;
+
 	public static String getSIGN() {
 		return SIGN;
 	}
@@ -83,7 +87,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	protected String mFilePath = null;
 	private TextView mUsersetting_progress;
 	private String password = "";
-//	private EditText mUsersetting_phone;
 	private RelativeLayout mUsersetting_save_1_layout;
 	private TextView mUsersetting_sex;
 	private Integer Userpk_user;
@@ -104,7 +107,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private String Userjpush_id;
 	private User readuser;
 
-
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -119,6 +121,59 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		String Cacheurl = PreferenceUtils.readImageCache(this);
 		completeURL = Cacheurl;
 		initUI();
+		isWIFI();// 判断是否有网络
+
+		mUsersetting_tv_password.setText("请输入想要设置的密码");
+		// initUpload();
+		PicSign();// 传图片签名字符串
+		Broadcast();// 接收广播
+	}
+
+	private void Broadcast() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("Binding_Phone");
+		receiver = new MyReceiver();
+		registerReceiver(receiver, filter);
+	}
+
+	class MyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			boolean succeed = intent.getBooleanExtra("Succeed", false);
+			Integer pk_user = intent.getIntExtra("Pk_user", 0);
+			if (succeed) {
+				ReadUser(pk_user);
+			}
+		}
+
+	}
+
+	private void PicSign() {
+		readuserinter.setPostListener(new getPicSignListenner() {
+
+			@Override
+			public void success(String A) {
+				Log.e("UserSettingActivity", "新的方法签名字符串：" + A);
+				PicSignBack picSignBack = GsonUtils.parseJson(A,
+						PicSignBack.class);
+				String returnData = picSignBack.getReturnData();
+				UserSettingActivity.setSIGN(returnData);
+
+				UploadManager.authorize(APPID, USERID, SIGN);
+				uploadManager = new UploadManager(UserSettingActivity.this,
+						"persistenceId");
+
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+	}
+
+	private void isWIFI() {
 		boolean isWIFI = Ifwifi.getNetworkConnected(UserSettingActivity.this);
 		Log.e("UserSettingActivity", "判断是否有网络" + isWIFI);
 		if (isWIFI) {
@@ -139,29 +194,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			ImageLoaderUtils.getInstance().LoadImage(UserSettingActivity.this,
 					completeURL, mUsersetting_head);
 		}
-
-		mUsersetting_tv_password.setText("请输入想要设置的密码");
-//		initUpload();
-		readuserinter.setPostListener(new getPicSignListenner() {
-			
-			@Override
-			public void success(String A) {
-				Log.e("UserSettingActivity", "新的方法签名字符串："+A);
-				PicSignBack picSignBack = GsonUtils.parseJson(A, PicSignBack.class);
-				String returnData = picSignBack.getReturnData();
-				UserSettingActivity.setSIGN(returnData);
-				
-				UploadManager.authorize(APPID, USERID, SIGN);
-				uploadManager = new UploadManager(UserSettingActivity.this,
-						"persistenceId");
-
-			}
-			
-			@Override
-			public void defail(Object B) {
-				
-			}
-		});
 	}
 
 	@Override
@@ -200,16 +232,15 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 						Useravatar_path = readuser.getAvatar_path();
 						Userphone = readuser.getPhone();
 						Userjpush_id = readuser.getJpush_id();
-						Log.e("UserSettingActivity", "电话号码1 ==  "
-								+ Userphone);
+						Log.e("UserSettingActivity", "电话号码1 ==  " + Userphone);
 						Userpassword = readuser.getPassword();
 						Log.e("UserSettingActivity", "读取出来的" + Userpk_user
-								+ Usernickname + Useravatar_path
-								+ Userphone + Userpassword);
+								+ Usernickname + Useravatar_path + Userphone
+								+ Userpassword);
 						mUsersetting_nickname.setText(Usernickname);
 						mUsersetting_edt_password_1.setText(Userpassword);
 						mUsersetting_edt_password_2.setText(Userpassword);
-//						mUsersetting_phone.setText(Userphone);
+						mUsersetting_tv_phone.setText(Userphone);
 						password = Userpassword;
 						int Usersex = readuser.getSex();
 						Log.e("UserSettingActivity", "性别" + Usersex);
@@ -232,13 +263,13 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 						SimpleDateFormat sdf = new SimpleDateFormat(
 								"yyyy-MM-dd hh:mm:ss");
 						setup_time = sdf.format(new Date());
-						
+
 						Log.e("UserSettingActivity", "昵称显示" + "====="
 								+ Usernickname);
 					}
 					completeURL = beginStr + Useravatar_path + endStr;
-					PreferenceUtils.saveImageCache(
-							UserSettingActivity.this, completeURL);
+					PreferenceUtils.saveImageCache(UserSettingActivity.this,
+							completeURL);
 					ImageLoaderUtils.getInstance().LoadImage(
 							UserSettingActivity.this, completeURL,
 							mUsersetting_head);
@@ -250,9 +281,9 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 			}
 		});
-		
+
 		readuserinter.setPostListener(new updateUserListenner() {
-			
+
 			@Override
 			public void success(String A) {
 				// 更新用户资料成功
@@ -264,19 +295,19 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 					finish();
 				}
 			}
-			
+
 			@Override
 			public void defail(Object B) {
-				
+
 			}
 		});
 	}
 
 	private void initUpload() {
-//		Flag=2;
+		// Flag=2;
 		readuserinter.getPicSign(this, new User());
-//		uploadManager = new UploadManager(UserSettingActivity.this,
-//				"persistenceId");
+		// uploadManager = new UploadManager(UserSettingActivity.this,
+		// "persistenceId");
 	}
 
 	private void initUI() {
@@ -293,8 +324,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		mUsersetting_save_1_layout.setOnClickListener(this);// 保存1
 		findViewById(R.id.usersetting_save_1).setOnClickListener(this);
 		mUsersetting_progress = (TextView) findViewById(R.id.usersetting_progress);// 显示上传进度
-//		mUsersetting_phone.setInputType(EditorInfo.TYPE_CLASS_PHONE);//点击电话号码时直接弹出数字键盘
-		findViewById(R.id.usersetting_tv_phone).setOnClickListener(this);
+		mUsersetting_tv_phone = (TextView) findViewById(R.id.usersetting_tv_phone);
+		mUsersetting_tv_phone.setOnClickListener(this);
 		mUsersetting_sex = (TextView) findViewById(R.id.usersetting_sex);// 设置性别
 		mUsersetting_sex.setOnClickListener(this);
 		findViewById(R.id.usersetting_back_layout).setOnClickListener(this);// 返回
@@ -337,9 +368,51 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void usersetting_tv_phone() {
-		Intent intent=new Intent(UserSettingActivity.this, BindingPhoneActivity.class);
-		intent.putExtra("UserData", readuser);
-		startActivity(intent);
+		if (Userphone != null) {
+			NiftyDialogBuilder();
+		} else {
+			Intent intent = new Intent(UserSettingActivity.this,
+					BindingPhoneActivity.class);
+			intent.putExtra("UserData", readuser);
+			startActivity(intent);
+		}
+	}
+
+	private void NiftyDialogBuilder() {
+		final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
+				.getInstance(this);
+		Effectstype effectstype = Effectstype.Shake;
+		niftyDialogBuilder.withTitle("提示").withTitleColor("#000000")
+				// 设置标题字体颜色
+				.withDividerColor("#ffffff")
+				// 设置对话框背景颜色
+				.withMessage("您已经绑定了手机号码，是否重新绑定另一个号码？")
+				// 对话框提示内容
+				.withMessageColor("#000000")
+				// 提示内容字体颜色
+				.withIcon(getResources().getDrawable(R.drawable.about_us))
+				// 设置对话框显示图片
+				.isCancelableOnTouchOutside(true).withDuration(700)
+				// 设置时间
+				.withEffect(effectstype).withButton1Text("取消")
+				.withButton2Text("确定").setButton1Click(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						niftyDialogBuilder.cancel();
+					}
+				}).setButton2Click(new OnClickListener() {
+
+					@Override
+					public void onClick(View v) {
+						Intent intent = new Intent(UserSettingActivity.this,
+								BindingPhoneActivity.class);
+						intent.putExtra("UserData", readuser);
+						startActivity(intent);
+						niftyDialogBuilder.cancel();
+					}
+				}).show();
+
 	}
 
 	private void usersetting_back() {
@@ -350,8 +423,9 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private int returndata_1;
 	private boolean isRegistered_one;
 	private int sex = 0;
-	private String phone;
 	private boolean login;
+	private TextView mUsersetting_tv_phone;
+	private MyReceiver receiver;
 
 	private void usersetting_sex() {
 		i++;
@@ -373,7 +447,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
-
 
 	private void usersetting_head() {
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
@@ -399,14 +472,14 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			InitHead.initHead(bmp);// 画圆形头像
 			ishead = !ishead;
 		} catch (Exception e) {
-			Log.e("", "catch:"+e.getMessage());
+			Log.e("", "catch:" + e.getMessage());
 		}
-		//初始化图片签名
+		// 初始化图片签名
 		initUpload();
 	}
 
 	private void usersetting_save_1() {
-		
+
 		if (isSetting) {
 			isRead = true;
 			Usernickname = mUsersetting_nickname.getText().toString().trim();
@@ -414,12 +487,10 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			if (isRegistered_one) {
 				usersetting.setPk_user(returndata_1);
 			} else {
-				if(login)
-				{
+				if (login) {
 					int returndata_2 = LoginActivity.getPk_user();
 					usersetting.setPk_user(returndata_2);
-				}else
-				{
+				} else {
 					usersetting.setPk_user(returndata_1);
 				}
 			}
@@ -427,14 +498,14 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			usersetting.setNickname(Usernickname);
 			usersetting.setPassword(password);
 			usersetting.setSex(sex);
-			Log.e("UserSettingActivity", "性别" + "  " + sex);
-			usersetting.setPhone(phone);
-			Log.e("UserSettingActivity", "电话号码4==  " + phone);
+			usersetting.setStatus(1);
+			usersetting.setPhone(Userphone);
+			Log.e("UserSettingActivity", "电话号码4===========  " + Userphone);
 			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			usersetting.setSetup_time(setup_time);
 			usersetting.setLast_login_time(sdf1.format(new Date()));
 			if (ishead) {
-				upload(usersetting);//上传
+				upload(usersetting);// 上传
 			} else {
 				usersetting.setAvatar_path(Useravatar_path);
 				readuserinter.updateUser(UserSettingActivity.this, usersetting);

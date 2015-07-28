@@ -288,7 +288,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 			mHomeFragmen.prepareParty(true);
 		}
 
-
 	}
 
 	private void initUI() {
