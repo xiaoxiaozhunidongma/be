@@ -78,8 +78,8 @@ public class GalleryActivity extends Activity {
 		// 为发送按钮设置文字
 		pager = (ViewPagerFixed) findViewById(Res.getWidgetID("gallery01"));
 		pager.setOnPageChangeListener(pageChangeListener);
-		for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
-			initListViews(Bimp.tempSelectBitmap.get(i).getBitmap());
+		for (int i = 0; i < PhotoFragment.bitmaps.size(); i++) {
+			initListViews(PhotoFragment.bitmaps.get(i));
 		}
 
 		adapter = new MyPageAdapter(listViews);
@@ -121,12 +121,14 @@ public class GalleryActivity extends Activity {
 
 		public void onClick(View v) {
 			if (listViews.size() == 1) {
+//				PhotoFragment.bitmaps.clear();
 				Bimp.tempSelectBitmap.clear();
 				Bimp.max = 0;
 				Intent intent = new Intent("data.broadcast.action");
 				sendBroadcast(intent);
 				finish();
 			} else {
+//				PhotoFragment.bitmaps.remove(location);
 				Bimp.tempSelectBitmap.remove(location);
 				Bimp.max--;
 				pager.removeAllViews();

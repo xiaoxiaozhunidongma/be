@@ -8,6 +8,7 @@ import cn.jpush.android.api.JPushInterface;
 import com.baidu.mapapi.SDKInitializer;
 import com.biju.MainActivity;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
@@ -19,6 +20,8 @@ public class MyApplication extends Application {
 	public static String getRegId() {
 		return regId;
 	}
+	
+	
 
 
 	public static void setRegId(String regId) {
@@ -30,7 +33,16 @@ public class MyApplication extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		initImageLoader(getApplicationContext());
+		//初始化imageloader
+		ImageLoaderConfiguration config = new
+				ImageLoaderConfiguration .Builder(getApplicationContext())
+				.threadPoolSize(5)
+				.threadPriority(Thread.MIN_PRIORITY + 3)
+				.denyCacheImageMultipleSizesInMemory()//强制不能存重复的图片
+				.memoryCache(new WeakMemoryCache()) //设置。。。
+				.build();
+//		initImageLoader(getApplicationContext());
+		ImageLoader.getInstance().init(config);
 		// 地图初始化
 		SDKInitializer.initialize(this);
 		// 极光推送

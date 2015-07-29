@@ -21,7 +21,10 @@ import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.Party_User;
+import com.BJ.javabean.Phone;
+import com.BJ.javabean.PhoneArray;
 import com.BJ.javabean.Photo;
+import com.BJ.javabean.StrPhoneArray;
 import com.BJ.javabean.StringCreGroup;
 import com.BJ.javabean.User;
 import com.BJ.javabean.User_Chat;
@@ -129,6 +132,32 @@ public class Interface {
 		JSONObject jsonObject=new JSONObject(map);
 		Map<String, String> params=new HashMap<String, String>();
 
+		
+		params.put("request_type", interfaceType);
+		Log.e("Interface", "小组json:"+jsonObject.toString());
+		params.put("request_data",jsonObject.toString());
+		
+		return params;
+	}
+	
+	//通讯录的packParams方法
+	ArrayList<String> string=new ArrayList<String>();
+	public Map<String, String> packParamsPhone(Object classObject , String interfaceType) throws JSONException {
+		
+		for (int i = 0; i < ((PhoneArray)classObject).getPhones().length; i++) {
+			String Strphone = ((PhoneArray)classObject).getPhones()[i];
+			string.add(Strphone);
+		}
+		
+		JSONArray array=new JSONArray(string.toString());
+		Integer user_id = ((PhoneArray)classObject).getUser_id();
+		StrPhoneArray strPhoneArray = new StrPhoneArray(user_id, array);
+		
+		Map map = Bean2Map.ConvertObjToMap(strPhoneArray);
+		Log.e("Interface", "map------"+map);
+		JSONObject jsonObject=new JSONObject(map);
+		Map<String, String> params=new HashMap<String, String>();
+		
 		
 		params.put("request_type", interfaceType);
 		Log.e("Interface", "小组json:"+jsonObject.toString());
@@ -779,8 +808,8 @@ public class Interface {
 	 * @param context
 	 * @param user this user can be null!(这个对象可以是空的)
 	 */
-	public void requestVerCode(Context context,User user) {//传入为??
-		requestVerCodePost(context,packParams(user, kRequestVerCode));
+	public void requestVerCode(Context context,Phone phone) {//传入为??
+		requestVerCodePost(context,packParams(phone, kRequestVerCode));
 	}
 	//根据手机号或者账户ID查找用户
 	public void findUser(Context context,User user) {
@@ -881,8 +910,13 @@ public class Interface {
 	 * @param context
 	 * @param user this user can be null!(这个对象属性可以是空的)
 	 */
-	public void mateComBook(Context context,User user) {  //........传入？？？
-		mateComBookPost(context,packParams(user, kMateComBook));
+	public void mateComBook(Context context,PhoneArray phonearray) {  //........传入？？？
+		try {
+			mateComBookPost(context,packParamsPhone(phonearray, kMateComBook));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 	//成为好友关系
 	public void becomeFriend(Context context,User_User user_User) {  

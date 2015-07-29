@@ -54,6 +54,7 @@ import com.BJ.photo.PublicWay;
 import com.BJ.photo.Res;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.BJ.utils.Path2Bitmap;
 import com.biju.Interface;
 import com.biju.Interface.uploadingPhotoListenner;
 import com.biju.Interface.readPartyPhotosListenner;
@@ -94,6 +95,7 @@ public class PhotoFragment extends Fragment  {
 //	private boolean isbeginUpload;
 	private Interface instance;
 	private ArrayList<Photo> listphotos=new ArrayList<Photo>();
+	public static ArrayList<Bitmap> bitmaps=new ArrayList<Bitmap>();
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL;
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
@@ -146,6 +148,24 @@ public class PhotoFragment extends Fragment  {
 				listphotos = photosback.getReturnData();
 				//刷新
 				adapter.notifyDataSetChanged();
+				
+				//获取浏览图片bitmap容器
+				bitmaps.clear();
+				//回收内存
+				for (int i = 0; i < bitmaps.size(); i++) {
+					bitmaps.get(i).recycle();
+				}
+				for (int i = 0; i < listphotos.size(); i++) {
+					String path = listphotos.get(i).getPath();
+					if(!"".equals(path)){
+						Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(path, 1, 1);
+//						if(!convertToBitmap.isRecycled() ){ 
+//							convertToBitmap.recycle();   //回收图片所占的内存 
+//						} 
+						bitmaps.add(convertToBitmap);
+					}
+					
+				}
 			}
 			
 			@Override
@@ -200,6 +220,8 @@ public class PhotoFragment extends Fragment  {
 		group.setPk_group(GroupActivity.getPk_group());
 		group.setStatus(1);
 		instance.readPartyPhotos(getActivity(), group);
+		
+		//获取浏览的容器
 	}
 
 	private void initBeginUplistener() {
@@ -387,7 +409,7 @@ public class PhotoFragment extends Fragment  {
 
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				if (arg2 == listphotos.size()) {
+				if (arg2 == bitmaps.size()) {
 					Log.i("ddddddd", "----------");
 					ll_popup.startAnimation(AnimationUtils.loadAnimation(
 							getActivity(), R.anim.activity_translate_in));
@@ -631,6 +653,17 @@ public class PhotoFragment extends Fragment  {
 	@Override
 	public void onStop() {
 		super.onStop();
+	}
+	
+	@Override
+	public void onDestroy() {
+		for (int i = 0; i < PublicWay.activityList.size(); i++) {
+			if (null != PublicWay.activityList.get(i)) {
+				PublicWay.activityList.get(i).finish();
+			}
+		}
+//		System.exit(0);
+		super.onDestroy();
 	}
 	
 

@@ -35,7 +35,6 @@ import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.Utils;
-import com.biju.BindingPhoneActivity;
 import com.biju.Interface;
 import com.biju.Interface.updateUserListenner;
 import com.biju.Interface.readUserListenner;
