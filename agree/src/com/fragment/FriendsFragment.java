@@ -1,10 +1,6 @@
 package com.fragment;
 
-import com.biju.R;
-import com.biju.function.AddFriendsActivity;
-
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
@@ -12,11 +8,14 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 
+import com.biju.R;
+import com.biju.function.AddFriendsActivity;
+
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class FriendsFragment extends Fragment implements OnClickListener{
+public class FriendsFragment extends Fragment implements OnClickListener {
 
 	private View mLayout;
 
@@ -33,8 +32,10 @@ public class FriendsFragment extends Fragment implements OnClickListener{
 	}
 
 	private void initUI() {
-		mLayout.findViewById(R.id.tab_friends_addbuddy_layout).setOnClickListener(this);
-		mLayout.findViewById(R.id.tab_friends_addbuddy).setOnClickListener(this);//添加好友
+		mLayout.findViewById(R.id.tab_friends_addbuddy_layout)
+				.setOnClickListener(this);
+		mLayout.findViewById(R.id.tab_friends_addbuddy)
+				.setOnClickListener(this);// 添加好友
 	}
 
 	@Override
@@ -51,7 +52,7 @@ public class FriendsFragment extends Fragment implements OnClickListener{
 	}
 
 	private void tab_friends_addbuddy() {
-		Intent intent=new Intent(getActivity(), AddFriendsActivity.class);
+		Intent intent = new Intent(getActivity(), AddFriendsActivity.class);
 		startActivity(intent);
 	}
 
