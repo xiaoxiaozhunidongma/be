@@ -150,15 +150,19 @@ public class PhotoFragment extends Fragment  {
 				adapter.notifyDataSetChanged();
 				
 				//获取浏览图片bitmap容器
-				bitmaps.clear();
 				//回收内存
 				for (int i = 0; i < bitmaps.size(); i++) {
-					bitmaps.get(i).recycle();
+					Bitmap bitmap = bitmaps.get(i);
+					if(!bitmap.isRecycled()){
+						bitmap.recycle();
+					}
 				}
+				//先清空
+				bitmaps.clear();
 				for (int i = 0; i < listphotos.size(); i++) {
 					String path = listphotos.get(i).getPath();
 					if(!"".equals(path)){
-						Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(path, 1, 1);
+						Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(path, 400, 400);
 //						if(!convertToBitmap.isRecycled() ){ 
 //							convertToBitmap.recycle();   //回收图片所占的内存 
 //						} 
@@ -166,6 +170,7 @@ public class PhotoFragment extends Fragment  {
 					}
 					
 				}
+				
 			}
 			
 			@Override
@@ -410,7 +415,7 @@ public class PhotoFragment extends Fragment  {
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				if (arg2 == bitmaps.size()) {
-					Log.i("ddddddd", "----------");
+					Log.e("ddddddd", "----------");
 					ll_popup.startAnimation(AnimationUtils.loadAnimation(
 							getActivity(), R.anim.activity_translate_in));
 					pop.showAtLocation(mLayout, Gravity.BOTTOM, 0, 0);
@@ -652,19 +657,21 @@ public class PhotoFragment extends Fragment  {
 
 	@Override
 	public void onStop() {
+		//清理缓存
+		ImageLoaderUtils4Photos.clearCache();
 		super.onStop();
 	}
 	
-	@Override
-	public void onDestroy() {
-		for (int i = 0; i < PublicWay.activityList.size(); i++) {
-			if (null != PublicWay.activityList.get(i)) {
-				PublicWay.activityList.get(i).finish();
-			}
-		}
-//		System.exit(0);
-		super.onDestroy();
-	}
+//	@Override
+//	public void onDestroy() {
+//		for (int i = 0; i < PublicWay.activityList.size(); i++) {
+//			if (null != PublicWay.activityList.get(i)) {
+//				PublicWay.activityList.get(i).finish();
+//			}
+//		}
+////		System.exit(0);
+//		super.onDestroy();
+//	}
 	
 
 }

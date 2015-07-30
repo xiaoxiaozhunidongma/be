@@ -62,7 +62,7 @@ public class GalleryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setContentView(Res.getLayoutID("plugin_camera_gallery"));// 切屏到主界面
+		setContentView(R.layout.plugin_camera_gallery);// 切屏到主界面
 		PublicWay.activityList.add(this);
 		mContext = this;
 		// back_bt = (Button) findViewById(Res.getWidgetID("gallery_back"));
@@ -78,6 +78,7 @@ public class GalleryActivity extends Activity {
 		// 为发送按钮设置文字
 		pager = (ViewPagerFixed) findViewById(Res.getWidgetID("gallery01"));
 		pager.setOnPageChangeListener(pageChangeListener);
+		//PhotoFragment.bitmaps
 		for (int i = 0; i < PhotoFragment.bitmaps.size(); i++) {
 			initListViews(PhotoFragment.bitmaps.get(i));
 		}
@@ -120,22 +121,22 @@ public class GalleryActivity extends Activity {
 	private class DelListener implements OnClickListener {
 
 		public void onClick(View v) {
-			if (listViews.size() == 1) {
-//				PhotoFragment.bitmaps.clear();
-				Bimp.tempSelectBitmap.clear();
-				Bimp.max = 0;
-				Intent intent = new Intent("data.broadcast.action");
-				sendBroadcast(intent);
-				finish();
-			} else {
-//				PhotoFragment.bitmaps.remove(location);
-				Bimp.tempSelectBitmap.remove(location);
-				Bimp.max--;
-				pager.removeAllViews();
-				listViews.remove(location);
-				adapter.setListViews(listViews);
-				adapter.notifyDataSetChanged();
-			}
+//			if (listViews.size() == 1) {
+////				PhotoFragment.bitmaps.clear();
+//				Bimp.tempSelectBitmap.clear();
+//				Bimp.max = 0;
+//				Intent intent = new Intent("data.broadcast.action");
+//				sendBroadcast(intent);
+//				finish();
+//			} else {
+////				PhotoFragment.bitmaps.remove(location);
+//				Bimp.tempSelectBitmap.remove(location);
+//				Bimp.max--;
+//				pager.removeAllViews();
+//				listViews.remove(location);
+//				adapter.setListViews(listViews);
+//				adapter.notifyDataSetChanged();
+//			}
 		}
 	}
 

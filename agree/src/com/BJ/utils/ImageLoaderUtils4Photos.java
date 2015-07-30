@@ -3,6 +3,8 @@ package com.BJ.utils;
 import android.content.Context;
 import android.widget.ImageView;
 
+import com.BJ.photo.AlbumGridViewAdapter;
+import com.BJ.photo.FolderAdapter;
 import com.biju.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
@@ -41,13 +43,25 @@ public class ImageLoaderUtils4Photos {
 				.showImageOnFail(R.drawable.ic_error)
 				.cacheInMemory(false)//是否缓存在内存中
 				.displayer(new RoundedBitmapDisplayer(50))//设置圆角
-				.cacheOnDisk(true)//是否缓存在SD卡中
+				.cacheOnDisk(false)//是否缓存在SD卡中
 				.considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)  //格式
 				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
 				.build();
 		
 				
+	}
+	public void LoadImage(AlbumGridViewAdapter albumGridViewAdapter,
+			String imagePath, ImageView imageView) {
+		// TODO Auto-generated method stub
+		ImageLoader.getInstance().displayImage(imagePath, imageView, options, null);
+		
+	}
+	public void LoadImage(FolderAdapter folderAdapter, String imagePath,
+			ImageView imageView) {
+		// TODO Auto-generated method stub
+		ImageLoader.getInstance().displayImage(imagePath, imageView, options, null);
+		
 	}
 
 }

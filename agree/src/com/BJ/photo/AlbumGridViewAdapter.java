@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import com.BJ.photo.BitmapCache.ImageCallback;
 
+
+import com.BJ.utils.ImageLoaderUtils4Photos;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;

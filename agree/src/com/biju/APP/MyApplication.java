@@ -39,7 +39,7 @@ public class MyApplication extends Application {
 				.threadPoolSize(5)
 				.threadPriority(Thread.MIN_PRIORITY + 3)
 				.denyCacheImageMultipleSizesInMemory()//强制不能存重复的图片
-				.memoryCache(new WeakMemoryCache()) //设置。。。
+//				.memoryCache(new WeakMemoryCache()) //设置。。。
 				.build();
 //		initImageLoader(getApplicationContext());
 		ImageLoader.getInstance().init(config);
