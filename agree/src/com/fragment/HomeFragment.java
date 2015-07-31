@@ -3,6 +3,7 @@ package com.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -11,7 +12,9 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -44,7 +47,7 @@ import com.github.volley_examples.utils.GsonUtils;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class HomeFragment extends Fragment implements OnClickListener {
+public class HomeFragment extends Fragment implements OnClickListener , SwipeRefreshLayout.OnRefreshListener{
 
 	private View mLayout;
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
@@ -68,10 +71,13 @@ public class HomeFragment extends Fragment implements OnClickListener {
 	private MyReceiver receiver;
 	private boolean isParty;
 	private boolean refresh;
+	private SwipeRefreshLayout swipeLayout;
 
 	public HomeFragment() {
 	}
 
+	@SuppressWarnings("deprecation")
+	@SuppressLint("InlinedApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
@@ -96,6 +102,15 @@ public class HomeFragment extends Fragment implements OnClickListener {
 			if (!iscode) {
 				initNewTeam();
 			}
+			
+
+			swipeLayout = (SwipeRefreshLayout) mLayout.findViewById(R.id.swipe_refresh);
+			swipeLayout.setOnRefreshListener(this);
+			
+			// 顶部刷新的样式
+			swipeLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
+
 		}
 		return mLayout;
 	}
@@ -596,6 +611,17 @@ public class HomeFragment extends Fragment implements OnClickListener {
 		super.onDestroyView();
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
+	}
+
+	@Override
+	public void onRefresh() {
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				swipeLayout.setRefreshing(false);
+				adapter.notifyDataSetChanged();
+			}
+		}, 5000);
 	}
 
 	// @Override

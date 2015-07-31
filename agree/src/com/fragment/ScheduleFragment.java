@@ -18,6 +18,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -25,9 +26,13 @@ import android.widget.Toast;
 
 import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party2;
+import com.BJ.javabean.PartyRelationshipback;
+import com.BJ.javabean.Party_User;
 import com.BJ.javabean.Partyback;
 import com.biju.Interface;
+import com.biju.Interface.createPartyRelationListenner;
 import com.biju.Interface.readUserGroupPartyListenner;
+import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.PartyDetailsActivity;
@@ -57,6 +62,7 @@ public class ScheduleFragment extends Fragment {
 	private PullToRefreshListView mPull_refresh_list;
 	private boolean isData;
 	private Integer pk_user_1;
+	private Party2 scheduleparty;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -124,12 +130,21 @@ public class ScheduleFragment extends Fragment {
 				int pos = arg2 - mSchedule_listView.getHeaderViewsCount();
 				if (pos >= 0) {
 					Log.e("ScheduleFragment", "所点击中的行数" + arg2);
-					Party2 party = partylist.get(pos);
-					Intent intent = new Intent(getActivity(),
-							PartyDetailsActivity.class);
-					intent.putExtra("oneParty", party);
-					startActivity(intent);
-					getActivity().finish();
+					scheduleparty = partylist.get(pos);
+					Integer relatonship = scheduleparty.getRelationship();
+					Integer fk_user = scheduleparty.getFk_user();
+					String pk_party = scheduleparty.getPk_party();
+					Integer pk_party_user = scheduleparty.getPk_party_user();
+					if (relatonship == null) {
+						initcreatePartyRelation(fk_user, pk_party,
+								pk_party_user);
+					} else {
+						Intent intent = new Intent(getActivity(),
+								PartyDetailsActivity.class);
+						intent.putExtra("oneParty", scheduleparty);
+						startActivity(intent);
+						getActivity().finish();
+					}
 				}
 			}
 		});
@@ -153,10 +168,21 @@ public class ScheduleFragment extends Fragment {
 
 		@Override
 		protected void onPostExecute(String result) {
+			initreadUserGroupParty();
 			adapter.notifyDataSetChanged();
 			mPull_refresh_list.onRefreshComplete();
 			super.onPostExecute(result);
 		}
+	}
+
+	private void initcreatePartyRelation(Integer fk_user, String pk_party,
+			Integer pk_party_user) {
+		Party_User readuserparty = new Party_User();
+		readuserparty.setPk_party_user(pk_party_user);
+		readuserparty.setFk_party(pk_party);
+		readuserparty.setFk_user(fk_user);
+		readuserparty.setStatus(1);
+		scheduleInterface.createPartyRelation(getActivity(), readuserparty);
 	}
 
 	class ViewHolder {
@@ -164,6 +190,8 @@ public class ScheduleFragment extends Fragment {
 		TextView address;
 		TextView name;
 		TextView times;
+		ImageView party_unread_tag;
+		TextView inNum;
 	}
 
 	class MyAdapter extends BaseAdapter {
@@ -197,6 +225,9 @@ public class ScheduleFragment extends Fragment {
 				holder.name = (TextView) inflater.findViewById(R.id.name);
 				holder.times = (TextView) inflater.findViewById(R.id.times);
 				holder.address = (TextView) inflater.findViewById(R.id.address);
+				holder.party_unread_tag = (ImageView) inflater
+						.findViewById(R.id.party_unread_tag);
+				holder.inNum=(TextView) inflater.findViewById(R.id.inNum);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -216,6 +247,19 @@ public class ScheduleFragment extends Fragment {
 				holder.name.setText(party.getName());
 				holder.times.setText(datetimes);
 				holder.address.setText(party.getLocation());
+				if(party.getInNum()!=null)
+				{
+					holder.inNum.setText(party.getInNum()+"");
+				}else
+				{
+					holder.inNum.setText("0");
+				}
+				Integer ralationship = party.getRelationship();
+				if (ralationship == null) {
+					holder.party_unread_tag.setVisibility(View.VISIBLE);
+				} else {
+					holder.party_unread_tag.setVisibility(View.GONE);
+				}
 			}
 
 			return inflater;
@@ -250,6 +294,28 @@ public class ScheduleFragment extends Fragment {
 					mPull_refresh_list.setVisibility(View.GONE);
 				}
 				adapter.notifyDataSetChanged();
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+
+		scheduleInterface.setPostListener(new createPartyRelationListenner() {
+
+			@Override
+			public void success(String A) {
+				PartyRelationshipback partyRelationshipback = GsonUtils
+						.parseJson(A, PartyRelationshipback.class);
+				Integer statusMsg = partyRelationshipback.getStatusMsg();
+				if (statusMsg == 1) {
+					Intent intent = new Intent(getActivity(),
+							PartyDetailsActivity.class);
+					intent.putExtra("oneParty", scheduleparty);
+					startActivity(intent);
+					getActivity().finish();
+				}
 			}
 
 			@Override
