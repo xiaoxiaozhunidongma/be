@@ -1,20 +1,27 @@
 package com.biju.function;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -24,26 +31,28 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.GroupCodeback;
 import com.BJ.javabean.GroupCodeback2;
 import com.BJ.javabean.Group_Code2;
+import com.BJ.javabean.Group_ReadAllUser;
+import com.BJ.javabean.Group_ReadAllUserback;
 import com.BJ.javabean.Group_User;
-import com.BJ.javabean.Loginback;
 import com.BJ.javabean.Teamupdateback;
-import com.BJ.javabean.User;
-import com.BJ.utils.Ifwifi;
+import com.BJ.utils.GridViewWithHeaderAndFooter;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.biju.Interface;
 import com.biju.Interface.produceRequestCodeListenner;
-import com.biju.Interface.readUserListenner;
+import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.updateGroupSetListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
-public class TeamSettingActivity extends Activity implements OnClickListener {
+@SuppressLint("InlinedApi")
+public class TeamSettingActivity extends Activity implements OnClickListener,
+		SwipeRefreshLayout.OnRefreshListener {
 
-	private ImageView mTeamSetting_head;
-	private TextView mTeamSetting_number;
+	// private ImageView mTeamSetting_head;
+	// private TextView mTeamSetting_number;
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
 	private String endStr = "/original";
 	private String useravatar_path;
@@ -69,6 +78,11 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	private boolean isRegistered_one;
 	private boolean login;
 	private boolean isExit;
+	private ArrayList<Group_ReadAllUser> group_readalluser_list = new ArrayList<Group_ReadAllUser>();
+	private SwipeRefreshLayout mTeamsetting_swipe_refresh;
+	private GridViewWithHeaderAndFooter mTeamsetting_gridview;
+	private MyAdapter adapter;
+	private View mHeadView;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -81,17 +95,13 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		returndata = sp2.getInt("returndata", returndata);
 		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
 		login = sp1.getBoolean("Login", false);
-
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("Group", pk_group);
+
+		ReadUser();
+		returndata();
 		initUI();
-		boolean isWIFI = Ifwifi.getNetworkConnected(TeamSettingActivity.this);
-		if (isWIFI) {
-			returndata();
-		} else {
-			ImageLoaderUtils.getInstance().LoadImage(TeamSettingActivity.this,
-					completeURL, mTeamSetting_head);
-		}
+
 		SharedPreferences sp = getSharedPreferences("Switch", 0);
 		ismessage = sp.getInt("ismessage", 0);
 		Log.e("TeamSettingActivity", "小组的聚会信息的提醒--------" + ismessage);
@@ -135,58 +145,36 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void returndata() {
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		int returndata_1 = sp.getInt("returndata", 0);
-		boolean isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		boolean login = sp1.getBoolean("Login", false);
-		if (isRegistered_one) {
-			mTeamSetting_number.setText("" + returndata_1);
-			ReadUser(returndata_1);
-		} else {
-			if (login) {
-				int returndata_2 = LoginActivity.getPk_user();
-				mTeamSetting_number.setText("" + returndata_2);
-				ReadUser(returndata_2);
-			} else {
-				mTeamSetting_number.setText("" + returndata_1);
-				ReadUser(returndata_1);
-			}
-		}
+		Group readAllPerRelation_group = new Group();
+		readAllPerRelation_group.setPk_group(pk_group);
+		readuserinter.readAllPerRelation(TeamSettingActivity.this,
+				readAllPerRelation_group);
 	}
 
-	private void ReadUser(int returndata) {
+	private void ReadUser() {
 		readuserinter = Interface.getInstance();
-		User readuser = new User();
-		readuser.setPk_user(returndata);
-		readuserinter.readUser(TeamSettingActivity.this, readuser);
 		readuserinter.setPostListener(new updateGroupSetListenner() {
 
 			@Override
 			public void success(String A) {
-				if(isExit)
-				{
-					Exitback exitback=GsonUtils.parseJson(A, Exitback.class);
-					Integer exitstatus=exitback.getStatusMsg();
-					if(exitstatus==1)
-					{
+				if (isExit) {
+					Exitback exitback = GsonUtils.parseJson(A, Exitback.class);
+					Integer exitstatus = exitback.getStatusMsg();
+					if (exitstatus == 1) {
 						Log.e("TeamSettingActivity", "返回是否退出成功的结果-------" + A);
 						// 发广播进行更新gridview
 						Intent intent = new Intent();
 						intent.setAction("isRefresh");
 						intent.putExtra("refresh", true);
 						sendBroadcast(intent);
-//						GroupActivity groupActivity=new GroupActivity();
-//						groupActivity.group_back();
-						
-						Intent intent1=new Intent();
+
+						Intent intent1 = new Intent();
 						intent1.setAction("isFinish");
 						intent1.putExtra("isExitFinish", true);
 						sendBroadcast(intent1);
 						finish();
 					}
-				}else
-				{
+				} else {
 					Teamupdateback teamupdateback = GsonUtils.parseJson(A,
 							Teamupdateback.class);
 					int statusmsg = teamupdateback.getStatusMsg();
@@ -203,49 +191,16 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 								"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
 					}
 				}
-					
+
 			}
 
 			@Override
 			public void defail(Object B) {
 
-			}
-		});
-		
-		readuserinter.setPostListener(new readUserListenner() {
-			
-			@Override
-			public void success(String A) {
-
-				// 读取用户资料成功
-				Loginback usersettingback = GsonUtils.parseJson(A,
-						Loginback.class);
-				int userStatusmsg = usersettingback.getStatusMsg();
-				if (userStatusmsg == 1) {
-					List<User> Users = usersettingback.getReturnData();
-					if (Users.size() >= 1) {
-						User readuser = Users.get(0);
-						useravatar_path = readuser.getAvatar_path();
-					}
-					completeURL = beginStr + useravatar_path + endStr;
-					PreferenceUtils.saveImageCache(
-							TeamSettingActivity.this, completeURL);// 存SP
-					ImageLoaderUtils.getInstance().LoadImage(
-							TeamSettingActivity.this, completeURL,
-							mTeamSetting_head);
-				}
-			
-				
-			}
-			
-			@Override
-			public void defail(Object B) {
-				// TODO Auto-generated method stub
-				
 			}
 		});
 		readuserinter.setPostListener(new produceRequestCodeListenner() {
-			
+
 			@Override
 			public void success(String A) {
 
@@ -253,54 +208,68 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 				try {
 					JSONObject jsonObject = new JSONObject(A);
 					Object object = jsonObject.get("returnData");
-					Log.e("TeamSettingActivity", "object====" + object);
-					Log.e("TeamSettingActivity",
-							"object.toString()====" + object.toString());
-					Log.e("TeamSettingActivity",
-							"object.toString().length()===="
-									+ object.toString().length());
 					if (object.toString().length() > 4) {
-						Log.e("TeamSettingActivity", "进入第二次====");
 						java.lang.reflect.Type type = new TypeToken<GroupCodeback2>() {
 						}.getType();
 						GroupCodeback2 groupcodeback2 = GsonUtils
 								.parseJsonArray(A, type);
-						int Group_statusmsg2 = groupcodeback2
-								.getStatusMsg();
+						int Group_statusmsg2 = groupcodeback2.getStatusMsg();
 						List<Group_Code2> grouplsit = (List<Group_Code2>) groupcodeback2
 								.getReturnData();
 						if (Group_statusmsg2 == 1) {
 							Group_Code2 groupcode = grouplsit.get(0);
-							String requestcode = groupcode
-									.getPk_group_code();
-							mTeamSetting_requestcode
-									.setText(requestcode);
+							String requestcode = groupcode.getPk_group_code();
+							mTeamSetting_requestcode.setText(requestcode);
 						}
 					} else {
-						Log.e("TeamSettingActivity", "进入第一次====");
-						GroupCodeback groupcodeback = GsonUtils
-								.parseJson(A, GroupCodeback.class);
-						int Group_statusmsg = groupcodeback
-								.getStatusMsg();
+						GroupCodeback groupcodeback = GsonUtils.parseJson(A,
+								GroupCodeback.class);
+						int Group_statusmsg = groupcodeback.getStatusMsg();
 						if (Group_statusmsg == 1) {
-							String requestcode = groupcodeback
-									.getReturnData();
-							mTeamSetting_requestcode
-									.setText(requestcode);
+							String requestcode = groupcodeback.getReturnData();
+							mTeamSetting_requestcode.setText(requestcode);
 						}
 					}
 				} catch (JSONException e) {
 					e.printStackTrace();
 				}
 
-			
-				
 			}
-			
+
 			@Override
 			public void defail(Object B) {
-				// TODO Auto-generated method stub
-				
+
+			}
+		});
+
+		readuserinter.setPostListener(new readAllPerRelationListenner() {
+
+			@Override
+			public void success(String A) {
+				Group_ReadAllUserback group_ReadAllUserback = GsonUtils
+						.parseJson(A, Group_ReadAllUserback.class);
+				int status = group_ReadAllUserback.getStatusMsg();
+				if (status == 1) {
+					Log.e("TeamSettingActivity", "读取出小组中的所有用户========" + A);
+					List<Group_ReadAllUser> allUsers = group_ReadAllUserback
+							.getReturnData();
+					if (allUsers.size() > 0) {
+						for (int i = 0; i < allUsers.size(); i++) {
+							Group_ReadAllUser readAllUser = allUsers.get(i);
+							group_readalluser_list.add(readAllUser);
+						}
+						Log.e("TeamSettingActivity", "加入到list中的东西====="+group_readalluser_list.toString());
+					}
+					if(group_readalluser_list.size()>0)
+					{
+						mTeamsetting_gridview.setAdapter(adapter);
+					}
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
 			}
 		});
 	}
@@ -310,17 +279,97 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 		findViewById(R.id.TeamSetting_back).setOnClickListener(this);
 		findViewById(R.id.TeamSetting_save_layout).setOnClickListener(this);// 保存
 		findViewById(R.id.TeamSetting_save).setOnClickListener(this);
-		mTeamSetting_head = (ImageView) findViewById(R.id.TeamSetting_head);// 头像
-		mTeamSetting_number = (TextView) findViewById(R.id.TeamSetting_number);// 必聚号
-		mTeamSetting_requestcode = (TextView) findViewById(R.id.TeamSetting_requestcode);// 生成邀请码
+
+		mTeamsetting_swipe_refresh = (SwipeRefreshLayout) findViewById(R.id.teamsetting_swipe_refresh);
+		mTeamsetting_swipe_refresh.setOnRefreshListener(this);
+		// 顶部刷新的样式
+		mTeamsetting_swipe_refresh.setColorSchemeResources(
+				android.R.color.holo_red_light,
+				android.R.color.holo_green_light,
+				android.R.color.holo_blue_bright,
+				android.R.color.holo_orange_light);
+
+		mTeamsetting_gridview = (GridViewWithHeaderAndFooter) findViewById(R.id.teamsetting_gridview);
+		mHeadView = View.inflate(TeamSettingActivity.this,
+				R.layout.teamsetting_foot_item, null);
+		mTeamsetting_gridview.addFooterView(mHeadView);
+		mTeamSetting_requestcode = (TextView) mHeadView
+				.findViewById(R.id.TeamSetting_requestcode);// 生成邀请码
 		mTeamSetting_requestcode.setOnClickListener(this);
-		mTeamSetting_message = (TextView) findViewById(R.id.TeamSetting_message);// 聚会信息提醒开关
+		mTeamSetting_message = (TextView) mHeadView
+				.findViewById(R.id.TeamSetting_message);// 聚会信息提醒开关
 		mTeamSetting_message.setOnClickListener(this);
-		mTeamSetting_chat = (TextView) findViewById(R.id.TeamSetting_chat);// 聊天信息开关
+		mTeamSetting_chat = (TextView) mHeadView
+				.findViewById(R.id.TeamSetting_chat);// 聊天信息开关
 		mTeamSetting_chat.setOnClickListener(this);
-		mTeamSetting_phone = (TextView) findViewById(R.id.TeamSetting_phone);// 公开手机号码开关
+		mTeamSetting_phone = (TextView) mHeadView
+				.findViewById(R.id.TeamSetting_phone);// 公开手机号码开关
 		mTeamSetting_phone.setOnClickListener(this);
-		findViewById(R.id.TeamSetting_exit).setOnClickListener(this);//退出小组
+		mHeadView.findViewById(R.id.TeamSetting_exit).setOnClickListener(this);// 退出小组
+
+		adapter = new MyAdapter();
+//		mTeamsetting_gridview.setAdapter(adapter);
+
+	}
+
+	class ViewHolder {
+		ImageView TeamSetting_head;
+		TextView TeamSetting_number;
+	}
+
+	class MyAdapter extends BaseAdapter {
+
+		@Override
+		public int getCount() {
+			return group_readalluser_list.size();
+		}
+
+		@Override
+		public Object getItem(int position) {
+			return null;
+		}
+
+		@Override
+		public long getItemId(int position) {
+			return 0;
+		}
+
+		@Override
+		public View getView(int position, View convertView, ViewGroup parent) {
+			View inflater = null;
+			ViewHolder holder = null;
+			if (convertView == null) {
+				holder = new ViewHolder();
+				LayoutInflater layoutInflater = getLayoutInflater();
+				inflater = layoutInflater.inflate(
+						R.layout.teamsetting_gridview_item, null);
+				holder.TeamSetting_head = (ImageView) inflater
+						.findViewById(R.id.TeamSetting_head);
+				holder.TeamSetting_number = (TextView) inflater
+						.findViewById(R.id.TeamSetting_number);
+				inflater.setTag(holder);
+			} else {
+				inflater = convertView;
+				holder = (ViewHolder) inflater.getTag();
+			}
+
+			Log.e("TeamSettingActivity", "容器的长度========"+group_readalluser_list.size());
+			if(group_readalluser_list.size()>0)
+			{
+				Group_ReadAllUser group_ReadAllUser = group_readalluser_list
+						.get(position);
+				Integer pk_user = group_ReadAllUser.getPk_user();
+				holder.TeamSetting_number.setText(pk_user + "");
+				useravatar_path = group_ReadAllUser.getAvatar_path();
+				completeURL = beginStr + useravatar_path + endStr;
+				PreferenceUtils.saveImageCache(TeamSettingActivity.this,
+						completeURL);// 存SP
+				ImageLoaderUtils.getInstance().LoadImage(TeamSettingActivity.this,
+						completeURL, holder.TeamSetting_head);
+			}
+			return inflater;
+		}
+
 	}
 
 	@Override
@@ -362,7 +411,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void TeamSetting_exit() {
-		isExit=true;
+		isExit = true;
 		Group_User group_user = new Group_User();
 		group_user.setPk_group_user(GroupActivity.pk_group_user);
 		if (isRegistered_one) {
@@ -453,6 +502,17 @@ public class TeamSettingActivity extends Activity implements OnClickListener {
 
 	private void TeamSetting_back() {
 		finish();
+	}
+
+	@Override
+	public void onRefresh() {
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				adapter.notifyDataSetChanged();
+				mTeamsetting_swipe_refresh.setRefreshing(false);
+			}
+		}, 3000);
 	}
 
 }
