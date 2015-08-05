@@ -3,10 +3,12 @@ package com.biju.APP;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
+import cn.jpush.android.api.CustomPushNotificationBuilder;
 import cn.jpush.android.api.JPushInterface;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.biju.MainActivity;
+import com.biju.R;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
@@ -39,6 +41,7 @@ public class MyApplication extends Application {
 		
 		regId = JPushInterface.getRegistrationID(MyApplication.this);
 		Log.e("MyApplication", "µÃµ½µÄID===================" + regId);
+		
 	}
 
 

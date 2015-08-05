@@ -40,5 +40,6 @@
     <string name="camera_cancel">取消</string>
     <string name="no_photo">相册没有图片</string>
     <string name="title_activity_comments_list">CommentsListActivity</string>
+    <string name="title_activity_friends_data">FriendsDataActivity</string>
 
 </resources>

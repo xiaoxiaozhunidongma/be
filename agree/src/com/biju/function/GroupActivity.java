@@ -25,7 +25,6 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
@@ -102,9 +101,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 		partyDetails = PartyDetails_sp.getBoolean("PartyDetails", false);
 		if (partyDetails) {
 			mTabhost.setCurrentTab(1);
-			i=1;
+			i = 1;
 		}
-		
+
 		initInterface();
 		if (!finish_1) {
 			initreadUserGroupRelation();
@@ -118,21 +117,20 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 		mGestureDetector = new GestureDetector((OnGestureListener) this);
 	}
 
-	private int i=0;
+	private int i = 0;
+
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
 		if (e1.getX() - e2.getX() > verticalMinDistance
 				&& Math.abs(velocityX) > minVelocity) {
 			// «–ªªActivity
-			if(i<3)
-			{
+			if (i < 3) {
 				i++;
 				mTabhost.setCurrentTab(i);
 			}
 		} else if (e2.getX() - e1.getX() > verticalMinDistance
 				&& Math.abs(velocityX) > minVelocity) {
-			if(i>=0)
-			{
+			if (i >= 0) {
 				i--;
 				mTabhost.setCurrentTab(i);
 			}
@@ -182,7 +180,10 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 		Log.e("GroupActivity", "Ω¯»Î¡À=========+onStart");
 		SharedPreferences sp = getSharedPreferences("isPhoto", 0);
 		photo = sp.getBoolean("Photo", false);
-
+		if (photo) {
+			mTabhost.setCurrentTab(2);
+			i = 2;
+		}
 		super.onStart();
 	}
 
@@ -205,7 +206,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			finish_1 = intent.getBooleanExtra("finish", false);
-			boolean isExitFinish=intent.getBooleanExtra("isExitFinish", false);
+			boolean isExitFinish = intent
+					.getBooleanExtra("isExitFinish", false);
 			if (finish_1) {
 				group_back();
 				Intent intent1 = new Intent(GroupActivity.this,
@@ -214,8 +216,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 				overridePendingTransition(0, 0);
 				initreadUserGroupRelation1();
 			}
-			if(isExitFinish)
-			{
+			if (isExitFinish) {
 				group_back();
 			}
 		}
@@ -264,17 +265,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 						isChat = ischat;
 						isMessage = ismessage;
 						isPhone = isphone;
-						if (photo) {
-							mTabhost.setCurrentTab(2);
-							i=2;
-						}
+
 					}
-					SharedPreferences sp = getSharedPreferences("Switch", 0);
-					Editor editor = sp.edit();
-					editor.putInt("ismessage", isMessage);
-					editor.putInt("ischat", isChat);
-					editor.putInt("isphone", isPhone);
-					editor.commit();
 				}
 			}
 

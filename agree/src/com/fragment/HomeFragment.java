@@ -58,7 +58,6 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	private List<Group> users;
 	private ArrayList<Group> list = new ArrayList<Group>();
 	private ArrayList<Group> Codelist = new ArrayList<Group>();
-	private ArrayList<String> pk_group_list=new ArrayList<String>();
 	private MyGridviewAdapter adapter;
 	private boolean isRegistered_one;
 	private int returndata;
@@ -69,7 +68,6 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	private Group readhomeuser;
 
 	private MyReceiver receiver;
-	private boolean isParty;
 	private boolean refresh;
 	private SwipeRefreshLayout swipeLayout;
 
@@ -115,36 +113,9 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 		return mLayout;
 	}
 
-	// @Override
-	// public void onStart() {
-	// if (!isParty) {
-	// Log.e("HomeFragment", "有进入onStart=======");
-	// SharedPreferences sp = getActivity().getSharedPreferences(
-	// "Registered", 0);
-	// isRegistered_one = sp.getBoolean("isRegistered_one", false);
-	// Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
-	// returndata = sp.getInt("returndata", returndata);
-	// SharedPreferences sp1 = getActivity().getSharedPreferences(
-	// "isLogin", 0);
-	// login = sp1.getBoolean("Login", false);
-	//
-	// IntentFilter filter = new IntentFilter();
-	// filter.addAction("isRefresh");
-	// receiver = new MyReceiver();
-	// getActivity().registerReceiver(receiver, filter);
-	// if (!iscode) {
-	// initNewTeam();
-	// }
-	// }
-	// super.onStart();
-	// }
 
 	public void prepareData(Integer pk_user) {
 		ReadTeam(pk_user);
-	}
-
-	public void prepareParty(Boolean isparty) {
-		isParty = isparty;
 	}
 
 	class MyReceiver extends BroadcastReceiver {
@@ -623,17 +594,4 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 			}
 		}, 5000);
 	}
-
-	// @Override
-	// public void onStop() {
-	// if (iscode) {
-	// getActivity().unregisterReceiver(receiver);
-	// Log.e("HomeFragment", "有进入到onStop==========");
-	// }
-	// if(refresh)
-	// {
-	// getActivity().unregisterReceiver(receiver);
-	// }
-	// super.onStop();
-	// }
 }

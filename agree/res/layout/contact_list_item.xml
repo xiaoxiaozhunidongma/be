@@ -46,6 +46,10 @@
             android:layout_marginRight="20dp"
             android:gravity="center"
             android:text="邀请加入"
+            android:padding="5.0dp"
+            android:layout_marginTop="5.0dp"
+            android:layout_marginBottom="5.0dp"
+            android:background="@drawable/ok_click_selector"
             android:textColor="#00e3e3"
             android:textSize="17.0sp" />
 

@@ -1,5 +1,6 @@
 package com.biju.function;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -16,15 +17,20 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.javabean.AddFriendsback;
+import com.BJ.javabean.CheckFriends;
+import com.BJ.javabean.CheckFriendsback;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.javabean.User_User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.biju.Interface;
+import com.biju.Interface.addFriendListenner;
+import com.biju.Interface.checkFriendListenner;
+import com.biju.Interface.findUserListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
-import com.biju.Interface.findUserListenner;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class FindFriendsActivity extends Activity implements OnClickListener {
@@ -38,6 +44,12 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 	private int i = 1;
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
 	private String endStr = "/original";
+	private boolean isRegistered_one;
+	private int returndata;
+	private boolean login;
+	private String pk_user;
+	private ArrayList<CheckFriends> checkfriendslist = new ArrayList<CheckFriends>();
+	private TextView mFindfriends_sendrequest;
 
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 
@@ -46,8 +58,14 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_find_friends);
-		initUI();
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		isRegistered_one = sp.getBoolean("isRegistered_one", false);
+		returndata = sp.getInt("returndata", 0);
+		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
+		login = sp1.getBoolean("Login", false);
+
 		initInterface();
+		initUI();
 	}
 
 	private void initInterface() {
@@ -80,7 +98,6 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 					ImageLoaderUtils.getInstance().LoadImage(
 							FindFriendsActivity.this, completeURL,
 							mFindfriends_head);
-
 				} else {
 					Toast.makeText(FindFriendsActivity.this, "查找好友失败，请重新查找!",
 							Toast.LENGTH_SHORT).show();
@@ -93,6 +110,65 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 
 			}
 		});
+
+		findfriends_inter_before.setPostListener(new addFriendListenner() {
+
+			@Override
+			public void success(String A) {
+				AddFriendsback addFriendsback=GsonUtils.parseJson(A, AddFriendsback.class);
+				int status=addFriendsback.getStatusMsg();
+				if(status==1)
+				{
+					Log.e("FindFriendsActivity", "返回是否添加成功=======" + A);
+					finish();
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+			}
+		});
+
+		findfriends_inter_before.setPostListener(new checkFriendListenner() {
+
+			@Override
+			public void success(String A) {
+				CheckFriendsback checkFriendsback = GsonUtils.parseJson(A,
+						CheckFriendsback.class);
+				Integer status = checkFriendsback.getStatusMsg();
+				if (status == 1) {
+					Log.e("FindFriendsActivity", "返回检查好友的结果=======" + A);
+					List<CheckFriends> friendsbacks = checkFriendsback
+							.getReturnData();
+					if (friendsbacks.size() > 0) {
+						for (int i = 0; i < friendsbacks.size(); i++) {
+							CheckFriends checkFriends = friendsbacks.get(i);
+							Log.e("FindFriendsActivity", "pk_user======="
+									+ pk_user);
+							if (Integer.valueOf(pk_user) == checkFriends
+									.getPk_user()) {
+								Toast.makeText(FindFriendsActivity.this,
+										"您已添加过该好友！", Toast.LENGTH_SHORT).show();
+								mFindfriends_before.setVisibility(View.VISIBLE);
+								mFindfriends_after.setVisibility(View.GONE);
+							}
+
+						}
+					}
+				} else {
+					Log.e("FindFriendsActivity", "进入了返回结果不为1的=======");
+					// 查找好友信息
+					User user = new User();
+					user.setPhone(pk_user);
+					findfriends_inter_before.findUser(FindFriendsActivity.this,
+							user);
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+			}
+		});
 	}
 
 	private void initUI() {
@@ -102,7 +178,8 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 		mFindfriends_number = (EditText) findViewById(R.id.findfriends_number);// 输入必聚号或者手机号
 		mFindfriends_before = (RelativeLayout) findViewById(R.id.findfriends_before);// 查找之前
 		mFindfriends_after = (RelativeLayout) findViewById(R.id.findfriends_after);// 查找之后
-		findViewById(R.id.findfriends_sendrequest).setOnClickListener(this);// 发送好友请求
+		mFindfriends_sendrequest = (TextView) findViewById(R.id.findfriends_sendrequest);
+		mFindfriends_sendrequest.setOnClickListener(this);// 发送好友请求
 		findViewById(R.id.findfriends_againfind).setOnClickListener(this);// 重新查找
 		mFindfriends_head = (ImageView) findViewById(R.id.findfriends_head);// 好友头像
 		mFindfriends_nickname = (TextView) findViewById(R.id.findfriends_nickname);// 好友必聚号或者手机号
@@ -137,13 +214,6 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 	}
 
 	private void findfriends_sendrequest() {
-		String pk_user = mFindfriends_number.getText().toString().trim();
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		boolean isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		int returndata = sp.getInt("returndata", 0);
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		boolean login = sp1.getBoolean("Login", false);
-		// Log.e("FindFriendsActivity", "returndata"+returndata);
 		User_User user_User = new User_User();
 		if (isRegistered_one) {
 			user_User.setFk_user_from(returndata);
@@ -156,7 +226,12 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 			}
 		}
 		user_User.setFk_user_to(Integer.valueOf(pk_user));
-//		findfriends_inter_before.addFriend(FindFriendsActivity.this, user_User);
+		user_User.setRelationship(1);
+		user_User.setStatus(1);
+		findfriends_inter_before.addFriend(FindFriendsActivity.this, user_User);
+		mFindfriends_sendrequest.setText("已发送好友请求");
+		mFindfriends_sendrequest.setEnabled(false);
+		mFindfriends_sendrequest.setTextColor(R.color.lightslategray);
 	}
 
 	private void findfriends_againfind() {
@@ -167,10 +242,23 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 	private void findfriends_find() {
 		boolean isWIFI = Ifwifi.getNetworkConnected(FindFriendsActivity.this);
 		if (isWIFI) {
-			String pk_user = mFindfriends_number.getText().toString().trim();
-			User user = new User();
-			user.setPhone(pk_user);
-			findfriends_inter_before.findUser(FindFriendsActivity.this, user);
+			pk_user = mFindfriends_number.getText().toString().trim();
+			// 检查好友关系
+			User_User user_User = new User_User();
+			if (isRegistered_one) {
+				user_User.setFk_user_from(returndata);
+			} else {
+				if (login) {
+					int user = LoginActivity.getPk_user();
+					user_User.setFk_user_from(user);
+				} else {
+					user_User.setFk_user_from(returndata);
+				}
+			}
+			user_User.setFk_user_to(Integer.valueOf(pk_user));
+			findfriends_inter_before.checkFriend(FindFriendsActivity.this,
+					user_User);
+
 		} else {
 			Toast.makeText(FindFriendsActivity.this, "网络异常，请检查网络!",
 					Toast.LENGTH_SHORT).show();

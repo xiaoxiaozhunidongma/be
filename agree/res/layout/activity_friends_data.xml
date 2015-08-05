@@ -1,0 +1,146 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".FriendsDataActivity" >
+
+    <RelativeLayout
+        android:id="@+id/FriendsData_top_layout"
+        android:layout_width="match_parent"
+        android:layout_height="250.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#000000"
+         >
+
+        <ImageView
+            android:id="@+id/FriendsData_head"
+            android:layout_width="80.0dp"
+            android:layout_height="80.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="64dp"
+            android:src="@drawable/login_1" />
+
+        <TextView
+            android:id="@+id/FriendsData_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/FriendsData_head"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="25dp"
+            android:textColor="#ffffff"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/FriendsData_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignRight="@+id/FriendsData_nickname"
+            android:layout_below="@+id/FriendsData_nickname"
+            android:layout_marginTop="25dp"
+            android:textColor="#ffffff"
+            android:text="TextView" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/FriendsData_top_layout"
+        android:layout_centerHorizontal="true"
+        android:background="#000000" >
+
+        <LinearLayout
+            android:id="@+id/FriendsData_buttom_1"
+            android:layout_width="match_parent"
+            android:layout_height="130.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="80.0dp"
+                    android:layout_height="80.0dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/kongxin_white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <ImageView
+                    android:id="@+id/imageView2"
+                    android:layout_width="80.0dp"
+                    android:layout_height="80.0dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/kongxin_white" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <ImageView
+                    android:id="@+id/imageView3"
+                    android:layout_width="80.0dp"
+                    android:layout_height="80.0dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/kongxin_white" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/FriendsData_buttom_1"
+            android:layout_centerHorizontal="true"
+            
+             >
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"  >
+
+                <ImageView
+                    android:id="@+id/imageView4"
+                    android:layout_width="80.0dp"
+                    android:layout_height="80.0dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/kongxin_white" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1"  >
+
+                <ImageView
+                    android:id="@+id/imageView5"
+                    android:layout_width="80.0dp"
+                    android:layout_height="80.0dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/kongxin_white" />
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>
