@@ -34,7 +34,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:gravity="center"
-            android:text="邀请加入"
+            android:text="成为好友"
             android:padding="5.0dp"
             android:background="@drawable/ok_click_selector"
             android:layout_marginTop="5.0dp"

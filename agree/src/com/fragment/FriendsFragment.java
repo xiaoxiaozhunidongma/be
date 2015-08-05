@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.javabean.ReadUserAllFriendsback;
@@ -30,6 +31,7 @@ import com.biju.Interface;
 import com.biju.Interface.readFriendListenner;
 import com.biju.R;
 import com.biju.function.AddFriendsActivity;
+import com.biju.function.FriendsDataActivity;
 import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -188,7 +190,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			View inflater=null;
 			ViewHolder holder=null;
 			if(convertView==null)
@@ -204,13 +206,24 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 				inflater=convertView;
 				holder=(ViewHolder) inflater.getTag();
 			}
-			ReadUserAllFriends allFriends=AllFriends_List.get(position);
+			final ReadUserAllFriends allFriends=AllFriends_List.get(position);
 			holder.ReadUserAllFriends_name.setText(allFriends.getNickname());
 			String avatar_path = allFriends.getAvatar_path();
 			String completeURL = beginStr + avatar_path + endStr;
 			ImageLoaderUtils.getInstance().LoadImage(
 					getActivity(), completeURL,
 					holder.ReadUserAllFriends_head);
+			
+			holder.ReadUserAllFriends_head.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Toast.makeText(getActivity(), "当前的位置"+position, Toast.LENGTH_SHORT).show();
+					Intent intent=new Intent(getActivity(), FriendsDataActivity.class);
+					intent.putExtra("ReadUserAllFriends", allFriends);
+					startActivity(intent);
+				}
+			});
 			
 			return inflater;
 		}

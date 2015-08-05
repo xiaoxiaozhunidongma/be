@@ -75,12 +75,9 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 	private String endStr = "/original";
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
-	private String nickname;
-	private String avatar_path;
 	private View mContact_head;
 	private ListView mContact_head_listview;
 	private MyContactAdapter contactAdapter;
-	private String name;
 	private boolean isHeadview;
 	private SwipeRefreshLayout mContact_swipe_refresh;
 	private boolean isAddThe;
@@ -124,6 +121,12 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 		add_Interface.setPostListener(new mateComBookListenner() {
 			@Override
 			public void success(String A) {
+				contact_list.clear();
+				Namelist.clear();
+				NickNamelist.clear();
+				Avatar_pathlist.clear();
+				AddThe_list.clear();
+				ByAdd_list.clear();
 				CheckFriendsback contactback = GsonUtils.parseJson(A,
 						CheckFriendsback.class);
 				Integer status = contactback.getStatusMsg();
@@ -147,13 +150,15 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 							isADD = true;
 							Log.e("AddFriendsActivity", "得到的发出邀请的用户==="
 									+ AddThe_list.size());
-						} else if ("2".equals(String.valueOf(checkFriends
-								.getRelationship()))) {
+						} else if ("2".equals(String.valueOf(checkFriends.getRelationship()))) {
 							ByAdd_list.add(checkFriends);
 							isADD = true;
 							Log.e("AddFriendsActivity", "得到的被邀请的用户==="
 									+ ByAdd_list.size());
-						} else {
+						} else if("3".equals(String.valueOf(checkFriends.getRelationship())))
+						{
+							
+						}else{
 							String contact_list_phone = checkFriends.getPhone();
 
 							for (int j = 0; j < phonelist2.size(); j++) {
@@ -164,12 +169,12 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 													+ contact_list_phone);
 									Log.e("AddFriendsActivity",
 											"得到的相同号码2222===" + contactphone);
-									name = namelist.get(j);
+									String name = namelist.get(j);
 									Namelist.add(name);
-									nickname = contact_list.get(i)
+									String nickname = contact_list.get(i)
 											.getNickname();
 									NickNamelist.add(nickname);
-									avatar_path = contact_list.get(i)
+									String avatar_path = contact_list.get(i)
 											.getAvatar_path();
 									Avatar_pathlist.add(avatar_path);
 									isHeadview = true;
@@ -539,7 +544,7 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 
 							@Override
 							public void onClick(View v) {
-								Toast.makeText(AddFriendsActivity.this, "同意",
+								Toast.makeText(AddFriendsActivity.this, "添加成功",
 										Toast.LENGTH_SHORT).show();
 								User_User user_User = new User_User();
 								user_User.setFk_user_to(byaddcontact_user
@@ -560,7 +565,8 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 
 		@Override
 		public int getCount() {
-			return contact_list.size();
+			Log.e("AddFriendsActivity", "所得到的通讯录匹配的有绑定的电话号码的长度"+Namelist.size());
+			return Namelist.size();
 		}
 
 		@Override

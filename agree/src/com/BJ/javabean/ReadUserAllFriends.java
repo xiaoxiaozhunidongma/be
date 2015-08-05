@@ -1,10 +1,12 @@
 package com.BJ.javabean;
 
+import java.io.Serializable;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table(name = "t_checkfriends")
-public class ReadUserAllFriends {
+public class ReadUserAllFriends implements Serializable{
 
 	@Column
 	private Integer fk_user_to;
