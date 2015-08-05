@@ -20,21 +20,16 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.BJ.javabean.Party;
-import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.ReadPartyback;
 import com.BJ.javabean.Relation;
 import com.BJ.javabean.ReturnData;
-import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.biju.Interface;
-import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readPartyJoinMsgListenner;
-import com.biju.login.RegisteredActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
-import com.tencent.upload.UploadManager;
 
 public class CommentsListActivity extends Activity implements OnClickListener {
 
@@ -47,10 +42,10 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private ListView mComments_list_listview;
 	private String pk_party;
 	private Interface mCommentInterface;
-	private ArrayList<Relation> partackList=new ArrayList<Relation>();
-	private ArrayList<Relation> not_sayList=new ArrayList<Relation>();
-	private ArrayList<Relation> refuseList=new ArrayList<Relation>();
-	
+	private ArrayList<Relation> partackList = new ArrayList<Relation>();
+	private ArrayList<Relation> not_sayList = new ArrayList<Relation>();
+	private ArrayList<Relation> refuseList = new ArrayList<Relation>();
+
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
 	private String endStr = "/original";
 	private String useravatar_path;
@@ -62,9 +57,6 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private int partakeNum;
 	private int refuseNum;
 	private int not_sayNum;
-	
-	
-	
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +67,6 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 		initInterface();
 		initData();
 	}
-	
 
 	private void initInterface() {
 		mCommentInterface = Interface.getInstance();
@@ -90,7 +81,8 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 				}.getType();
 				ReadPartyback partyback = GsonUtils.parseJsonArray(A, type);
 				ReturnData returnData = partyback.getReturnData();
-				Log.e("CommentsListActivity", "当前returnData:" + returnData.toString());
+				Log.e("CommentsListActivity",
+						"当前returnData:" + returnData.toString());
 				List<Relation> relationList = returnData.getRelation();
 				if (relationList.size() > 0) {
 					for (int i = 0; i < relationList.size(); i++) {
@@ -100,17 +92,20 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 						switch (relationship) {
 						case 0:
 							not_sayNum++;
-							Log.e("CommentsListActivity", "当前not_sayNum的数量" + not_sayNum+"======="+i);
+							Log.e("CommentsListActivity", "当前not_sayNum的数量"
+									+ not_sayNum + "=======" + i);
 							not_sayList.add(relationList.get(i));
 							break;
 						case 1:
 							partakeNum++;
-							Log.e("CommentsListActivity", "当前partakeNum的数量" + partakeNum+"======="+i);
+							Log.e("CommentsListActivity", "当前partakeNum的数量"
+									+ partakeNum + "=======" + i);
 							partackList.add(relationList.get(i));
 							break;
 						case 2:
 							refuseNum++;
-							Log.e("CommentsListActivity", "当前refuseNum的数量" + refuseNum+"======="+i);
+							Log.e("CommentsListActivity", "当前refuseNum的数量"
+									+ refuseNum + "=======" + i);
 							refuseList.add(relationList.get(i));
 							break;
 						default:
@@ -142,21 +137,27 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 		commentsList_msg = intent.getIntExtra("CommentsList", 0);
 		switch (commentsList_msg) {
 		case 0:
-			mComments_list_not_say_layout.setBackgroundResource(R.drawable.ok_1);
-			mComments_list_partake_layout.setBackgroundResource(R.drawable.ok_3);
+			mComments_list_not_say_layout
+					.setBackgroundResource(R.drawable.ok_1);
+			mComments_list_partake_layout
+					.setBackgroundResource(R.drawable.ok_3);
 			mComments_list_refuse_layout.setBackgroundResource(R.drawable.ok_3);
 			pk_party = intent.getStringExtra("not_say");
 			break;
 		case 1:
-			mComments_list_partake_layout.setBackgroundResource(R.drawable.ok_1);
-			mComments_list_not_say_layout.setBackgroundResource(R.drawable.ok_3);
+			mComments_list_partake_layout
+					.setBackgroundResource(R.drawable.ok_1);
+			mComments_list_not_say_layout
+					.setBackgroundResource(R.drawable.ok_3);
 			mComments_list_refuse_layout.setBackgroundResource(R.drawable.ok_3);
 			pk_party = intent.getStringExtra("partake");
 			break;
 		case 2:
 			mComments_list_refuse_layout.setBackgroundResource(R.drawable.ok_1);
-			mComments_list_partake_layout.setBackgroundResource(R.drawable.ok_3);
-			mComments_list_not_say_layout.setBackgroundResource(R.drawable.ok_3);
+			mComments_list_partake_layout
+					.setBackgroundResource(R.drawable.ok_3);
+			mComments_list_not_say_layout
+					.setBackgroundResource(R.drawable.ok_3);
 			pk_party = intent.getStringExtra("refuse");
 			break;
 		default:
@@ -189,30 +190,24 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 		mComments_list_listview.setAdapter(adapter);
 	}
 
-	class ViewHolder
-	{
+	class ViewHolder {
 		ImageView commentslist_item_head;
 		TextView commentslist_item_nickname;
 		TextView commentslist_item_status;
 	}
-	
-	
-	class MyAdapter extends BaseAdapter
-	{
+
+	class MyAdapter extends BaseAdapter {
 
 		@Override
 		public int getCount() {
-			if(commentsList_msg==0)
-			{
+			if (commentsList_msg == 0) {
 				return not_sayList.size();
-			}else if(commentsList_msg==1)
-			{
+			} else if (commentsList_msg == 1) {
 				return partackList.size();
-			}else
-			{
+			} else {
 				return refuseList.size();
 			}
-			
+
 		}
 
 		@Override
@@ -227,54 +222,65 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View inflater=null;
-			ViewHolder holder=null;
-			if(convertView==null)
-			{
-				holder=new ViewHolder();
+			View inflater = null;
+			ViewHolder holder = null;
+			if (convertView == null) {
+				holder = new ViewHolder();
 				LayoutInflater layoutInflater = getLayoutInflater();
-				inflater=layoutInflater.inflate(R.layout.commentslist_item, null);
-				holder.commentslist_item_head=(ImageView) inflater.findViewById(R.id.commentslist_item_head);
-				holder.commentslist_item_nickname=(TextView) inflater.findViewById(R.id.commentslist_item_nickname);
-				holder.commentslist_item_status=(TextView) inflater.findViewById(R.id.commentslist_item_status);
+				inflater = layoutInflater.inflate(R.layout.commentslist_item,
+						null);
+				holder.commentslist_item_head = (ImageView) inflater
+						.findViewById(R.id.commentslist_item_head);
+				holder.commentslist_item_nickname = (TextView) inflater
+						.findViewById(R.id.commentslist_item_nickname);
+				holder.commentslist_item_status = (TextView) inflater
+						.findViewById(R.id.commentslist_item_status);
 				inflater.setTag(holder);
-			}else
-			{
-				inflater=convertView;
-				holder=(ViewHolder) inflater.getTag();
+			} else {
+				inflater = convertView;
+				holder = (ViewHolder) inflater.getTag();
 			}
-			
-			if(commentsList_msg==0)
-			{
-				Relation relation=not_sayList.get(position);
+
+			if (commentsList_msg == 0) {
+				Relation relation = not_sayList.get(position);
 				holder.commentslist_item_status.setText("未表态");
-				String useravatar_path=relation.getAvatar_path();
+				String useravatar_path = relation.getAvatar_path();
 				completeURL = beginStr + useravatar_path + endStr;
-				PreferenceUtils.saveImageCache(CommentsListActivity.this, completeURL);// 存SP
-				ImageLoaderUtils.getInstance().LoadImage(CommentsListActivity.this,completeURL, holder.commentslist_item_head);
-				holder.commentslist_item_nickname.setText(relation.getNickname());
-			}else if(commentsList_msg==1)
-			{
-				Relation relation=partackList.get(position);
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,
+						completeURL);// 存SP
+				ImageLoaderUtils.getInstance().LoadImage(
+						CommentsListActivity.this, completeURL,
+						holder.commentslist_item_head);
+				holder.commentslist_item_nickname.setText(relation
+						.getNickname());
+			} else if (commentsList_msg == 1) {
+				Relation relation = partackList.get(position);
 				holder.commentslist_item_status.setText("参与");
-				String useravatar_path1=relation.getAvatar_path();
+				String useravatar_path1 = relation.getAvatar_path();
 				completeURL = beginStr + useravatar_path1 + endStr;
-				PreferenceUtils.saveImageCache(CommentsListActivity.this, completeURL);// 存SP
-				ImageLoaderUtils.getInstance().LoadImage(CommentsListActivity.this,completeURL, holder.commentslist_item_head);
-				holder.commentslist_item_nickname.setText(relation.getNickname());
-			}else
-			{
-				Relation relation=refuseList.get(position);
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,
+						completeURL);// 存SP
+				ImageLoaderUtils.getInstance().LoadImage(
+						CommentsListActivity.this, completeURL,
+						holder.commentslist_item_head);
+				holder.commentslist_item_nickname.setText(relation
+						.getNickname());
+			} else {
+				Relation relation = refuseList.get(position);
 				holder.commentslist_item_status.setText("拒绝");
-				String useravatar_path1=relation.getAvatar_path();
+				String useravatar_path1 = relation.getAvatar_path();
 				completeURL = beginStr + useravatar_path1 + endStr;
-				PreferenceUtils.saveImageCache(CommentsListActivity.this, completeURL);// 存SP
-				ImageLoaderUtils.getInstance().LoadImage(CommentsListActivity.this,completeURL, holder.commentslist_item_head);
-				holder.commentslist_item_nickname.setText(relation.getNickname());
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,
+						completeURL);// 存SP
+				ImageLoaderUtils.getInstance().LoadImage(
+						CommentsListActivity.this, completeURL,
+						holder.commentslist_item_head);
+				holder.commentslist_item_nickname.setText(relation
+						.getNickname());
 			}
 			return inflater;
 		}
-		
+
 	}
 
 	@Override
@@ -310,7 +316,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	}
 
 	private void Comments_list_not_say_layout() {
-		commentsList_msg=0;
+		commentsList_msg = 0;
 		mComments_list_not_say_layout.setBackgroundResource(R.drawable.ok_1);
 		mComments_list_partake_layout.setBackgroundResource(R.drawable.ok_3);
 		mComments_list_refuse_layout.setBackgroundResource(R.drawable.ok_3);
@@ -319,7 +325,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	}
 
 	private void Comments_list_refuse_layout() {
-		commentsList_msg=2;
+		commentsList_msg = 2;
 		mComments_list_not_say_layout.setBackgroundResource(R.drawable.ok_3);
 		mComments_list_partake_layout.setBackgroundResource(R.drawable.ok_3);
 		mComments_list_refuse_layout.setBackgroundResource(R.drawable.ok_1);
@@ -328,7 +334,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	}
 
 	private void Comments_list_partake_layout() {
-		commentsList_msg=1;
+		commentsList_msg = 1;
 		mComments_list_not_say_layout.setBackgroundResource(R.drawable.ok_3);
 		mComments_list_partake_layout.setBackgroundResource(R.drawable.ok_1);
 		mComments_list_refuse_layout.setBackgroundResource(R.drawable.ok_3);

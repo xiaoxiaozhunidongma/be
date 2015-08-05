@@ -23,19 +23,8 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:src="@drawable/ad_loading_01"
-            android:visibility="invisible" />
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="90.0dp"
-            android:gravity="left|center"
-            android:singleLine="true"
-            android:text="15614"
-            android:textAppearance="?android:textAppearanceLarge" />
+            android:visibility="invisible" 
+            />
 
         <TextView
             android:id="@+id/textView1"
@@ -51,13 +40,32 @@
 
         <ImageView
             android:id="@+id/contact_list_head"
-            android:layout_width="40.0dp"
-            android:layout_height="40.0dp"
+            android:layout_width="50.0dp"
+            android:layout_height="50.0dp"
             android:layout_marginLeft="20.0dp"
             android:layout_marginTop="5.0dp"
             android:src="@drawable/login_1" 
-            android:visibility="gone"
             />
+
+        <TextView
+            android:id="@+id/contact_list_item_1_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/contact_list_head"
+            android:layout_marginLeft="20dp"
+            android:layout_toRightOf="@+id/contact_list_head"
+            android:gravity="left|center"
+            android:singleLine="true"
+            android:text="15614"
+            android:textAppearance="?android:textAppearanceLarge" />
+
+        <TextView
+            android:id="@+id/contact_list_item_1_name_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/contact_list_item_1_name"
+            android:layout_below="@+id/contact_list_item_1_name"
+            android:text="TextView" />
 
     </RelativeLayout>
 

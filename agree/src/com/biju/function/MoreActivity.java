@@ -13,6 +13,7 @@ import android.view.Window;
 import com.BJ.javabean.Moreback;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
+import com.BJ.javabean.UserAllParty;
 import com.biju.Interface;
 import com.biju.Interface.userCanclePartyListenner;
 import com.biju.R;
@@ -22,6 +23,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 
 	private Party2 moreparty;
 	private Interface moreinterface;
+	private UserAllParty userAllParty;
+	private boolean userAll;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -29,7 +32,14 @@ public class MoreActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_more);
 		Intent intent = getIntent();
-		moreparty = (Party2) intent.getSerializableExtra("moreparty");
+		userAll = intent.getBooleanExtra("UserAll", false);
+		if(userAll)
+		{
+			userAllParty = (UserAllParty) intent.getSerializableExtra("userAllmoreparty");
+		}else
+		{
+			moreparty = (Party2) intent.getSerializableExtra("moreparty");
+		}
 		initUI();
 		initInterface();
 	}
@@ -94,7 +104,13 @@ public class MoreActivity extends Activity implements OnClickListener {
 
 	private void more_cancel_layout() {
 		Party more_party = new Party();
-		more_party.setPk_party(moreparty.getPk_party());
+		if(userAll)
+		{
+			more_party.setPk_party(userAllParty.getPk_party());
+		}else
+		{
+			more_party.setPk_party(moreparty.getPk_party());
+		}
 		moreinterface.userCancleParty(MoreActivity.this, more_party);
 	}
 

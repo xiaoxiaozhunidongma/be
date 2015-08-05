@@ -240,7 +240,13 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 						mUsersetting_nickname.setText(Usernickname);
 						mUsersetting_edt_password_1.setText(Userpassword);
 						mUsersetting_edt_password_2.setText(Userpassword);
-						mUsersetting_tv_phone.setText(Userphone);
+						if("".equals(Userphone))
+						{
+							mUsersetting_tv_phone.setText("绑定电话号码");
+						}else
+						{
+							mUsersetting_tv_phone.setText(Userphone);
+						}
 						password = Userpassword;
 						int Usersex = readuser.getSex();
 						Log.e("UserSettingActivity", "性别" + Usersex);
@@ -368,7 +374,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	}
 
 	private void usersetting_tv_phone() {
-		if (Userphone != null) {
+		if (!("".equals(Userphone))) {
 			NiftyDialogBuilder();
 		} else {
 			Intent intent = new Intent(UserSettingActivity.this,

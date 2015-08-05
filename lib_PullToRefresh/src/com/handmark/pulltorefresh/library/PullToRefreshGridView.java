@@ -25,7 +25,7 @@ import android.widget.GridView;
 
 import com.handmark.pulltorefresh.library.internal.EmptyViewMethodAccessor;
 
-public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView> {
+public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView>  {
 
 	public PullToRefreshGridView(Context context) {
 		super(context);
@@ -99,4 +99,5 @@ public class PullToRefreshGridView extends PullToRefreshAdapterViewBase<GridView
 			return returnValue;
 		}
 	}
+	
 }

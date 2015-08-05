@@ -202,6 +202,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			User user = new User();
 			user.setNickname(nickname);
 			user.setJpush_id(jpush_id);
+			user.setStatus(1);
 			if (isHead) {
 				// ÉÏ´«Í¼Æ¬
 				upload(user);

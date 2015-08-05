@@ -20,8 +20,6 @@ public class MyApplication extends Application {
 	public static String getRegId() {
 		return regId;
 	}
-	
-	
 
 
 	public static void setRegId(String regId) {

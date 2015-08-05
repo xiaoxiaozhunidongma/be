@@ -59,6 +59,7 @@
                 android:text="TextView"
                 android:singleLine="true"
                 android:layout_marginTop="5.0dp"
+                android:layout_marginRight="25.0dp"
                 android:textSize="18.0sp" />
 
             <TextView
@@ -72,6 +73,18 @@
                 android:singleLine="true"
                 android:layout_marginTop="5.0dp"
                 android:textSize="15.0sp" />
+
+            <ImageView
+                android:id="@+id/party_unread_tag"
+                android:layout_width="15.0dp"
+                android:layout_height="15.0dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/name"
+                android:layout_marginRight="15dp"
+                android:src="@drawable/red_yuan"
+                android:visibility="gone"
+                 />
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -91,7 +104,7 @@
                 android:textSize="17.0sp" />
 
             <TextView
-                android:id="@+id/textView6"
+                android:id="@+id/inNum"
                 android:layout_width="match_parent"
                 android:layout_height="25.0dp"
                 android:layout_alignParentBottom="true"

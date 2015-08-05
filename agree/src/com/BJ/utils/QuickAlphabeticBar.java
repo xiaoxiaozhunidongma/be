@@ -53,7 +53,7 @@ public class QuickAlphabeticBar extends ImageButton {
 
 	// ≥ı ºªØ
 	public void init(Activity ctx) {
-		mDialogText = (TextView) ctx.findViewById(R.id.fast_position);
+//		mDialogText = (TextView) ctx.findViewById(R.id.fast_position);
 		mDialogText.setVisibility(View.INVISIBLE);
 		mHandler = new Handler();
 	}
