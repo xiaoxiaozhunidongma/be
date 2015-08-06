@@ -58,6 +58,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private MyAdapter adapter;
+	private Integer fk_user_from;
 
 	public FriendsFragment() {
 		// Required empty public constructor
@@ -101,12 +102,15 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		User user = new User();
 		if (isRegistered_one) {
 			user.setPk_user(returndata);
+			fk_user_from=returndata;
 		} else {
 			if (login) {
 				Integer pk_user = LoginActivity.getPk_user();
 				user.setPk_user(pk_user);
+				fk_user_from=pk_user;
 			} else {
 				user.setPk_user(returndata);
+				fk_user_from=returndata;
 			}
 		}
 		addFriends_interface.readFriend(getActivity(), user);
@@ -218,9 +222,10 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 				
 				@Override
 				public void onClick(View v) {
-					Toast.makeText(getActivity(), "当前的位置"+position, Toast.LENGTH_SHORT).show();
+//					Toast.makeText(getActivity(), "当前的位置"+position, Toast.LENGTH_SHORT).show();
 					Intent intent=new Intent(getActivity(), FriendsDataActivity.class);
 					intent.putExtra("ReadUserAllFriends", allFriends);
+					intent.putExtra("fk_user_from", fk_user_from);
 					startActivity(intent);
 				}
 			});
@@ -244,7 +249,9 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	}
 
 	private void tab_friends_addbuddy() {
+		Integer size=AllFriends_List.size();
 		Intent intent = new Intent(getActivity(), AddFriendsActivity.class);
+		intent.putExtra("size", size);
 		startActivity(intent);
 	}
 
@@ -253,10 +260,11 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
+				ReadUserAllFriends();
 				mFriends_swipe_refresh.setRefreshing(false);
-				// adapter.notifyDataSetChanged();
+				adapter.notifyDataSetChanged();
 			}
-		}, 5000);
+		}, 3000);
 	}
 
 }

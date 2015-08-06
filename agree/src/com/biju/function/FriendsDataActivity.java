@@ -1,12 +1,16 @@
 package com.biju.function;
 
 import com.BJ.javabean.ReadUserAllFriends;
+import com.BJ.javabean.User_User;
 import com.BJ.utils.ImageLoaderUtils;
+import com.biju.Interface;
+import com.biju.Interface.releaseFriendListenner;
 import com.biju.R;
 
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -30,6 +34,8 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 	private String endStr = "/original";
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
+	private Interface mFriendsDataInterface;
+	private Integer fk_user_from;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -38,8 +44,27 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_friends_data);
 		Intent intent = getIntent();
 		mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("ReadUserAllFriends");
+		fk_user_from = intent.getIntExtra("fk_user_from", 0);
 		initUI();
+		initInterface();
 		initFriendsData();
+	}
+
+	private void initInterface() {
+		mFriendsDataInterface = Interface.getInstance();
+		mFriendsDataInterface.setPostListener(new releaseFriendListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("FriendsDataActivity", "返回删除好友的结果======"+A);
+				Toast.makeText(FriendsDataActivity.this, "删除成功", Toast.LENGTH_SHORT).show();
+				finish();
+			}
+			
+			@Override
+			public void defail(Object B) {
+			}
+		});
 	}
 
 	private void initFriendsData() {
@@ -117,7 +142,10 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 	}
 
 	private void FriendsData_DeleteFriends() {
-		Toast.makeText(FriendsDataActivity.this, "删除好友", Toast.LENGTH_SHORT).show();
+		User_User user_User=new User_User();
+		user_User.setFk_user_to(mAllFriends.getFk_user_to());
+		user_User.setFk_user_from(fk_user_from);
+		mFriendsDataInterface.releaseFriend(FriendsDataActivity.this, user_User);
 	}
 
 	private void FriendsData_Savecontact() {
