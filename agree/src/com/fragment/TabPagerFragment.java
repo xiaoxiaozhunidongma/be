@@ -37,9 +37,9 @@ public class TabPagerFragment extends Fragment implements TabContentFactory,
 		OnTabChangeListener, OnPageChangeListener {
 	private TabHost mTabHost;
 	private ViewPager mPager;
-	private ArrayList<Fragment> fragments=new ArrayList<Fragment>();
-	private String[] labels=new String[]{};
-	private int[] tabIcons=new int[]{};
+	private ArrayList<Fragment> fragments;
+	private String[] labels;
+	private int[] tabIcons;
 	private ImageView mImgScrollbar;
 
 	public void setArg(String[] labels, int[] tabIcons,

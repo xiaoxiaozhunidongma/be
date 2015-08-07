@@ -109,22 +109,24 @@
 
         <TextView
             android:id="@+id/usersetting_tv_phone"
-            android:layout_width="wrap_content"
+            android:layout_width="200.0dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/usersetting_sex"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:text="绑定手机号码"
+            android:gravity="center"
             android:textSize="18.0sp" />
 
         <TextView
             android:id="@+id/textView4"
-            android:layout_width="wrap_content"
+            android:layout_width="200.0dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/usersetting_tv_phone"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="30dp"
             android:text="绑定微信账号"
+            android:gravity="center"
             android:textSize="18.0sp" />
 
         <TextView

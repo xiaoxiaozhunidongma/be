@@ -271,6 +271,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		finish();
 		Intent intent = new Intent(RegisteredActivity.this, LoginActivity.class);
 		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	// ´ò¿ªÍ¼¿â£¬Ñ¡ÔñÍ¼Æ¬

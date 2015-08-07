@@ -34,6 +34,7 @@ import com.BJ.javabean.Group_Code2;
 import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_ReadAllUserback;
 import com.BJ.javabean.Group_User;
+import com.BJ.javabean.Groupuserback;
 import com.BJ.javabean.Teamupdateback;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
 import com.BJ.utils.ImageLoaderUtils;
@@ -41,6 +42,7 @@ import com.BJ.utils.PreferenceUtils;
 import com.biju.Interface;
 import com.biju.Interface.produceRequestCodeListenner;
 import com.biju.Interface.readAllPerRelationListenner;
+import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.Interface.updateGroupSetListenner;
 import com.biju.R;
 import com.biju.login.LoginActivity;
@@ -99,17 +101,26 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 		pk_group = intent.getIntExtra("Group", pk_group);
 
 		ReadUser();
+		initreadUserGroupRelation1();
 		returndata();
 		initUI();
+	}
 
-		SharedPreferences sp = getSharedPreferences("Switch", 0);
-		ismessage = sp.getInt("ismessage", 0);
-		Log.e("TeamSettingActivity", "小组的聚会信息的提醒--------" + ismessage);
-		ischat = sp.getInt("ischat", 0);
-		Log.e("TeamSettingActivity", "小组的聊天信息的提醒--------" + ischat);
-		isphone = sp.getInt("isphone", 0);
-		Log.e("TeamSettingActivity", "小组的公开手机号码--------" + isphone);
-		initSwitch();
+	private void initreadUserGroupRelation1() {
+		Group_User group_User = new Group_User();
+		group_User.setFk_group(pk_group);
+		if (isRegistered_one) {
+			group_User.setFk_user(returndata);
+		} else {
+			if (login) {
+				int pk_user = LoginActivity.getPk_user();
+				group_User.setFk_user(pk_user);
+			} else {
+				group_User.setFk_user(returndata);
+			}
+		}
+		readuserinter.readUserGroupRelation(TeamSettingActivity.this,
+				group_User);
 	}
 
 	private void initSwitch() {
@@ -258,11 +269,40 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 							Group_ReadAllUser readAllUser = allUsers.get(i);
 							group_readalluser_list.add(readAllUser);
 						}
-						Log.e("TeamSettingActivity", "加入到list中的东西====="+group_readalluser_list.toString());
+						Log.e("TeamSettingActivity", "加入到list中的东西====="
+								+ group_readalluser_list.toString());
 					}
-					if(group_readalluser_list.size()>0)
-					{
+					if (group_readalluser_list.size() > 0) {
 						mTeamsetting_gridview.setAdapter(adapter);
+					}
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+
+		readuserinter.setPostListener(new readUserGroupRelationListenner() {
+			@Override
+			public void success(String A) {
+				Groupuserback groupuserback = GsonUtils.parseJson(A,
+						Groupuserback.class);
+				Integer statusMsg = groupuserback.getStatusMsg();
+				if (statusMsg == 1) {
+					Log.e("GroupActivity", "返回小组关系ID====" + A);
+					List<Group_User> groupuser_returnData = groupuserback
+							.getReturnData();
+					if (groupuser_returnData.size() > 0) {
+						Group_User group_user = groupuser_returnData.get(0);
+						ischat = group_user.getMessage_warn();
+						ismessage = group_user.getParty_warn();
+						isphone = group_user.getPublic_phone();
+						Log.e("GroupActivity", "小组的聚会信息的提醒--------" + ismessage);
+						Log.e("GroupActivity", "小组的聊天信息的提醒--------" + ischat);
+						Log.e("GroupActivity", "小组的公开手机号码--------" + isphone);
+						initSwitch();
 					}
 				}
 			}
@@ -308,7 +348,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 		mHeadView.findViewById(R.id.TeamSetting_exit).setOnClickListener(this);// 退出小组
 
 		adapter = new MyAdapter();
-//		mTeamsetting_gridview.setAdapter(adapter);
+		// mTeamsetting_gridview.setAdapter(adapter);
 
 	}
 
@@ -353,9 +393,9 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 				holder = (ViewHolder) inflater.getTag();
 			}
 
-			Log.e("TeamSettingActivity", "容器的长度========"+group_readalluser_list.size());
-			if(group_readalluser_list.size()>0)
-			{
+			Log.e("TeamSettingActivity", "容器的长度========"
+					+ group_readalluser_list.size());
+			if (group_readalluser_list.size() > 0) {
 				Group_ReadAllUser group_ReadAllUser = group_readalluser_list
 						.get(position);
 				Integer pk_user = group_ReadAllUser.getPk_user();
@@ -364,8 +404,9 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 				completeURL = beginStr + useravatar_path + endStr;
 				PreferenceUtils.saveImageCache(TeamSettingActivity.this,
 						completeURL);// 存SP
-				ImageLoaderUtils.getInstance().LoadImage(TeamSettingActivity.this,
-						completeURL, holder.TeamSetting_head);
+				ImageLoaderUtils.getInstance().LoadImage(
+						TeamSettingActivity.this, completeURL,
+						holder.TeamSetting_head);
 			}
 			return inflater;
 		}

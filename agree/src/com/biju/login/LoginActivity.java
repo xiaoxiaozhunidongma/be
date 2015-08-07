@@ -22,27 +22,30 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.inputmethod.EditorInfo;
 import android.view.Window;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
+import cn.jpush.android.service.PushReceiver;
 
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
+import com.BJ.javabean.updateback;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.Person;
 import com.biju.Interface;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
+import com.biju.Interface.updateUserListenner;
 import com.biju.Interface.userLoginListenner;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.biju.APP.MyApplication;
 import com.fragment.HomeFragment;
-import com.fragment.PartyFragment;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class LoginActivity extends Activity implements OnClickListener {
@@ -69,14 +72,18 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private String mAvatar_path;
 	private String mPhone;
 	private String mPassword;
-	private boolean onelogin = false;
 	private Interface Login_ReadUserInter;
-	private String mJpush_id;
+	private String device_id;
+	private Integer status;
 
 	private String fileName = getSDPath() + "/" + "saveData";
-	private PartyFragment mPartyFragment;
+	private Integer sex;
+	private String setup_time;
+	private String last_login_time;
+	private boolean isAuto;
 
 	public static ArrayList<Group> list = new ArrayList<Group>();
+	private Person person;
 
 	public String getSDPath() {
 		File sdDir = null;
@@ -96,7 +103,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login);
 		mHomeFragmen = new HomeFragment();
-		mPartyFragment = new PartyFragment();
 		initUI();
 		mManually_login.setVisibility(View.VISIBLE);
 		mAuto_login.setVisibility(View.GONE);
@@ -108,78 +114,50 @@ public class LoginActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				Log.e("LoginActivity", "用户资料" + A);
-				Loginback loginbackread = GsonUtils.parseJson(A,
-						Loginback.class);
-				int aa = loginbackread.getStatusMsg();
-				if (aa == 1) {
-					// 取第一个Users[0]
-					List<User> Users = loginbackread.getReturnData();
-					if (Users.size() >= 1) {
-						User readuser = Users.get(0);
-						pk_user = readuser.getPk_user();
-						mNickname = readuser.getNickname();
-						mAvatar_path = readuser.getAvatar_path();
-						mPhone = readuser.getPhone();
-						mPassword = readuser.getPassword();
-						mJpush_id = readuser.getJpush_id();
-					}
-					loadBaseNeedLoginMethod(pk_user);
-					String mPassword = mLogin_password.getText().toString()
-							.trim();
-					if (mPassword.equals(mPassword)) {
-						Loginback loginback = GsonUtils.parseJson(A,
-								Loginback.class);
-						// 说明是已经登录成功
-						if (loginback.getStatusMsg() == 1) {
-							Log.e("LoginActivity", "登录成功，账号ID" + A);
-							mLogin_account.postDelayed(new Runnable() {
+				Loginback loginback = GsonUtils.parseJson(A, Loginback.class);
+				// 说明是已经登录成功
+				if (loginback.getStatusMsg() == 1) {
+					Log.e("LoginActivity", "登录成功，账号ID" + A);
+					mLogin_account.postDelayed(new Runnable() {
 
-								@Override
-								public void run() {
-									if (drawable != null) {
-										drawable.stop();
-									}
-									Intent intent = new Intent(
-											LoginActivity.this,
-											MainActivity.class);
-									startActivity(intent);
-									overridePendingTransition(0, 0);
-									finish();
-								}
-							}, 1000);
-							
-							String pk_user = mLogin_account.getText().toString().trim();
-							String password = mLogin_password.getText().toString().trim();
-							Person person = new Person(pk_user, password);
-							try {
-								ObjectOutputStream oos = new ObjectOutputStream(
-										new FileOutputStream(fileName));
-								oos.writeObject(person);
-								oos.close();
-							} catch (FileNotFoundException e) {
-								e.printStackTrace();
-							} catch (IOException e) {
-								e.printStackTrace();
+						@Override
+						public void run() {
+							if (drawable != null) {
+								drawable.stop();
 							}
-							// 取第一个Users[0]
-							// List<User> Users = loginback.getReturnData();
-							// if (Users.size() >= 1) {
-							// User user = Users.get(0);
-							// Log.e("解析出来的",
-							// user.getPhone() + "====" + user.getNickname());
-							// }
+
+							SharedPreferences sp = getSharedPreferences(
+									"isLogin", 0);
+							Editor editor = sp.edit();
+							editor.putBoolean("Login", true);
+							editor.commit();
+
+							Intent intent = new Intent(LoginActivity.this,
+									MainActivity.class);
+							startActivity(intent);
+							overridePendingTransition(0, 0);
+							finish();
 						}
-					} else {
-						if (drawable != null) {
-							drawable.stop();
-						}
-						mManually_login.setVisibility(View.VISIBLE);
-						mAuto_login.setVisibility(View.GONE);
-						Toast.makeText(LoginActivity.this, "账号或者密码错误!",
-								Toast.LENGTH_SHORT).show();
+					}, 1000);
+
+					// 每次登陆都更新用户的信息，主要是极光推送的ID
+					updateLogin();
+
+					String pk_user = mLogin_account.getText().toString().trim();
+					String password = mLogin_password.getText().toString()
+							.trim();
+					Person person = new Person(pk_user, password);
+					try {
+						ObjectOutputStream oos = new ObjectOutputStream(
+								new FileOutputStream(fileName));
+						oos.writeObject(person);
+						oos.close();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
 					}
 				}
-
 			}
 
 			@Override
@@ -187,6 +165,22 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 			}
 		});
+	}
+
+	private void updateLogin() {
+		User usersetting = new User();
+		usersetting.setPk_user(pk_user);
+		usersetting.setJpush_id(MyApplication.getRegId());
+		usersetting.setNickname(mNickname);
+		usersetting.setPassword(mPassword);
+		usersetting.setSex(sex);
+		usersetting.setStatus(status);
+		usersetting.setPhone(mPhone);
+		usersetting.setSetup_time(setup_time);
+		usersetting.setLast_login_time(last_login_time);
+		usersetting.setAvatar_path(mAvatar_path);
+		usersetting.setDevice_id(device_id);
+		Login_ReadUserInter.updateUser(LoginActivity.this, usersetting);
 	}
 
 	private void auto_ReadUser(Integer mpk_user) {
@@ -212,65 +206,68 @@ public class LoginActivity extends Activity implements OnClickListener {
 						mAvatar_path = readuser.getAvatar_path();
 						mPhone = readuser.getPhone();
 						mPassword = readuser.getPassword();
-						mJpush_id = readuser.getJpush_id();
+						sex = readuser.getSex();
+						setup_time = readuser.getSetup_time();
+						last_login_time = readuser.getLast_login_time();
+						device_id = readuser.getDevice_id();
+						status = readuser.getStatus();
+
 					}
 					loadBaseNeedLoginMethod(pk_user);
-					String mPassword = mLogin_password.getText().toString()
-							.trim();
-					if (mPassword.equals(mPassword)) {
-						Loginback loginback = GsonUtils.parseJson(A,
-								Loginback.class);
-						// 说明是已经登录成功
-						if (loginback.getStatusMsg() == 1) {
-							Log.e("LoginActivity", "登录成功，账号ID" + A);
-							mLogin_account.postDelayed(new Runnable() {
 
-								@Override
-								public void run() {
-									if (drawable != null) {
-										drawable.stop();
-									}
-									Intent intent = new Intent(
-											LoginActivity.this,
-											MainActivity.class);
-									startActivity(intent);
-									overridePendingTransition(0, 0);
-									finish();
-								}
-							}, 1000);
-							
-							String pk_user = mLogin_account.getText().toString().trim();
-							String password = mLogin_password.getText().toString().trim();
-							Person person = new Person(pk_user, password);
-							try {
-								ObjectOutputStream oos = new ObjectOutputStream(
-										new FileOutputStream(fileName));
-								oos.writeObject(person);
-								oos.close();
-							} catch (FileNotFoundException e) {
-								e.printStackTrace();
-							} catch (IOException e) {
-								e.printStackTrace();
-							}
-							// 取第一个Users[0]
-							// List<User> Users = loginback.getReturnData();
-							// if (Users.size() >= 1) {
-							// User user = Users.get(0);
-							// Log.e("解析出来的",
-							// user.getPhone() + "====" + user.getNickname());
-							// }
+					if (!isAuto) {
+						String mPassword_tv = mLogin_password.getText()
+								.toString().trim();
+						if (String.valueOf(mPassword_tv).equals(
+								String.valueOf(mPassword))) {
+							User loginuser = new User();
+							loginuser.setPk_user(pk_user);
+							loginuser.setPassword(mPassword);
+							Login_ReadUserInter.userLogin(LoginActivity.this,
+									loginuser);
+						} else {
+							mManually_login.setVisibility(View.VISIBLE);
+							mAuto_login.setVisibility(View.GONE);
+							Toast.makeText(LoginActivity.this, "账号或者密码错误!",
+									Toast.LENGTH_SHORT).show();
 						}
 					} else {
-						if (drawable != null) {
-							drawable.stop();
+						if (String.valueOf(person.password).equals(
+								String.valueOf(mPassword))) {
+							User autologinuser = new User();
+							autologinuser.setPk_user(pk_user);
+							autologinuser.setPassword(person.password);
+							Login_ReadUserInter.userLogin(LoginActivity.this,
+									autologinuser);
+						} else {
+							mManually_login.setVisibility(View.VISIBLE);
+							mAuto_login.setVisibility(View.GONE);
+							Toast.makeText(LoginActivity.this, "密码错误!",
+									Toast.LENGTH_SHORT).show();
 						}
-						mManually_login.setVisibility(View.VISIBLE);
-						mAuto_login.setVisibility(View.GONE);
-						Toast.makeText(LoginActivity.this, "账号或者密码错误!",
-								Toast.LENGTH_SHORT).show();
 					}
+
 				}
 
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+
+		Login_ReadUserInter.setPostListener(new updateUserListenner() {
+
+			@Override
+			public void success(String A) {
+				// 更新用户资料成功
+				updateback usersetting_updateback = GsonUtils.parseJson(A,
+						updateback.class);
+				int a = usersetting_updateback.getStatusMsg();
+				if (a == 1) {
+					Log.e("LoginActivity", "更新成功" + A);
+				}
 			}
 
 			@Override
@@ -285,7 +282,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 		// 首页数据更新
 		if (mHomeFragmen != null) {
 			mHomeFragmen.prepareData(pk_user);
-			mHomeFragmen.prepareParty(true);
 		}
 
 	}
@@ -294,7 +290,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 		findViewById(R.id.Login_OK).setOnClickListener(this);
 		findViewById(R.id.Login_registered).setOnClickListener(this);
 		mLogin_account = (EditText) findViewById(R.id.Login_account);
-		mLogin_account.setInputType(EditorInfo.TYPE_CLASS_PHONE);//点击账号时直接弹出数字键盘
+		mLogin_account.setInputType(EditorInfo.TYPE_CLASS_PHONE);// 点击账号时直接弹出数字键盘
 		mLogin_password = (EditText) findViewById(R.id.Login_password);
 		mAuto_login_image = (ImageView) findViewById(R.id.Auto_login_image);
 		mManually_login = (RelativeLayout) findViewById(R.id.Manually_login);
@@ -323,7 +319,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	private void Login_registered() {
-		Login_ReadUserInter=Interface.getInstance();
+		Login_ReadUserInter = Interface.getInstance();
 		Login_ReadUserInter.setPostListener(new getPicSignListenner() {
 
 			@Override
@@ -352,28 +348,13 @@ public class LoginActivity extends Activity implements OnClickListener {
 		boolean isWIFI = Ifwifi.getNetworkConnected(LoginActivity.this);
 		if (isWIFI) {
 			String mUser = mLogin_account.getText().toString().trim();
-			String mPassword2 = mLogin_password.getText().toString().trim();
 			auto_ReadUser(Integer.valueOf(mUser));
-			if (mPassword2.equals(mPassword)) {
-				User loginuser = new User();
-				loginuser.setPk_user(pk_user);
-				loginuser.setAvatar_path(mAvatar_path);
-				loginuser.setNickname(mNickname);
-				loginuser.setPassword(mPassword);
-				loginuser.setPhone(mPhone);
-				loginuser.setJpush_id(mJpush_id);
-				Login_ReadUserInter.userLogin(LoginActivity.this, loginuser);
-			}
-
-			SharedPreferences sp = getSharedPreferences("isLogin", 0);
-			Editor editor = sp.edit();
-			editor.putBoolean("Login", true);
-			editor.commit();
+			userLogin();// 登录监听
 		} else {
 			Toast.makeText(LoginActivity.this, "网络异常，请检查网络!",
 					Toast.LENGTH_SHORT).show();
 		}
-		userLogin();//登录监听
+		userLogin();// 登录监听
 	}
 
 	@Override
@@ -398,66 +379,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	protected void onStart() {
 		SharedPreferences login_sp = getSharedPreferences("Logout", 0);
 		boolean isLogout = login_sp.getBoolean("isLogout", false);
-		if (!isLogout) {
-			boolean isWIFI = Ifwifi.getNetworkConnected(LoginActivity.this);
-			if (isWIFI) {
-				FileInputStream fis;
-				try {
-					Log.e("LoginActivity", "sd卡路径" + fileName);
-					fis = new FileInputStream(fileName);
-					ObjectInputStream ois = new ObjectInputStream(fis);
-					Person person = (Person) ois.readObject();
-					mLogin_account.setText(person.pk_user);
-					mLogin_password.setText(person.password);
-					Log.e("person.pk_user", person.pk_user);
-					Log.e("person.password", person.password);
-					SharedPreferences sp = getSharedPreferences("isLogin", 0);
-					onelogin = sp.getBoolean("Login", false);
-					Log.e("LoginActivity", "进入到这里了11111111==========" );
-					if (onelogin) {
-						Log.e("LoginActivity", "进入到这里了222222==========" );
-						mManually_login.setVisibility(View.GONE);
-						mAuto_login.setVisibility(View.VISIBLE);
-						drawable = (AnimationDrawable) mAuto_login_image
-								.getDrawable();
-						drawable.start();
-						if (!("".equals(person.pk_user) && ""
-								.equals(person.password))) {
-							Log.e("LoginActivity", "进入到这里了333333==========" );
-							auto_ReadUser(Integer.valueOf(person.pk_user));
-							if (person.password.equals(mPassword)) {
-								User autologinuser = new User();
-								autologinuser.setPk_user(pk_user);
-								autologinuser.setAvatar_path(mAvatar_path);
-								autologinuser.setNickname(mNickname);
-								autologinuser.setPassword(person.password);
-								autologinuser.setPhone(mPhone);
-								autologinuser.setJpush_id(mJpush_id);
-								Login_ReadUserInter.userLogin(
-										LoginActivity.this, autologinuser);
-							}
-						}
-						userLogin();//登录监听
-					} else {
-						mManually_login.setVisibility(View.VISIBLE);
-						mAuto_login.setVisibility(View.GONE);
-					}
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (StreamCorruptedException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
-			} else {
-				mManually_login.setVisibility(View.VISIBLE);
-				mAuto_login.setVisibility(View.GONE);
-				Toast.makeText(LoginActivity.this, "网络异常，请检查网络!",
-						Toast.LENGTH_SHORT).show();
-			}
-		} else {
+		if (isLogout) {
 			FileInputStream fis;
 			try {
 				fis = new FileInputStream(fileName);
@@ -467,6 +389,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 				mLogin_password.setText(person.password);
 				mManually_login.setVisibility(View.VISIBLE);
 				mAuto_login.setVisibility(View.GONE);
+				ois.close();
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (StreamCorruptedException e) {
@@ -476,8 +399,56 @@ public class LoginActivity extends Activity implements OnClickListener {
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
+		} else {
+			Auto_Login();
 		}
 		super.onStart();
 	}
 
+	private void Auto_Login() {
+		boolean isWIFI = Ifwifi.getNetworkConnected(LoginActivity.this);
+		if (isWIFI) {
+			FileInputStream fis;
+			try {
+				SharedPreferences sp = getSharedPreferences("isLogin", 0);
+				boolean onelogin = sp.getBoolean("Login", false);
+				if (onelogin) {
+					Log.e("LoginActivity", "sd卡路径" + fileName);
+					fis = new FileInputStream(fileName);
+					ObjectInputStream ois = new ObjectInputStream(fis);
+					person = (Person) ois.readObject();
+					mLogin_account.setText(person.pk_user);
+					mLogin_password.setText(person.password);
+					mManually_login.setVisibility(View.GONE);
+					mAuto_login.setVisibility(View.VISIBLE);
+					drawable = (AnimationDrawable) mAuto_login_image
+							.getDrawable();
+					drawable.start();
+					if (!("".equals(person.pk_user) && ""
+							.equals(person.password))) {
+						Log.e("LoginActivity", "进入到这里了333333==========");
+						auto_ReadUser(Integer.valueOf(person.pk_user));
+						isAuto = true;
+						userLogin();// 登录监听
+					}
+				} else {
+					mManually_login.setVisibility(View.VISIBLE);
+					mAuto_login.setVisibility(View.GONE);
+				}
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (StreamCorruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+		} else {
+			mManually_login.setVisibility(View.VISIBLE);
+			mAuto_login.setVisibility(View.GONE);
+			Toast.makeText(LoginActivity.this, "网络异常，请检查网络!",
+					Toast.LENGTH_SHORT).show();
+		}
+	}
 }

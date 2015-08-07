@@ -1,10 +1,6 @@
 package com.fragment;
 
-import android.content.Intent;
-import android.content.SharedPreferences;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
@@ -17,19 +13,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.widget.ListView;
-import android.widget.RelativeLayout;
-
-import com.BJ.javabean.User;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
 
-import com.BJ.javabean.Party2;
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.UserAllPartyback;
@@ -37,17 +27,13 @@ import com.biju.Interface;
 import com.biju.Interface.readUserAllPartyListenner;
 import com.biju.R;
 import com.biju.function.NewPartyActivity;
-import com.biju.login.LoginActivity;
 import com.biju.function.PartyDetailsActivity;
 import com.biju.login.LoginActivity;
-import com.fragment.ScheduleFragment.GetDataTask;
-import com.fragment.ScheduleFragment.ViewHolder;
 import com.github.volley_examples.utils.GsonUtils;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.tencent.download.core.strategy.DownloadGlobalStrategy.StrategyInfo;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -58,7 +44,6 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	private View mLayout;
 	private RelativeLayout mTab_party_prompt_layout;
 	private RelativeLayout mTab_party_list_layout;
-	private ListView mTab_party_listView;
 	private int returndata;
 	private boolean isRegistered_one;
 	private boolean login;
@@ -66,7 +51,7 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	private PullToRefreshListView mPull_refresh_list;
 	private ListView mParty_listView;
 	private MyAdapter adapter;
-	private ArrayList<UserAllParty> userAllPartieList=new ArrayList<UserAllParty>();
+	private ArrayList<UserAllParty> userAllPartieList = new ArrayList<UserAllParty>();
 
 	public PartyFragment() {
 		// Required empty public constructor
@@ -89,7 +74,6 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		adapter.notifyDataSetChanged();
 		super.onStart();
 	}
-	
 	private void initInterface() {
 		tab_party_interface = Interface.getInstance();
 		tab_party_interface.setPostListener(new readUserAllPartyListenner() {
@@ -97,26 +81,23 @@ public class PartyFragment extends Fragment implements OnClickListener {
 			@Override
 			public void success(String A) {
 				userAllPartieList.clear();
-				UserAllPartyback allPartyback=GsonUtils.parseJson(A, UserAllPartyback.class);
-				int status=allPartyback.getStatusMsg();
-				if(status==1)
-				{
+				UserAllPartyback allPartyback = GsonUtils.parseJson(A,
+						UserAllPartyback.class);
+				int status = allPartyback.getStatusMsg();
+				if (status == 1) {
 					Log.e("PartyFragment", "读取出用户的所有日程====" + A);
-					List<UserAllParty> AllList=allPartyback.getReturnData();
-					if(AllList.size()>0)
-					{
+					List<UserAllParty> AllList = allPartyback.getReturnData();
+					if (AllList.size() > 0) {
 						for (int i = 0; i < AllList.size(); i++) {
-							UserAllParty userAllParty=AllList.get(i);
+							UserAllParty userAllParty = AllList.get(i);
 							userAllPartieList.add(userAllParty);
 						}
 					}
 					adapter.notifyDataSetChanged();
-					if(userAllPartieList.size()>0)
-					{
+					if (userAllPartieList.size() > 0) {
 						mTab_party_prompt_layout.setVisibility(View.GONE);
 						mTab_party_list_layout.setVisibility(View.VISIBLE);
-					}else
-					{
+					} else {
 						mTab_party_prompt_layout.setVisibility(View.VISIBLE);
 						mTab_party_list_layout.setVisibility(View.GONE);
 					}
@@ -188,7 +169,6 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		mParty_listView = mPull_refresh_list.getRefreshableView();
 		adapter = new MyAdapter();
 		mParty_listView.setAdapter(adapter);
-		
 		mParty_listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -196,8 +176,9 @@ public class PartyFragment extends Fragment implements OnClickListener {
 					long arg3) {
 				int pos = arg2 - mParty_listView.getHeaderViewsCount();
 				if (pos >= 0) {
-					UserAllParty UserAllParty=userAllPartieList.get(pos);
-					Intent intent=new Intent(getActivity(), PartyDetailsActivity.class);
+					UserAllParty UserAllParty = userAllPartieList.get(pos);
+					Intent intent = new Intent(getActivity(),
+							PartyDetailsActivity.class);
 					intent.putExtra("UserAll", true);
 					intent.putExtra("UserAllParty", UserAllParty);
 					getActivity().startActivity(intent);
@@ -230,15 +211,14 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	class ViewHolder
-	{
+	class ViewHolder {
 		TextView years_month;
 		TextView address;
 		TextView name;
 		TextView times;
 		TextView inNum;
 	}
-	
+
 	class MyAdapter extends BaseAdapter {
 
 		@Override
@@ -258,21 +238,21 @@ public class PartyFragment extends Fragment implements OnClickListener {
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			View inflater=null;
+			View inflater = null;
 			ViewHolder holder = null;
-			if(convertView==null)
-			{
+			if (convertView == null) {
 				holder = new ViewHolder();
-				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-				inflater=layoutInflater.inflate(R.layout.party_item, null);
+				LayoutInflater layoutInflater = getActivity()
+						.getLayoutInflater();
+				inflater = layoutInflater.inflate(R.layout.party_item, null);
 				holder.years_month = (TextView) inflater
 						.findViewById(R.id.years_month);
 				holder.name = (TextView) inflater.findViewById(R.id.name);
 				holder.times = (TextView) inflater.findViewById(R.id.times);
 				holder.address = (TextView) inflater.findViewById(R.id.address);
-				holder.inNum=(TextView) inflater.findViewById(R.id.inNum);
+				holder.inNum = (TextView) inflater.findViewById(R.id.inNum);
 				inflater.setTag(holder);
-			}else {
+			} else {
 				inflater = convertView;
 				holder = (ViewHolder) inflater.getTag();
 			}
@@ -289,16 +269,13 @@ public class PartyFragment extends Fragment implements OnClickListener {
 				holder.name.setText(party.getName());
 				holder.times.setText(datetimes);
 				holder.address.setText(party.getLocation());
-				if(party.getInNum()!=null)
-				{
-					holder.inNum.setText(party.getInNum()+"");
-				}else
-				{
+				if (party.getInNum() != null) {
+					holder.inNum.setText(party.getInNum() + "");
+				} else {
 					holder.inNum.setText("0");
 				}
 			}
-			
-			
+
 			return inflater;
 		}
 

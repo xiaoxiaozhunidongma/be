@@ -72,8 +72,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI() {
-		findViewById(R.id.more_cancel_layout).setOnClickListener(this);
-		findViewById(R.id.more_cancel).setOnClickListener(this);
+		findViewById(R.id.take_photo_rela).setOnClickListener(this);
+		findViewById(R.id.take_photo_tv).setOnClickListener(this);
 	}
 
 	@Override
@@ -92,8 +92,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.more_cancel_layout:
-		case R.id.more_cancel:
+		case R.id.take_photo_rela:
+		case R.id.take_photo_tv:
 			more_cancel_layout();
 			break;
 
