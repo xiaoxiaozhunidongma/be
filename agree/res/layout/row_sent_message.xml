@@ -92,7 +92,8 @@
             android:text="15:32" 
             android:textSize="12sp"
             android:textColor="#8e8e8e"
-            android:layout_marginRight="5dp"/>
+            android:layout_marginRight="5dp"
+            android:visibility="gone"/>
 
     </RelativeLayout>
 
