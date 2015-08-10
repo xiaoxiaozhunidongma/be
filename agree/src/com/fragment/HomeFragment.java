@@ -1,5 +1,11 @@
 package com.fragment;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,6 +18,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -31,6 +38,7 @@ import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
+import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
@@ -59,9 +67,6 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	private ArrayList<Group> list = new ArrayList<Group>();
 	private ArrayList<Group> Codelist = new ArrayList<Group>();
 	private MyGridviewAdapter adapter;
-	private boolean isRegistered_one;
-	private int returndata;
-	private boolean login;
 	private Interface homeInterface;
 	private boolean iscode;
 	private Integer fk_group;
@@ -70,6 +75,22 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	private MyReceiver receiver;
 	private boolean refresh;
 	private SwipeRefreshLayout swipeLayout;
+	
+	private String fileName = getSDPath() + "/" + "saveData";
+	private String pk_user;
+	private boolean isRegistered_one;
+	private boolean login;
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
 
 	public HomeFragment() {
 	}
@@ -80,16 +101,30 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if (mLayout == null) {
-			mLayout = inflater
-					.inflate(R.layout.fragment_home, container, false);
-			SharedPreferences sp = getActivity().getSharedPreferences(
-					"Registered", 0);
+			mLayout = inflater.inflate(R.layout.fragment_home, container, false);
+			//提供gridview做布局判断
+			SharedPreferences sp = getActivity().getSharedPreferences("Registered", 0);
 			isRegistered_one = sp.getBoolean("isRegistered_one", false);
-			Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
-			returndata = sp.getInt("returndata", returndata);
-			SharedPreferences sp1 = getActivity().getSharedPreferences(
-					"isLogin", 0);
+			SharedPreferences sp1 = getActivity().getSharedPreferences("isLogin", 0);
 			login = sp1.getBoolean("Login", false);
+			
+			//获取sd卡中的pk_user
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream(fileName);
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				Person person = (Person) ois.readObject();
+				pk_user = person.pk_user;
+				ois.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (StreamCorruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
 
 			initUI(inflater);
 			adapter.notifyDataSetChanged();
@@ -138,18 +173,7 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 				Log.e("HomeFragment", "使用邀请码添加后的fk_group======" + fk_group);
 				Group_User group_User = new Group_User();
 				group_User.setFk_group(fk_group);
-				if (isRegistered_one) {
-					group_User.setFk_user(returndata);
-				} else {
-					if (login) {
-						int pk_user = LoginActivity.getPk_user();
-						group_User.setFk_user(pk_user);
-						Log.e("HomeFragment", "使用邀请码添加后的pk_user======"
-								+ pk_user);
-					} else {
-						group_User.setFk_user(returndata);
-					}
-				}
+				group_User.setFk_user(Integer.valueOf(pk_user));
 				group_User.setRole(2);
 				group_User.setStatus(1);
 				homeInterface.userJoin2gourp(getActivity(), group_User);
@@ -162,17 +186,7 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	}
 
 	public void initNewTeam() {
-		if (isRegistered_one) {
-			ReadTeam(returndata);
-		} else {
-			if (login) {
-				int pk_user = LoginActivity.getPk_user();
-				ReadTeam(pk_user);
-				Log.e("HomeFragment", "进入登录的新建小组=======" + pk_user);
-			} else {
-				ReadTeam(returndata);
-			}
-		}
+		ReadTeam(Integer.valueOf(pk_user));
 	}
 
 	private void ReadTeam(int pk_user) {

@@ -76,7 +76,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 	private String device_id;
 	private Integer status;
 
-	private String fileName = getSDPath() + "/" + "saveData";
 	private Integer sex;
 	private String setup_time;
 	private String last_login_time;
@@ -85,6 +84,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 	public static ArrayList<Group> list = new ArrayList<Group>();
 	private Person person;
 
+	private String fileName = getSDPath() + "/" + "saveData";
 	public String getSDPath() {
 		File sdDir = null;
 		boolean sdCardExist = Environment.getExternalStorageState().equals(
