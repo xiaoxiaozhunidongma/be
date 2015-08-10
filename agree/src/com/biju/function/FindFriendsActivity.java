@@ -90,7 +90,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 			fis = new FileInputStream(fileName);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Person person = (Person) ois.readObject();
-			pk_user = person.pk_user;
+			SD_pk_user = person.pk_user;
 			Log.e("SettingFragment", "从sd卡中获取到的pk_user" + pk_user);
 			ois.close();
 		} catch (FileNotFoundException e) {
