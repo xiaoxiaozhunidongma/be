@@ -84,7 +84,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private void User4head() {
 		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
 		completeURL = Cacheurl;
-		
+		//获取SD卡中的pk_user
 		FileInputStream fis;
 		try {
 			fis = new FileInputStream(fileName);

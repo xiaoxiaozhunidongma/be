@@ -1,0 +1,44 @@
+package com.example.takephoto;
+
+import android.content.Context;
+import android.widget.ImageView;
+
+import com.biju.R;
+import com.biju.APP.MyApplication;
+import com.example.domain.User;
+import com.squareup.picasso.Picasso;
+
+public class UserUtils {
+    /**
+     * ??????username????????????user?????????demo????????????????????????????????????????????????????????????
+     * @param username
+     * @return
+     */
+    public static User getUserInfo(String username){
+        User user = MyApplication.getInstance().getContactList().get(username);
+        if(user == null){
+            user = new User(username);
+        }
+            
+        if(user != null){
+            //demo?????????????????????????????????
+            user.setNick(username);
+//            user.setAvatar("http://downloads.easemob.com/downloads/57.png");
+        }
+        return user;
+    }
+    
+    /**
+     * ??????????????????
+     * @param username
+     */
+    public static void setUserAvatar(Context context, String username, ImageView imageView){
+        User user = getUserInfo(username);
+        if(user != null){
+            Picasso.with(context).load(user.getAvatar()).placeholder(R.drawable.default_avatar).into(imageView);
+        }else{
+            Picasso.with(context).load(R.drawable.default_avatar).into(imageView);
+        }
+    }
+    
+}

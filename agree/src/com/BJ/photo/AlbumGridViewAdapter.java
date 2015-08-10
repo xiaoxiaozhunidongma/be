@@ -4,6 +4,9 @@ import java.util.ArrayList;
 
 import com.BJ.photo.BitmapCache.ImageCallback;
 
+
+import com.BJ.utils.ImageLoaderUtils4Photos;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -15,6 +18,7 @@ import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.ToggleButton;

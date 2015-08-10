@@ -30,6 +30,10 @@ import com.fragment.PhotoFragment;
 
 
 
+import com.biju.function.GroupActivity;
+import com.fragment.PhotoFragment;
+
+
 /**
  * 这个是进入相册显示所有图片的界面
  * 
@@ -59,6 +63,7 @@ public class AlbumActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(Res.getLayoutID("plugin_camera_album"));
+		setContentView(R.layout.plugin_camera_album);
 		PublicWay.activityList.add(this);
 		mContext = AlbumActivity.this;
 		// 注册一个广播，这个广播主要是用于在GalleryActivity进行预览时，防止当所有图片都删除完后，再回到该页面时被取消选中的图片仍处于选中状态
@@ -119,6 +124,8 @@ public class AlbumActivity extends Activity {
 		dataList = new ArrayList<ImageItem>();
 		for (int i = 0; i < contentList.size(); i++) {
 			dataList.addAll(contentList.get(i).imageList);
+			ImageItem imageItem = dataList.get(i);//调试
+			imageItem.setImageId("");
 		}
 
 		mPhoto_num = (TextView) findViewById(R.id.photo_num);
@@ -226,5 +233,12 @@ public class AlbumActivity extends Activity {
 		isShowOkBt();
 		Log.e("AlbumActivity", "进入了onRestart=======");
 		super.onRestart();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		unregisterReceiver(broadcastReceiver);
+		super.onDestroy();
 	}
 }

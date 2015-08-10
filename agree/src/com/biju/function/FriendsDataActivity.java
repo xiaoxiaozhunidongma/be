@@ -8,6 +8,10 @@ import com.BJ.utils.ImageLoaderUtils;
 import com.biju.Interface;
 import com.biju.Interface.releaseFriendListenner;
 import com.biju.R;
+import com.example.huanxin.ChatActivity;
+
+import android.os.Bundle;
+import android.app.Activity;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -148,7 +152,9 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 	}
 
 	private void FriendsData_PrivateChat() {
-		Toast.makeText(FriendsDataActivity.this, "к╫ад", Toast.LENGTH_SHORT).show();
+		Intent intent=new Intent(this, ChatActivity.class);
+		intent.putExtra("allFriends", mAllFriends);
+		startActivity(intent);
 	}
 
 	private void FriendsData_DeleteFriends() {

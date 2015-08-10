@@ -1,5 +1,11 @@
 package com.fragment;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +14,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -16,6 +23,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -27,12 +36,17 @@ import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.javabean.ReadUserAllFriendsback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.Person;
 import com.biju.Interface;
 import com.biju.Interface.readFriendListenner;
 import com.biju.R;
 import com.biju.function.AddFriendsActivity;
 import com.biju.function.FriendsDataActivity;
 import com.biju.login.LoginActivity;
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMGroupManager;
+import com.example.huanxin.ChatActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
 /**
@@ -41,7 +55,7 @@ import com.github.volley_examples.utils.GsonUtils;
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class FriendsFragment extends Fragment implements OnClickListener,
-		SwipeRefreshLayout.OnRefreshListener {
+		SwipeRefreshLayout.OnRefreshListener, OnItemClickListener {
 
 	private View mLayout;
 	private SwipeRefreshLayout mFriends_swipe_refresh;
@@ -49,9 +63,6 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	private RelativeLayout mFriends_add_tishi_layout;
 	private ListView mFriends_listview;
 	private Interface addFriends_interface;
-	private boolean isRegistered_one;
-	private int returndata;
-	private boolean login;
 	private ArrayList<ReadUserAllFriends> AllFriends_List = new ArrayList<ReadUserAllFriends>();
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
 	private String endStr = "/original";
@@ -59,6 +70,20 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private MyAdapter adapter;
 	private Integer fk_user_from;
+	
+	private String fileName = getSDPath() + "/" + "saveData";
+	private String pk_user;
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
 
 	public FriendsFragment() {
 		// Required empty public constructor
@@ -68,15 +93,35 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_friends, container, false);
-		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
-				0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", 0);
-		SharedPreferences sp1 = getActivity()
-				.getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
+//		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
+//				0);
+//		isRegistered_one = sp.getBoolean("isRegistered_one", false);
+//		returndata = sp.getInt("returndata", 0);
+//		SharedPreferences sp1 = getActivity()
+//				.getSharedPreferences("isLogin", 0);
+//		login = sp1.getBoolean("Login", false);
+		
+		//获取SD卡中的pk_user
+				FileInputStream fis;
+				try {
+					fis = new FileInputStream(fileName);
+					ObjectInputStream ois = new ObjectInputStream(fis);
+					Person person = (Person) ois.readObject();
+					pk_user = person.pk_user;
+					Log.e("SettingFragment", "从sd卡中获取到的pk_user" + pk_user);
+					ois.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (StreamCorruptedException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 
 		initUI();
+		LoginHuanXin();
 		initInterface();
 		ReadUserAllFriends();
 		mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout
@@ -92,6 +137,37 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		return mLayout;
 	}
 
+
+	//需要异步？？？？？？？？？？？？？？？？？？？？？？？？？？？
+	private void LoginHuanXin() {
+		Log.e("FriendsFragment~~~~~", "调用了LoginHuanXin（）");
+		String str_pkuser = String.valueOf(Integer.valueOf(pk_user));
+		
+		Log.e("FriendsFragment~~~~~", "Integer.valueOf(pk_user)"+pk_user);
+		
+		if(!"".equals(str_pkuser)){
+			
+			EMChatManager.getInstance().login(str_pkuser,
+					"paopian",new EMCallBack() {//回调
+				@Override
+				public void onSuccess() {
+					EMGroupManager.getInstance().loadAllGroups();
+					EMChatManager.getInstance().loadAllConversations();
+					Log.e("FriendsFragment~~~~~", "登陆聊天服务器成功！~~~~");		
+				}
+				
+				@Override
+				public void onProgress(int progress, String status) {
+				}
+				
+				@Override
+				public void onError(int code, String message) {
+					Log.d("FriendsFragment~~~~~~", "登陆聊天服务器失败！~~~~");
+				}
+			});
+		}
+	}
+
 	@Override
 	public void onStart() {
 		ReadUserAllFriends();
@@ -100,19 +176,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 	private void ReadUserAllFriends() {
 		User user = new User();
-		if (isRegistered_one) {
-			user.setPk_user(returndata);
-			fk_user_from=returndata;
-		} else {
-			if (login) {
-				Integer pk_user = LoginActivity.getPk_user();
-				user.setPk_user(pk_user);
-				fk_user_from=pk_user;
-			} else {
-				user.setPk_user(returndata);
-				fk_user_from=returndata;
-			}
-		}
+		user.setPk_user(Integer.valueOf(pk_user));
+		fk_user_from=Integer.valueOf(pk_user);
 		addFriends_interface.readFriend(getActivity(), user);
 	}
 
@@ -168,6 +233,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		mFriends_listview = (ListView) mLayout
 				.findViewById(R.id.friends_listview);// listview布局
 		adapter = new MyAdapter();
+		
+		mFriends_listview.setOnItemClickListener(this);
 	}
 
 	class ViewHolder
@@ -266,5 +333,15 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			}
 		}, 3000);
 	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		ReadUserAllFriends allFriends = AllFriends_List.get(position);
+		Intent intent=new Intent(getActivity(), ChatActivity.class);
+		intent.putExtra("allFriends", allFriends);
+		startActivity(intent);
+	}
+
 
 }
