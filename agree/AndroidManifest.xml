@@ -7,22 +7,21 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
-    
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    
+
     <!-- 发送短信权限 -->
-    <uses-permission android:name="android.permission.SEND_SMS"/>
-    
-    <!--添加联系人权限  -->
-    <uses-permission android:name="android.permission.READ_CONTACTS" />  
-	<uses-permission android:name="android.permission.WRITE_CONTACTS" />  
+    <uses-permission android:name="android.permission.SEND_SMS" />
+
+    <!-- 添加联系人权限 -->
+    <uses-permission android:name="android.permission.READ_CONTACTS" />
+    <uses-permission android:name="android.permission.WRITE_CONTACTS" />
 
     <!-- 极光推送 -->
     <permission
@@ -111,7 +110,7 @@
     <!-- 读短信权限 -->
     <uses-permission android:name="android.permission.READ_SMS" />
     <!-- 读取本地通讯录 -->
-<!--     环信权限 -->
+    <!-- 环信权限 -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -150,7 +149,7 @@
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-<!--     环信权限 -->
+    <!-- 环信权限 -->
 
     <application
         android:name="com.biju.APP.MyApplication"
@@ -366,7 +365,7 @@
             android:name="com.biju.function.FriendsDataActivity"
             android:label="@string/title_activity_friends_data" >
         </activity>
-<!--         环信部分 -->
+        <!-- 环信部分 -->
         <meta-data
             android:name="EASEMOB_APPKEY"
             android:value="superrabbit#superrabbit" />
@@ -408,12 +407,25 @@
             android:name="com.example.testhuanxin.MorePictureActivity"
             android:label="@string/title_activity_more_picture" >
         </activity>
-               <activity
+        <activity
             android:name="com.example.huanxin.AlertDialog"
             android:screenOrientation="portrait"
             android:theme="@style/MyDialogStyle" >
         </activity>
-<!--         环信部分 -->
+        <!-- 环信部分 -->
+        <activity
+            android:name="com.biju.login.BeforeLoginActivity"
+            android:label="@string/title_activity_before_login" >
+        </activity>
+        <activity
+            android:name="com.biju.login.LoginJumpActivity"
+            android:label="@string/title_activity_login_jump"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.biju.login.PhoneRegisteredActivity"
+            android:label="@string/title_activity_phone_registered" >
+        </activity>
     </application>
 
 </manifest>
