@@ -30,17 +30,20 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="25dp"
             android:textColor="#ffffff"
+            android:gravity="center"
             android:text="TextView" />
 
         <TextView
             android:id="@+id/FriendsData_phone"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignRight="@+id/FriendsData_nickname"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/FriendsData_nickname"
             android:layout_marginTop="25dp"
-            android:textColor="#ffffff"
-            android:text="TextView" />
+            android:gravity="center"
+            android:text="TextView"
+            android:textColor="#ffffff" />
+
     </RelativeLayout>
 
     <RelativeLayout
@@ -64,12 +67,34 @@
                 android:layout_weight="1" >
 
                 <ImageView
-                    android:id="@+id/imageView1"
+                    android:id="@+id/FriendsData_Callphone"
                     android:layout_width="80.0dp"
                     android:layout_height="80.0dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="10.0dp"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/kongxin_white" />
+                    android:src="@drawable/kongxinyuan_selector" />
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/FriendsData_Callphone"
+                    android:layout_centerHorizontal="true"
+                    android:text="拨电话" 
+                    android:layout_marginTop="10.0dp"
+                    android:textColor="@color/white"
+                    />
+
+                <ImageView
+                    android:id="@+id/FriendsData_Callphone_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/FriendsData_Callphone"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="23dp"
+                    android:src="@drawable/phone_selector" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -78,12 +103,34 @@
                 android:layout_weight="1" >
 
                 <ImageView
-                    android:id="@+id/imageView2"
+                    android:id="@+id/FriendsData_SendMessages"
                     android:layout_width="80.0dp"
                     android:layout_height="80.0dp"
+                    android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/kongxin_white" />
+                    android:layout_marginTop="10.0dp"
+                    android:src="@drawable/kongxinyuan_selector" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/FriendsData_SendMessages"
+                    android:layout_centerHorizontal="true"
+                    android:text="发信息"
+                    android:layout_marginTop="10.0dp"
+                    android:textColor="@color/white"
+                     />
+
+                <ImageView
+                    android:id="@+id/FriendsData_SendMessages_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/FriendsData_SendMessages"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="23dp"
+                    android:src="@drawable/sms_selector" />
+
             </RelativeLayout>
 
             <RelativeLayout
@@ -92,12 +139,34 @@
                 android:layout_weight="1" >
 
                 <ImageView
-                    android:id="@+id/imageView3"
+                    android:id="@+id/FriendsData_Savecontact"
                     android:layout_width="80.0dp"
                     android:layout_height="80.0dp"
+                    android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/kongxin_white" />
+                    android:layout_marginTop="10.0dp"
+                    android:src="@drawable/kongxinyuan_selector" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/FriendsData_Savecontact"
+                    android:layout_centerHorizontal="true"
+                    android:text="保存到通讯录"
+                    android:layout_marginTop="10.0dp"
+                    android:textColor="@color/white"
+                     />
+
+                <ImageView
+                    android:id="@+id/FriendsData_Savecontact_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/FriendsData_Savecontact"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginBottom="23dp"
+                    android:src="@drawable/contact_selector" />
+
             </RelativeLayout>
         </LinearLayout>
 
@@ -115,12 +184,33 @@
                 android:layout_weight="1"  >
 
                 <ImageView
-                    android:id="@+id/imageView4"
+                    android:id="@+id/FriendsData_DeleteFriends"
                     android:layout_width="80.0dp"
                     android:layout_height="80.0dp"
+                    android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/kongxin_white" />
+                    android:layout_marginTop="10.0dp"
+                    android:src="@drawable/kongxinyuan_selector"/>
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/FriendsData_DeleteFriends"
+                    android:layout_centerHorizontal="true"
+                    android:text="删除好友"
+                    android:layout_marginTop="10.0dp"
+                    android:textColor="@color/white"
+                     />
+
+                <ImageView
+                    android:id="@+id/FriendsData_DeleteFriends_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignTop="@+id/FriendsData_DeleteFriends"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="24dp"
+                    android:src="@drawable/deletefriends_selector" />
 
             </RelativeLayout>
 
@@ -130,12 +220,33 @@
                 android:layout_weight="1"  >
 
                 <ImageView
-                    android:id="@+id/imageView5"
+                    android:id="@+id/FriendsData_PrivateChat"
                     android:layout_width="80.0dp"
                     android:layout_height="80.0dp"
+                    android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/kongxin_white" />
+                    android:layout_marginTop="10.0dp"
+                    android:src="@drawable/kongxinyuan_selector"/>
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/FriendsData_PrivateChat"
+                    android:layout_centerHorizontal="true"
+                    android:text="私聊"
+                    android:layout_marginTop="10.0dp"
+                    android:textColor="@color/white"
+                     />
+
+                <ImageView
+                    android:id="@+id/FriendsData_PrivateChat_1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignLeft="@+id/textView5"
+                    android:layout_alignTop="@+id/FriendsData_PrivateChat"
+                    android:layout_marginTop="24dp"
+                    android:src="@drawable/siliao_selector" />
 
             </RelativeLayout>
 

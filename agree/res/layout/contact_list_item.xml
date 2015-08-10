@@ -38,7 +38,7 @@
             android:textAppearance="?android:textAppearanceLarge" />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/contact_list_yaoqing"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
@@ -49,9 +49,9 @@
             android:padding="5.0dp"
             android:layout_marginTop="5.0dp"
             android:layout_marginBottom="5.0dp"
-            android:background="@drawable/ok_click_selector"
             android:textColor="#00e3e3"
             android:textSize="17.0sp" />
+<!--             android:background="@drawable/ok_click_selector" -->
 
         <ImageView
             android:id="@+id/contact_list_head"

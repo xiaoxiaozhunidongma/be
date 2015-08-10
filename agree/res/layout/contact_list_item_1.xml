@@ -27,20 +27,21 @@
             />
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/contact_list_addfriends"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:gravity="center"
-            android:text="邀请加入"
+            android:text="成为好友"
             android:padding="5.0dp"
-            android:background="@drawable/ok_click_selector"
             android:layout_marginTop="5.0dp"
             android:layout_marginBottom="5.0dp"
             android:textColor="#00e3e3"
-            android:textSize="17.0sp" />
+            android:textSize="17.0sp"
+             />
+<!--             android:background="@drawable/ok_click_selector" -->
 
         <ImageView
             android:id="@+id/contact_list_head"
@@ -70,6 +71,22 @@
             android:layout_alignLeft="@+id/contact_list_item_1_name"
             android:layout_below="@+id/contact_list_item_1_name"
             android:text="TextView" />
+
+        <TextView
+            android:id="@+id/contact_list_addfriends_1"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:gravity="center"
+            android:padding="5.0dp"
+            android:layout_marginTop="5.0dp"
+            android:layout_marginBottom="5.0dp"
+            android:textColor="#00e3e3"
+            android:textSize="17.0sp"
+            android:visibility="gone"
+             />
 
     </RelativeLayout>
 

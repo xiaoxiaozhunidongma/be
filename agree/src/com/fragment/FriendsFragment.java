@@ -16,6 +16,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -30,11 +32,13 @@ import com.biju.Interface;
 import com.biju.Interface.readFriendListenner;
 import com.biju.R;
 import com.biju.function.AddFriendsActivity;
+import com.biju.function.FriendsDataActivity;
 import com.biju.login.LoginActivity;
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMGroupManager;
+import com.example.huanxin.ChatActivity;
 import com.github.volley_examples.utils.GsonUtils;
-
-import com.biju.R;
-import com.biju.function.AddFriendsActivity;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -42,7 +46,7 @@ import com.biju.function.AddFriendsActivity;
  */
 @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class FriendsFragment extends Fragment implements OnClickListener,
-		SwipeRefreshLayout.OnRefreshListener {
+		SwipeRefreshLayout.OnRefreshListener, OnItemClickListener {
 
 	private View mLayout;
 	private SwipeRefreshLayout mFriends_swipe_refresh;
@@ -59,6 +63,9 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private MyAdapter adapter;
+	private Integer fk_user_from;
+	private Interface readuserinter;
+	private String str_pkuser;
 
 	public FriendsFragment() {
 		// Required empty public constructor
@@ -77,6 +84,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		login = sp1.getBoolean("Login", false);
 
 		initUI();
+		LoginHuanXin();
 		initInterface();
 		ReadUserAllFriends();
 		mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout
@@ -92,6 +100,47 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		return mLayout;
 	}
 
+
+	//需要异步？？？？？？？？？？？？？？？？？？？？？？？？？？？
+	private void LoginHuanXin() {
+		Log.e("FriendsFragment~~~~~", "调用了LoginHuanXin（）");
+		String str_pkuser = String.valueOf(LoginActivity.getPk_user());
+		
+//		if (isRegistered_one) {
+//			str_pkuser = String.valueOf(returndata);
+//		} else {
+//			if (login) {
+//				Integer pk_user = LoginActivity.getPk_user();
+//				 str_pkuser = String.valueOf(pk_user);
+//			} else {
+//				 str_pkuser = String.valueOf(returndata);
+//			}
+//		}
+		Log.e("FriendsFragment~~~~~", "String.valueOf(LoginActivity.getPk_user())"+str_pkuser);
+		
+		if(!"".equals(str_pkuser)){
+			
+			EMChatManager.getInstance().login(str_pkuser,
+					"paopian",new EMCallBack() {//回调
+				@Override
+				public void onSuccess() {
+					EMGroupManager.getInstance().loadAllGroups();
+					EMChatManager.getInstance().loadAllConversations();
+					Log.e("FriendsFragment~~~~~", "登陆聊天服务器成功！~~~~");		
+				}
+				
+				@Override
+				public void onProgress(int progress, String status) {
+				}
+				
+				@Override
+				public void onError(int code, String message) {
+					Log.d("FriendsFragment~~~~~~", "登陆聊天服务器失败！~~~~");
+				}
+			});
+		}
+	}
+
 	@Override
 	public void onStart() {
 		ReadUserAllFriends();
@@ -102,12 +151,15 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		User user = new User();
 		if (isRegistered_one) {
 			user.setPk_user(returndata);
+			fk_user_from=returndata;
 		} else {
 			if (login) {
 				Integer pk_user = LoginActivity.getPk_user();
 				user.setPk_user(pk_user);
+				fk_user_from=pk_user;
 			} else {
 				user.setPk_user(returndata);
+				fk_user_from=returndata;
 			}
 		}
 		addFriends_interface.readFriend(getActivity(), user);
@@ -165,6 +217,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		mFriends_listview = (ListView) mLayout
 				.findViewById(R.id.friends_listview);// listview布局
 		adapter = new MyAdapter();
+		
+		mFriends_listview.setOnItemClickListener(this);
 	}
 
 	class ViewHolder
@@ -191,7 +245,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		}
 
 		@Override
-		public View getView(int position, View convertView, ViewGroup parent) {
+		public View getView(final int position, View convertView, ViewGroup parent) {
 			View inflater=null;
 			ViewHolder holder=null;
 			if(convertView==null)
@@ -207,13 +261,25 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 				inflater=convertView;
 				holder=(ViewHolder) inflater.getTag();
 			}
-			ReadUserAllFriends allFriends=AllFriends_List.get(position);
+			final ReadUserAllFriends allFriends=AllFriends_List.get(position);
 			holder.ReadUserAllFriends_name.setText(allFriends.getNickname());
 			String avatar_path = allFriends.getAvatar_path();
 			String completeURL = beginStr + avatar_path + endStr;
 			ImageLoaderUtils.getInstance().LoadImage(
 					getActivity(), completeURL,
 					holder.ReadUserAllFriends_head);
+			
+			holder.ReadUserAllFriends_head.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+//					Toast.makeText(getActivity(), "当前的位置"+position, Toast.LENGTH_SHORT).show();
+					Intent intent=new Intent(getActivity(), FriendsDataActivity.class);
+					intent.putExtra("ReadUserAllFriends", allFriends);
+					intent.putExtra("fk_user_from", fk_user_from);
+					startActivity(intent);
+				}
+			});
 			
 			return inflater;
 		}
@@ -234,7 +300,9 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	}
 
 	private void tab_friends_addbuddy() {
+		Integer size=AllFriends_List.size();
 		Intent intent = new Intent(getActivity(), AddFriendsActivity.class);
+		intent.putExtra("size", size);
 		startActivity(intent);
 	}
 
@@ -243,10 +311,20 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
+				ReadUserAllFriends();
 				mFriends_swipe_refresh.setRefreshing(false);
-				// adapter.notifyDataSetChanged();
+				adapter.notifyDataSetChanged();
 			}
-		}, 5000);
+		}, 3000);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		ReadUserAllFriends allFriends = AllFriends_List.get(position);
+		Intent intent=new Intent(getActivity(), ChatActivity.class);
+		intent.putExtra("allFriends", allFriends);
+		startActivity(intent);
 	}
 
 }

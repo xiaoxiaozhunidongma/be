@@ -45,6 +45,9 @@ import com.biju.Interface.userLoginListenner;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
+import com.easemob.EMCallBack;
+import com.easemob.chat.EMChatManager;
+import com.easemob.chat.EMGroupManager;
 import com.fragment.HomeFragment;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -69,9 +72,25 @@ public class LoginActivity extends Activity implements OnClickListener {
 	}
 
 	private String mNickname;
-	private String mAvatar_path;
+	private static String mAvatar_path;
+	public String getmAvatar_path() {
+		return mAvatar_path;
+	}
+
+	public void setmAvatar_path(String mAvatar_path) {
+		this.mAvatar_path = mAvatar_path;
+	}
+
 	private String mPhone;
-	private String mPassword;
+	private static String mPassword;
+	public static String getmPassword() {
+		return mPassword;
+	}
+
+	public static void setmPassword(String mPassword) {
+		LoginActivity.mPassword = mPassword;
+	}
+
 	private Interface Login_ReadUserInter;
 	private String device_id;
 	private Integer status;
@@ -211,6 +230,7 @@ public class LoginActivity extends Activity implements OnClickListener {
 						last_login_time = readuser.getLast_login_time();
 						device_id = readuser.getDevice_id();
 						status = readuser.getStatus();
+//						LoginHuanXin();
 
 					}
 					loadBaseNeedLoginMethod(pk_user);
@@ -249,6 +269,36 @@ public class LoginActivity extends Activity implements OnClickListener {
 
 				}
 
+			}
+
+			private void LoginHuanXin() {
+
+				Log.e("FriendsFragment~~~~~", "调用了LoginHuanXin（）");
+				Log.e("FriendsFragment~~~~~", "String.valueOf(LoginActivity.getPk_user())"+String.valueOf(LoginActivity.getPk_user()));
+				Log.e("FriendsFragment~~~~~", "LoginActivity.getmPassword()"+LoginActivity.getmPassword());
+//				EMChatManager.getInstance().login("c",
+//						"c",new EMCallBack() {//回调
+					EMChatManager.getInstance().login(String.valueOf(LoginActivity.getPk_user()),
+							LoginActivity.getmPassword(),new EMCallBack() {//回调
+					@Override
+					public void onSuccess() {
+								EMGroupManager.getInstance().loadAllGroups();
+								EMChatManager.getInstance().loadAllConversations();
+								Log.e("FriendsFragment~~~~~", "登陆聊天服务器成功！~~~~");		
+					}
+
+					@Override
+					public void onProgress(int progress, String status) {
+						Log.e("FriendsFragment~~~~~", "progressprogressprogress登陆聊天服务器成功！~~~~");		
+					}
+
+					@Override
+					public void onError(int code, String message) {
+						Log.d("FriendsFragment~~~~~~", "登陆聊天服务器失败！~~~~");
+					}
+				});
+			
+				
 			}
 
 			@Override
