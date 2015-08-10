@@ -26,6 +26,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.javabean.Loginback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.Registeredback;
 import com.BJ.javabean.User;
@@ -36,6 +37,7 @@ import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.regNewAccountListenner;
 import com.biju.Interface.getPicSignListenner;
+import com.biju.Interface.userLoginListenner;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
@@ -158,11 +160,12 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 					editor.putInt("returndata", returndata);
 					editor.putBoolean("isRegistered_one", true);
 					editor.commit();
-					// 跳转至主界面
-					Intent intent = new Intent(RegisteredActivity.this,
-							MainActivity.class);
-					startActivity(intent);
-					finish();
+					//注册成功后进行登录
+					User loginuser = new User();
+					loginuser.setPk_user(returndata);
+					loginuser.setPassword("");
+					mRegistered_Inter.userLogin(RegisteredActivity.this,loginuser);
+					
 				} else {
 					Toast.makeText(RegisteredActivity.this, "请重新注册!",
 							Toast.LENGTH_SHORT).show();
@@ -175,6 +178,42 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			}
 		});
 		mTextView = (TextView) findViewById(R.id.textView1);
+		
+		mRegistered_Inter.setPostListener(new userLoginListenner() {
+
+			@Override
+			public void success(String A) {
+				Log.e("RegisteredActivity", "用户资料" + A);
+				Loginback loginback = GsonUtils.parseJson(A, Loginback.class);
+				// 说明是已经登录成功
+				if (loginback.getStatusMsg() == 1) {
+					Log.e("RegisteredActivity", "登录成功，账号ID" + A);
+					// 跳转至主界面
+					Intent intent = new Intent(RegisteredActivity.this,
+							MainActivity.class);
+					startActivity(intent);
+					finish();
+					
+					try {
+						Person person = new Person(String.valueOf(returndata), "");
+						ObjectOutputStream oos = new ObjectOutputStream(
+								new FileOutputStream(fileName));
+						oos.writeObject(person);
+						oos.close();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		
 	}
 	
 	@Override

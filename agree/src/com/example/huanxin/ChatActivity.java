@@ -1028,6 +1028,9 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 						holder.pb = (ProgressBar) convertView.findViewById(R.id.progressBar);
 						holder.staus_iv = (ImageView) convertView.findViewById(R.id.msg_status);
 						holder.tv_usernick = (TextView) convertView.findViewById(R.id.tv_userid);
+						holder.tv_sendtime = (TextView) convertView.findViewById(R.id.tv_sendtime);
+						holder.tv_yymmdd = (TextView) convertView.findViewById(R.id.tv_yymmdd);
+						holder.tv_hhmm = (TextView) convertView.findViewById(R.id.tv_hhmm);
 					} catch (Exception e) {
 					}
 
@@ -1041,6 +1044,8 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 						holder.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 						holder.tv_usernick = (TextView) convertView.findViewById(R.id.tv_userid);
 						holder.tv_sendtime = (TextView) convertView.findViewById(R.id.tv_sendtime);
+						holder.tv_yymmdd = (TextView) convertView.findViewById(R.id.tv_yymmdd);
+						holder.tv_hhmm = (TextView) convertView.findViewById(R.id.tv_hhmm);
 					} catch (Exception e) {
 					}
 
@@ -1242,18 +1247,16 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 			}
 
 			TextView timestamp = (TextView) convertView.findViewById(R.id.timestamp);
-			TextView tv_yymmdd = (TextView) convertView.findViewById(R.id.tv_yymmdd);
-			TextView tv_hhmm = (TextView) convertView.findViewById(R.id.tv_hhmm);
 			
 			SimpleDateFormat format=new SimpleDateFormat("yy/M/d");
 			String yymmdd=format.format(new Date(message.getMsgTime()));
 			SimpleDateFormat format2=new SimpleDateFormat("HH:mm");
 			String HHmm=format2.format(new Date(message.getMsgTime()));
-			if(tv_yymmdd!=null){
-				tv_yymmdd.setText(yymmdd);
+			if(holder.tv_yymmdd!=null){
+				holder.tv_yymmdd.setText(yymmdd);
 			}
-			if(tv_hhmm!=null){
-				tv_hhmm.setText(HHmm);
+			if(holder.tv_hhmm!=null){
+				holder.tv_hhmm.setText(HHmm);
 			}
 
 //			if (position == 0) {
@@ -1340,10 +1343,12 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 					}
 					break;
 				case INPROGRESS: // 发送中
+					Log.e("ChatAc", "发送中=======");//此处并没有调用
 					holder.pb.setVisibility(View.VISIBLE);
 					holder.staus_iv.setVisibility(View.GONE);
-					//不显示发送时间
+//					不显示发送时间
 					if(holder.tv_sendtime !=null){
+						Log.e("ChatAc", "holder.tv_sendtime+++++++holder.tv_sendtime+++++++holder.tv_sendtime");
 						holder.tv_sendtime .setVisibility(View.GONE);
 					}
 					break;
@@ -1881,8 +1886,10 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 		 * @param position
 		 */
 		public void sendMsgInBackground(final EMMessage message, final ViewHolder holder) {
+			//这里为发送中....
 			holder.staus_iv.setVisibility(View.GONE);
 			holder.pb.setVisibility(View.VISIBLE);
+			holder.tv_sendtime.setVisibility(View.GONE);
 
 			final long start = System.currentTimeMillis();
 			// 调用sdk发送异步发送方法
@@ -1902,6 +1909,7 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 
 				@Override
 				public void onProgress(int progress, String status) {
+					Log.e("ChatAcs", "progress==="+progress);
 				}
 
 			});
@@ -2062,6 +2070,8 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 							Toast.makeText(activity, activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast), 0)
 							.show();
 						}
+					}else if(message.status == EMMessage.Status.INPROGRESS){
+						
 					}
 
 					notifyDataSetChanged();
@@ -2831,6 +2841,8 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 		return listView;
 	}
 	public static class ViewHolder {
+		public TextView tv_hhmm;
+		public TextView tv_yymmdd;
 		public TextView tv_sendtime;
 		ImageView iv;
 		TextView tv;

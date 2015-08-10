@@ -1,5 +1,11 @@
 package com.biju.function;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,6 +22,7 @@ import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.provider.ContactsContract;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -42,6 +49,7 @@ import com.BJ.javabean.User_User;
 import com.BJ.utils.ContactBean;
 import com.BJ.utils.DensityUtil;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.Person;
 import com.biju.Interface;
 import com.biju.Interface.addFriendListenner;
 import com.biju.Interface.becomeFriendListenner;
@@ -67,9 +75,6 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 	private ArrayList<String> Userphonelist = new ArrayList<String>();
 	private Interface add_Interface;
 	private String phonenumber;
-	private boolean isRegistered_one;
-	private boolean login;
-	private int returndata;
 	private ArrayList<CheckFriends> contact_list = new ArrayList<CheckFriends>();
 	private ArrayList<CheckFriends> AddThe_list = new ArrayList<CheckFriends>();
 	private ArrayList<CheckFriends> ByAdd_list = new ArrayList<CheckFriends>();
@@ -96,20 +101,44 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 	private RelativeLayout mContact_head_listview_2_layout;
 	private RelativeLayout mContact_head_layout;
 	private Integer fk_user_from;
-	private boolean isShow;
 	private Integer size;
-	private int sum=60;
+	private String fileName = getSDPath() + "/" + "saveData";
+	private String SD_pk_user;
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_buddy);
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
+		//获取SD卡中的pk_user
+				FileInputStream fis;
+				try {
+					fis = new FileInputStream(fileName);
+					ObjectInputStream ois = new ObjectInputStream(fis);
+					Person person = (Person) ois.readObject();
+					SD_pk_user = person.pk_user;
+					Log.e("SettingFragment", "从sd卡中获取到的pk_user" + SD_pk_user);
+					ois.close();
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				} catch (StreamCorruptedException e) {
+					e.printStackTrace();
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (ClassNotFoundException e) {
+					e.printStackTrace();
+				}
 
 		Intent intent = getIntent();
 		size = intent.getIntExtra("size", 0);
@@ -316,8 +345,6 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 				if (status == 1) {
 					Log.e("AddFriendsActivity", "返回是否添加成功=======" + A);
 					contactAdapter.notifyDataSetChanged();
-					// finish();
-					isShow = true;
 				}
 			}
 
@@ -331,16 +358,12 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 		for (int i = 0; i < phonelist.size(); i++) {
 			phonenumber = phonelist.get(i);
 			char phone_one = phonenumber.charAt(0);
-			// Log.e("ContactListActivity+number", "截取后的电话号码的第一个数为========="
-			// + phone_one);
 			if ("1".equals(String.valueOf(phone_one))) {
 				if (phonenumber.length() > 11) {
 					String number1 = phonenumber.substring(0, 3);
 					String number2 = phonenumber.substring(4, 8);
 					String number3 = phonenumber.substring(9, 13);
 					String number4 = number1 + number2 + number3;
-					// Log.e("ContactListActivity+number", "截取后的电话号码========="
-					// + number4);
 					phonelist2.add(number4);
 				} else {
 					phonelist2.add(phonenumber);
@@ -355,30 +378,15 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 		if (phonelist2.size() > 0) {
 			contactList.setAdapter(adapter);
 		}
-		// Log.e("ContactListActivity+number", "截取后的电话号码list========="
-		// + phonelist2.toString());
 		final int size = phonelist2.size();
 		phoneArrays = (String[]) phonelist2.toArray(new String[size]);
 		for (int i = 0; i < phoneArrays.length; i++) {
 			Log.e("AddFriendsActivity", "所获取到的电话号码数组 的每一个=========="+ phoneArrays[i]);
 		}
-		// Log.e("AddFriendsActivity",
-		// "所获取到的电话号码数组==========" + phoneArrays.toString());
 		PhoneArray phonearray = new PhoneArray();
 		phonearray.setPhones(phoneArrays);
-		if (isRegistered_one) {
-			phonearray.setUser_id(returndata);
-			fk_user_from = returndata;
-		} else {
-			if (login) {
-				Integer user_id = LoginActivity.getPk_user();
-				phonearray.setUser_id(user_id);
-				fk_user_from = user_id;
-			} else {
-				phonearray.setUser_id(returndata);
-				fk_user_from = returndata;
-			}
-		}
+		fk_user_from = Integer.valueOf(SD_pk_user);
+		phonearray.setUser_id(Integer.valueOf(SD_pk_user));
 		add_Interface.mateComBook(AddFriendsActivity.this, phonearray);
 	}
 
@@ -700,20 +708,10 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 
 						@Override
 						public void onClick(View v) {
-							isShow=true;
 							Toast.makeText(AddFriendsActivity.this, "已发送请求",Toast.LENGTH_SHORT).show();
 							Integer pk_user = pk_userlist.get(position);
 							User_User user_User = new User_User();
-							if (isRegistered_one) {
-								user_User.setFk_user_from(returndata);
-							} else {
-								if (login) {
-									int user = LoginActivity.getPk_user();
-									user_User.setFk_user_from(user);
-								} else {
-									user_User.setFk_user_from(returndata);
-								}
-							}
+							user_User.setFk_user_from(Integer.valueOf(SD_pk_user));
 							user_User.setFk_user_to(Integer.valueOf(pk_user));
 							user_User.setRelationship(1);
 							user_User.setStatus(1);
@@ -756,19 +754,8 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 	private void initData() {
 		PhoneArray phonearray = new PhoneArray();
 		phonearray.setPhones(phoneArrays);
-		if (isRegistered_one) {
-			phonearray.setUser_id(returndata);
-			fk_user_from = returndata;
-		} else {
-			if (login) {
-				Integer user_id = LoginActivity.getPk_user();
-				phonearray.setUser_id(user_id);
-				fk_user_from = user_id;
-			} else {
-				phonearray.setUser_id(returndata);
-				fk_user_from = returndata;
-			}
-		}
+		phonearray.setUser_id(Integer.valueOf(SD_pk_user));
+		fk_user_from = Integer.valueOf(SD_pk_user);
 		add_Interface.mateComBook(AddFriendsActivity.this, phonearray);
 	}
 }
