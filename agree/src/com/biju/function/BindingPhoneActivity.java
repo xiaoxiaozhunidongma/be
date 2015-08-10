@@ -42,6 +42,10 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 	private Integer mBinding_phone_codeback;
 	private String phone;
 	private String binding_phone;
+	private int sum=60;
+	private TextView mBinding_phone_OK;
+	private boolean isagain;
+	private boolean isOK;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -66,8 +70,52 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 					Log.e("BindingPhoneActivity", "返回验证码是否发送成功======" + A);
 					Code code = (Code) codeback.getReturnData();
 					mBinding_phone_codeback = code.getCode();
-					Log.e("BindingPhoneActivity",
-							"返回验证码是否发送成功======" + code.getCode());
+					Log.e("BindingPhoneActivity","返回验证码是否发送成功======" + code.getCode());
+					//发送一次后再60s内不能再发送第二次
+					mBinding_phone_OK.post(new Runnable() {
+						
+						@Override
+						public void run() {
+							sum--;
+							if (sum > 0) {
+								mBinding_phone_OK.setText(sum + "");
+								mBinding_phone_OK.postDelayed(this, 1000);
+								mBinding_phone_OK.setEnabled(false);
+								mBinding_phone_code.addTextChangedListener(new TextWatcher() {
+									
+									@Override
+									public void onTextChanged(CharSequence s, int start, int before, int count) {
+										String code=s.toString();
+										if(code!=null)
+										{
+											isOK=true;
+											sum=0;
+										}
+									}
+									@Override
+									public void beforeTextChanged(CharSequence s, int start, int count,
+											int after) {
+									}
+									@Override
+									public void afterTextChanged(Editable s) {
+									}
+								});
+							} else {
+								if(isOK)
+								{
+									mBinding_phone_OK.setText("完成验证");
+									mBinding_phone_OK.setEnabled(true);
+									isagain=false;
+								}else
+								{
+									mBinding_phone_OK.setText("发送验证码");
+									isagain=true;
+									sum = 60;
+									mBinding_phone_OK.setEnabled(true);
+								}
+							}
+						}
+					});
 					mBinding_phone_before.setVisibility(View.GONE);
 					mBinding_phone_after.setVisibility(View.VISIBLE);
 				}
@@ -118,7 +166,8 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 		mBinding_phone_before = (RelativeLayout) findViewById(R.id.binding_phone_before);// 发送前
 		mBinding_phone_after = (RelativeLayout) findViewById(R.id.binding_phone_after);// 发送后
 		mBinding_phone_code = (EditText) findViewById(R.id.binding_phone_code);// 输入验证码
-		findViewById(R.id.binding_phone_OK).setOnClickListener(this);// 完成验证
+		mBinding_phone_OK = (TextView) findViewById(R.id.binding_phone_OK);
+		mBinding_phone_OK.setOnClickListener(this);// 完成验证
 		mBinding_phone_send.setTextColor(R.color.lightgray1);
 		mBinding_phone_phone_listener();
 	}
@@ -206,28 +255,37 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 	}
 
 	private void binding_phone_OK() {
-		String code_1 = mBinding_phone_code.getText().toString().trim();
-		Log.e("BindingPhoneActivity", "所得到的验证码1111======" + code_1);
-		Log.e("BindingPhoneActivity", "所得到的验证码222222======"
-				+ mBinding_phone_codeback);
-		if (Integer.valueOf(code_1).equals(mBinding_phone_codeback)) {
-			User usersetting = new User();
-			usersetting.setPk_user(user.getPk_user());
-			usersetting.setJpush_id(user.getJpush_id());
-			usersetting.setNickname(user.getNickname());
-			usersetting.setPassword(user.getPassword());
-			usersetting.setSex(user.getSex());
-			usersetting.setPhone(binding_phone);
-			usersetting.setSetup_time(user.getSetup_time());
-			usersetting.setLast_login_time(user.getLast_login_time());
-			usersetting.setAvatar_path(user.getAvatar_path());
-			usersetting.setStatus(user.getStatus());
-			mBinding_phone_interface.updateUser(BindingPhoneActivity.this,
-					usersetting);
-
-		} else {
-			Toast.makeText(BindingPhoneActivity.this, "验证码错误！",
-					Toast.LENGTH_SHORT).show();
+		if(isagain)
+		{
+			Phone binding_phone_1 = new Phone();
+			binding_phone_1.setPhone(binding_phone);
+			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,
+					binding_phone_1);
+		}else
+		{
+			String code_1 = mBinding_phone_code.getText().toString().trim();
+			Log.e("BindingPhoneActivity", "所得到的验证码1111======" + code_1);
+			Log.e("BindingPhoneActivity", "所得到的验证码222222======"
+					+ mBinding_phone_codeback);
+			if (Integer.valueOf(code_1).equals(mBinding_phone_codeback)) {
+				User usersetting = new User();
+				usersetting.setPk_user(user.getPk_user());
+				usersetting.setJpush_id(user.getJpush_id());
+				usersetting.setNickname(user.getNickname());
+				usersetting.setPassword(user.getPassword());
+				usersetting.setSex(user.getSex());
+				usersetting.setPhone(binding_phone);
+				usersetting.setSetup_time(user.getSetup_time());
+				usersetting.setLast_login_time(user.getLast_login_time());
+				usersetting.setAvatar_path(user.getAvatar_path());
+				usersetting.setStatus(user.getStatus());
+				mBinding_phone_interface.updateUser(BindingPhoneActivity.this,
+						usersetting);
+				
+			} else {
+				Toast.makeText(BindingPhoneActivity.this, "验证码错误！",
+						Toast.LENGTH_SHORT).show();
+			}
 		}
 	}
 
@@ -245,6 +303,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 			binding_phone_1.setPhone(binding_phone);
 			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,
 					binding_phone_1);
+			
 		}
 	}
 

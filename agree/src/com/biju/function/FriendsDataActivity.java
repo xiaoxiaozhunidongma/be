@@ -1,5 +1,7 @@
 package com.biju.function;
 
+import java.util.ArrayList;
+
 import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.javabean.User_User;
 import com.BJ.utils.ImageLoaderUtils;
@@ -10,6 +12,12 @@ import com.example.huanxin.ChatActivity;
 
 import android.os.Bundle;
 import android.app.Activity;
+
+import android.net.Uri;
+import android.os.Bundle;
+import android.app.Activity;
+import android.content.ContentProviderOperation;
+import android.content.ContentResolver;
 import android.content.Intent;
 import android.util.Log;
 import android.view.Menu;
@@ -123,7 +131,12 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 			break;
 		case R.id.FriendsData_Savecontact:
 		case R.id.FriendsData_Savecontact_1:
-			FriendsData_Savecontact();
+			Toast.makeText(FriendsDataActivity.this, "添加成功", Toast.LENGTH_SHORT).show();
+			try {
+				FriendsData_Savecontact();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
 			break;
 		case R.id.FriendsData_DeleteFriends:
 		case R.id.FriendsData_DeleteFriends_1:
@@ -151,16 +164,46 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 		mFriendsDataInterface.releaseFriend(FriendsDataActivity.this, user_User);
 	}
 
-	private void FriendsData_Savecontact() {
-		Toast.makeText(FriendsDataActivity.this, "添加到通讯录", Toast.LENGTH_SHORT).show();
+	private void FriendsData_Savecontact()  throws Exception {
+		Uri uri = Uri.parse("content://com.android.contacts/raw_contacts");
+		ContentResolver resolver = FriendsDataActivity.this.getContentResolver();
+		ArrayList<ContentProviderOperation> operations = new ArrayList<ContentProviderOperation>();
+		ContentProviderOperation op1 = ContentProviderOperation.newInsert(uri)
+			.withValue("account_name", null)
+			.build();
+		operations.add(op1);
+		
+		uri = Uri.parse("content://com.android.contacts/data");
+		ContentProviderOperation op2 = ContentProviderOperation.newInsert(uri)
+			.withValueBackReference("raw_contact_id", 0)
+			.withValue("mimetype", "vnd.android.cursor.item/name")
+			.withValue("data2", mAllFriends.getNickname())
+			.build();
+		operations.add(op2);
+		
+		ContentProviderOperation op3 = ContentProviderOperation.newInsert(uri)
+			.withValueBackReference("raw_contact_id", 0)
+			.withValue("mimetype", "vnd.android.cursor.item/phone_v2")
+			.withValue("data1", mAllFriends.getPhone())			
+			.withValue("data2", "2")
+			.build();
+		operations.add(op3);
+		
+		resolver.applyBatch("com.android.contacts", operations);
 	}
 
 	private void FriendsData_SendMessages() {
-		Toast.makeText(FriendsDataActivity.this, "发短信", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(FriendsDataActivity.this, "发短信", Toast.LENGTH_SHORT).show();
+		Uri smsToUri = Uri.parse("smsto:"+ mAllFriends.getPhone());    
+	    Intent mIntent = new Intent( android.content.Intent.ACTION_SENDTO, smsToUri );  
+	    startActivity( mIntent );
 	}
 
 	private void FriendsData_Callphone() {
-		Toast.makeText(FriendsDataActivity.this, "拨打电话", Toast.LENGTH_SHORT).show();
+//		Toast.makeText(FriendsDataActivity.this, "拨打电话", Toast.LENGTH_SHORT).show();
+		Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mAllFriends.getPhone()));
+		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+		startActivity(intent);
 	}
 
 }

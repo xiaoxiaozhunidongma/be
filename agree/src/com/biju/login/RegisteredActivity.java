@@ -1,5 +1,11 @@
 package com.biju.login;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -8,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -24,6 +31,7 @@ import com.BJ.javabean.Registeredback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.InitHead;
+import com.BJ.utils.Person;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.regNewAccountListenner;
@@ -68,6 +76,20 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private TextView mTextView;
 	private Interface mRegistered_Inter;
 	private boolean isHead;
+	
+	private String fileName = getSDPath() + "/" + "saveData";
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
+	private int returndata;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -129,7 +151,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 				int statusMsg = registered.getStatusMsg();
 				if (statusMsg == 1) {
 
-					int returndata = registered.getReturnData();
+					returndata = registered.getReturnData();
 					Log.e("RegisteredActivity", "returndata" + returndata);
 					SharedPreferences sp = getSharedPreferences("Registered", 0);
 					Editor editor = sp.edit();
@@ -154,6 +176,24 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		});
 		mTextView = (TextView) findViewById(R.id.textView1);
 	}
+	
+	@Override
+	protected void onStop() {
+		try {
+			Person person = new Person(String.valueOf(returndata), "");
+			ObjectOutputStream oos = new ObjectOutputStream(
+					new FileOutputStream(fileName));
+			oos.writeObject(person);
+			oos.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		super.onStop();
+	}
+
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -273,6 +313,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		startActivity(intent);
 		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
+	
 
 	// 打开图库，选择图片
 	private void registered_head() {

@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.javabean.ReadUserAllFriendsback;
@@ -106,16 +107,6 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		Log.e("FriendsFragment~~~~~", "µ˜”√¡ÀLoginHuanXin£®£©");
 		String str_pkuser = String.valueOf(LoginActivity.getPk_user());
 		
-//		if (isRegistered_one) {
-//			str_pkuser = String.valueOf(returndata);
-//		} else {
-//			if (login) {
-//				Integer pk_user = LoginActivity.getPk_user();
-//				 str_pkuser = String.valueOf(pk_user);
-//			} else {
-//				 str_pkuser = String.valueOf(returndata);
-//			}
-//		}
 		Log.e("FriendsFragment~~~~~", "String.valueOf(LoginActivity.getPk_user())"+str_pkuser);
 		
 		if(!"".equals(str_pkuser)){
@@ -326,5 +317,6 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		intent.putExtra("allFriends", allFriends);
 		startActivity(intent);
 	}
+
 
 }

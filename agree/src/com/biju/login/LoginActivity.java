@@ -230,7 +230,6 @@ public class LoginActivity extends Activity implements OnClickListener {
 						last_login_time = readuser.getLast_login_time();
 						device_id = readuser.getDevice_id();
 						status = readuser.getStatus();
-//						LoginHuanXin();
 
 					}
 					loadBaseNeedLoginMethod(pk_user);

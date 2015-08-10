@@ -74,6 +74,7 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		adapter.notifyDataSetChanged();
 		super.onStart();
 	}
+
 	private void initInterface() {
 		tab_party_interface = Interface.getInstance();
 		tab_party_interface.setPostListener(new readUserAllPartyListenner() {
@@ -169,6 +170,7 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		mParty_listView = mPull_refresh_list.getRefreshableView();
 		adapter = new MyAdapter();
 		mParty_listView.setAdapter(adapter);
+
 		mParty_listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
