@@ -1,9 +1,6 @@
 package com.fragment;
 
-import java.lang.reflect.Type;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -26,10 +23,11 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -37,7 +35,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
@@ -53,21 +50,20 @@ import com.BJ.photo.ImageItem;
 import com.BJ.photo.PublicWay;
 import com.BJ.photo.Res;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
-import com.biju.Interface.uploadingPhotoListenner;
-import com.biju.Interface.readPartyPhotosListenner;
 import com.biju.Interface.getPicSignListenner;
+import com.biju.Interface.readPartyPhotosListenner;
+import com.biju.Interface.uploadingPhotoListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
+import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
 import com.tencent.upload.task.UploadTask;
-import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.data.FileInfo;
 import com.tencent.upload.task.impl.PhotoUploadTask;
-import com.biju.Interface.uploadingPhotoListenner;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -97,6 +93,7 @@ public class PhotoFragment extends Fragment  {
 	private String completeURL;
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
 	private String endStr = "/original";
+	private Integer SD_pk_user;
 
 
 	public PhotoFragment() {
@@ -115,8 +112,12 @@ public class PhotoFragment extends Fragment  {
 
 		if (mLayout == null) {
 
-			mLayout = inflater.inflate(R.layout.activity_selectimg, container,
-					false);
+			mLayout = inflater.inflate(R.layout.activity_selectimg, container,false);
+			
+			//获取sd卡中的pk_user
+			SD_pk_user = SdPkUser.getsD_pk_user();
+			Log.e("PhotoFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+			
 			Res.init(getActivity());
 			bimap = BitmapFactory.decodeResource(getResources(),
 					R.drawable.icon_addpic_unfocused);
@@ -233,7 +234,7 @@ public class PhotoFragment extends Fragment  {
 				
 				Photo photo = new Photo();
 				photo.setFk_group(GroupActivity.getPk_group());
-				photo.setFk_user(LoginActivity.getPk_user());
+				photo.setFk_user(SD_pk_user);
 //				photo.setPath(result.fileId);
 				photo.setPk_photo(result.fileId);
 				photo.setStatus(1);

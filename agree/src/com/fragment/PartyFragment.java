@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -23,12 +22,12 @@ import android.widget.TextView;
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.UserAllPartyback;
+import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.readUserAllPartyListenner;
 import com.biju.R;
 import com.biju.function.NewPartyActivity;
 import com.biju.function.PartyDetailsActivity;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -44,9 +43,6 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	private View mLayout;
 	private RelativeLayout mTab_party_prompt_layout;
 	private RelativeLayout mTab_party_list_layout;
-	private int returndata;
-	private boolean isRegistered_one;
-	private boolean login;
 	private Interface tab_party_interface;
 	private PullToRefreshListView mPull_refresh_list;
 	private ListView mParty_listView;
@@ -62,7 +58,6 @@ public class PartyFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_party, container, false);
 		initUI();
-		initPk_user();
 		initInterface();
 		initParty();
 		return mLayout;
@@ -114,29 +109,10 @@ public class PartyFragment extends Fragment implements OnClickListener {
 
 	private void initParty() {
 		User partyuser = new User();
-		if (isRegistered_one) {
-			partyuser.setPk_user(returndata);
-		} else {
-			if (login) {
-				int pk_user = LoginActivity.getPk_user();
-				partyuser.setPk_user(pk_user);
-				Log.e("PartyFragment", "pk_user====" + pk_user);
-			} else {
-				partyuser.setPk_user(returndata);
-			}
-		}
+		Integer SD_pk_user=SdPkUser.getsD_pk_user();
+		partyuser.setPk_user(SD_pk_user);
+		Log.e("PartyFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
 		tab_party_interface.readUserAllParty(getActivity(), partyuser);
-	}
-
-	private void initPk_user() {
-		// 得到pk_user
-		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
-				0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getActivity()
-				.getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
 	}
 
 	private void initUI() {

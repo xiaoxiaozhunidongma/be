@@ -1,18 +1,10 @@
 package com.biju.function;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.Environment;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -32,13 +24,12 @@ import com.BJ.javabean.User;
 import com.BJ.javabean.User_User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
-import com.BJ.utils.Person;
+import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.addFriendListenner;
 import com.biju.Interface.checkFriendListenner;
 import com.biju.Interface.findUserListenner;
 import com.biju.R;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class FindFriendsActivity extends Activity implements OnClickListener {
@@ -58,20 +49,8 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	
-	private String fileName = getSDPath() + "/" + "saveData";
-	private String SD_pk_user;
+	private Integer SD_pk_user;
 	private boolean isRegistered_one;
-	public String getSDPath() {
-		File sdDir = null;
-		boolean sdCardExist = Environment.getExternalStorageState().equals(
-				android.os.Environment.MEDIA_MOUNTED);
-		// 判断sd卡是否存在
-		if (sdCardExist) {
-			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
-		}
-		return sdDir.toString();
-
-	}
 	
 
 	@Override
@@ -81,27 +60,11 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_find_friends);
 		
 		//提供做布局判断
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
+		isRegistered_one=SdPkUser.isRegistered_one();
 		
 		//获取SD卡中的pk_user
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream(fileName);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Person person = (Person) ois.readObject();
-			SD_pk_user = person.pk_user;
-			Log.e("SettingFragment", "从sd卡中获取到的pk_user" + pk_user);
-			ois.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (StreamCorruptedException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		SD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("FindFriendsActivity", "从SD卡中获取到的Pk_user" + SD_pk_user);
 
 		initInterface();
 		initUI();
@@ -254,7 +217,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 
 	private void findfriends_sendrequest() {
 		User_User user_User = new User_User();
-		user_User.setFk_user_from(Integer.valueOf(SD_pk_user));
+		user_User.setFk_user_from(SD_pk_user);
 		user_User.setFk_user_to(Integer.valueOf(pk_user));
 		user_User.setRelationship(1);
 		user_User.setStatus(1);
@@ -283,7 +246,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 			{
 				// 检查好友关系
 				User_User user_User = new User_User();
-				user_User.setFk_user_from(Integer.valueOf(SD_pk_user));
+				user_User.setFk_user_from(SD_pk_user);
 				user_User.setFk_user_to(Integer.valueOf(pk_user));
 				findfriends_inter_before.checkFriend(FindFriendsActivity.this,
 						user_User);

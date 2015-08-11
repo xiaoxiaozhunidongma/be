@@ -1,23 +1,25 @@
 package com.biju.login;
 
-import com.biju.R;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
-public class BeforeLoginActivity extends Activity implements OnClickListener{
+import com.BJ.utils.SdPkUser;
+import com.biju.R;
 
+public class BeforeLoginActivity extends Activity implements OnClickListener{
+	public static BeforeLoginActivity BeforeLogin;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_before_login);
 		initUI();
+		BeforeLogin=this;
 	}
 
 	private void initUI() {
@@ -57,5 +59,4 @@ public class BeforeLoginActivity extends Activity implements OnClickListener{
 		startActivity(intent);
 		
 	}
-
 }

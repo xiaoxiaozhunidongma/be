@@ -7,20 +7,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -52,11 +51,10 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.R;
-import com.github.volley_examples.utils.NotifiUtils;
 
-public class MapActivity extends Activity implements
-		OnGetGeoCoderResultListener, OnClickListener {
+public class MapActivity extends Activity implements OnGetGeoCoderResultListener, OnClickListener {
 
+	public static MapActivity Map;
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	private LatLng currentPt;
@@ -128,6 +126,7 @@ public class MapActivity extends Activity implements
 		mSearch.setOnGetGeoCodeResultListener(this);
 
 		initUI();
+		Map=this;
 	}
 
 	private void initUI() {
@@ -424,13 +423,10 @@ public class MapActivity extends Activity implements
 	
 			Intent intent = new Intent(MapActivity.this, TimeActivity.class);
 			startActivity(intent);
-			finish();
 	}
 
 	private void map_back() {
 		finish();
-		Intent intent=new Intent(MapActivity.this, NewPartyActivity.class);
-		startActivity(intent);
 	}
 
 

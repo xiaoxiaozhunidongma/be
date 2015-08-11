@@ -192,7 +192,7 @@ public class PartyDetailsActivity extends Activity implements
 
 	@Override
 	protected void onStop() {
-		// unregisterReceiver(receiver);
+		unregisterReceiver(receiver);
 		super.onStop();
 	}
 

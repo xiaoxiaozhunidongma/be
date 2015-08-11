@@ -25,14 +25,13 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
+import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
-import com.biju.login.LoginActivity;
 import com.fragment.ChatFragment;
 import com.fragment.PhotoFragment;
 import com.fragment.ScheduleFragment;
@@ -54,9 +53,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 		GroupActivity.pk_group = pk_group;
 	}
 
-	private int returndata;
-	private boolean login;
-	private boolean isRegistered_one;
 	private Interface groupInterface;
 	public static Integer pk_group_user;
 
@@ -86,12 +82,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_tab);
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
+		//获取sd卡中的pk_user
+		sD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("GroupActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 
 		initUI();
 		Intent intent = getIntent();
@@ -119,6 +112,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 	}
 
 	private int i = 0;
+	private Integer sD_pk_user;
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
@@ -229,16 +223,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 		Integer pk_group = Group_sp.getInt("pk_group", 0);
 		Group_User group_User = new Group_User();
 		group_User.setFk_group(pk_group);
-		if (isRegistered_one) {
-			group_User.setFk_user(returndata);
-		} else {
-			if (login) {
-				int pk_user = LoginActivity.getPk_user();
-				group_User.setFk_user(pk_user);
-			} else {
-				group_User.setFk_user(returndata);
-			}
-		}
+		group_User.setFk_user(sD_pk_user);
 		groupInterface.readUserGroupRelation(GroupActivity.this, group_User);
 	}
 
@@ -281,16 +266,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,
 	private void initreadUserGroupRelation() {
 		Group_User group_User = new Group_User();
 		group_User.setFk_group(pk_group);
-		if (isRegistered_one) {
-			group_User.setFk_user(returndata);
-		} else {
-			if (login) {
-				int pk_user = LoginActivity.getPk_user();
-				group_User.setFk_user(pk_user);
-			} else {
-				group_User.setFk_user(returndata);
-			}
-		}
+		group_User.setFk_user(sD_pk_user);
 		groupInterface.readUserGroupRelation(GroupActivity.this, group_User);
 
 	}

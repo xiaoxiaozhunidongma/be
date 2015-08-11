@@ -170,8 +170,9 @@
     <string name="title_activity_more_picture">MorePictureActivity</string>
     <string name="prompt">prompt</string>
     <string name="button_cancel">Cancel</string>
-    <string name="title_activity_before_login">BeforeLoginActivity</string>
+    <string name="title_activity_before_login">必聚</string>
     <string name="title_activity_login_jump">LoginJumpActivity</string>
     <string name="title_activity_phone_registered">PhoneRegisteredActivity</string>
+    <string name="title_activity_phone_login">PhoneLoginActivity</string>
 
 </resources>

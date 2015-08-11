@@ -36,13 +36,13 @@ import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.PreferenceUtils;
+import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.Interface.updateUserListenner;
 import com.biju.R;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
@@ -106,18 +106,25 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private String setup_time;
 	private String Userjpush_id;
 	private User readuser;
+	
+	int i = 0;
+	private boolean isRegistered_one;
+	private int sex = 0;
+	private TextView mUsersetting_tv_phone;
+	private MyReceiver receiver;
+	private Integer sD_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_setting);
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		returndata_1 = sp.getInt("returndata", returndata_1);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
+		isRegistered_one=SdPkUser.isRegistered_one();
+		
+		//获取sd卡中的pk_user
+		sD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("UserSettingActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
+		
 		String Cacheurl = PreferenceUtils.readImageCache(this);
 		completeURL = Cacheurl;
 		initUI();
@@ -177,18 +184,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		boolean isWIFI = Ifwifi.getNetworkConnected(UserSettingActivity.this);
 		Log.e("UserSettingActivity", "判断是否有网络" + isWIFI);
 		if (isWIFI) {
-			if (isRegistered_one) {
-				ReadUser(returndata_1);
-				Log.e("UserSettingActivity", "进注册的");
-			} else {
-				if (login) {
-					int returndata_2 = LoginActivity.getPk_user();
-					ReadUser(returndata_2);
-					Log.e("UserSettingActivity", "进登录 的");
-				} else {
-					ReadUser(returndata_1);
-				}
-			}
+			ReadUser(sD_pk_user);
 			Log.e("UserSettingActivity", "有网络进入这里" + isWIFI);
 		} else {
 			ImageLoaderUtils.getInstance().LoadImage(UserSettingActivity.this,
@@ -201,7 +197,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		if (isRegistered_one) {
 			SharedPreferences sp = getSharedPreferences("Registered", 0);
 			Editor editor = sp.edit();
-			editor.putInt("returndata", returndata_1);
+			editor.putInt("returndata", sD_pk_user);
 			editor.putBoolean("isRegistered_one", true);
 			editor.commit();
 		}
@@ -425,14 +421,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		finish();
 	}
 
-	int i = 0;
-	private int returndata_1;
-	private boolean isRegistered_one;
-	private int sex = 0;
-	private boolean login;
-	private TextView mUsersetting_tv_phone;
-	private MyReceiver receiver;
-
 	private void usersetting_sex() {
 		i++;
 		int a = i % 3;
@@ -490,16 +478,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			isRead = true;
 			Usernickname = mUsersetting_nickname.getText().toString().trim();
 			User usersetting = new User();
-			if (isRegistered_one) {
-				usersetting.setPk_user(returndata_1);
-			} else {
-				if (login) {
-					int returndata_2 = LoginActivity.getPk_user();
-					usersetting.setPk_user(returndata_2);
-				} else {
-					usersetting.setPk_user(returndata_1);
-				}
-			}
+			usersetting.setPk_user(sD_pk_user);
 			usersetting.setJpush_id(Userjpush_id);
 			usersetting.setNickname(Usernickname);
 			usersetting.setPassword(password);

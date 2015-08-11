@@ -29,14 +29,13 @@ import com.BJ.javabean.Party2;
 import com.BJ.javabean.PartyRelationshipback;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.Partyback;
+import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.createPartyRelationListenner;
 import com.biju.Interface.readUserGroupPartyListenner;
-import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.PartyDetailsActivity;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -50,9 +49,6 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
 public class ScheduleFragment extends Fragment {
 
 	private View mLayout;
-	private int returndata;
-	private boolean login;
-	private boolean isRegistered_one;
 	private IDs ids;
 	private Interface scheduleInterface;
 	private RelativeLayout mSchedule_prompt_layout;
@@ -60,9 +56,9 @@ public class ScheduleFragment extends Fragment {
 	private ArrayList<Party2> partylist = new ArrayList<Party2>();
 	private MyAdapter adapter = null;
 	private PullToRefreshListView mPull_refresh_list;
-	private boolean isData;
 	private Integer pk_user_1;
 	private Party2 scheduleparty;
+	private Integer sD_pk_user;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -71,15 +67,8 @@ public class ScheduleFragment extends Fragment {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mLayout = inflater
-				.inflate(R.layout.fragment_schedule, container, false);
-		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
-				0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getActivity()
-				.getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
+		mLayout = inflater.inflate(R.layout.fragment_schedule, container, false);
+		sD_pk_user = SdPkUser.getsD_pk_user();
 		initInterface();
 		initreadUserGroupParty();
 		initUI();
@@ -328,22 +317,8 @@ public class ScheduleFragment extends Fragment {
 	private void initreadUserGroupParty() {
 		Integer id_group = GroupActivity.getPk_group();
 		Integer id_user_group = GroupActivity.getPk_group_user();
-		if (isRegistered_one) {
-			ids = new IDs(id_group, returndata, id_user_group);
-			pk_user_1 = returndata;
-		} else {
-			if (login) {
-				int pk_user = LoginActivity.getPk_user();
-				ids = new IDs(id_group, pk_user, id_user_group);
-				pk_user_1 = pk_user;
-				Log.e("ScheduleFragment", "id_group====" + id_group);
-				Log.e("ScheduleFragment", "pk_user====" + pk_user);
-				Log.e("ScheduleFragment", "id_user_group====" + id_user_group);
-			} else {
-				ids = new IDs(id_group, returndata, id_user_group);
-				pk_user_1 = returndata;
-			}
-		}
+		ids = new IDs(id_group, sD_pk_user, id_user_group);
+		pk_user_1 = sD_pk_user;
 		scheduleInterface.readUserGroupParty(getActivity(), ids);
 		SharedPreferences sp = getActivity().getSharedPreferences("isPk_user",
 				0);

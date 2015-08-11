@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -13,8 +14,10 @@ import android.widget.TextView;
 
 public class LoginJumpActivity extends Activity implements OnClickListener{
 
+	public static LoginJumpActivity LoginJump;
 	private TextView mLoginJump_phone;
 	private TextView mLoginJump_weixin;
+	private int registered;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -22,7 +25,7 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_login_jump);
 		Intent intent = getIntent();
-		int registered=intent.getIntExtra("registered", 0);
+		registered = intent.getIntExtra("registered", 0);
 		initUI();
 		if(1==registered)
 		{
@@ -33,6 +36,8 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 			mLoginJump_phone.setText("手机登录");
 			mLoginJump_weixin.setText("微信登录");
 		}
+		
+		LoginJump=this;
 	}
 
 	private void initUI() {
@@ -74,8 +79,23 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 	}
 
 	private void LoginJump_phone() {
-		// TODO Auto-generated method stub
-		
+		if(1==registered)
+		{
+			//跳转手机注册界面
+			Intent intent=new Intent(LoginJumpActivity.this, PhoneRegisteredActivity.class);
+			startActivity(intent);
+			
+		}else
+		{
+			//跳转手机登录界面
+			Intent intent=new Intent(LoginJumpActivity.this, PhoneLoginActivity.class);
+			startActivity(intent);
+		}
 	}
 
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		finish();
+		return super.onTouchEvent(event);
+	}
 }

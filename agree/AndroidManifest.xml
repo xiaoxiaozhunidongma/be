@@ -167,9 +167,11 @@
             android:name="com.biju.MainActivity"
             android:label="@string/app_name" >
         </activity>
+
+        <!-- 打开应用显现的首界面 -->
         <activity
-            android:name="com.biju.login.LoginActivity"
-            android:label="@string/title_activity_login" >
+            android:name="com.biju.login.BeforeLoginActivity"
+            android:label="@string/title_activity_before_login" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -413,10 +415,7 @@
             android:theme="@style/MyDialogStyle" >
         </activity>
         <!-- 环信部分 -->
-        <activity
-            android:name="com.biju.login.BeforeLoginActivity"
-            android:label="@string/title_activity_before_login" >
-        </activity>
+
         <activity
             android:name="com.biju.login.LoginJumpActivity"
             android:label="@string/title_activity_login_jump"
@@ -425,6 +424,10 @@
         <activity
             android:name="com.biju.login.PhoneRegisteredActivity"
             android:label="@string/title_activity_phone_registered" >
+        </activity>
+        <activity
+            android:name="com.biju.login.PhoneLoginActivity"
+            android:label="@string/title_activity_phone_login" >
         </activity>
     </application>
 
