@@ -54,11 +54,7 @@ public class MoreActivity extends Activity implements OnClickListener {
 				Integer status = moreback.getStatusMsg();
 				if (status == 1) {
 					Log.e("MoreActivity", "返回是否删除成功" + A);
-					Intent intent = new Intent();
-					intent.setAction("isFinish");
-					intent.putExtra("finish", true);
-					sendBroadcast(intent);
-
+					PartyDetailsActivity.PartyDetails.finish();
 					finish();
 				}
 			}

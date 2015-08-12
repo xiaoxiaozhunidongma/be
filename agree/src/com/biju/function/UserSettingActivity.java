@@ -56,6 +56,7 @@ import com.tencent.upload.task.impl.PhotoUploadTask;
 @SuppressLint("SimpleDateFormat")
 public class UserSettingActivity extends Activity implements OnClickListener {
 
+	public static UserSettingActivity UserSetting;
 	public static ImageView mUsersetting_head;
 	private EditText mUsersetting_nickname;
 	private RelativeLayout mUsersetting;
@@ -69,8 +70,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
-	// public static String SIGN =
-	// "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ";
 	public static String SIGN;
 
 	public static String getSIGN() {
@@ -111,7 +110,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private boolean isRegistered_one;
 	private int sex = 0;
 	private TextView mUsersetting_tv_phone;
-	private MyReceiver receiver;
 	private Integer sD_pk_user;
 
 	@Override
@@ -119,6 +117,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_setting);
+		UserSetting=this;
+		//做布局判断
 		isRegistered_one=SdPkUser.isRegistered_one();
 		
 		//获取sd卡中的pk_user
@@ -131,29 +131,12 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		isWIFI();// 判断是否有网络
 
 		mUsersetting_tv_password.setText("请输入想要设置的密码");
-		// initUpload();
 		PicSign();// 传图片签名字符串
-		Broadcast();// 接收广播
 	}
-
-	private void Broadcast() {
-		IntentFilter filter = new IntentFilter();
-		filter.addAction("Binding_Phone");
-		receiver = new MyReceiver();
-		registerReceiver(receiver, filter);
-	}
-
-	class MyReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			boolean succeed = intent.getBooleanExtra("Succeed", false);
-			Integer pk_user = intent.getIntExtra("Pk_user", 0);
-			if (succeed) {
-				ReadUser(pk_user);
-			}
-		}
-
+	
+	public void getRefresh()
+	{
+		ReadUser(sD_pk_user);
 	}
 
 	private void PicSign() {

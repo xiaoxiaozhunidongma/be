@@ -1,16 +1,15 @@
 package com.fragment;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,7 +21,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party2;
@@ -37,16 +35,12 @@ import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.PartyDetailsActivity;
 import com.github.volley_examples.utils.GsonUtils;
-import com.handmark.pulltorefresh.library.ILoadingLayout;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class ScheduleFragment extends Fragment {
+public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
 	private View mLayout;
 	private IDs ids;
@@ -55,10 +49,10 @@ public class ScheduleFragment extends Fragment {
 	private ListView mSchedule_listView;
 	private ArrayList<Party2> partylist = new ArrayList<Party2>();
 	private MyAdapter adapter = null;
-	private PullToRefreshListView mPull_refresh_list;
 	private Integer pk_user_1;
 	private Party2 scheduleparty;
 	private Integer sD_pk_user;
+	private SwipeRefreshLayout mSchedule_swipe_refresh;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -72,43 +66,23 @@ public class ScheduleFragment extends Fragment {
 		initInterface();
 		initreadUserGroupParty();
 		initUI();
+		
+		mSchedule_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.schedule_swipe_refresh);
+		mSchedule_swipe_refresh.setOnRefreshListener(this);
+
+		// 顶部刷新的样式
+		mSchedule_swipe_refresh.setColorSchemeResources(
+				android.R.color.holo_red_light,
+				android.R.color.holo_green_light,
+				android.R.color.holo_blue_bright,
+				android.R.color.holo_orange_light);
 		return mLayout;
 	}
 
 	private void initUI() {
 		mSchedule_prompt_layout = (RelativeLayout) mLayout
 				.findViewById(R.id.Schedule_prompt_layout);// 提示
-		mPull_refresh_list = (PullToRefreshListView) mLayout
-				.findViewById(R.id.pull_refresh_list);
-		mPull_refresh_list
-				.setOnRefreshListener(new OnRefreshListener<ListView>() {
-
-					@Override
-					public void onRefresh(
-							PullToRefreshBase<ListView> refreshView) {
-						SimpleDateFormat sdf = new SimpleDateFormat("HH:mm:ss");
-						String label = sdf.format(new Date());
-						// 显示最后更新的时间
-						refreshView.getLoadingLayoutProxy()
-								.setLastUpdatedLabel(label);
-						if (partylist.size() > 0) {
-							new GetDataTask().execute();
-						} else {
-							Toast.makeText(getActivity(), "暂无更新",
-									Toast.LENGTH_SHORT).show();
-							mPull_refresh_list.onRefreshComplete();
-						}
-					}
-				});
-
-		// 下拉刷新动画
-		ILoadingLayout iLoadingLayout = mPull_refresh_list
-				.getLoadingLayoutProxy();
-		iLoadingLayout.setPullLabel("下拉刷新");
-		iLoadingLayout.setRefreshingLabel("正在刷新...");
-		iLoadingLayout.setReleaseLabel("放开即可刷新");
-
-		mSchedule_listView = mPull_refresh_list.getRefreshableView();
+		mSchedule_listView=(ListView) mLayout.findViewById(R.id.schedule_listview);
 		adapter = new MyAdapter();
 		mSchedule_listView.setAdapter(adapter);
 		mSchedule_listView.setOnItemClickListener(new OnItemClickListener() {
@@ -125,14 +99,11 @@ public class ScheduleFragment extends Fragment {
 					String pk_party = scheduleparty.getPk_party();
 					Integer pk_party_user = scheduleparty.getPk_party_user();
 					if (relatonship == null) {
-						initcreatePartyRelation(fk_user, pk_party,
-								pk_party_user);
+						initcreatePartyRelation(fk_user, pk_party,pk_party_user);
 					} else {
-						Intent intent = new Intent(getActivity(),
-								PartyDetailsActivity.class);
+						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
 						intent.putExtra("oneParty", scheduleparty);
 						startActivity(intent);
-						getActivity().finish();
 					}
 				}
 			}
@@ -140,32 +111,7 @@ public class ScheduleFragment extends Fragment {
 
 	}
 
-	// 下拉啦刷新异步
-	class GetDataTask extends AsyncTask<Void, Void, String> {
-
-		@Override
-		protected String doInBackground(Void... params) {
-
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			String mString = "消息来了";
-			return mString;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			initreadUserGroupParty();
-			adapter.notifyDataSetChanged();
-			mPull_refresh_list.onRefreshComplete();
-			super.onPostExecute(result);
-		}
-	}
-
-	private void initcreatePartyRelation(Integer fk_user, String pk_party,
-			Integer pk_party_user) {
+	private void initcreatePartyRelation(Integer fk_user, String pk_party,Integer pk_party_user) {
 		Party_User readuserparty = new Party_User();
 		readuserparty.setPk_party_user(pk_party_user);
 		readuserparty.setFk_party(pk_party);
@@ -277,10 +223,8 @@ public class ScheduleFragment extends Fragment {
 				}
 				if (partylist.size() > 0) {
 					mSchedule_prompt_layout.setVisibility(View.GONE);
-					mPull_refresh_list.setVisibility(View.VISIBLE);
 				} else {
 					mSchedule_prompt_layout.setVisibility(View.VISIBLE);
-					mPull_refresh_list.setVisibility(View.GONE);
 				}
 				adapter.notifyDataSetChanged();
 			}
@@ -299,11 +243,9 @@ public class ScheduleFragment extends Fragment {
 						.parseJson(A, PartyRelationshipback.class);
 				Integer statusMsg = partyRelationshipback.getStatusMsg();
 				if (statusMsg == 1) {
-					Intent intent = new Intent(getActivity(),
-							PartyDetailsActivity.class);
+					Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
 					intent.putExtra("oneParty", scheduleparty);
 					startActivity(intent);
-					getActivity().finish();
 				}
 			}
 
@@ -320,10 +262,21 @@ public class ScheduleFragment extends Fragment {
 		ids = new IDs(id_group, sD_pk_user, id_user_group);
 		pk_user_1 = sD_pk_user;
 		scheduleInterface.readUserGroupParty(getActivity(), ids);
-		SharedPreferences sp = getActivity().getSharedPreferences("isPk_user",
-				0);
+		SharedPreferences sp = getActivity().getSharedPreferences("isPk_user",0);
 		Editor editor = sp.edit();
 		editor.putInt("Pk_user", pk_user_1);
 		editor.commit();
+	}
+
+	@Override
+	public void onRefresh() {
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				initreadUserGroupParty();
+				mSchedule_swipe_refresh.setRefreshing(false);
+				adapter.notifyDataSetChanged();
+			}
+		}, 3000);
 	}
 }

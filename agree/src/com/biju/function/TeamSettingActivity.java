@@ -53,8 +53,6 @@ import com.google.gson.reflect.TypeToken;
 public class TeamSettingActivity extends Activity implements OnClickListener,
 		SwipeRefreshLayout.OnRefreshListener {
 
-	// private ImageView mTeamSetting_head;
-	// private TextView mTeamSetting_number;
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
 	private String endStr = "/original";
 	private String useravatar_path;
@@ -167,10 +165,8 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 						intent.putExtra("refresh", true);
 						sendBroadcast(intent);
 
-						Intent intent1 = new Intent();
-						intent1.setAction("isFinish");
-						intent1.putExtra("isExitFinish", true);
-						sendBroadcast(intent1);
+						//πÿ±’GroupActivityΩÁ√Ê
+						GroupActivity.group.finish();
 						finish();
 					}
 				} else {
