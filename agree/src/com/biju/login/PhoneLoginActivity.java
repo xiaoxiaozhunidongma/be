@@ -478,20 +478,26 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 	}
 
 	private void PhoneLogin_send() {
-		if (phone == null) {
-			Toast.makeText(PhoneLoginActivity.this, "请先输入电话号码",
-					Toast.LENGTH_SHORT).show();
-		} else {
-			String phone1 = phone.substring(0, 3);
-			String phone2 = phone.substring(4, 8);
-			String phone3 = phone.substring(9, 13);
-			phoneLogin_phone = phone1 + phone2 + phone3;
-			Log.e("PhoneLoginActivity", "所得到的电话号码======" + phoneLogin_phone);
-			Phone phoneLogin_1 = new Phone();
-			phoneLogin_1.setPhone(phoneLogin_phone);
-			phoneLoginInterface.requestVerCode(PhoneLoginActivity.this,
-					phoneLogin_1);
-			
+		if(phone.length()==13)
+		{
+			if (phone == null) {
+				Toast.makeText(PhoneLoginActivity.this, "请先输入电话号码",
+						Toast.LENGTH_SHORT).show();
+			} else {
+				String phone1 = phone.substring(0, 3);
+				String phone2 = phone.substring(4, 8);
+				String phone3 = phone.substring(9, 13);
+				phoneLogin_phone = phone1 + phone2 + phone3;
+				Log.e("PhoneLoginActivity", "所得到的电话号码======" + phoneLogin_phone);
+				Phone phoneLogin_1 = new Phone();
+				phoneLogin_1.setPhone(phoneLogin_phone);
+				phoneLoginInterface.requestVerCode(PhoneLoginActivity.this,
+						phoneLogin_1);
+				
+			}
+		}else
+		{
+			Toast.makeText(PhoneLoginActivity.this, "电话号码格式错误，请输入正确的电话号码", Toast.LENGTH_SHORT).show();
 		}
 	}
 

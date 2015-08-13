@@ -1,16 +1,20 @@
 package com.biju.login;
 
-import com.biju.R;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
+
+import com.BJ.utils.SdPkUser;
+import com.biju.R;
+import com.biju.APP.MyApplication;
+import com.biju.wxapi.WXEntryActivity;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
 
 public class LoginJumpActivity extends Activity implements OnClickListener{
 
@@ -74,8 +78,21 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 	}
 
 	private void LoginJump_weixin() {
-		// TODO Auto-generated method stub
-		
+		if(1==registered)
+		{
+			//跳转微信注册界面
+//			Intent intent=new Intent(LoginJumpActivity.this, PhoneRegisteredActivity.class);
+//			startActivity(intent);
+			
+		}else
+		{
+			//跳转微信登录界面
+			final SendAuth.Req req = new SendAuth.Req();
+			req.scope = "snsapi_userinfo";
+			req.state = "carjob_wx_login";
+			MyApplication.api.sendReq(req);
+			SdPkUser.setGetweixinLogin(true);
+		}
 	}
 
 	private void LoginJump_phone() {

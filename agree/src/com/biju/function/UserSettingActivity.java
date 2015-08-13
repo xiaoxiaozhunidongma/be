@@ -39,6 +39,7 @@ import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
+import com.biju.APP.MyApplication;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.Interface.updateUserListenner;
@@ -46,6 +47,7 @@ import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
+import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -315,6 +317,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		mUsersetting_sex.setOnClickListener(this);
 		findViewById(R.id.usersetting_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.usersetting_back).setOnClickListener(this);
+		findViewById(R.id.usersetting_binding_weixin).setOnClickListener(this);//绑定微信
 	}
 
 	@Override
@@ -347,9 +350,21 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		case R.id.usersetting_back:
 			usersetting_back();
 			break;
+		case R.id.usersetting_binding_weixin:
+			usersetting_binding_weixin();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void usersetting_binding_weixin() {
+		finish();
+		//跳转微信绑定界面
+		final SendAuth.Req req = new SendAuth.Req();
+		req.scope = "snsapi_userinfo";
+		req.state = "carjob_wx_login";
+		MyApplication.api.sendReq(req);
 	}
 
 	private void usersetting_tv_phone() {
@@ -402,6 +417,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 	private void usersetting_back() {
 		finish();
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	private void usersetting_sex() {

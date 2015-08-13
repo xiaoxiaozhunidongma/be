@@ -429,6 +429,16 @@
             android:name="com.biju.login.PhoneLoginActivity"
             android:label="@string/title_activity_phone_login" >
         </activity>
+        <activity
+            android:name="com.biju.wxapi.WXEntryActivity"
+            android:label="@string/title_activity_wxentry"
+             >
+              <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="sdksample"/>
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>

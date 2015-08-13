@@ -174,5 +174,6 @@
     <string name="title_activity_login_jump">LoginJumpActivity</string>
     <string name="title_activity_phone_registered">PhoneRegisteredActivity</string>
     <string name="title_activity_phone_login">PhoneLoginActivity</string>
+    <string name="title_activity_wxentry">WXEntryActivity</string>
 
 </resources>

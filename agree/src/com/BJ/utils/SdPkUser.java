@@ -25,5 +25,13 @@ public class SdPkUser {
 	public static void setRegistered_one(boolean isRegistered_one) {
 		SdPkUser.isRegistered_one = isRegistered_one;
 	}
-	
+	//Î¢ÐÅµÇÂ¼´«true
+	private static boolean getweixinLogin;
+	public static boolean isGetweixinLogin() {
+		return getweixinLogin;
+	}
+
+	public static void setGetweixinLogin(boolean getweixinLogin) {
+		SdPkUser.getweixinLogin = getweixinLogin;
+	}
 }
