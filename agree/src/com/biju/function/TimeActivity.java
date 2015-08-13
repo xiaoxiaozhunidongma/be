@@ -1,9 +1,6 @@
 package com.biju.function;
 
 import java.util.ArrayList;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 import android.app.Activity;
@@ -29,6 +26,7 @@ import com.biju.R;
 
 public class TimeActivity extends Activity implements OnClickListener {
 
+	public static TimeActivity Time;
 	String date = null;// 设置默认选中的日期 格式为 “2014-04-05” 标准DATE格式
 	private KCalendar calendar;
 	private TextView popupwindow_calendar_month;
@@ -46,6 +44,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_time);
 		initUI();
 		initDate();
+		Time=this;
 	}
 
 	private void initDate() {
@@ -155,10 +154,8 @@ public class TimeActivity extends Activity implements OnClickListener {
 					editor.putString("isCalendar", date);
 					Log.e("TimeActivity", "date=========" + date);
 					editor.commit();
-					Intent intent = new Intent(TimeActivity.this,
-							OkPartyActivity.class);
+					Intent intent = new Intent(TimeActivity.this,OkPartyActivity.class);
 					startActivity(intent);
-					finish();
 				}
 			}
 		}
@@ -166,8 +163,6 @@ public class TimeActivity extends Activity implements OnClickListener {
 
 	private void time_back() {
 		finish();
-		Intent intent = new Intent(TimeActivity.this, MapActivity.class);
-		startActivity(intent);
 	}
 
 	private void PPopupWindows() {

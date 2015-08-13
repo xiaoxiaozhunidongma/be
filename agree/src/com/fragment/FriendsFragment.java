@@ -1,20 +1,12 @@
 package com.fragment;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,19 +22,17 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.javabean.ReadUserAllFriendsback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
-import com.BJ.utils.Person;
+import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.readFriendListenner;
 import com.biju.R;
 import com.biju.function.AddFriendsActivity;
 import com.biju.function.FriendsDataActivity;
-import com.biju.login.LoginActivity;
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
 import com.easemob.chat.EMGroupManager;
@@ -71,19 +61,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	private MyAdapter adapter;
 	private Integer fk_user_from;
 	
-	private String fileName = getSDPath() + "/" + "saveData";
-	private String pk_user;
-	public String getSDPath() {
-		File sdDir = null;
-		boolean sdCardExist = Environment.getExternalStorageState().equals(
-				android.os.Environment.MEDIA_MOUNTED);
-		// 判断sd卡是否存在
-		if (sdCardExist) {
-			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
-		}
-		return sdDir.toString();
-
-	}
+	private Integer SD_pk_user;
 
 	public FriendsFragment() {
 		// Required empty public constructor
@@ -93,32 +71,10 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_friends, container, false);
-//		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
-//				0);
-//		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-//		returndata = sp.getInt("returndata", 0);
-//		SharedPreferences sp1 = getActivity()
-//				.getSharedPreferences("isLogin", 0);
-//		login = sp1.getBoolean("Login", false);
 		
 		//获取SD卡中的pk_user
-				FileInputStream fis;
-				try {
-					fis = new FileInputStream(fileName);
-					ObjectInputStream ois = new ObjectInputStream(fis);
-					Person person = (Person) ois.readObject();
-					pk_user = person.pk_user;
-					Log.e("SettingFragment", "从sd卡中获取到的pk_user" + pk_user);
-					ois.close();
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				} catch (StreamCorruptedException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				} catch (ClassNotFoundException e) {
-					e.printStackTrace();
-				}
+		SD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("HomeFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
 
 		initUI();
 		LoginHuanXin();
@@ -141,9 +97,9 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	//需要异步？？？？？？？？？？？？？？？？？？？？？？？？？？？
 	private void LoginHuanXin() {
 		Log.e("FriendsFragment~~~~~", "调用了LoginHuanXin（）");
-		String str_pkuser = String.valueOf(Integer.valueOf(pk_user));
+		String str_pkuser = String.valueOf(SD_pk_user);
 		
-		Log.e("FriendsFragment~~~~~", "Integer.valueOf(pk_user)"+pk_user);
+		Log.e("FriendsFragment~~~~~", "Integer.valueOf(pk_user)"+SD_pk_user);
 		
 		if(!"".equals(str_pkuser)){
 			
@@ -176,8 +132,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 	private void ReadUserAllFriends() {
 		User user = new User();
-		user.setPk_user(Integer.valueOf(pk_user));
-		fk_user_from=Integer.valueOf(pk_user);
+		user.setPk_user(SD_pk_user);
+		fk_user_from=SD_pk_user;
 		addFriends_interface.readFriend(getActivity(), user);
 	}
 

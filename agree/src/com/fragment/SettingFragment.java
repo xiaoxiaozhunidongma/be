@@ -9,8 +9,6 @@ import java.io.StreamCorruptedException;
 import java.util.List;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.Fragment;
@@ -28,13 +26,14 @@ import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
+import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.readUserListenner;
 import com.biju.R;
 import com.biju.function.AboutUsActivity;
 import com.biju.function.FeedbackActivity;
 import com.biju.function.UserSettingActivity;
-import com.biju.login.LoginActivity;
+import com.biju.login.BeforeLoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
 /**
@@ -53,19 +52,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	
-	private String fileName = getSDPath() + "/" + "saveData";
-	private String pk_user;
-	public String getSDPath() {
-		File sdDir = null;
-		boolean sdCardExist = Environment.getExternalStorageState().equals(
-				android.os.Environment.MEDIA_MOUNTED);
-		// 判断sd卡是否存在
-		if (sdCardExist) {
-			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
-		}
-		return sdDir.toString();
-
-	}
+	private Integer SD_pk_user;
 
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 
@@ -84,24 +71,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private void User4head() {
 		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
 		completeURL = Cacheurl;
-		
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream(fileName);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Person person = (Person) ois.readObject();
-			pk_user = person.pk_user;
-			Log.e("SettingFragment", "从sd卡中获取到的pk_user" + pk_user);
-			ois.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (StreamCorruptedException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
-		}
+		//获取SD卡中的pk_user
+		SD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("SettingFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
 		
 		initUI();
 		boolean isWIFI = Ifwifi.getNetworkConnected(getActivity());
@@ -122,8 +94,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	private void returndata() {
-			setting_number.setText("必聚号:" + pk_user);
-			ReadUser(Integer.valueOf(pk_user));
+			setting_number.setText("必聚号:" + SD_pk_user);
+			ReadUser(SD_pk_user);
 	}
 
 	private void ReadUser(int returndata) {
@@ -194,12 +166,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	private void tab_setting_cancle() {
-		SharedPreferences login_sp = getActivity().getSharedPreferences(
-				"Logout", 0);
-		Editor login_editor = login_sp.edit();
-		login_editor.putBoolean("isLogout", true);
-		login_editor.commit();
-		Intent intent = new Intent(getActivity(), LoginActivity.class);
+		Intent intent = new Intent(getActivity(), BeforeLoginActivity.class);
 		startActivity(intent);
 		getActivity().finish();
 

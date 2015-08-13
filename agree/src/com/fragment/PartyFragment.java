@@ -4,10 +4,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -23,12 +24,12 @@ import android.widget.TextView;
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.UserAllPartyback;
+import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.readUserAllPartyListenner;
 import com.biju.R;
 import com.biju.function.NewPartyActivity;
 import com.biju.function.PartyDetailsActivity;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.handmark.pulltorefresh.library.ILoadingLayout;
 import com.handmark.pulltorefresh.library.PullToRefreshBase;
@@ -39,19 +40,15 @@ import com.handmark.pulltorefresh.library.PullToRefreshListView;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class PartyFragment extends Fragment implements OnClickListener {
+public class PartyFragment extends Fragment implements OnClickListener,SwipeRefreshLayout.OnRefreshListener {
 
 	private View mLayout;
 	private RelativeLayout mTab_party_prompt_layout;
-	private RelativeLayout mTab_party_list_layout;
-	private int returndata;
-	private boolean isRegistered_one;
-	private boolean login;
 	private Interface tab_party_interface;
-	private PullToRefreshListView mPull_refresh_list;
 	private ListView mParty_listView;
 	private MyAdapter adapter;
 	private ArrayList<UserAllParty> userAllPartieList = new ArrayList<UserAllParty>();
+	private SwipeRefreshLayout mTab_party_swipe_refresh;
 
 	public PartyFragment() {
 		// Required empty public constructor
@@ -62,9 +59,18 @@ public class PartyFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		mLayout = inflater.inflate(R.layout.fragment_party, container, false);
 		initUI();
-		initPk_user();
 		initInterface();
 		initParty();
+		
+		mTab_party_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.tab_party_swipe_refresh);
+		mTab_party_swipe_refresh.setOnRefreshListener(this);
+
+		// 顶部刷新的样式
+		mTab_party_swipe_refresh.setColorSchemeResources(
+				android.R.color.holo_red_light,
+				android.R.color.holo_green_light,
+				android.R.color.holo_blue_bright,
+				android.R.color.holo_orange_light);
 		return mLayout;
 	}
 
@@ -97,10 +103,8 @@ public class PartyFragment extends Fragment implements OnClickListener {
 					adapter.notifyDataSetChanged();
 					if (userAllPartieList.size() > 0) {
 						mTab_party_prompt_layout.setVisibility(View.GONE);
-						mTab_party_list_layout.setVisibility(View.VISIBLE);
 					} else {
 						mTab_party_prompt_layout.setVisibility(View.VISIBLE);
-						mTab_party_list_layout.setVisibility(View.GONE);
 					}
 				}
 			}
@@ -114,29 +118,10 @@ public class PartyFragment extends Fragment implements OnClickListener {
 
 	private void initParty() {
 		User partyuser = new User();
-		if (isRegistered_one) {
-			partyuser.setPk_user(returndata);
-		} else {
-			if (login) {
-				int pk_user = LoginActivity.getPk_user();
-				partyuser.setPk_user(pk_user);
-				Log.e("PartyFragment", "pk_user====" + pk_user);
-			} else {
-				partyuser.setPk_user(returndata);
-			}
-		}
+		Integer SD_pk_user=SdPkUser.getsD_pk_user();
+		partyuser.setPk_user(SD_pk_user);
+		Log.e("PartyFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
 		tab_party_interface.readUserAllParty(getActivity(), partyuser);
-	}
-
-	private void initPk_user() {
-		// 得到pk_user
-		SharedPreferences sp = getActivity().getSharedPreferences("Registered",
-				0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getActivity()
-				.getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
 	}
 
 	private void initUI() {
@@ -145,29 +130,8 @@ public class PartyFragment extends Fragment implements OnClickListener {
 		mLayout.findViewById(R.id.tab_party_new).setOnClickListener(this);
 		mTab_party_prompt_layout = (RelativeLayout) mLayout
 				.findViewById(R.id.tab_party_prompt_layout);// 提示布局
-		mTab_party_list_layout = (RelativeLayout) mLayout
-				.findViewById(R.id.tab_party_list_layout);// listview布局
 
-		mPull_refresh_list = (PullToRefreshListView) mLayout
-				.findViewById(R.id.pull_refresh_list);
-		mPull_refresh_list
-				.setOnRefreshListener(new OnRefreshListener<ListView>() {
-
-					@Override
-					public void onRefresh(
-							PullToRefreshBase<ListView> refreshView) {
-						new GetDataTask().execute();
-					}
-				});
-
-		// 下拉刷新动画
-		ILoadingLayout iLoadingLayout = mPull_refresh_list
-				.getLoadingLayoutProxy();
-		iLoadingLayout.setPullLabel("下拉刷新");
-		iLoadingLayout.setRefreshingLabel("正在刷新...");
-		iLoadingLayout.setReleaseLabel("放开即可刷新");
-
-		mParty_listView = mPull_refresh_list.getRefreshableView();
+		mParty_listView =(ListView) mLayout.findViewById(R.id.tab_party_listview);
 		adapter = new MyAdapter();
 		mParty_listView.setAdapter(adapter);
 
@@ -187,30 +151,6 @@ public class PartyFragment extends Fragment implements OnClickListener {
 				}
 			}
 		});
-	}
-
-	// 下拉啦刷新异步
-	class GetDataTask extends AsyncTask<Void, Void, String> {
-
-		@Override
-		protected String doInBackground(Void... params) {
-
-			try {
-				Thread.sleep(3000);
-			} catch (InterruptedException e) {
-				e.printStackTrace();
-			}
-			String mString = "消息来了";
-			return mString;
-		}
-
-		@Override
-		protected void onPostExecute(String result) {
-			initParty();
-			adapter.notifyDataSetChanged();
-			mPull_refresh_list.onRefreshComplete();
-			super.onPostExecute(result);
-		}
 	}
 
 	class ViewHolder {
@@ -299,6 +239,18 @@ public class PartyFragment extends Fragment implements OnClickListener {
 	private void tab_party_new() {
 		Intent intent = new Intent(getActivity(), NewPartyActivity.class);
 		startActivity(intent);
+	}
+	
+	@Override
+	public void onRefresh() {
+		new Handler().postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				initParty();
+				mTab_party_swipe_refresh.setRefreshing(false);
+				adapter.notifyDataSetChanged();
+			}
+		}, 3000);
 	}
 
 }

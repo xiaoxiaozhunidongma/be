@@ -39,13 +39,13 @@ import com.BJ.javabean.Teamupdateback;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
+import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.produceRequestCodeListenner;
 import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.Interface.updateGroupSetListenner;
 import com.biju.R;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
@@ -53,8 +53,6 @@ import com.google.gson.reflect.TypeToken;
 public class TeamSettingActivity extends Activity implements OnClickListener,
 		SwipeRefreshLayout.OnRefreshListener {
 
-	// private ImageView mTeamSetting_head;
-	// private TextView mTeamSetting_number;
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
 	private String endStr = "/original";
 	private String useravatar_path;
@@ -76,27 +74,24 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 	private int message = 0;
 	private int chat = 0;
 	private int phone = 0;
-	private int returndata;
-	private boolean isRegistered_one;
-	private boolean login;
 	private boolean isExit;
 	private ArrayList<Group_ReadAllUser> group_readalluser_list = new ArrayList<Group_ReadAllUser>();
 	private SwipeRefreshLayout mTeamsetting_swipe_refresh;
 	private GridViewWithHeaderAndFooter mTeamsetting_gridview;
 	private MyAdapter adapter;
 	private View mHeadView;
+	private Integer sD_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_team_setting);
-		// 得到fk_user
-		SharedPreferences sp2 = getSharedPreferences("Registered", 0);
-		isRegistered_one = sp2.getBoolean("isRegistered_one", false);
-		returndata = sp2.getInt("returndata", returndata);
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
+		
+		//获取sd卡中的pk_user
+		sD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("TeamSettingActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
+		
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("Group", pk_group);
 
@@ -109,16 +104,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 	private void initreadUserGroupRelation1() {
 		Group_User group_User = new Group_User();
 		group_User.setFk_group(pk_group);
-		if (isRegistered_one) {
-			group_User.setFk_user(returndata);
-		} else {
-			if (login) {
-				int pk_user = LoginActivity.getPk_user();
-				group_User.setFk_user(pk_user);
-			} else {
-				group_User.setFk_user(returndata);
-			}
-		}
+		group_User.setFk_user(sD_pk_user);
 		readuserinter.readUserGroupRelation(TeamSettingActivity.this,
 				group_User);
 	}
@@ -179,10 +165,8 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 						intent.putExtra("refresh", true);
 						sendBroadcast(intent);
 
-						Intent intent1 = new Intent();
-						intent1.setAction("isFinish");
-						intent1.putExtra("isExitFinish", true);
-						sendBroadcast(intent1);
+						//关闭GroupActivity界面
+						GroupActivity.group.finish();
 						finish();
 					}
 				} else {
@@ -455,16 +439,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 		isExit = true;
 		Group_User group_user = new Group_User();
 		group_user.setPk_group_user(GroupActivity.pk_group_user);
-		if (isRegistered_one) {
-			group_user.setFk_user(returndata);
-		} else {
-			if (login) {
-				int fk_user = LoginActivity.getPk_user();
-				group_user.setFk_user(fk_user);
-			} else {
-				group_user.setFk_user(returndata);
-			}
-		}
+		group_user.setFk_user(sD_pk_user);
 		group_user.setFk_group(pk_group);
 		group_user.setRole(0);
 		group_user.setStatus(0);
@@ -516,16 +491,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 	private void TeamSetting_save() {
 		Group_User group_user = new Group_User();
 		group_user.setPk_group_user(GroupActivity.pk_group_user);
-		if (isRegistered_one) {
-			group_user.setFk_user(returndata);
-		} else {
-			if (login) {
-				int fk_user = LoginActivity.getPk_user();
-				group_user.setFk_user(fk_user);
-			} else {
-				group_user.setFk_user(returndata);
-			}
-		}
+		group_user.setFk_user(sD_pk_user);
 		group_user.setFk_group(pk_group);
 		group_user.setParty_warn(message);// 聚会信息
 		Log.e("TeamSettingActivity", "需要传入的聚会信息ID--------" + message);

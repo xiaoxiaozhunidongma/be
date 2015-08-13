@@ -1,0 +1,139 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PhoneRegisteredActivity" >
+    
+    <RelativeLayout
+        android:id="@+id/PhoneRegistered_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+
+        <RelativeLayout
+            android:id="@+id/PhoneRegistered_back_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" >
+
+            <TextView
+                android:id="@+id/PhoneRegistered_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="关闭"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/PhoneRegistered_before_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/PhoneRegistered_title_layout"
+        android:layout_centerHorizontal="true" 
+        >
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/relativeLayout1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:text="输入手机号"
+            android:textSize="17.0sp" />
+
+        <EditText
+            android:id="@+id/PhoneRegistered_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView4"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp"
+            android:background="@null"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="输入手机号码"
+            android:phoneNumber="true"
+            android:maxLength="13"
+            android:textSize="20.0sp" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/PhoneRegistered_send"
+            android:layout_width="150.0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/PhoneRegistered_phone"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp"
+            android:gravity="center"
+            android:text="发送验证码"
+            android:textSize="20.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/PhoneRegistered_after_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/PhoneRegistered_title_layout"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+        >
+
+        <TextView
+            android:id="@+id/textView5"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60dp"
+            android:text="验证码发送成功" 
+            android:textSize="17.0sp"
+            />
+
+        <EditText
+            android:id="@+id/PhoneRegistered_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView5"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="55dp"
+            android:textSize="20.0sp"
+            android:gravity="center"
+            android:ems="10"
+            android:background="@null"
+            android:hint="输入验证码" 
+            />
+
+        <TextView
+            android:id="@+id/PhoneRegistered_OK"
+            android:layout_width="150.0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+             android:layout_marginTop="55dp"
+            android:text="完成验证" 
+            android:textSize="20.0sp"
+            android:gravity="center"
+            />
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

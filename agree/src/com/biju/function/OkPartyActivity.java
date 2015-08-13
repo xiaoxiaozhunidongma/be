@@ -3,7 +3,6 @@ package com.biju.function;
 import java.util.UUID;
 
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -16,11 +15,13 @@ import android.widget.EditText;
 import android.widget.TextView;
 
 import com.BJ.javabean.Party;
+import com.BJ.javabean.PartyOkback;
+import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Weeks;
 import com.biju.Interface;
 import com.biju.Interface.addPartyListenner;
 import com.biju.R;
-import com.biju.login.LoginActivity;
+import com.github.volley_examples.utils.GsonUtils;
 
 public class OkPartyActivity extends Activity implements OnClickListener {
 
@@ -30,9 +31,6 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 	private boolean isFeedback;
 	private EditText mOkParty_name;
 	private EditText mOkParty_note;
-	private int returndata;
-	private boolean isRegistered_one;
-	private boolean login;
 	private int fk_group;
 	private String address;
 	private String isCalendar;
@@ -44,18 +42,17 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 	private int y;
 	private int m;
 	private int d;
+	private Integer sD_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_ok_party);
-		// 得到fk_user
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
+		
+		//获取sd卡中的pk_user
+		sD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("OkPartyActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 
 		// 得到fk_group
 		SharedPreferences sp3 = getSharedPreferences("isParty_fk_group", 0);
@@ -76,13 +73,23 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				Log.e("OkPartyActivity", "日程是否创建成功======" + A);
-				finish();
+				PartyOkback partyOkback=GsonUtils.parseJson(A, PartyOkback.class);
+				Integer status=partyOkback.getStatusMsg();
+				if(status==1)
+				{
+					Log.e("OkPartyActivity", "日程是否创建成功======" + A);
+					finish();
+					//关闭新建小组界面
+					NewPartyActivity.NewParty.finish();
+					//关闭地图界面
+					MapActivity.Map.finish();
+					//关闭时间日期界面
+					TimeActivity.Time.finish();
+				}
 			}
 
 			@Override
 			public void defail(Object B) {
-				
 			}
 		});
 	}
@@ -169,8 +176,6 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 
 	private void OkParty_back() {
 		finish();
-		Intent intent = new Intent(OkPartyActivity.this, TimeActivity.class);
-		startActivity(intent);
 	}
 
 	private void OkParty_complete() {
@@ -181,18 +186,7 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 		Party party = new Party();
 		party.setPk_party(pk_party);
 		party.setFk_group(fk_group);
-		if (isRegistered_one) {
-			party.setFk_user(returndata);
-			Log.e("OkPartyActivity", "新建日程的returndata=====" + returndata);
-		} else {
-			if (login) {
-				int pk_user = LoginActivity.getPk_user();
-				party.setFk_user(pk_user);
-				Log.e("OkPartyActivity", "新建日程的pk_user=====" + pk_user);
-			} else {
-				party.setFk_user(returndata);
-			}
-		}
+		party.setFk_user(sD_pk_user);
 		party.setName(name);
 		party.setRemark(remark);
 		party.setBegin_time(isCalendar + "   " + hour + ":" + minute);

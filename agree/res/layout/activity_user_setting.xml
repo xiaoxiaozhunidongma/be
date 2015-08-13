@@ -119,7 +119,7 @@
             android:textSize="18.0sp" />
 
         <TextView
-            android:id="@+id/textView4"
+            android:id="@+id/usersetting_binding_weixin"
             android:layout_width="200.0dp"
             android:layout_height="wrap_content"
             android:layout_below="@+id/usersetting_tv_phone"

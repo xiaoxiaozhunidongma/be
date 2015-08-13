@@ -78,7 +78,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 						public void run() {
 							sum--;
 							if (sum > 0) {
-								mBinding_phone_OK.setText(sum + "");
+								mBinding_phone_OK.setText(sum + "秒后重新发送");
 								mBinding_phone_OK.postDelayed(this, 1000);
 								mBinding_phone_OK.setEnabled(false);
 								mBinding_phone_code.addTextChangedListener(new TextWatcher() {
@@ -136,11 +136,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 				int a = usersetting_updateback.getStatusMsg();
 				if (a == 1) {
 					Log.e("UserSettingActivity", "更新成功" + A);
-					Intent intent=new Intent();
-					intent.setAction("Binding_Phone");
-					intent.putExtra("Succeed", true);
-					intent.putExtra("Pk_user", user.getPk_user());
-					sendBroadcast(intent);
+					UserSettingActivity.UserSetting.getRefresh();
 					finish();
 				} else {
 					Toast.makeText(BindingPhoneActivity.this, "绑定失败，请重新绑定",

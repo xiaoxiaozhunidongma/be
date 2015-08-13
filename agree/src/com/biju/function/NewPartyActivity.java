@@ -2,27 +2,14 @@ package com.biju.function;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-import com.BJ.javabean.Group;
-import com.BJ.javabean.Groupback;
-import com.BJ.javabean.User;
-import com.BJ.utils.PreferenceUtils;
-import com.BJ.utils.homeImageLoaderUtils;
-import com.biju.Interface;
-import com.biju.R;
-import com.biju.Interface.readUserGroupMsgListenner;
-import com.biju.login.LoginActivity;
-import com.github.volley_examples.utils.GsonUtils;
-import com.tencent.download.core.strategy.DownloadGlobalStrategy.StrategyInfo;
-
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -37,12 +24,21 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.BJ.javabean.Group;
+import com.BJ.javabean.Groupback;
+import com.BJ.javabean.User;
+import com.BJ.utils.PreferenceUtils;
+import com.BJ.utils.SdPkUser;
+import com.BJ.utils.homeImageLoaderUtils;
+import com.biju.Interface;
+import com.biju.Interface.readUserGroupMsgListenner;
+import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
+
 public class NewPartyActivity extends Activity implements OnClickListener{
 
+	public static NewPartyActivity NewParty;
 	private GridView newparty_gridview;
-	private int returndata;
-	private boolean login;
-	private boolean isRegistered_one;
 	private List<Group> users;
 	private ArrayList<Group> list = new ArrayList<Group>();
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
@@ -50,22 +46,20 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private MyGridviewAdapter adapter;
+	private Integer sD_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_party);
-		SharedPreferences sp = getSharedPreferences(
-				"Registered", 0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", false);
-		returndata = sp.getInt("returndata", returndata);
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
+		//获取sd卡中的pk_user
+		sD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("NewPartyActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 		
 		initUI();
 		initNewTeam();
-		
+		NewParty=this;
 	}
 
 	@Override
@@ -82,18 +76,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 	}
 
 	private void initNewTeam() {
-		if (isRegistered_one) {
-			ReadTeam(returndata);
-		} else {
-			if(login)
-			{
-				int pk_user = LoginActivity.getPk_user();
-				ReadTeam(pk_user);
-			}else
-			{
-				ReadTeam(returndata);
-			}
-		}
+		ReadTeam(sD_pk_user);
 	}
 
 	private void ReadTeam(int pk_user) {
@@ -105,6 +88,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 
 			@Override
 			public void success(String A) {
+				list.clear();
 				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
 				int homeStatusMsg = homeback.getStatusMsg();
 				if (homeStatusMsg == 1) {
@@ -147,7 +131,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 				editor.commit();
 				Intent intent=new Intent(NewPartyActivity.this, MapActivity.class);
 				startActivity(intent);
-				finish();
+//				finish();
 			}
 		});
 	}
@@ -160,6 +144,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 
 		@Override
 		public int getCount() {
+			Log.e("NewPartyActivity", "list的长度======" + list.size());
 			return list.size();
 		}
 
