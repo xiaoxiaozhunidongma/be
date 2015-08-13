@@ -1,8 +1,5 @@
 package com.BJ.utils;
 
-import java.util.ArrayList;
-
-import com.BJ.javabean.Group;
 
 
 public class SdPkUser {
@@ -33,5 +30,15 @@ public class SdPkUser {
 
 	public static void setGetweixinLogin(boolean getweixinLogin) {
 		SdPkUser.getweixinLogin = getweixinLogin;
+	}
+	
+	//´«opendi
+	private static String getopenid;
+	public static String getGetopenid() {
+		return getopenid;
+	}
+
+	public static void setGetopenid(String getopenid) {
+		SdPkUser.getopenid = getopenid;
 	}
 }

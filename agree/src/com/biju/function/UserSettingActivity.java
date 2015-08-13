@@ -95,6 +95,11 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private String Useravatar_path;
 	private String Userphone;
 	private String Userpassword;
+	private int Usersex;
+	private String Usersetup_time;
+	private String Userlast_login_time;
+	private String Userwechat_id;
+	
 	private boolean ishead;
 	private Interface readuserinter;
 	private boolean isRead;
@@ -113,6 +118,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private int sex = 0;
 	private TextView mUsersetting_tv_phone;
 	private Integer sD_pk_user;
+	private boolean weixin;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -134,6 +140,9 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 		mUsersetting_tv_password.setText("请输入想要设置的密码");
 		PicSign();// 传图片签名字符串
+		
+		Intent intent = getIntent();
+		weixin = intent.getBooleanExtra("weixin", false);
 	}
 	
 	public void getRefresh()
@@ -213,11 +222,13 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 						Useravatar_path = readuser.getAvatar_path();
 						Userphone = readuser.getPhone();
 						Userjpush_id = readuser.getJpush_id();
+						Usersetup_time = readuser.getSetup_time();
+						Userlast_login_time = readuser.getLast_login_time();
+						Userwechat_id = readuser.getWechat_id();
+						
 						Log.e("UserSettingActivity", "电话号码1 ==  " + Userphone);
 						Userpassword = readuser.getPassword();
-						Log.e("UserSettingActivity", "读取出来的" + Userpk_user
-								+ Usernickname + Useravatar_path + Userphone
-								+ Userpassword);
+						Log.e("UserSettingActivity", "读取出来的" + Userpk_user+ Usernickname + Useravatar_path + Userphone+ Userpassword);
 						mUsersetting_nickname.setText(Usernickname);
 						mUsersetting_edt_password_1.setText(Userpassword);
 						mUsersetting_edt_password_2.setText(Userpassword);
@@ -229,7 +240,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 							mUsersetting_tv_phone.setText(Userphone);
 						}
 						password = Userpassword;
-						int Usersex = readuser.getSex();
+						Usersex = readuser.getSex();
 						Log.e("UserSettingActivity", "性别" + Usersex);
 						switch (Usersex) {
 						case 0:
@@ -251,8 +262,36 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 								"yyyy-MM-dd hh:mm:ss");
 						setup_time = sdf.format(new Date());
 
-						Log.e("UserSettingActivity", "昵称显示" + "====="
-								+ Usernickname);
+						Log.e("UserSettingActivity", "昵称显示" + "====="+ Usernickname);
+						//绑定微信更新
+						if(weixin)
+						{
+							String wechat_id=SdPkUser.getGetopenid();
+							Log.e("UserSettingActivity", "得到的微信唯一识别码===="+wechat_id);
+							String openid=SdPkUser.getGetopenid();
+							User usersetting = new User();
+							usersetting.setPk_user(sD_pk_user);
+							usersetting.setJpush_id(Userjpush_id);
+							usersetting.setNickname(Usernickname);
+							usersetting.setPassword(Userpassword);
+							usersetting.setSex(Usersex);
+							usersetting.setStatus(1);
+							usersetting.setPhone(Userphone);
+							usersetting.setSetup_time(Usersetup_time);
+							usersetting.setLast_login_time(Userlast_login_time);
+							usersetting.setAvatar_path(Useravatar_path);
+							usersetting.setWechat_id(wechat_id);//微信的唯一识别码
+							Log.e("UserSettingActivity", "得到的用户信息===="+sD_pk_user+"\n"+Userjpush_id+"\n"+
+									Usernickname+"\n"+Userpassword+"\n"+Usersex+"\n"+Userphone+"\n"+Usersetup_time+"\n"
+									+Userlast_login_time+"\n"+Useravatar_path+"\n"+wechat_id);
+							readuserinter.updateUser(UserSettingActivity.this, usersetting);
+						}
+						
+						
+						
+						
+						
+						
 					}
 					completeURL = beginStr + Useravatar_path + endStr;
 					PreferenceUtils.saveImageCache(UserSettingActivity.this,
@@ -484,6 +523,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			usersetting.setSex(sex);
 			usersetting.setStatus(1);
 			usersetting.setPhone(Userphone);
+			usersetting.setWechat_id(Userwechat_id);
 			Log.e("UserSettingActivity", "电话号码4===========  " + Userphone);
 			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 			usersetting.setSetup_time(setup_time);

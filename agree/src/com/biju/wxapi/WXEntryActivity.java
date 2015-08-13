@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 
+import com.BJ.javabean.Access_Token;
 import com.BJ.utils.SdPkUser;
 import com.android.volley.VolleyError;
 import com.biju.R;
@@ -14,6 +15,7 @@ import com.biju.APP.MyApplication;
 import com.biju.function.UserSettingActivity;
 import com.github.volley_examples.app.MyVolley;
 import com.github.volley_examples.app.VolleyListenner;
+import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
@@ -59,29 +61,30 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	@Override
 	public void onResp(BaseResp resp) {
-		
+
 		switch (resp.errCode) {
 		case BaseResp.ErrCode.ERR_OK:
 			weixinLogin = SdPkUser.isGetweixinLogin();
 			code = ((SendAuth.Resp) resp).code;
-			initdata();
-			Log.e("WXEntryActivity", "获取的code======"+code);
-			if(!weixinLogin)
-			{
-				if(code!=null)
-				{
+			Log.e("WXEntryActivity", "获取的code======" + code);
+			if (!weixinLogin) {
+				if (code != null) {
 					Log.e("WXEntryActivity", "有进入到这来了111111========");
-					Intent intent=new Intent(WXEntryActivity.this, UserSettingActivity.class);
-					startActivity(intent);
-					overridePendingTransition(0, 0);
+//					Intent intent = new Intent(WXEntryActivity.this,UserSettingActivity.class);
+//					intent.putExtra("weixin", true);
+//					startActivity(intent);
+//					overridePendingTransition(0, 0);
+					initdata();
 				}
+			} else {
+				initdata();
 			}
 			break;
 		case BaseResp.ErrCode.ERR_USER_CANCEL:
-			if(!weixinLogin)
-			{
+			if (!weixinLogin) {
 				Log.e("WXEntryActivity", "有进入到这来了222222222========");
-				Intent intent=new Intent(WXEntryActivity.this, UserSettingActivity.class);
+				Intent intent = new Intent(WXEntryActivity.this,
+						UserSettingActivity.class);
 				startActivity(intent);
 				overridePendingTransition(0, 0);
 			}
@@ -92,23 +95,32 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			break;
 		}
 		finish();
-		}
+	}
 
 	private void initdata() {
-		String path="https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx9be30a70fcb480ae&secret=5afb616b4c62f245508643e078735bfb&code="+code+"&grant_type=authorization_code";
-		Log.e("WXEntryActivity", "路径==============="+path);
-		
+		String path = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx9be30a70fcb480ae&secret=5afb616b4c62f245508643e078735bfb&code="
+				+ code + "&grant_type=authorization_code";
+		Log.e("WXEntryActivity", "路径===============" + path);
+
 		MyVolley.get(WXEntryActivity.this, path, new VolleyListenner() {
-			
+
 			@Override
 			public void onErrorResponse(VolleyError error) {
 			}
-			
+
 			@Override
 			public void onResponse(String response) {
-				Log.e("WXEntryActivity", "获取回来的东西======"+response);
+				Log.e("WXEntryActivity", "获取回来的东西======" + response);
+				Access_Token access_Token = GsonUtils.parseJson(response,Access_Token.class);
+				String openid=access_Token.getOpenid();
+				Log.e("WXEntryActivity", "返回来的openid========"+openid);
+				SdPkUser.setGetopenid(openid);
+				Intent intent = new Intent(WXEntryActivity.this,UserSettingActivity.class);
+				intent.putExtra("weixin", true);
+				startActivity(intent);
+				overridePendingTransition(0, 0);
 			}
 		});
-	
+
 	}
 }
