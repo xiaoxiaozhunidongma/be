@@ -1,5 +1,10 @@
 package com.biju.login;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -8,6 +13,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -29,6 +35,7 @@ import com.BJ.javabean.Phone;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.utils.Person;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.findUserListenner;
@@ -74,6 +81,20 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 	private String device_id;
 	private Integer status;
 	private String wechat_id;
+	
+	private String fileName = getSDPath() + "/" + "saveData";
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
+	
 	
 	//提供给首界面的容器
 	public static ArrayList<Group> list = new ArrayList<Group>();
@@ -195,6 +216,18 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 							
 							//把pk_user保存进一个工具类中
 							SdPkUser.setsD_pk_user(Phone_pk_user);
+							
+							Person person = new Person(Phone_pk_user);
+							try {
+								ObjectOutputStream oos = new ObjectOutputStream(
+										new FileOutputStream(fileName));
+								oos.writeObject(person);
+								oos.close();
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				} else {

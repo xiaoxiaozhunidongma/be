@@ -1,5 +1,11 @@
 package com.fragment;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +17,7 @@ import android.content.IntentFilter;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
+import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -30,6 +37,7 @@ import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
+import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
@@ -70,6 +78,19 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	
 	private Integer SD_pk_user;
 	private boolean isRegistered_one;
+	
+	private String fileName = getSDPath() + "/" + "saveData";
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
 
 	public HomeFragment() {
 	}
@@ -84,9 +105,24 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 			//提供gridview做布局判断
 			isRegistered_one=SdPkUser.isRegistered_one();
 			
-			//获取sd卡中的pk_user
-			SD_pk_user = SdPkUser.getsD_pk_user();
-			Log.e("HomeFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+			FileInputStream fis;
+			try {
+				fis = new FileInputStream(fileName);
+				ObjectInputStream ois = new ObjectInputStream(fis);
+				Person person = (Person) ois.readObject();
+				SD_pk_user=person.pk_user;
+				SdPkUser.setsD_pk_user(SD_pk_user);
+				ois.close();
+			} catch (FileNotFoundException e) {
+				e.printStackTrace();
+			} catch (StreamCorruptedException e) {
+				e.printStackTrace();
+			} catch (IOException e) {
+				e.printStackTrace();
+			} catch (ClassNotFoundException e) {
+				e.printStackTrace();
+			}
+			
 
 			initUI(inflater);
 			adapter.notifyDataSetChanged();
@@ -110,6 +146,28 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 		return mLayout;
 	}
 
+	@Override
+	public void onStart() {
+		FileInputStream fis;
+		try {
+			fis = new FileInputStream(fileName);
+			ObjectInputStream ois = new ObjectInputStream(fis);
+			Person person = (Person) ois.readObject();
+			SD_pk_user=person.pk_user;
+			SdPkUser.setsD_pk_user(SD_pk_user);
+			ois.close();
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		} catch (StreamCorruptedException e) {
+			e.printStackTrace();
+		} catch (IOException e) {
+			e.printStackTrace();
+		} catch (ClassNotFoundException e) {
+			e.printStackTrace();
+		}
+		super.onStart();
+	}
+	
 	public void prepareData(Integer pk_user) {
 		ReadTeam(pk_user);
 	}
@@ -147,6 +205,8 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	}
 
 	public void initNewTeam() {
+//		SD_pk_user = SdPkUser.getsD_pk_user();
+//		Log.e("HomeFragment", "从SD卡中获取到的Pk_user2222222222" + SD_pk_user);
 		ReadTeam(SD_pk_user);
 	}
 

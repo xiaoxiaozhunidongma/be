@@ -275,6 +275,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 				usersetting.setLast_login_time(user.getLast_login_time());
 				usersetting.setAvatar_path(user.getAvatar_path());
 				usersetting.setStatus(user.getStatus());
+				usersetting.setWechat_id(user.getWechat_id());
 				mBinding_phone_interface.updateUser(BindingPhoneActivity.this,
 						usersetting);
 				

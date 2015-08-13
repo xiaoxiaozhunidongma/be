@@ -67,18 +67,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			weixinLogin = SdPkUser.isGetweixinLogin();
 			code = ((SendAuth.Resp) resp).code;
 			Log.e("WXEntryActivity", "获取的code======" + code);
-			if (!weixinLogin) {
-				if (code != null) {
-					Log.e("WXEntryActivity", "有进入到这来了111111========");
-//					Intent intent = new Intent(WXEntryActivity.this,UserSettingActivity.class);
-//					intent.putExtra("weixin", true);
-//					startActivity(intent);
-//					overridePendingTransition(0, 0);
-					initdata();
-				}
-			} else {
-				initdata();
-			}
+			initdata();
 			break;
 		case BaseResp.ErrCode.ERR_USER_CANCEL:
 			if (!weixinLogin) {
@@ -115,10 +104,16 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				String openid=access_Token.getOpenid();
 				Log.e("WXEntryActivity", "返回来的openid========"+openid);
 				SdPkUser.setGetopenid(openid);
-				Intent intent = new Intent(WXEntryActivity.this,UserSettingActivity.class);
-				intent.putExtra("weixin", true);
-				startActivity(intent);
-				overridePendingTransition(0, 0);
+				if(!weixinLogin)
+				{
+					Intent intent = new Intent(WXEntryActivity.this,UserSettingActivity.class);
+					intent.putExtra("weixin", true);
+					startActivity(intent);
+					overridePendingTransition(0, 0);
+				}else
+				{
+					
+				}
 			}
 		});
 

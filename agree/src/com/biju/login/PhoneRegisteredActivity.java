@@ -68,6 +68,7 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 	private String last_login_time;
 	private String device_id;
 	private Integer status;
+	private String wechat_id;
 	private HomeFragment mHomeFragmen;
 
 	@Override
@@ -214,6 +215,7 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 		
 		phoneRegisteredInterface.setPostListener(new readUserListenner() {
 
+
 			@Override
 			public void success(String A) {
 				Log.e("PhoneRegisteredActivity", "用户资料" + A);
@@ -235,6 +237,7 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 						last_login_time = readuser.getLast_login_time();
 						device_id = readuser.getDevice_id();
 						status = readuser.getStatus();
+						wechat_id = readuser.getWechat_id();
 					}
 					// 每次登陆都更新用户的信息，主要是极光推送的ID
 					updateLogin();
@@ -300,6 +303,7 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 		usersetting.setLast_login_time(last_login_time);
 		usersetting.setAvatar_path(mAvatar_path);
 		usersetting.setDevice_id(device_id);
+		usersetting.setWechat_id(wechat_id);
 		phoneRegisteredInterface.updateUser(PhoneRegisteredActivity.this, usersetting);
 	}
 
