@@ -42,18 +42,16 @@
     <string name="title_activity_binding_phone">BindingPhoneActivity</string>
     <string name="title_activity_comments_list">CommentsListActivity</string>
     <string name="title_activity_friends_data">FriendsDataActivity</string>
-
     <string name="only_choose_num">超出可选图片张数</string>
     <string name="finish">完成</string>
     <string name="invalidSD">sdcard无效或没有插入！</string>
     <string name="photo">选择相册</string>
     <string name="album">相册</string>
     <string name="preview">预览</string>
-    <string name="unfinished">完成</string> 
+    <string name="unfinished">完成</string>
     <string name="camera_cancel">取消</string>
     <string name="no_photo">相册没有图片</string>
-    
-     <string name="Send_the_following_pictures">Send the following pictures?</string>
+    <string name="Send_the_following_pictures">Send the following pictures?</string>
     <string name="location_prefix">[my location]</string>
     <string name="location_recv">[%1$s location]</string>
     <string name="voice">Voice</string>
@@ -140,7 +138,7 @@
     <string name="not_download">Did not download:</string>
     <string name="resend">重发</string>
     <string name="confirm_resend">确认重发该信息？</string>
-    <string name="Into_the_blacklist">Move to the blacklist?</string>
+    <string name="Into_the_blacklist">是否移入黑名单?</string>
     <string name="connect_failuer_toast">Please check the network or try again later</string>
     <string name="send_fail">Send failed</string>
     <string name="error_send_invalid_content">The message content is not allowed to be sent!</string>
@@ -170,8 +168,7 @@
     <string name="not_connect_to_server">Not connect to server, please try again later</string>
     <string name="Whether_to_empty_all_chats">Whether to empty all chats</string>
     <string name="title_activity_more_picture">MorePictureActivity</string>
+    <string name="prompt">prompt</string>
+    <string name="button_cancel">Cancel</string>
 
-       <string name="prompt">prompt</string>
-           <string name="button_cancel">Cancel</string>
-    
 </resources>

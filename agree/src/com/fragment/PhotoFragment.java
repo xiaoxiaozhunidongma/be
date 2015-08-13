@@ -15,10 +15,12 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Thumbnails;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
@@ -47,14 +49,17 @@ import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.photo.AlbumActivity;
 import com.BJ.photo.Bimp;
+import com.BJ.photo.BitmapCache;
 import com.BJ.photo.FileUtils;
 import com.BJ.photo.GalleryActivity;
 import com.BJ.photo.ImageItem;
 import com.BJ.photo.PublicWay;
 import com.BJ.photo.Res;
+import com.BJ.photo.BitmapCache.ImageCallback;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.Path2Bitmap;
+import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.uploadingPhotoListenner;
 import com.biju.Interface.readPartyPhotosListenner;
@@ -100,17 +105,34 @@ public class PhotoFragment extends Fragment  {
 	private String completeURL;
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
 	private String endStr = "/original";
+	BitmapCache cache=new BitmapCache();
+	ImageCallback callback = new ImageCallback() {
+		@Override
+		public void imageLoad(ImageView imageView, Bitmap bitmap,
+				Object... params) {
+			if (imageView != null && bitmap != null) {
+				String url = (String) params[0];
+				if (url != null && url.equals((String) imageView.getTag())) {
+					((ImageView) imageView).setImageBitmap(bitmap);
+				} else {
+					Log.e("TAG", "callback, bmp not match");
+				}
+			} else {
+				Log.e("TAG", "callback, bmp null");
+			}
+		}
+	};
 
 
 	public PhotoFragment() {
 		// Required empty public constructor
 	}
 
-	public static BeginUpload beginUpload;
-
-	public interface BeginUpload {
-		void begin();
-	}
+//	public static BeginUpload beginUpload;
+//
+//	public interface BeginUpload {
+//		void begin();
+//	}
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -123,12 +145,11 @@ public class PhotoFragment extends Fragment  {
 			Res.init(getActivity());
 			bimap = BitmapFactory.decodeResource(getResources(),
 					R.drawable.icon_addpic_unfocused);
-			PublicWay.activityList.add(getActivity());
 			// mLayout =inflater.inflate(R.layout.activity_selectimg, null);
 			// setContentView(mLayout);
 			Init(inflater);
 			get4PicSign();
-			initBeginUplistener();
+//			initBeginUplistener();
 			initPhotoUplisten();
 			initGroupPhotoListen();
 		}
@@ -162,6 +183,7 @@ public class PhotoFragment extends Fragment  {
 				for (int i = 0; i < listphotos.size(); i++) {
 					String path = listphotos.get(i).getPath();
 					if(!"".equals(path)){
+						//??????????????????
 						Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(path, 400, 400);
 //						if(!convertToBitmap.isRecycled() ){ 
 //							convertToBitmap.recycle();   //回收图片所占的内存 
@@ -226,39 +248,47 @@ public class PhotoFragment extends Fragment  {
 		group.setStatus(1);
 		instance.readPartyPhotos(getActivity(), group);
 		
-		//获取浏览的容器
+		//销毁界面
+		for (int i = 0; i < PublicWay.activityList.size(); i++) {
+		if (null != PublicWay.activityList.get(i)) {
+			PublicWay.activityList.get(i).finish();
+		}
+		System.gc();
+	}
 	}
 
-	private void initBeginUplistener() {
-		BeginUpload upload = new BeginUpload() {
-
-			private TextView textView;
-			private boolean isload;
-
-			@Override
-			public void begin() {
-				for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
-					isload=false;
-					String imagePath = Bimp.tempSelectBitmap.get(i)
-							.getImagePath();
-					Log.e("PhotoFragment", "每个图片路径：" + imagePath);
-					Log.e("PhotoFragment", "listphotos.size()====" + listphotos.size());
-					for (int j = 0; j < listphotos.size(); j++) {
-						String path = listphotos.get(j).getPath();
-						if(imagePath.equals(path)){
-							isload = true;
-						}
-					}
-					//解决重复上传
-					if(!isload){
-						//开始上传
-						upload(imagePath);
-					}
-				}
-			}
-		};
-		beginUpload = upload;
-	}
+//	private void initBeginUplistener() {
+	
+//		beginUpload = new BeginUpload() {
+//
+//			private TextView textView;
+//			private boolean isload;
+//
+//			@Override
+//			public void begin() {
+//				for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
+//					isload=false;
+////					String imagePath = Bimp.tempSelectBitmap.get(i)
+////							.getImagePath();
+//					String imagePath = Bimp.tempSelectBitmap.get(i)
+//							.getThumbnailPath();
+//					Log.e("PhotoFragment", "每个图片路径：" + imagePath);
+//					Log.e("PhotoFragment", "listphotos.size()====" + listphotos.size());
+//					for (int j = 0; j < listphotos.size(); j++) {
+//						String path = listphotos.get(j).getPath();
+//						if(imagePath.equals(path)){
+//							isload = true;
+//						}
+//					}
+//					//解决重复上传
+//					if(!isload){
+//						//开始上传
+//						upload(imagePath);
+//					}
+//				}
+//			}
+//		};
+//	}
 
 	private void upload(final String imagePath) {
 		 UploadTask task = new PhotoUploadTask(imagePath, new IUploadTaskListener() {
@@ -388,8 +418,9 @@ public class PhotoFragment extends Fragment  {
 			public void onClick(View v) {
 				// // 点击图库的时候关闭自身
 				// getActivity().finish();
+				Bimp.tempSelectBitmap.clear();
 				Intent intent = new Intent(getActivity(), AlbumActivity.class);
-				startActivity(intent);
+				startActivityForResult(intent, 110);
 				getActivity().overridePendingTransition(
 						R.anim.activity_translate_in,
 						R.anim.activity_translate_out);
@@ -547,6 +578,7 @@ public class PhotoFragment extends Fragment  {
 				}else{
 					String url=beginStr+listphotos.get(position).getPk_photo()+endStr;//完整路径
 					ImageLoaderUtils4Photos.getInstance().LoadImage(getActivity(), url, holder.image);
+//					cache.displayBmp(holder.image, listphotos.get(position).getPath(), url, callback);
 				}
 			}
 			//默认为加号图片
@@ -640,27 +672,49 @@ public class PhotoFragment extends Fragment  {
 //				startActivity(intent);
 			}
 			break;
-		}
-	}
+		case 110:
 
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			for (int i = 0; i < PublicWay.activityList.size(); i++) {
-				if (null != PublicWay.activityList.get(i)) {
-					PublicWay.activityList.get(i).finish();
+			for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
+				boolean isload = false;
+				ImageItem imageItem = Bimp.tempSelectBitmap.get(i);
+				String imagePath = imageItem.getImagePath();
+				String ThumbnailPath = imageItem.getThumbnailPath();
+				if(ThumbnailPath!=null){
+					//如果没有缩略图路径，替换
+					imagePath=ThumbnailPath;
+				}
+				
+				Log.e("PhotoFragment", "每个图片路径=====" + imagePath);
+				Log.e("PhotoFragment", "listphotos.size()====" + listphotos.size());
+				for (int j = 0; j < listphotos.size(); j++) {
+					String path = listphotos.get(j).getPath();
+					if(imagePath.equals(path)){
+						isload = true;
+					}
+				}
+				//解决重复上传
+				if(!isload){
+					//开始上传
+					upload(imagePath);
 				}
 			}
-			System.exit(0);
+		
+			break;
 		}
-		return true;
 	}
+//??????????????????????????????????????????????????????????????
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		if (keyCode == KeyEvent.KEYCODE_BACK) {
+//			for (int i = 0; i < PublicWay.activityList.size(); i++) {
+//				if (null != PublicWay.activityList.get(i)) {
+//					PublicWay.activityList.get(i).finish();
+//				}
+//			}
+//			System.exit(0);
+//		}
+//		return true;
+//	}
 
-	@Override
-	public void onStop() {
-		//清理缓存
-		ImageLoaderUtils4Photos.clearCache();
-		super.onStop();
-	}
 	
 //	@Override
 //	public void onDestroy() {

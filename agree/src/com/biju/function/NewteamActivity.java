@@ -19,10 +19,12 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.media.ThumbnailUtils;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images.Thumbnails;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -41,6 +43,10 @@ import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Newteamback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
+import com.BJ.photo.AlbumHelper;
+import com.BJ.photo.Bimp;
+import com.BJ.photo.ImageBucket;
+import com.BJ.photo.ImageItem;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.Utils;
 import com.BJ.utils.homeImageLoaderUtils;
@@ -386,7 +392,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						// 上传完成后注册
 						Log.e("图片路径", "result.url" + result.url);
 						// 上传完成后删除SD中图片
-						deleteMybitmap(sDpath);
+//						deleteMybitmap(sDpath);
 						group.setAvatar_path(result.fileId);
 						// 创建CreatGroup
 						Group_User group_User = new Group_User();
@@ -434,6 +440,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		uploadManager.upload(task); // 开始上传
 
 	}
+	
+	private ArrayList<ImageItem> dataList=new ArrayList<ImageItem>();;
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -442,24 +450,42 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		try {
 			Uri selectedImage = data.getData();
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//			String[] thumbColumns = { MediaStore.Images.Thumbnails.DATA};  
+
 			Cursor cursor = NewteamActivity.this.getContentResolver().query(
 					selectedImage, filePathColumn, null, null, null);
+//			Cursor cursor = NewteamActivity.this.getContentResolver().query(
+//					Thumbnails.EXTERNAL_CONTENT_URI, thumbColumns, null, null, null);
+			
 			cursor.moveToFirst();
 			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 			mFilePath = cursor.getString(columnIndex);
+			Log.e("NewteamActivity", "图路径====="+mFilePath);
 			cursor.close();
-			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-			
-			saveMyBitmap(bmp, newteam_name);
-			mFilePath = sDpath;// 图片在SD卡中的路径
+//			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+			Bitmap bmp = Bimp.revitionImageSize(mFilePath);
+			//缩略图
+			Bitmap thumbnail = ThumbnailUtils.extractThumbnail(bmp, 400, 800, ThumbnailUtils.OPTIONS_RECYCLE_INPUT);
+			bmp.recycle();//回收
+			System.gc();
+//			saveMyBitmap(bmp, newteam_name);
+//			mFilePath = sDpath;// 图片在SD卡中的路径
 			
 			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
 			mNewteam_head.setVisibility(View.VISIBLE);
 			newteam_progressBar.setVisibility(View.VISIBLE);
-			mNewteam_head.setImageBitmap(bmp);
+			mNewteam_head.setImageBitmap(thumbnail);
 		} catch (Exception e) {
 			Log.e("Demo", "choose file error!", e);
 		}
+	}
+
+	private List<ImageBucket> init() {
+		AlbumHelper helper = AlbumHelper.getHelper();
+		helper.init(getApplicationContext());
+
+		List<ImageBucket> contentList = helper.getImagesBucketList(false);
+		return contentList;
 	}
 
 	public String getSDPath() {

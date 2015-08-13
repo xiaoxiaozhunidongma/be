@@ -39,7 +39,7 @@ public class homeImageLoaderUtils {
 		.showImageOnFail(R.drawable.ic_error)
 		.cacheInMemory(false)//是否缓存在内存中
 		.displayer(new RoundedBitmapDisplayer(50))//设置圆角
-		.cacheOnDisk(false)//是否缓存在SD卡中
+		.cacheOnDisk(true)//是否缓存在SD卡中
 		.considerExifParams(true)
 		.bitmapConfig(Bitmap.Config.RGB_565)  //格式
 		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType

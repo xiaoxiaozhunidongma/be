@@ -80,6 +80,7 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	private String pk_user;
 	private boolean isRegistered_one;
 	private boolean login;
+	private LayoutInflater layoutInflater;
 	public String getSDPath() {
 		File sdDir = null;
 		boolean sdCardExist = Environment.getExternalStorageState().equals(
@@ -101,6 +102,7 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if (mLayout == null) {
+			layoutInflater=inflater;
 			mLayout = inflater.inflate(R.layout.fragment_home, container, false);
 			//提供gridview做布局判断
 			SharedPreferences sp = getActivity().getSharedPreferences("Registered", 0);
@@ -398,13 +400,13 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View inflater = null;
-			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+			
 			if (iscode) {
 				if (isRegistered_one) {
 					if (Codelist.size() > 0) {
 						if (position < Codelist.size()) {
-							inflater = layoutInflater.inflate(
-									R.layout.home_gridview_item, null);
+								inflater = layoutInflater.inflate(
+										R.layout.home_gridview_item, null);
 							home_item_head = (ImageView) inflater
 									.findViewById(R.id.home_item_head);
 							home_item_name = (TextView) inflater
@@ -420,17 +422,17 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 							homeImageLoaderUtils.getInstance().LoadImage(
 									getActivity(), completeURL, home_item_head);
 						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
+								inflater = layoutInflater.inflate(
+										R.layout.home_teamadd_item, null);
 						}
 					} else {
-						inflater = layoutInflater.inflate(
-								R.layout.home_teamadd_item, null);
+							inflater = layoutInflater.inflate(
+									R.layout.home_teamadd_item, null);
 					}
 				} else {
 					if (position < Codelist.size()) {
-						inflater = layoutInflater.inflate(
-								R.layout.home_gridview_item, null);
+							inflater = layoutInflater.inflate(
+									R.layout.home_gridview_item, null);
 						home_item_head = (ImageView) inflater
 								.findViewById(R.id.home_item_head);
 						home_item_name = (TextView) inflater
@@ -447,8 +449,8 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 								getActivity(), completeURL, home_item_head);
 
 					} else {
-						inflater = layoutInflater.inflate(
-								R.layout.home_teamadd_item, null);
+							inflater = layoutInflater.inflate(
+									R.layout.home_teamadd_item, null);
 					}
 				}
 
@@ -457,8 +459,8 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 					if (isRegistered_one) {
 						if (list.size() > 0) {
 							if (position < list.size()) {
-								inflater = layoutInflater.inflate(
-										R.layout.home_gridview_item, null);
+									inflater = layoutInflater.inflate(
+											R.layout.home_gridview_item, null);
 								home_item_head = (ImageView) inflater
 										.findViewById(R.id.home_item_head);
 								home_item_name = (TextView) inflater
@@ -477,17 +479,17 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 										getActivity(), completeURL,
 										home_item_head);
 							} else {
-								inflater = layoutInflater.inflate(
-										R.layout.home_teamadd_item, null);
+									inflater = layoutInflater.inflate(
+											R.layout.home_teamadd_item, null);
 							}
 						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
+								inflater = layoutInflater.inflate(
+										R.layout.home_teamadd_item, null);
 						}
 					} else {
 						if (position < list.size()) {
-							inflater = layoutInflater.inflate(
-									R.layout.home_gridview_item, null);
+								inflater = layoutInflater.inflate(
+										R.layout.home_gridview_item, null);
 							home_item_head = (ImageView) inflater
 									.findViewById(R.id.home_item_head);
 							home_item_name = (TextView) inflater
@@ -504,16 +506,16 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 									getActivity(), completeURL, home_item_head);
 
 						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
+								inflater = layoutInflater.inflate(
+										R.layout.home_teamadd_item, null);
 						}
 					}
 				} else {
 					if (isRegistered_one) {
 						if (LoginActivity.list.size() > 0) {
 							if (position < LoginActivity.list.size()) {
-								inflater = layoutInflater.inflate(
-										R.layout.home_gridview_item, null);
+									inflater = layoutInflater.inflate(
+											R.layout.home_gridview_item, null);
 								home_item_head = (ImageView) inflater
 										.findViewById(R.id.home_item_head);
 								home_item_name = (TextView) inflater
@@ -533,17 +535,17 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 										getActivity(), completeURL,
 										home_item_head);
 							} else {
-								inflater = layoutInflater.inflate(
-										R.layout.home_teamadd_item, null);
+									inflater = layoutInflater.inflate(
+											R.layout.home_teamadd_item, null);
 							}
 						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
+								inflater = layoutInflater.inflate(
+										R.layout.home_teamadd_item, null);
 						}
 					} else {
+						inflater = layoutInflater.inflate(
+								R.layout.home_gridview_item, null);
 						if (position < LoginActivity.list.size()) {
-							inflater = layoutInflater.inflate(
-									R.layout.home_gridview_item, null);
 							home_item_head = (ImageView) inflater
 									.findViewById(R.id.home_item_head);
 							home_item_name = (TextView) inflater
@@ -561,8 +563,8 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 									getActivity(), completeURL, home_item_head);
 
 						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
+								inflater = layoutInflater.inflate(
+										R.layout.home_teamadd_item, null);
 						}
 					}
 				}

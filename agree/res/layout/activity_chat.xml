@@ -64,24 +64,27 @@
         </RelativeLayout>
 
         <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/selector_back_gray_white"
+            android:text="返回"
+            android:textColor="#8e8e8e" 
+            android:gravity="center"/>
+
+        <TextView
             android:id="@+id/tv_detail"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="46dp"
+            android:layout_height="46dp"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="10dp"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/selector_back_gray_white"
+            android:gravity="center"
             android:text="详情"
             android:textColor="#00e3e3" />
 
-        <TextView
-            android:id="@+id/tv_back"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10dp"
-            android:text="返回"
-            android:textColor="#8e8e8e" />
     </RelativeLayout>
 
     <LinearLayout
@@ -144,8 +147,10 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/rela_more"
                 android:layout_width="45dp"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent" 
+                android:background="@drawable/selector_back_gray_black">
 
                 <ImageView
                     android:id="@+id/iv_more"
@@ -153,7 +158,8 @@
                     android:layout_height="24dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/iconfont_qita" />
+                    android:src="@drawable/iconfont_qita" 
+                    />
             </RelativeLayout>
 
             <RelativeLayout
@@ -567,7 +573,7 @@
             android:layout_height="40.0dp"
             android:layout_alignParentBottom="true"
             android:layout_alignParentLeft="true"
-            android:background="@drawable/chat_more_corners2"
+            android:background="@drawable/selector_cancle_coners"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
             android:layout_marginBottom="3dp" >
@@ -593,13 +599,15 @@
             android:layout_marginBottom="10dp"
             android:layout_marginLeft="10dp"
             android:layout_marginRight="10dp"
-            android:background="@drawable/chat_more_corners"
+            android:background="#00000000"
             android:orientation="vertical" >
 
             <RelativeLayout
                 android:id="@+id/select_picsource"
                 android:layout_width="match_parent"
-                android:layout_height="50.0dp" >
+                android:layout_height="50.0dp" 
+                android:background="@drawable/chat_more_corners_topleft_right"
+                >
 
                 <TextView
                     android:id="@+id/TextView01"
@@ -617,7 +625,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50.0dp"
                 android:layout_marginBottom="1dp"
-                android:layout_marginTop="1dp" >
+                android:layout_marginTop="1dp"
+                 android:background="@drawable/selector_back_ee_gray_white" >
 
                 <TextView
                     android:id="@+id/take_photo_tv"
@@ -633,7 +642,9 @@
             <RelativeLayout
                 android:id="@+id/locpicture_rela"
                 android:layout_width="match_parent"
-                android:layout_height="50.0dp" >
+                android:layout_height="50.0dp"
+                 android:background="@drawable/chat_more_corners_bottomleft_right" 
+                 >
 
                 <TextView
                     android:id="@+id/locpicture_tv"

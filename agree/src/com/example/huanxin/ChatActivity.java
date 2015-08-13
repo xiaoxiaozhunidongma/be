@@ -535,6 +535,8 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 
 	private void unitUI() {
 		
+		findViewById(R.id.tv_detail).setOnClickListener(this);//详情
+		findViewById(R.id.rela_more).setOnClickListener(this);
 		findViewById(R.id.tv_back).setOnClickListener(this);
 		picture_source_rela = (RelativeLayout) findViewById(R.id.picture_source_rela);
 		picture_source_rela.setOnClickListener(this);
@@ -1400,6 +1402,10 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 					holder.iv.setImageResource(R.drawable.default_image);
 					showDownloadImageProgress(message, holder);
 					// downloadImage(message, holder);
+//					不显示发送时间
+					if(holder.tv_sendtime !=null){
+						holder.tv_sendtime .setVisibility(View.GONE);
+					}
 				} else {
 					// "!!!! not back receive, show image directly");
 					holder.pb.setVisibility(View.GONE);
@@ -1437,13 +1443,23 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 				holder.pb.setVisibility(View.GONE);
 				holder.tv.setVisibility(View.GONE);
 				holder.staus_iv.setVisibility(View.GONE);
+				if(holder.tv_sendtime !=null){
+					holder.tv_sendtime .setVisibility(View.VISIBLE);
+				}
 				break;
 			case FAIL:
 				holder.pb.setVisibility(View.GONE);
 				holder.tv.setVisibility(View.GONE);
 				holder.staus_iv.setVisibility(View.VISIBLE);
+				if(holder.tv_sendtime !=null){
+					holder.tv_sendtime .setVisibility(View.GONE);
+				}
 				break;
 			case INPROGRESS:
+//				不显示发送时间
+				if(holder.tv_sendtime !=null){
+					holder.tv_sendtime .setVisibility(View.GONE);
+				}
 				holder.staus_iv.setVisibility(View.GONE);
 				holder.pb.setVisibility(View.VISIBLE);
 				holder.tv.setVisibility(View.VISIBLE);
@@ -1994,6 +2010,9 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 								// send success
 								holder.pb.setVisibility(View.GONE);
 								holder.tv.setVisibility(View.GONE);
+								if(holder.tv_sendtime !=null){
+									holder.tv_sendtime .setVisibility(View.VISIBLE);
+								}
 							}
 						});
 					}
@@ -2009,6 +2028,9 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 								holder.staus_iv.setVisibility(View.VISIBLE);
 								Toast.makeText(activity,
 										activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast), 0).show();
+								if(holder.tv_sendtime !=null){
+									holder.tv_sendtime .setVisibility(View.VISIBLE);
+								}
 							}
 						});
 					}
@@ -2018,6 +2040,10 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 						activity.runOnUiThread(new Runnable() {
 							public void run() {
 								holder.tv.setText(progress + "%");
+								//此处为发送中
+								if(holder.tv_sendtime !=null){
+									holder.tv_sendtime .setVisibility(View.GONE);
+								}
 							}
 						});
 					}
@@ -2240,6 +2266,7 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 			picture_source_rela.setVisibility(View.GONE);
 			break;
 		case R.id.iv_more:
+		case R.id.rela_more:
 			hideKeyboard();
 			picture_source_rela.setVisibility(View.VISIBLE);
 			break;

@@ -77,20 +77,12 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				Log.e("OkPartyActivity", "日程是否创建成功======" + A);
+				finish();
 			}
 
 			@Override
 			public void defail(Object B) {
-				Log.e("OkPartyActivity", "日程是否创建成功dfsdfds======" + B);
-				Log.e("OkPartyActivity", "日程是否创建成功dfsdfds======"
-						+ B.toString().length());
-				mOkParty_name.postDelayed(new Runnable() {
-
-					@Override
-					public void run() {
-						finish();
-					}
-				}, 1000);
+				
 			}
 		});
 	}

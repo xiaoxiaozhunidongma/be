@@ -1,11 +1,13 @@
 package com.BJ.utils;
 
 import android.content.Context;
+import android.graphics.Bitmap;
 import android.widget.ImageView;
 
 import com.biju.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class ImageLoaderUtils {
@@ -34,9 +36,14 @@ public class ImageLoaderUtils {
 		options = new DisplayImageOptions.Builder()
 				.showImageOnLoading(R.drawable.login_1)
 				.showImageForEmptyUri(R.drawable.login_1)
-				.showImageOnFail(R.drawable.ic_error).cacheInMemory(true)
+				.showImageOnFail(R.drawable.ic_error)
+				.cacheInMemory(false)
 				.displayer(new CircleBitmapDisplayer())//‘≤–Œ
-				.cacheOnDisk(true).considerExifParams(true).build();
+				.cacheOnDisk(true)
+				.considerExifParams(true)
+				.bitmapConfig(Bitmap.Config.RGB_565)  //∏Ò Ω
+				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
+				.build();
 		
 				
 	}
