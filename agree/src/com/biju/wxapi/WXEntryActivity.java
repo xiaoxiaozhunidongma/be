@@ -112,7 +112,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 					overridePendingTransition(0, 0);
 				}else
 				{
-					
+					//进行对比openid后进行登录
 				}
 			}
 		});

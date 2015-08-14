@@ -1,11 +1,18 @@
 package com.biju.login;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+
 import android.app.Activity;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -23,6 +30,7 @@ import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.InitHead;
+import com.BJ.utils.Person;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
@@ -72,6 +80,19 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private int returndata;
 	private String phoneRegistered_phone;
 	private boolean phoneLogin;
+	
+	private String fileName = getSDPath() + "/" + "saveData";
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -141,6 +162,17 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 					SdPkUser.setsD_pk_user(returndata);
 					SdPkUser.setRegistered_one(true);
 					Log.e("RegisteredActivity", "returndata" + returndata);
+					Person person = new Person(returndata);
+					try {
+						ObjectOutputStream oos = new ObjectOutputStream(
+								new FileOutputStream(fileName));
+						oos.writeObject(person);
+						oos.close();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
 					
 					//注册成功后进行登录并绑定手机号码
 					updateLogin();

@@ -90,6 +90,13 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void defail(Object B) {
+				finish();
+				//关闭新建小组界面
+				NewPartyActivity.NewParty.finish();
+				//关闭地图界面
+				MapActivity.Map.finish();
+				//关闭时间日期界面
+				TimeActivity.Time.finish();
 			}
 		});
 	}

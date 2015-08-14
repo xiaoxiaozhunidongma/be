@@ -43,7 +43,6 @@ import com.github.volley_examples.utils.GsonUtils;
 public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
 
 	private View mLayout;
-	private IDs ids;
 	private Interface scheduleInterface;
 	private RelativeLayout mSchedule_prompt_layout;
 	private ListView mSchedule_listView;
@@ -79,6 +78,19 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		return mLayout;
 	}
 
+	@Override
+	public void onStart() {
+		SharedPreferences PartyDetails_sp = getActivity().getSharedPreferences("isPartyDetails_", 0);
+		boolean PartyDetails=PartyDetails_sp.getBoolean("PartyDetails", false);
+		if(PartyDetails)
+		{
+			initreadUserGroupParty();
+			adapter.notifyDataSetChanged();
+		}
+		
+		super.onStart();
+	}
+	
 	private void initUI() {
 		mSchedule_prompt_layout = (RelativeLayout) mLayout
 				.findViewById(R.id.Schedule_prompt_layout);// ÌבÊ¾
@@ -259,7 +271,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private void initreadUserGroupParty() {
 		Integer id_group = GroupActivity.getPk_group();
 		Integer id_user_group = GroupActivity.getPk_group_user();
-		ids = new IDs(id_group, sD_pk_user, id_user_group);
+		IDs ids = new IDs(id_group, sD_pk_user, id_user_group);
 		pk_user_1 = sD_pk_user;
 		scheduleInterface.readUserGroupParty(getActivity(), ids);
 		SharedPreferences sp = getActivity().getSharedPreferences("isPk_user",0);

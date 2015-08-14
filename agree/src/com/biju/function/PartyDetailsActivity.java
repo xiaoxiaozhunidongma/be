@@ -26,14 +26,17 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.Party_User;
+import com.BJ.javabean.Partyback;
 import com.BJ.javabean.ReadPartyback;
 import com.BJ.javabean.Relation;
 import com.BJ.javabean.ReturnData;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.utils.DensityUtil;
+import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Weeks;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -66,6 +69,7 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.Interface;
 import com.biju.Interface.readPartyJoinMsgListenner;
+import com.biju.Interface.readUserGroupPartyListenner;
 import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
@@ -106,6 +110,8 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	private UserAllParty allParty;
 	private boolean userAll;
 
+	private Integer sD_pk_user;
+
 	/**
 	 * 定位SDK监听函数
 	 */
@@ -145,6 +151,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
 		PartyDetails=this;
+		sD_pk_user = SdPkUser.getsD_pk_user();
 		
 		initUI();
 		initInterface();
@@ -193,7 +200,29 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			@Override
 			public void success(String A) {
 				Log.e("PartyDetailsActivity", "返回的是否更新成功" + A);
-				initReadParty();
+				Integer id_group = GroupActivity.getPk_group();
+				Integer id_user_group = GroupActivity.getPk_group_user();
+				IDs ids = new IDs(id_group, sD_pk_user, id_user_group);
+				readpartyInterface.readUserGroupParty(PartyDetailsActivity.this, ids);
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		//重新读取一遍所以的party
+		readpartyInterface.setPostListener(new readUserGroupPartyListenner() {
+
+			@Override
+			public void success(String A) {
+				Partyback partybackInterface = GsonUtils.parseJson(A,
+						Partyback.class);
+				Integer statusMsg = partybackInterface.getStatusMsg();
+				if (statusMsg == 1) {
+					initReadParty();
+					Log.e("PartyDetailsActivity", "读取出小组中的聚会信息===" + A);
+				}
 			}
 
 			@Override
@@ -237,50 +266,35 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 							break;
 						}
 						// 当前用户
-						if (String.valueOf(fk_user1).equals(
-								String.valueOf(read_pk_user))) {
-							Integer read_relationship = relation
-									.getRelationship();
+						if (String.valueOf(fk_user1).equals(String.valueOf(read_pk_user))) {
+							Integer read_relationship = relation.getRelationship();
 							switch (read_relationship) {
 							case 0:
-								mPartyDetails_partake
-										.setBackgroundResource(R.drawable.ok_2);
-								mPartyDetails_refuse
-										.setBackgroundResource(R.drawable.ok_2);
-								Log.e("PartyDetailsActivity", "用户未表态======"
-										+ relationship);
+								mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
+								mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+								Log.e("PartyDetailsActivity", "用户未表态======"+ relationship);
 								break;
 							case 1:
-								mPartyDetails_partake
-										.setBackgroundResource(R.drawable.ok_1);
-								mPartyDetails_refuse
-										.setBackgroundResource(R.drawable.ok_2);
-								Log.e("PartyDetailsActivity", "用户已参与======="
-										+ relationship);
+								mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
+								mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+								Log.e("PartyDetailsActivity", "用户已参与======="+ relationship);
 								break;
 							case 2:
-								mPartyDetails_partake
-										.setBackgroundResource(R.drawable.ok_2);
-								mPartyDetails_refuse
-										.setBackgroundResource(R.drawable.ok_1);
-								Log.e("PartyDetailsActivity", "用户已拒绝=========="
-										+ relationship);
+								mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
+								mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
+								Log.e("PartyDetailsActivity", "用户已拒绝=========="+ relationship);
 								break;
 							default:
 								break;
 							}
 						}
 					}
-					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"
-							+ not_sayNum);
-					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"
-							+ not_sayNum);
-					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"
-							+ not_sayNum);
+					Log.e("PartyDetailsActivity", "当前partakeNum的数量"+ partakeNum);
+					Log.e("PartyDetailsActivity", "当前refuseNum的数量"+ refuseNum);
+					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"+ not_sayNum);
 					mPartyDetails_tv_partake.setText(String.valueOf(partakeNum));
 					mPartyDetails_tv_refuse.setText(String.valueOf(refuseNum));
-					mPartyDetails_did_not_say.setText(String
-							.valueOf(not_sayNum));
+					mPartyDetails_did_not_say.setText(String.valueOf(not_sayNum));
 					partakeNum = 0;
 					refuseNum = 0;
 					not_sayNum = 0;
@@ -294,6 +308,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		});
 	}
 
+	//读取聚会详情
 	private void initReadParty() {
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
@@ -301,19 +316,18 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 				readparty);
 	}
 
+	//首次进来时传值
 	private void initOneParty() {
 		Intent intent = getIntent();
 		userAll = intent.getBooleanExtra("UserAll", false);
 		if (userAll) {
-			allParty = (UserAllParty) intent
-					.getSerializableExtra("UserAllParty");
+			allParty = (UserAllParty) intent.getSerializableExtra("UserAllParty");
 			Integer allrelationship = allParty.getRelationship();
 			pk_party_user = allParty.getPk_party_user();
 			pk_party = allParty.getPk_party();
 			fk_user1 = allParty.getFk_user();
 			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中======");
-			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中的allrelationship======"
-					+ allrelationship);
+			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中的allrelationship======"+ allrelationship);
 			switch (allrelationship) {
 			case 0:
 				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
@@ -366,8 +380,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			} else {
 				switch (relationship) {
 				case 0:
-					mPartyDetails_partake
-							.setBackgroundResource(R.drawable.ok_2);
+					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
 					Log.e("PartyDetailsActivity", "用户未表态======" + relationship);
 					break;
@@ -602,10 +615,12 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
 		party_user.setRelationship(1);
-		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
-				party_user);
-		Toast toast = Toast.makeText(getApplicationContext(), "已参与",
-				Toast.LENGTH_SHORT);
+		party_user.setStatus(1);
+		party_user.setFk_party(pk_party);
+		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+		
+		
+		Toast toast = Toast.makeText(getApplicationContext(), "已参与",Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		LinearLayout toastView = (LinearLayout) toast.getView();
 		ImageView imageCodeProject = new ImageView(getApplicationContext());
@@ -619,12 +634,13 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
+		party_user.setFk_party(pk_party);
 		party_user.setRelationship(2);
-		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
-				party_user);
+		party_user.setStatus(1);
+		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 
-		Toast toast = Toast.makeText(getApplicationContext(), "已拒绝",
-				Toast.LENGTH_SHORT);
+		
+		Toast toast = Toast.makeText(getApplicationContext(), "已拒绝",Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		LinearLayout toastView = (LinearLayout) toast.getView();
 		ImageView imageCodeProject = new ImageView(getApplicationContext());
