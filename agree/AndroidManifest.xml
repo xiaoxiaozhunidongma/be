@@ -161,7 +161,7 @@
         <!-- 百度签名 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="yGkNOAGTinoQq0oFRuksvUIi" />
+            android:value="wVPLhs0pEqbegYMGNWCUmboz" />
         <!-- 百度签名 -->
         <activity
             android:name="com.biju.MainActivity"

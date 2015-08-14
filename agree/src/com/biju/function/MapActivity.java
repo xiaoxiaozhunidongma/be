@@ -411,7 +411,7 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 			strCity = StrAddress.substring(0, 6);
 			strGeocodekey = StrAddress.substring(6);
 		}else{
-			Toast.makeText(MapActivity.this, "长度格式：福建省厦门市湖里区小学路", Toast.LENGTH_SHORT).show();
+//			Toast.makeText(MapActivity.this, "长度格式：福建省厦门市湖里区小学路", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		Log.e("MapActivity", "StrAddress:"+StrAddress);

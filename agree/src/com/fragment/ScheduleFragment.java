@@ -31,6 +31,7 @@ import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.createPartyRelationListenner;
 import com.biju.Interface.readUserGroupPartyListenner;
+import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.PartyDetailsActivity;
@@ -164,16 +165,13 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			ViewHolder holder = null;
 			if (convertView == null) {
 				holder = new ViewHolder();
-				LayoutInflater layoutInflater = getActivity()
-						.getLayoutInflater();
+				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 				inflater = layoutInflater.inflate(R.layout.party_item, null);
-				holder.years_month = (TextView) inflater
-						.findViewById(R.id.years_month);
+				holder.years_month = (TextView) inflater.findViewById(R.id.years_month);
 				holder.name = (TextView) inflater.findViewById(R.id.name);
 				holder.times = (TextView) inflater.findViewById(R.id.times);
 				holder.address = (TextView) inflater.findViewById(R.id.address);
-				holder.party_unread_tag = (ImageView) inflater
-						.findViewById(R.id.party_unread_tag);
+				holder.party_unread_tag = (ImageView) inflater.findViewById(R.id.party_unread_tag);
 				holder.inNum=(TextView) inflater.findViewById(R.id.inNum);
 				inflater.setTag(holder);
 			} else {
@@ -255,10 +253,34 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 						.parseJson(A, PartyRelationshipback.class);
 				Integer statusMsg = partyRelationshipback.getStatusMsg();
 				if (statusMsg == 1) {
-					Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
-					intent.putExtra("oneParty", scheduleparty);
-					startActivity(intent);
+					Log.e("ScheduleFragment", "得到的关系结果===="+A);
+					Integer pk_party_user = partyRelationshipback.getReturnData();
+					Log.e("ScheduleFragment", "得到的pk_party_user111111===="+pk_party_user);
+					SdPkUser.setGetPk_party_user(pk_party_user);
+					Party_User party_user = new Party_User();
+					party_user.setPk_party_user(pk_party_user);
+					party_user.setRelationship(0);
+					party_user.setFk_party(scheduleparty.getPk_party());
+					party_user.setStatus(1);
+					scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
 				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		
+		scheduleInterface.setPostListener(new updateUserJoinMsgListenner() {
+
+			@Override
+			public void success(String A) {
+				Log.e("ScheduleFragment", "返回的是否更新成功" + A);
+				Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
+				intent.putExtra("isRelationship", true);
+				intent.putExtra("oneParty", scheduleparty);
+				startActivity(intent);
 			}
 
 			@Override

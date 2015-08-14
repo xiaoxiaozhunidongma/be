@@ -1,8 +1,5 @@
 package com.BJ.utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.ObjectInputStream;
 
 
 
@@ -44,5 +41,14 @@ public class SdPkUser {
 
 	public static void setGetopenid(String getopenid) {
 		SdPkUser.getopenid = getopenid;
+	}
+	
+	private static Integer getPk_party_user;
+	public static Integer getGetPk_party_user() {
+		return getPk_party_user;
+	}
+
+	public static void setGetPk_party_user(Integer getPk_party_user) {
+		SdPkUser.getPk_party_user = getPk_party_user;
 	}
 }

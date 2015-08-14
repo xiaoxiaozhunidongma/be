@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -26,11 +23,9 @@ import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.Party_User;
-import com.BJ.javabean.Partyback;
 import com.BJ.javabean.ReadPartyback;
 import com.BJ.javabean.Relation;
 import com.BJ.javabean.ReturnData;
@@ -69,7 +64,6 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.Interface;
 import com.biju.Interface.readPartyJoinMsgListenner;
-import com.biju.Interface.readUserGroupPartyListenner;
 import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
@@ -153,7 +147,6 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		setContentView(R.layout.activity_party_details);
 		PartyDetails=this;
 		sD_pk_user = SdPkUser.getsD_pk_user();
-		
 		initUI();
 		initInterface();
 		initOneParty();
@@ -320,8 +313,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			case 2:
 				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
-				Log.e("PartyDetailsActivity", "用户已拒绝=========="
-						+ allrelationship);
+				Log.e("PartyDetailsActivity", "用户已拒绝=========="+ allrelationship);
 				break;
 			default:
 				break;
@@ -350,8 +342,16 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			edit_show.setText(location);
 		} else {
 			oneParty = (Party2) intent.getSerializableExtra("oneParty");
+			boolean isRelationship=intent.getBooleanExtra("isRelationship", false);
 			Integer relationship = oneParty.getRelationship();
-			pk_party_user = oneParty.getPk_party_user();
+			if(isRelationship)
+			{
+				pk_party_user =SdPkUser.getGetPk_party_user();
+				Log.e("PartyDetailsActivity", "得到的getPk_party_user111111111" + pk_party_user);
+			}else
+			{
+				pk_party_user=oneParty.getPk_party_user();
+			}
 			pk_party = oneParty.getPk_party();
 			fk_user1 = oneParty.getFk_user();
 			if (relationship == null) {
@@ -363,17 +363,14 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 					Log.e("PartyDetailsActivity", "用户未表态======" + relationship);
 					break;
 				case 1:
-					mPartyDetails_partake
-							.setBackgroundResource(R.drawable.ok_1);
+					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
 					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
 					Log.e("PartyDetailsActivity", "用户已参与=======" + relationship);
 					break;
 				case 2:
-					mPartyDetails_partake
-							.setBackgroundResource(R.drawable.ok_2);
+					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
-					Log.e("PartyDetailsActivity", "用户已拒绝=========="
-							+ relationship);
+					Log.e("PartyDetailsActivity", "用户已拒绝=========="+ relationship);
 					break;
 				default:
 					break;
@@ -519,8 +516,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",Toast.LENGTH_LONG).show();
 			return;
 		}
 	}
@@ -589,9 +585,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
+		Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222" + pk_party_user);
 		party_user.setRelationship(1);
-//		party_user.setStatus(1);
-//		party_user.setFk_party(pk_party);
+		party_user.setStatus(1);
+		party_user.setFk_party(pk_party);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 		
 		
@@ -609,9 +606,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
+		Log.e("PartyDetailsActivity", "得到的getPk_party_user333333333" + pk_party_user);
 		party_user.setRelationship(2);
-//		party_user.setFk_party(pk_party);
-//		party_user.setStatus(1);
+		party_user.setFk_party(pk_party);
+		party_user.setStatus(1);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 
 		
