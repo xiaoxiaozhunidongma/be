@@ -33,6 +33,10 @@ public class MainActivity extends FragmentActivity {
 	private FragmentTabHost mTabhost;
 	private TabPagerFragment fragment;
 	private ArrayList<Fragment> fragments;
+	String[] labels = new String[] { "小组", "聚会", "好友", "我" };
+	int[] tabIcons = new int[] { R.drawable.tab_home_selector,
+			R.drawable.tab_party_selector, R.drawable.tab_friends_selector,
+			R.drawable.tab_setting_selector };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +52,17 @@ public class MainActivity extends FragmentActivity {
 		fragments.add(new PartyFragment());
 		fragments.add(new FriendsFragment());
 		fragments.add(new SettingFragment());
-		String[] labels = new String[] { "小组", "聚会", "好友", "我" };
-		int[] tabIcons = new int[] { R.drawable.tab_home_selector,
-				R.drawable.tab_party_selector, R.drawable.tab_friends_selector,
-				R.drawable.tab_setting_selector };
 
 		fragment.setArg(labels, tabIcons, fragments);
 		ft.commit();
 		
+	}
+	
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+//		fragment.setArg(labels, tabIcons, fragments);
+		super.onStart();
 	}
 
 	@Override

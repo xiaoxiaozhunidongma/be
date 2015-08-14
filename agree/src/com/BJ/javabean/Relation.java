@@ -82,7 +82,7 @@ public class Relation {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Object getWechat_id() {
+	public String getWechat_id() {
 		return wechat_id;
 	}
 	public void setWechat_id(String wechat_id) {

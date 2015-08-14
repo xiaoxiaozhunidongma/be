@@ -121,7 +121,6 @@ public class PhotoFragment extends Fragment  {
 			Res.init(getActivity());
 			bimap = BitmapFactory.decodeResource(getResources(),
 					R.drawable.icon_addpic_unfocused);
-			PublicWay.activityList.add(getActivity());
 			// mLayout =inflater.inflate(R.layout.activity_selectimg, null);
 			// setContentView(mLayout);
 			Init(inflater);
@@ -204,6 +203,12 @@ public class PhotoFragment extends Fragment  {
 		group.setPk_group(GroupActivity.getPk_group());
 		group.setStatus(1);
 		instance.readPartyPhotos(getActivity(), group);
+//		//销毁界面
+//		for (int i = 0; i < PublicWay.activityList.size(); i++) {
+//			if (null != PublicWay.activityList.get(i)) {
+//				PublicWay.activityList.get(i).finish();
+//			}
+//		}
 	}
 
 	private void initBeginUplistener() {
@@ -353,6 +358,8 @@ public class PhotoFragment extends Fragment  {
 			public void onClick(View v) {
 				// // 点击图库的时候关闭自身
 				// getActivity().finish();
+				
+//				Bimp.tempSelectBitmap.clear();
 				Intent intent = new Intent(getActivity(), AlbumActivity.class);
 				startActivity(intent);
 				getActivity().overridePendingTransition(
@@ -610,18 +617,19 @@ public class PhotoFragment extends Fragment  {
 		}
 	}
 
-	public boolean onKeyDown(int keyCode, KeyEvent event) {
-		if (keyCode == KeyEvent.KEYCODE_BACK) {
-			for (int i = 0; i < PublicWay.activityList.size(); i++) {
-				if (null != PublicWay.activityList.get(i)) {
-					PublicWay.activityList.get(i).finish();
-				}
-			}
-			System.exit(0);
-		}
-		return true;
-	}
-
+//	public boolean onKeyDown(int keyCode, KeyEvent event) {
+//		if (keyCode == KeyEvent.KEYCODE_BACK) {
+//			for (int i = 0; i < PublicWay.activityList.size(); i++) {
+//				if (null != PublicWay.activityList.get(i)) {
+//					PublicWay.activityList.get(i).finish();
+//				}
+//			}
+//			System.exit(0);
+//		}
+//		return true;
+//	}
+	
+	
 	@Override
 	public void onStop() {
 		super.onStop();
