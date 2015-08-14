@@ -112,6 +112,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 	private Integer sD_pk_user;
 
+
 	/**
 	 * 定位SDK监听函数
 	 */
@@ -200,29 +201,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			@Override
 			public void success(String A) {
 				Log.e("PartyDetailsActivity", "返回的是否更新成功" + A);
-				Integer id_group = GroupActivity.getPk_group();
-				Integer id_user_group = GroupActivity.getPk_group_user();
-				IDs ids = new IDs(id_group, sD_pk_user, id_user_group);
-				readpartyInterface.readUserGroupParty(PartyDetailsActivity.this, ids);
-			}
-
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
-		//重新读取一遍所以的party
-		readpartyInterface.setPostListener(new readUserGroupPartyListenner() {
-
-			@Override
-			public void success(String A) {
-				Partyback partybackInterface = GsonUtils.parseJson(A,
-						Partyback.class);
-				Integer statusMsg = partybackInterface.getStatusMsg();
-				if (statusMsg == 1) {
-					initReadParty();
-					Log.e("PartyDetailsActivity", "读取出小组中的聚会信息===" + A);
-				}
+				initReadParty();
 			}
 
 			@Override
@@ -231,6 +210,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			}
 		});
 
+		
 		readpartyInterface.setPostListener(new readPartyJoinMsgListenner() {
 			private int partakeNum;
 			private int refuseNum;
@@ -243,8 +223,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 				}.getType();
 				ReadPartyback partyback = GsonUtils.parseJsonArray(A, type);
 				ReturnData returnData = partyback.getReturnData();
-				Log.e("PartyDetailsActivity",
-						"当前returnData:" + returnData.toString());
+				Log.e("PartyDetailsActivity","当前returnData:" + returnData.toString());
 				List<Relation> relationList = returnData.getRelation();
 				if (relationList.size() > 0) {
 					for (int i = 0; i < relationList.size(); i++) {
@@ -312,8 +291,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	private void initReadParty() {
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
-		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,
-				readparty);
+		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,readparty);
 	}
 
 	//首次进来时传值
@@ -583,8 +561,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 	// 未表态
 	private void PartyDetails_did_not_say_prompt() {
-		Intent intent = new Intent(PartyDetailsActivity.this,
-				CommentsListActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra("CommentsList", 0);
 		intent.putExtra("not_say", pk_party);
 		startActivity(intent);
@@ -592,8 +569,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 	// 拒绝
 	private void PartyDetails_tv_refuse_prompt() {
-		Intent intent = new Intent(PartyDetailsActivity.this,
-				CommentsListActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra("CommentsList", 2);
 		intent.putExtra("refuse", pk_party);
 		startActivity(intent);
@@ -601,8 +577,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 	// 参与
 	private void PartyDetails_tv_partake_prompt() {
-		Intent intent = new Intent(PartyDetailsActivity.this,
-				CommentsListActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra("CommentsList", 1);
 		intent.putExtra("partake", pk_party);
 		startActivity(intent);
@@ -615,8 +590,8 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
 		party_user.setRelationship(1);
-		party_user.setStatus(1);
-		party_user.setFk_party(pk_party);
+//		party_user.setStatus(1);
+//		party_user.setFk_party(pk_party);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 		
 		
@@ -634,9 +609,9 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
-		party_user.setFk_party(pk_party);
 		party_user.setRelationship(2);
-		party_user.setStatus(1);
+//		party_user.setFk_party(pk_party);
+//		party_user.setStatus(1);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 
 		
