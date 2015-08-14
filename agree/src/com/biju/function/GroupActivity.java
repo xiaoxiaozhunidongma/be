@@ -4,7 +4,10 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Build;
@@ -22,13 +25,14 @@ import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
-import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
+import com.biju.login.LoginActivity;
 import com.fragment.ChatFragment;
 import com.fragment.PhotoFragment;
 import com.fragment.ScheduleFragment;
@@ -36,10 +40,9 @@ import com.github.volley_examples.utils.GsonUtils;
 
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressLint("NewApi")
-public class GroupActivity extends FragmentActivity implements OnClickListener,OnTouchListener, OnGestureListener {
+public class GroupActivity extends FragmentActivity implements OnClickListener,
+		OnTouchListener, OnGestureListener {
 
-	public static GroupActivity group;
-	
 	private FragmentTabHost mTabhost;
 	public static int pk_group;
 
@@ -51,6 +54,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		GroupActivity.pk_group = pk_group;
 	}
 
+	private int returndata;
+	private boolean login;
+	private boolean isRegistered_one;
 	private Interface groupInterface;
 	public static Integer pk_group_user;
 
@@ -62,27 +68,30 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		GroupActivity.pk_group_user = pk_group_user;
 	}
 
+	private int isChat;
+	private int isMessage;
+	private int isPhone;
+	private MyReceiver receiver;
+	private boolean finish_1;
+	private boolean update = false;
 	private boolean photo;
 	private boolean partyDetails;
 
 	private GestureDetector mGestureDetector;
 	private int verticalMinDistance = 180;
 	private int minVelocity = 0;
-	
-	private int i = 0;
-	private Integer sD_pk_user;
-
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_tab);
-		group=this;
-		
-		//获取sd卡中的pk_user
-		sD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("GroupActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		isRegistered_one = sp.getBoolean("isRegistered_one", false);
+		Log.e("HomeFragment", "isRegistered_one===" + isRegistered_one);
+		returndata = sp.getInt("returndata", returndata);
+		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
+		login = sp1.getBoolean("Login", false);
 
 		initUI();
 		Intent intent = getIntent();
@@ -97,7 +106,10 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		}
 
 		initInterface();
-		initreadUserGroupRelation();
+		if (!finish_1) {
+			initreadUserGroupRelation();
+		}
+		initFinish();
 		Log.e("GroupActivity", "进入了=========+onCreate");
 		initGesture();
 	}
@@ -105,6 +117,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 	private void initGesture() {
 		mGestureDetector = new GestureDetector((OnGestureListener) this);
 	}
+
+	private int i = 0;
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
@@ -174,6 +188,60 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		super.onStart();
 	}
 
+	private void initFinish() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("isFinish");
+		receiver = new MyReceiver();
+		registerReceiver(receiver, filter);
+	}
+
+	// 注销广播
+	@Override
+	protected void onDestroy() {
+		unregisterReceiver(receiver);
+		super.onDestroy();
+	}
+
+	class MyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			finish_1 = intent.getBooleanExtra("finish", false);
+			boolean isExitFinish = intent
+					.getBooleanExtra("isExitFinish", false);
+			if (finish_1) {
+				group_back();
+				Intent intent1 = new Intent(GroupActivity.this,
+						GroupActivity.class);
+				startActivity(intent1);
+				overridePendingTransition(0, 0);
+				initreadUserGroupRelation1();
+			}
+			if (isExitFinish) {
+				group_back();
+			}
+		}
+
+	}
+
+	private void initreadUserGroupRelation1() {
+		SharedPreferences Group_sp = getSharedPreferences("group", 0);
+		Integer pk_group = Group_sp.getInt("pk_group", 0);
+		Group_User group_User = new Group_User();
+		group_User.setFk_group(pk_group);
+		if (isRegistered_one) {
+			group_User.setFk_user(returndata);
+		} else {
+			if (login) {
+				int pk_user = LoginActivity.getPk_user();
+				group_User.setFk_user(pk_user);
+			} else {
+				group_User.setFk_user(returndata);
+			}
+		}
+		groupInterface.readUserGroupRelation(GroupActivity.this, group_User);
+	}
+
 	private void initInterface() {
 		groupInterface = Interface.getInstance();
 		groupInterface.setPostListener(new readUserGroupRelationListenner() {
@@ -189,6 +257,15 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 					if (groupuser_returnData.size() > 0) {
 						Group_User group_user = groupuser_returnData.get(0);
 						pk_group_user = group_user.getPk_group_user();
+						int ischat = group_user.getMessage_warn();
+						int ismessage = group_user.getParty_warn();
+						int isphone = group_user.getPublic_phone();
+						Log.e("GroupActivity", "小组的聚会信息的提醒--------" + ismessage);
+						Log.e("GroupActivity", "小组的聊天信息的提醒--------" + ischat);
+						Log.e("GroupActivity", "小组的公开手机号码--------" + isphone);
+						isChat = ischat;
+						isMessage = ismessage;
+						isPhone = isphone;
 
 					}
 				}
@@ -204,7 +281,16 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 	private void initreadUserGroupRelation() {
 		Group_User group_User = new Group_User();
 		group_User.setFk_group(pk_group);
-		group_User.setFk_user(sD_pk_user);
+		if (isRegistered_one) {
+			group_User.setFk_user(returndata);
+		} else {
+			if (login) {
+				int pk_user = LoginActivity.getPk_user();
+				group_User.setFk_user(pk_user);
+			} else {
+				group_User.setFk_user(returndata);
+			}
+		}
 		groupInterface.readUserGroupRelation(GroupActivity.this, group_User);
 
 	}
@@ -257,7 +343,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 	}
 
 	private void group_setting() {
-		Intent intent = new Intent(GroupActivity.this,TeamSettingActivity.class);
+		Intent intent = new Intent(GroupActivity.this,
+				TeamSettingActivity.class);
 		intent.putExtra("Group", pk_group);
 		startActivity(intent);
 	}

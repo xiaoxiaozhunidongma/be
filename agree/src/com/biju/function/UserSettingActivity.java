@@ -36,18 +36,16 @@ import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.PreferenceUtils;
-import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
-import com.biju.APP.MyApplication;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.Interface.updateUserListenner;
 import com.biju.R;
+import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
 import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -58,7 +56,6 @@ import com.tencent.upload.task.impl.PhotoUploadTask;
 @SuppressLint("SimpleDateFormat")
 public class UserSettingActivity extends Activity implements OnClickListener {
 
-	public static UserSettingActivity UserSetting;
 	public static ImageView mUsersetting_head;
 	private EditText mUsersetting_nickname;
 	private RelativeLayout mUsersetting;
@@ -72,6 +69,8 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
+	// public static String SIGN =
+	// "3lXtRSAlZuWqzRczFPIjqrcHJCBhPTIwMTEzOSZrPUFLSUQ5eUFramtVTUhFQzFJTGREbFlvMndmaW1mOThUaUltRyZlPTE0MzY0OTk2NjcmdD0xNDMzOTA3NjY3JnI9MTk5MDE3ODExNSZ1PSZmPQ";
 	public static String SIGN;
 
 	public static String getSIGN() {
@@ -107,38 +106,47 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 	private String setup_time;
 	private String Userjpush_id;
 	private User readuser;
-	
-	int i = 0;
-	private boolean isRegistered_one;
-	private int sex = 0;
-	private TextView mUsersetting_tv_phone;
-	private Integer sD_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_user_setting);
-		UserSetting=this;
-		//做布局判断
-		isRegistered_one=SdPkUser.isRegistered_one();
-		
-		//获取sd卡中的pk_user
-		sD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("UserSettingActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
-		
+		SharedPreferences sp = getSharedPreferences("Registered", 0);
+		returndata_1 = sp.getInt("returndata", returndata_1);
+		isRegistered_one = sp.getBoolean("isRegistered_one", false);
+
+		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
+		login = sp1.getBoolean("Login", false);
 		String Cacheurl = PreferenceUtils.readImageCache(this);
 		completeURL = Cacheurl;
 		initUI();
 		isWIFI();// 判断是否有网络
 
 		mUsersetting_tv_password.setText("请输入想要设置的密码");
+		// initUpload();
 		PicSign();// 传图片签名字符串
+		Broadcast();// 接收广播
 	}
-	
-	public void getRefresh()
-	{
-		ReadUser(sD_pk_user);
+
+	private void Broadcast() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("Binding_Phone");
+		receiver = new MyReceiver();
+		registerReceiver(receiver, filter);
+	}
+
+	class MyReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			boolean succeed = intent.getBooleanExtra("Succeed", false);
+			Integer pk_user = intent.getIntExtra("Pk_user", 0);
+			if (succeed) {
+				ReadUser(pk_user);
+			}
+		}
+
 	}
 
 	private void PicSign() {
@@ -169,7 +177,18 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		boolean isWIFI = Ifwifi.getNetworkConnected(UserSettingActivity.this);
 		Log.e("UserSettingActivity", "判断是否有网络" + isWIFI);
 		if (isWIFI) {
-			ReadUser(sD_pk_user);
+			if (isRegistered_one) {
+				ReadUser(returndata_1);
+				Log.e("UserSettingActivity", "进注册的");
+			} else {
+				if (login) {
+					int returndata_2 = LoginActivity.getPk_user();
+					ReadUser(returndata_2);
+					Log.e("UserSettingActivity", "进登录 的");
+				} else {
+					ReadUser(returndata_1);
+				}
+			}
 			Log.e("UserSettingActivity", "有网络进入这里" + isWIFI);
 		} else {
 			ImageLoaderUtils.getInstance().LoadImage(UserSettingActivity.this,
@@ -182,7 +201,7 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		if (isRegistered_one) {
 			SharedPreferences sp = getSharedPreferences("Registered", 0);
 			Editor editor = sp.edit();
-			editor.putInt("returndata", sD_pk_user);
+			editor.putInt("returndata", returndata_1);
 			editor.putBoolean("isRegistered_one", true);
 			editor.commit();
 		}
@@ -317,7 +336,6 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		mUsersetting_sex.setOnClickListener(this);
 		findViewById(R.id.usersetting_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.usersetting_back).setOnClickListener(this);
-		findViewById(R.id.usersetting_binding_weixin).setOnClickListener(this);//绑定微信
 	}
 
 	@Override
@@ -350,21 +368,9 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 		case R.id.usersetting_back:
 			usersetting_back();
 			break;
-		case R.id.usersetting_binding_weixin:
-			usersetting_binding_weixin();
-			break;
 		default:
 			break;
 		}
-	}
-
-	private void usersetting_binding_weixin() {
-		finish();
-		//跳转微信绑定界面
-		final SendAuth.Req req = new SendAuth.Req();
-		req.scope = "snsapi_userinfo";
-		req.state = "carjob_wx_login";
-		MyApplication.api.sendReq(req);
 	}
 
 	private void usersetting_tv_phone() {
@@ -417,8 +423,15 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 
 	private void usersetting_back() {
 		finish();
-		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
+
+	int i = 0;
+	private int returndata_1;
+	private boolean isRegistered_one;
+	private int sex = 0;
+	private boolean login;
+	private TextView mUsersetting_tv_phone;
+	private MyReceiver receiver;
 
 	private void usersetting_sex() {
 		i++;
@@ -477,7 +490,16 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			isRead = true;
 			Usernickname = mUsersetting_nickname.getText().toString().trim();
 			User usersetting = new User();
-			usersetting.setPk_user(sD_pk_user);
+			if (isRegistered_one) {
+				usersetting.setPk_user(returndata_1);
+			} else {
+				if (login) {
+					int returndata_2 = LoginActivity.getPk_user();
+					usersetting.setPk_user(returndata_2);
+				} else {
+					usersetting.setPk_user(returndata_1);
+				}
+			}
 			usersetting.setJpush_id(Userjpush_id);
 			usersetting.setNickname(Usernickname);
 			usersetting.setPassword(password);

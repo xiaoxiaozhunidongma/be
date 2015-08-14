@@ -71,11 +71,8 @@ import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
-public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResultListener, OnClickListener {
-	
-	
-	public static PartyDetailsActivity PartyDetails;
-	
+public class PartyDetailsActivity extends Activity implements
+		OnGetGeoCoderResultListener, OnClickListener {
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	public MyLocationListenner myListener = new MyLocationListenner();
@@ -101,6 +98,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	private Interface readpartyInterface;
 	private String pk_party;
 	private Party2 oneParty;
+	private MyReceiver receiver;
 	private Integer pk_party_user;
 	private Integer fk_user1;
 	private UserAllParty allParty;
@@ -144,8 +142,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
-		PartyDetails=this;
-		
+
 		initUI();
 		initInterface();
 		initOneParty();
@@ -183,8 +180,36 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 		// 初始化地图
 		initMap();
+		initFinish();
 	}
 
+	private void initFinish() {
+		IntentFilter filter = new IntentFilter();
+		filter.addAction("isFinish");
+		receiver = new MyReceiver();
+		registerReceiver(receiver, filter);
+	}
+
+	@Override
+	protected void onStop() {
+		// unregisterReceiver(receiver);
+		super.onStop();
+	}
+
+	class MyReceiver extends BroadcastReceiver {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			boolean finish_1 = intent.getBooleanExtra("finish", false);
+			if (finish_1) {
+				Partydetails_back();
+			}
+		}
+
+		private void Partydetails_back() {
+			finish();
+		}
+
+	}
 
 	private void initInterface() {
 		readpartyInterface = Interface.getInstance();
@@ -269,6 +294,11 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 							default:
 								break;
 							}
+							//
+							// Log.e("PartyActivity", "每个relationship:"
+							// + read_relationship);
+							// Log.e("PartyActivity", "每个read_pk_user:"
+							// + read_pk_user);
 						}
 					}
 					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"
@@ -432,9 +462,12 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		findViewById(R.id.PartyDetails_back).setOnClickListener(this);
 		findViewById(R.id.PartyDetails_more_layout).setOnClickListener(this);
 		findViewById(R.id.PartyDetails_more).setOnClickListener(this);
-		findViewById(R.id.PartyDetails_tv_partake_prompt).setOnClickListener(this);// 参与提示字符
-		findViewById(R.id.PartyDetails_tv_refuse_prompt).setOnClickListener(this);// 拒绝提示字符
-		findViewById(R.id.PartyDetails_did_not_say_prompt).setOnClickListener(this);// 未表态提示字符
+		findViewById(R.id.PartyDetails_tv_partake_prompt).setOnClickListener(
+				this);// 参与提示字符
+		findViewById(R.id.PartyDetails_tv_refuse_prompt).setOnClickListener(
+				this);// 拒绝提示字符
+		findViewById(R.id.PartyDetails_did_not_say_prompt).setOnClickListener(
+				this);// 未表态提示字符
 	}
 
 	private void initListener() {
@@ -650,10 +683,15 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			finish();
 		} else {
 			finish();
-			SharedPreferences PartyDetails_sp = getSharedPreferences("isPartyDetails_", 0);
+			SharedPreferences PartyDetails_sp = getSharedPreferences(
+					"isPartyDetails_", 0);
 			Editor editor = PartyDetails_sp.edit();
 			editor.putBoolean("PartyDetails", true);
 			editor.commit();
+			Intent intent = new Intent(PartyDetailsActivity.this,
+					GroupActivity.class);
+			overridePendingTransition(0, 0);
+			startActivity(intent);
 		}
 
 	}

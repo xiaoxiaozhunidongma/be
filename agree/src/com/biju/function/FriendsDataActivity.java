@@ -151,14 +151,12 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 		}
 	}
 
-	//私聊
 	private void FriendsData_PrivateChat() {
-		Intent intent=new Intent(FriendsDataActivity.this, ChatActivity.class);
+		Intent intent=new Intent(this, ChatActivity.class);
 		intent.putExtra("allFriends", mAllFriends);
 		startActivity(intent);
 	}
 
-	//删除好友
 	private void FriendsData_DeleteFriends() {
 		User_User user_User=new User_User();
 		user_User.setFk_user_to(mAllFriends.getFk_user_to());
@@ -166,7 +164,6 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 		mFriendsDataInterface.releaseFriend(FriendsDataActivity.this, user_User);
 	}
 
-	//收藏到通讯录
 	private void FriendsData_Savecontact()  throws Exception {
 		Uri uri = Uri.parse("content://com.android.contacts/raw_contacts");
 		ContentResolver resolver = FriendsDataActivity.this.getContentResolver();
@@ -195,7 +192,6 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 		resolver.applyBatch("com.android.contacts", operations);
 	}
 
-	//发短信
 	private void FriendsData_SendMessages() {
 //		Toast.makeText(FriendsDataActivity.this, "发短信", Toast.LENGTH_SHORT).show();
 		Uri smsToUri = Uri.parse("smsto:"+ mAllFriends.getPhone());    
@@ -203,7 +199,6 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 	    startActivity( mIntent );
 	}
 
-	//拨打电话
 	private void FriendsData_Callphone() {
 //		Toast.makeText(FriendsDataActivity.this, "拨打电话", Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + mAllFriends.getPhone()));
