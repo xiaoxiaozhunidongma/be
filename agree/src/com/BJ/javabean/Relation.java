@@ -14,7 +14,7 @@ public class Relation {
 	private String sex;
 	private String device_id;
 	private String status;
-	private Object wechat_id;
+	private String wechat_id;
 	private Integer relationship;
 	public Integer getPk_user() {
 		return pk_user;
@@ -82,10 +82,10 @@ public class Relation {
 	public void setStatus(String status) {
 		this.status = status;
 	}
-	public Object getWechat_id() {
+	public String getWechat_id() {
 		return wechat_id;
 	}
-	public void setWechat_id(Object wechat_id) {
+	public void setWechat_id(String wechat_id) {
 		this.wechat_id = wechat_id;
 	}
 	public Integer getRelationship() {

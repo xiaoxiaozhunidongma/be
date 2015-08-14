@@ -35,7 +35,7 @@ public class CheckFriends implements Serializable{
 	@Column
 	private Integer status;
 	@Column
-	private Integer wechat_id;
+	private String wechat_id;
 	public Integer getFk_user_to() {
 		return fk_user_to;
 	}
@@ -114,10 +114,10 @@ public class CheckFriends implements Serializable{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	public Integer getWechat_id() {
+	public String getWechat_id() {
 		return wechat_id;
 	}
-	public void setWechat_id(Integer wechat_id) {
+	public void setWechat_id(String wechat_id) {
 		this.wechat_id = wechat_id;
 	}
 
