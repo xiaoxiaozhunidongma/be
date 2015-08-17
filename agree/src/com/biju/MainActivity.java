@@ -30,7 +30,7 @@ import com.fragment.SettingFragment;
 import com.fragment.TabPagerFragment;
 
 public class MainActivity extends FragmentActivity {
-	//dsasgdfgsdfgsdf
+	//ghsdfg sdf asdkjgf kasgd kjsdg 
 	private FragmentTabHost mTabhost;
 	private TabPagerFragment fragment;
 	private ArrayList<Fragment> fragments;
