@@ -76,6 +76,7 @@ import android.widget.Toast;
 import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
+import com.biju.IConstant;
 import com.biju.R;
 import com.easemob.EMCallBack;
 import com.easemob.EMChatRoomChangeListener;
@@ -210,7 +211,7 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 		activityInstance=this;
 		//...............................    ...........................
 		Intent intent = getIntent();
-		mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("allFriends");
+		mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra(IConstant.AllFriends);
 		
 		int pk_user = mAllFriends.getPk_user();
 		nickname = mAllFriends.getNickname();

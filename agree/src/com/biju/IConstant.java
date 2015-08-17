@@ -26,5 +26,10 @@ public interface IConstant {
 	public String PartyDetails="PartyDetails";
 	//使用在GroupActivity类中和TeamSettingActivity类中
 	public String Group="Group";
+	//使用在FriendsFragment类和FriendsDataActivity类和ChatActivity类中
+	public String ReadUserAllFriends="ReadUserAllFriends";
+	public String Fk_user_from="fk_user_from";
+	public String Size="size";
+	public String AllFriends="allFriends";
 	
 }
