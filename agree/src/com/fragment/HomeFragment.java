@@ -303,7 +303,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
 				}
 			}
-
 			return inflater;
 		}
 

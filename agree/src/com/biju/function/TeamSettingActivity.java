@@ -168,8 +168,8 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 					if (exitstatus == 1) {
 						Log.e("TeamSettingActivity", "返回是否退出成功的结果-------" + A);
 						//关闭GroupActivity界面
-						for (int i = 0; i < RefreshActivity.activList.size(); i++) {
-							RefreshActivity.activList.get(i).finish();
+						for (int i = 0; i < RefreshActivity.activList_1.size(); i++) {
+							RefreshActivity.activList_1.get(i).finish();
 						}
 						finish();
 					}

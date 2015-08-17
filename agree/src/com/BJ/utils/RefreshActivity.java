@@ -6,5 +6,6 @@ import java.util.List;
 import android.app.Activity;
 
 public class RefreshActivity {
-	public static List<Activity>  activList=new ArrayList<Activity>();
+	public static List<Activity>  activList_1=new ArrayList<Activity>();
+	public static List<Activity>  activList_2=new ArrayList<Activity>();
 }
