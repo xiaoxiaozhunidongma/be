@@ -24,7 +24,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Thumbnails;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -43,11 +42,9 @@ import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Newteamback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
-import com.BJ.photo.AlbumHelper;
 import com.BJ.photo.Bimp;
-import com.BJ.photo.ImageBucket;
-import com.BJ.photo.ImageItem;
 import com.BJ.utils.PreferenceUtils;
+import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
@@ -55,7 +52,6 @@ import com.biju.Interface.createGroupListenner;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.R;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
@@ -90,19 +86,28 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private boolean iscode;
 	private Group readhomeuser;
 	private ArrayList<Group> readuesrlist = new ArrayList<Group>();
+	
+	private String tmpFilePath;
+	private String newteam_name;
+	private String sDpath;
+	private int returndata_1;
+	private boolean isRegistered_one;
+	private int flag;
+	private Group group;
+	private MyReceiver receiver;
+	private Integer pk_group;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_newteam);
-		SharedPreferences sp = getSharedPreferences("Registered", 0);
-		isRegistered_one = sp.getBoolean("isRegistered_one", true);
-		Log.e("NewteamActivity", "isRegistered_one" + isRegistered_one);
-		returndata_1 = sp.getInt("returndata", returndata_1);
-
-		SharedPreferences sp1 = getSharedPreferences("isLogin", 0);
-		login = sp1.getBoolean("Login", false);
+		//提供做布局
+		isRegistered_one=SdPkUser.isRegistered_one();
+		
+		//获取sd卡中的pk_user
+		sD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("NewteamActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 
 		initUI();
 		// initUpload();
@@ -186,19 +191,11 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private void readUser() {
-		if (isRegistered_one) {
-			ReadTeam(returndata_1);
-		} else {
-			if (login) {
-				int pk_user = LoginActivity.getPk_user();
-				ReadTeam(pk_user);
-			} else {
-				ReadTeam(returndata_1);
-			}
-		}
+		ReadTeam(sD_pk_user);
 	}
 
 	private boolean isreaduser;
+	private Integer sD_pk_user;
 
 	private void ReadTeam(int pk_user) {
 		cregrouInter = Interface.getInstance();
@@ -367,18 +364,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private String tmpFilePath;
-	private String newteam_name;
-	private String sDpath;
-	private int returndata_1;
-	private boolean isRegistered_one;
-	private boolean isno1;
-	private boolean login;
-	private int flag;
-	private Group group;
-	private MyReceiver receiver;
-	private Integer pk_group;
-
 	private void upload(final Group group) {
 		tmpFilePath = Environment.getExternalStorageDirectory()
 				.getAbsolutePath() + "/compress.tmp";
@@ -391,23 +376,12 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
 						Log.e("图片路径", "result.url" + result.url);
-						// 上传完成后删除SD中图片
+//						// 上传完成后删除SD中图片
 //						deleteMybitmap(sDpath);
 						group.setAvatar_path(result.fileId);
 						// 创建CreatGroup
 						Group_User group_User = new Group_User();
-						if (isRegistered_one) {
-							group_User.setFk_user(returndata_1);
-							Log.e("NewteamActivity", "进入注册的");
-						} else {
-							if (login) {
-								int returndata_2 = LoginActivity.getPk_user();
-								Log.e("NewteamActivity", "进入登录的");
-								group_User.setFk_user(returndata_2);
-							} else {
-								group_User.setFk_user(returndata_1);
-							}
-						}
+						group_User.setFk_user(sD_pk_user);
 						group_User.setRole(1);
 						group.setStatus(1);
 						Group_User[] members = { group_User };
@@ -440,8 +414,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		uploadManager.upload(task); // 开始上传
 
 	}
-	
-	private ArrayList<ImageItem> dataList=new ArrayList<ImageItem>();;
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -478,14 +450,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		} catch (Exception e) {
 			Log.e("Demo", "choose file error!", e);
 		}
-	}
-
-	private List<ImageBucket> init() {
-		AlbumHelper helper = AlbumHelper.getHelper();
-		helper.init(getApplicationContext());
-
-		List<ImageBucket> contentList = helper.getImagesBucketList(false);
-		return contentList;
 	}
 
 	public String getSDPath() {

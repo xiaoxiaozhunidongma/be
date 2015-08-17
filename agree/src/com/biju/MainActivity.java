@@ -1,11 +1,18 @@
 package com.biju;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -14,6 +21,8 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.Window;
 
+import com.BJ.utils.Person;
+import com.BJ.utils.SdPkUser;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
@@ -21,9 +30,14 @@ import com.fragment.SettingFragment;
 import com.fragment.TabPagerFragment;
 
 public class MainActivity extends FragmentActivity {
+	//ghsdfg sdf asdkjgf kasgd kjsdg 
 	private FragmentTabHost mTabhost;
 	private TabPagerFragment fragment;
 	private ArrayList<Fragment> fragments;
+	String[] labels = new String[] { "小组", "聚会", "好友", "我" };
+	int[] tabIcons = new int[] { R.drawable.tab_home_selector,
+			R.drawable.tab_party_selector, R.drawable.tab_friends_selector,
+			R.drawable.tab_setting_selector };
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -39,13 +53,17 @@ public class MainActivity extends FragmentActivity {
 		fragments.add(new PartyFragment());
 		fragments.add(new FriendsFragment());
 		fragments.add(new SettingFragment());
-		String[] labels = new String[] { "小组", "聚会", "好友", "我" };
-		int[] tabIcons = new int[] { R.drawable.tab_home_selector,
-				R.drawable.tab_party_selector, R.drawable.tab_friends_selector,
-				R.drawable.tab_setting_selector };
 
 		fragment.setArg(labels, tabIcons, fragments);
 		ft.commit();
+		
+	}
+	
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+//		fragment.setArg(labels, tabIcons, fragments);
+		super.onStart();
 	}
 
 	@Override

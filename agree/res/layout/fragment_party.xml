@@ -7,8 +7,9 @@
     tools:context=".PartyFragment" >
 
     <!-- TODO: Update blank fragment layout -->
+
     <RelativeLayout
-	    android:id="@+id/tab_party_title_layout"
+        android:id="@+id/tab_party_title_layout"
         android:layout_width="match_parent"
         android:layout_height="50.0dp" >
 
@@ -19,8 +20,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="日程"
-            android:textSize="18sp"
-             />
+            android:textSize="18sp" />
 
         <RelativeLayout
             android:id="@+id/tab_party_new_layout"
@@ -39,66 +39,31 @@
                 android:text="新建"
                 android:textColor="#d3d3d3"
                 android:textSize="17.0sp" />
-
         </RelativeLayout>
-        
+
         <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="1.0dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-			android:background="#aaaaaa"            
-            />
-
+            android:background="#aaaaaa" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/tab_party_prompt_layout"
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/tab_party_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/tab_party_title_layout"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        >
+        android:layout_marginTop="50.0dp" >
 
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <ListView
+            android:id="@+id/tab_party_listview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="45dp"
-            android:textColor="#ff0000"
-            android:text="你还没有创建日程哦！" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/tab_party_list_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/tab_party_title_layout"
-        android:layout_centerHorizontal="true"
-        >
-
-        <com.handmark.pulltorefresh.library.PullToRefreshListView
-        android:id="@+id/pull_refresh_list"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:background="#ffffff"
-        android:cacheColorHint="#00000000"
-        android:divider="#19000000"
-        android:dividerHeight="1dp"
-        android:fadingEdge="none"
-        android:fastScrollEnabled="false"
-        android:footerDividersEnabled="false"
-        android:headerDividersEnabled="false"
-        android:smoothScrollbar="true"
-        ptr:ptrAnimationStyle="rotate"
-        ptr:ptrDrawableStart="@drawable/refreshing_animtaion" />
-
-    </RelativeLayout>
+            android:layout_centerHorizontal="true" >
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
     <RelativeLayout
         android:id="@+id/tab_party_prompt_layout"
@@ -106,8 +71,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/tab_party_title_layout"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-         >
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/textView3"
@@ -117,9 +81,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="45dp"
             android:text="你还没有参与过日程哦！"
-            android:textColor="#ff0000"
-            />
-
+            android:textColor="#ff0000" />
     </RelativeLayout>
 
 </RelativeLayout>

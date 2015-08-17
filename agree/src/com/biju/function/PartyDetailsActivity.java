@@ -4,10 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -34,6 +31,7 @@ import com.BJ.javabean.Relation;
 import com.BJ.javabean.ReturnData;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.utils.DensityUtil;
+import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Weeks;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -71,8 +69,11 @@ import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
-public class PartyDetailsActivity extends Activity implements
-		OnGetGeoCoderResultListener, OnClickListener {
+public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResultListener, OnClickListener {
+	
+	
+	public static PartyDetailsActivity PartyDetails;
+	
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	public MyLocationListenner myListener = new MyLocationListenner();
@@ -98,11 +99,13 @@ public class PartyDetailsActivity extends Activity implements
 	private Interface readpartyInterface;
 	private String pk_party;
 	private Party2 oneParty;
-	private MyReceiver receiver;
 	private Integer pk_party_user;
 	private Integer fk_user1;
 	private UserAllParty allParty;
 	private boolean userAll;
+
+	private Integer sD_pk_user;
+
 
 	/**
 	 * 定位SDK监听函数
@@ -142,7 +145,8 @@ public class PartyDetailsActivity extends Activity implements
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
-
+		PartyDetails=this;
+		sD_pk_user = SdPkUser.getsD_pk_user();
 		initUI();
 		initInterface();
 		initOneParty();
@@ -180,36 +184,8 @@ public class PartyDetailsActivity extends Activity implements
 
 		// 初始化地图
 		initMap();
-		initFinish();
 	}
 
-	private void initFinish() {
-		IntentFilter filter = new IntentFilter();
-		filter.addAction("isFinish");
-		receiver = new MyReceiver();
-		registerReceiver(receiver, filter);
-	}
-
-	@Override
-	protected void onStop() {
-		// unregisterReceiver(receiver);
-		super.onStop();
-	}
-
-	class MyReceiver extends BroadcastReceiver {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			boolean finish_1 = intent.getBooleanExtra("finish", false);
-			if (finish_1) {
-				Partydetails_back();
-			}
-		}
-
-		private void Partydetails_back() {
-			finish();
-		}
-
-	}
 
 	private void initInterface() {
 		readpartyInterface = Interface.getInstance();
@@ -227,6 +203,7 @@ public class PartyDetailsActivity extends Activity implements
 			}
 		});
 
+		
 		readpartyInterface.setPostListener(new readPartyJoinMsgListenner() {
 			private int partakeNum;
 			private int refuseNum;
@@ -239,8 +216,7 @@ public class PartyDetailsActivity extends Activity implements
 				}.getType();
 				ReadPartyback partyback = GsonUtils.parseJsonArray(A, type);
 				ReturnData returnData = partyback.getReturnData();
-				Log.e("PartyDetailsActivity",
-						"当前returnData:" + returnData.toString());
+				Log.e("PartyDetailsActivity","当前returnData:" + returnData.toString());
 				List<Relation> relationList = returnData.getRelation();
 				if (relationList.size() > 0) {
 					for (int i = 0; i < relationList.size(); i++) {
@@ -262,55 +238,35 @@ public class PartyDetailsActivity extends Activity implements
 							break;
 						}
 						// 当前用户
-						if (String.valueOf(fk_user1).equals(
-								String.valueOf(read_pk_user))) {
-							Integer read_relationship = relation
-									.getRelationship();
+						if (String.valueOf(fk_user1).equals(String.valueOf(read_pk_user))) {
+							Integer read_relationship = relation.getRelationship();
 							switch (read_relationship) {
 							case 0:
-								mPartyDetails_partake
-										.setBackgroundResource(R.drawable.ok_2);
-								mPartyDetails_refuse
-										.setBackgroundResource(R.drawable.ok_2);
-								Log.e("PartyDetailsActivity", "用户未表态======"
-										+ relationship);
+								mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
+								mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+								Log.e("PartyDetailsActivity", "用户未表态======"+ relationship);
 								break;
 							case 1:
-								mPartyDetails_partake
-										.setBackgroundResource(R.drawable.ok_1);
-								mPartyDetails_refuse
-										.setBackgroundResource(R.drawable.ok_2);
-								Log.e("PartyDetailsActivity", "用户已参与======="
-										+ relationship);
+								mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
+								mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+								Log.e("PartyDetailsActivity", "用户已参与======="+ relationship);
 								break;
 							case 2:
-								mPartyDetails_partake
-										.setBackgroundResource(R.drawable.ok_2);
-								mPartyDetails_refuse
-										.setBackgroundResource(R.drawable.ok_1);
-								Log.e("PartyDetailsActivity", "用户已拒绝=========="
-										+ relationship);
+								mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
+								mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
+								Log.e("PartyDetailsActivity", "用户已拒绝=========="+ relationship);
 								break;
 							default:
 								break;
 							}
-							//
-							// Log.e("PartyActivity", "每个relationship:"
-							// + read_relationship);
-							// Log.e("PartyActivity", "每个read_pk_user:"
-							// + read_pk_user);
 						}
 					}
-					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"
-							+ not_sayNum);
-					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"
-							+ not_sayNum);
-					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"
-							+ not_sayNum);
+					Log.e("PartyDetailsActivity", "当前partakeNum的数量"+ partakeNum);
+					Log.e("PartyDetailsActivity", "当前refuseNum的数量"+ refuseNum);
+					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"+ not_sayNum);
 					mPartyDetails_tv_partake.setText(String.valueOf(partakeNum));
 					mPartyDetails_tv_refuse.setText(String.valueOf(refuseNum));
-					mPartyDetails_did_not_say.setText(String
-							.valueOf(not_sayNum));
+					mPartyDetails_did_not_say.setText(String.valueOf(not_sayNum));
 					partakeNum = 0;
 					refuseNum = 0;
 					not_sayNum = 0;
@@ -324,26 +280,25 @@ public class PartyDetailsActivity extends Activity implements
 		});
 	}
 
+	//读取聚会详情
 	private void initReadParty() {
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
-		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,
-				readparty);
+		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,readparty);
 	}
 
+	//首次进来时传值
 	private void initOneParty() {
 		Intent intent = getIntent();
 		userAll = intent.getBooleanExtra("UserAll", false);
 		if (userAll) {
-			allParty = (UserAllParty) intent
-					.getSerializableExtra("UserAllParty");
+			allParty = (UserAllParty) intent.getSerializableExtra("UserAllParty");
 			Integer allrelationship = allParty.getRelationship();
 			pk_party_user = allParty.getPk_party_user();
 			pk_party = allParty.getPk_party();
 			fk_user1 = allParty.getFk_user();
 			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中======");
-			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中的allrelationship======"
-					+ allrelationship);
+			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中的allrelationship======"+ allrelationship);
 			switch (allrelationship) {
 			case 0:
 				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
@@ -358,8 +313,7 @@ public class PartyDetailsActivity extends Activity implements
 			case 2:
 				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
-				Log.e("PartyDetailsActivity", "用户已拒绝=========="
-						+ allrelationship);
+				Log.e("PartyDetailsActivity", "用户已拒绝=========="+ allrelationship);
 				break;
 			default:
 				break;
@@ -388,31 +342,35 @@ public class PartyDetailsActivity extends Activity implements
 			edit_show.setText(location);
 		} else {
 			oneParty = (Party2) intent.getSerializableExtra("oneParty");
+			boolean isRelationship=intent.getBooleanExtra("isRelationship", false);
 			Integer relationship = oneParty.getRelationship();
-			pk_party_user = oneParty.getPk_party_user();
+			if(isRelationship)
+			{
+				pk_party_user =SdPkUser.getGetPk_party_user();
+				Log.e("PartyDetailsActivity", "得到的getPk_party_user111111111" + pk_party_user);
+			}else
+			{
+				pk_party_user=oneParty.getPk_party_user();
+			}
 			pk_party = oneParty.getPk_party();
 			fk_user1 = oneParty.getFk_user();
 			if (relationship == null) {
 			} else {
 				switch (relationship) {
 				case 0:
-					mPartyDetails_partake
-							.setBackgroundResource(R.drawable.ok_2);
+					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
 					Log.e("PartyDetailsActivity", "用户未表态======" + relationship);
 					break;
 				case 1:
-					mPartyDetails_partake
-							.setBackgroundResource(R.drawable.ok_1);
+					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
 					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
 					Log.e("PartyDetailsActivity", "用户已参与=======" + relationship);
 					break;
 				case 2:
-					mPartyDetails_partake
-							.setBackgroundResource(R.drawable.ok_2);
+					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
-					Log.e("PartyDetailsActivity", "用户已拒绝=========="
-							+ relationship);
+					Log.e("PartyDetailsActivity", "用户已拒绝=========="+ relationship);
 					break;
 				default:
 					break;
@@ -462,12 +420,9 @@ public class PartyDetailsActivity extends Activity implements
 		findViewById(R.id.PartyDetails_back).setOnClickListener(this);
 		findViewById(R.id.PartyDetails_more_layout).setOnClickListener(this);
 		findViewById(R.id.PartyDetails_more).setOnClickListener(this);
-		findViewById(R.id.PartyDetails_tv_partake_prompt).setOnClickListener(
-				this);// 参与提示字符
-		findViewById(R.id.PartyDetails_tv_refuse_prompt).setOnClickListener(
-				this);// 拒绝提示字符
-		findViewById(R.id.PartyDetails_did_not_say_prompt).setOnClickListener(
-				this);// 未表态提示字符
+		findViewById(R.id.PartyDetails_tv_partake_prompt).setOnClickListener(this);// 参与提示字符
+		findViewById(R.id.PartyDetails_tv_refuse_prompt).setOnClickListener(this);// 拒绝提示字符
+		findViewById(R.id.PartyDetails_did_not_say_prompt).setOnClickListener(this);// 未表态提示字符
 	}
 
 	private void initListener() {
@@ -561,8 +516,7 @@ public class PartyDetailsActivity extends Activity implements
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",Toast.LENGTH_LONG).show();
 			return;
 		}
 	}
@@ -603,8 +557,7 @@ public class PartyDetailsActivity extends Activity implements
 
 	// 未表态
 	private void PartyDetails_did_not_say_prompt() {
-		Intent intent = new Intent(PartyDetailsActivity.this,
-				CommentsListActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra("CommentsList", 0);
 		intent.putExtra("not_say", pk_party);
 		startActivity(intent);
@@ -612,8 +565,7 @@ public class PartyDetailsActivity extends Activity implements
 
 	// 拒绝
 	private void PartyDetails_tv_refuse_prompt() {
-		Intent intent = new Intent(PartyDetailsActivity.this,
-				CommentsListActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra("CommentsList", 2);
 		intent.putExtra("refuse", pk_party);
 		startActivity(intent);
@@ -621,8 +573,7 @@ public class PartyDetailsActivity extends Activity implements
 
 	// 参与
 	private void PartyDetails_tv_partake_prompt() {
-		Intent intent = new Intent(PartyDetailsActivity.this,
-				CommentsListActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra("CommentsList", 1);
 		intent.putExtra("partake", pk_party);
 		startActivity(intent);
@@ -634,11 +585,14 @@ public class PartyDetailsActivity extends Activity implements
 		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
+		Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222" + pk_party_user);
 		party_user.setRelationship(1);
-		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
-				party_user);
-		Toast toast = Toast.makeText(getApplicationContext(), "已参与",
-				Toast.LENGTH_SHORT);
+		party_user.setStatus(1);
+		party_user.setFk_party(pk_party);
+		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+		
+		
+		Toast toast = Toast.makeText(getApplicationContext(), "已参与",Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		LinearLayout toastView = (LinearLayout) toast.getView();
 		ImageView imageCodeProject = new ImageView(getApplicationContext());
@@ -652,12 +606,14 @@ public class PartyDetailsActivity extends Activity implements
 		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
+		Log.e("PartyDetailsActivity", "得到的getPk_party_user333333333" + pk_party_user);
 		party_user.setRelationship(2);
-		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,
-				party_user);
+		party_user.setFk_party(pk_party);
+		party_user.setStatus(1);
+		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 
-		Toast toast = Toast.makeText(getApplicationContext(), "已拒绝",
-				Toast.LENGTH_SHORT);
+		
+		Toast toast = Toast.makeText(getApplicationContext(), "已拒绝",Toast.LENGTH_SHORT);
 		toast.setGravity(Gravity.CENTER, 0, 0);
 		LinearLayout toastView = (LinearLayout) toast.getView();
 		ImageView imageCodeProject = new ImageView(getApplicationContext());
@@ -683,15 +639,10 @@ public class PartyDetailsActivity extends Activity implements
 			finish();
 		} else {
 			finish();
-			SharedPreferences PartyDetails_sp = getSharedPreferences(
-					"isPartyDetails_", 0);
+			SharedPreferences PartyDetails_sp = getSharedPreferences("isPartyDetails_", 0);
 			Editor editor = PartyDetails_sp.edit();
 			editor.putBoolean("PartyDetails", true);
 			editor.commit();
-			Intent intent = new Intent(PartyDetailsActivity.this,
-					GroupActivity.class);
-			overridePendingTransition(0, 0);
-			startActivity(intent);
 		}
 
 	}

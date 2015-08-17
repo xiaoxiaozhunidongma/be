@@ -8,8 +8,6 @@ import java.io.ObjectOutputStream;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -26,18 +24,19 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BJ.javabean.Loginback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.Registeredback;
 import com.BJ.javabean.User;
+import com.BJ.javabean.updateback;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.Person;
+import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
-import com.biju.Interface.regNewAccountListenner;
 import com.biju.Interface.getPicSignListenner;
-import com.biju.Interface.userLoginListenner;
+import com.biju.Interface.regNewAccountListenner;
+import com.biju.Interface.updateUserListenner;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
@@ -78,6 +77,9 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private TextView mTextView;
 	private Interface mRegistered_Inter;
 	private boolean isHead;
+	private int returndata;
+	private String phoneRegistered_phone;
+	private boolean phoneLogin;
 	
 	private String fileName = getSDPath() + "/" + "saveData";
 	public String getSDPath() {
@@ -91,13 +93,15 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		return sdDir.toString();
 
 	}
-	private int returndata;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_registered);
+		Intent intent = getIntent();
+		phoneRegistered_phone = intent.getStringExtra("phoneRegistered_phone");
+		phoneLogin = intent.getBooleanExtra("PhoneLogin", false);
 		get4Sign();
 		initUI();
 //		initUpload();
@@ -154,17 +158,24 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 				if (statusMsg == 1) {
 
 					returndata = registered.getReturnData();
+					//把当前注册成功的pk_user传给工具类
+					SdPkUser.setsD_pk_user(returndata);
+					SdPkUser.setRegistered_one(true);
 					Log.e("RegisteredActivity", "returndata" + returndata);
-					SharedPreferences sp = getSharedPreferences("Registered", 0);
-					Editor editor = sp.edit();
-					editor.putInt("returndata", returndata);
-					editor.putBoolean("isRegistered_one", true);
-					editor.commit();
-					//注册成功后进行登录
-					User loginuser = new User();
-					loginuser.setPk_user(returndata);
-					loginuser.setPassword("");
-					mRegistered_Inter.userLogin(RegisteredActivity.this,loginuser);
+					Person person = new Person(returndata);
+					try {
+						ObjectOutputStream oos = new ObjectOutputStream(
+								new FileOutputStream(fileName));
+						oos.writeObject(person);
+						oos.close();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
+					//注册成功后进行登录并绑定手机号码
+					updateLogin();
 					
 				} else {
 					Toast.makeText(RegisteredActivity.this, "请重新注册!",
@@ -179,61 +190,55 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		});
 		mTextView = (TextView) findViewById(R.id.textView1);
 		
-		mRegistered_Inter.setPostListener(new userLoginListenner() {
+		// 更新用户资料成功
+		mRegistered_Inter.setPostListener(new updateUserListenner() {
 
-			@Override
-			public void success(String A) {
-				Log.e("RegisteredActivity", "用户资料" + A);
-				Loginback loginback = GsonUtils.parseJson(A, Loginback.class);
-				// 说明是已经登录成功
-				if (loginback.getStatusMsg() == 1) {
-					Log.e("RegisteredActivity", "登录成功，账号ID" + A);
-					// 跳转至主界面
-					Intent intent = new Intent(RegisteredActivity.this,
-							MainActivity.class);
+		@Override
+		public void success(String A) {
+						
+		updateback usersetting_updateback = GsonUtils.parseJson(A,updateback.class);
+				int a = usersetting_updateback.getStatusMsg();
+				if (a == 1) {
+					Log.e("RegisteredActivity", "更新成功" + A);
+					Intent intent = new Intent(RegisteredActivity.this,MainActivity.class);
 					startActivity(intent);
 					finish();
-					
-					try {
-						Person person = new Person(String.valueOf(returndata), "");
-						ObjectOutputStream oos = new ObjectOutputStream(
-								new FileOutputStream(fileName));
-						oos.writeObject(person);
-						oos.close();
-					} catch (FileNotFoundException e) {
-						e.printStackTrace();
-					} catch (IOException e) {
-						e.printStackTrace();
+					//关闭首界面
+					BeforeLoginActivity.BeforeLogin.finish();;
+					//关闭登录界面
+					LoginJumpActivity.LoginJump.finish(); 
+					if(phoneLogin)
+					{
+						//关闭手机登录界面
+						PhoneLoginActivity.PhoneLogin.finish();
+					}else
+					{
+						//关闭手机注册界面
+						PhoneRegisteredActivity.phoneRegistered.finish();;
 					}
-				}
 			}
+	}
 
 			@Override
 			public void defail(Object B) {
 
-			}
+				}
 		});
+
 		
 	}
-	
-	@Override
-	protected void onStop() {
-		try {
-			Person person = new Person(String.valueOf(returndata), "");
-			ObjectOutputStream oos = new ObjectOutputStream(
-					new FileOutputStream(fileName));
-			oos.writeObject(person);
-			oos.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
+
+		//用户进行登录
+		private void updateLogin() {
+			User usersetting = new User();
+			usersetting.setPk_user(returndata);
+			usersetting.setJpush_id(MyApplication.getRegId());
+			usersetting.setPhone(phoneRegistered_phone);
+			mRegistered_Inter.updateUser(RegisteredActivity.this, usersetting);
 		}
-		super.onStop();
-	}
-
 	
-
+	
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -270,11 +275,6 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private void registered_OK() {
 		boolean isWIFI = Ifwifi.getNetworkConnected(RegisteredActivity.this);
 		if (isWIFI) {
-			SharedPreferences sp = getSharedPreferences("isLogin", 0);
-			Editor editor = sp.edit();
-			editor.putBoolean("Login", false);
-			editor.commit();
-
 			// 把昵称传到接口
 			String nickname = mNickname.getText().toString().trim();
 			String jpush_id = MyApplication.getRegId();
@@ -343,14 +343,19 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	}
 
 	private void registered_back() {
-		SharedPreferences sp = getSharedPreferences("isLogin", 0);
-		Editor editor = sp.edit();
-		editor.putBoolean("Login", false);
-		editor.commit();
+		//关闭自身
 		finish();
-		Intent intent = new Intent(RegisteredActivity.this, LoginActivity.class);
-		startActivity(intent);
-		overridePendingTransition(R.anim.in_item, R.anim.out_item);
+		//关闭登录界面
+		LoginJumpActivity.LoginJump.finish(); 
+		if(phoneLogin)
+		{
+			//关闭手机登录界面
+			PhoneLoginActivity.PhoneLogin.finish();
+		}else
+		{
+			//关闭手机注册界面
+			PhoneRegisteredActivity.phoneRegistered.finish();;
+		}
 	}
 	
 

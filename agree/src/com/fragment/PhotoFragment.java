@@ -59,6 +59,7 @@ import com.BJ.photo.BitmapCache.ImageCallback;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.Path2Bitmap;
+import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
 import com.biju.Interface.uploadingPhotoListenner;
@@ -66,7 +67,6 @@ import com.biju.Interface.readPartyPhotosListenner;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
-import com.biju.login.LoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -122,6 +122,7 @@ public class PhotoFragment extends Fragment  {
 			}
 		}
 	};
+	private Integer SD_pk_user;
 
 
 	public PhotoFragment() {
@@ -140,8 +141,12 @@ public class PhotoFragment extends Fragment  {
 
 		if (mLayout == null) {
 
-			mLayout = inflater.inflate(R.layout.activity_selectimg, container,
-					false);
+			mLayout = inflater.inflate(R.layout.activity_selectimg, container,false);
+			
+			//获取sd卡中的pk_user
+			SD_pk_user = SdPkUser.getsD_pk_user();
+			Log.e("PhotoFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+			
 			Res.init(getActivity());
 			bimap = BitmapFactory.decodeResource(getResources(),
 					R.drawable.icon_addpic_unfocused);
@@ -167,8 +172,6 @@ public class PhotoFragment extends Fragment  {
 
 				Photosback photosback = GsonUtils.parseJsonArray(A, Photosback.class);
 				listphotos = photosback.getReturnData();
-				//刷新
-				adapter.notifyDataSetChanged();
 				
 				//获取浏览图片bitmap容器
 				//回收内存
@@ -193,6 +196,12 @@ public class PhotoFragment extends Fragment  {
 					
 				}
 				
+				if(listphotos!=null&&listphotos.size()>0){
+					String pk_photo = listphotos.get(0).getPk_photo();
+					Log.e("PhotoFragment", "第一个图片路径："+pk_photo);
+				}
+				//刷新
+				adapter.notifyDataSetChanged();
 			}
 			
 			@Override
@@ -298,7 +307,7 @@ public class PhotoFragment extends Fragment  {
 				
 				Photo photo = new Photo();
 				photo.setFk_group(GroupActivity.getPk_group());
-				photo.setFk_user(LoginActivity.getPk_user());
+				photo.setFk_user(SD_pk_user);
 //				photo.setPath(result.fileId);
 				photo.setPk_photo(result.fileId);
 				photo.setStatus(1);

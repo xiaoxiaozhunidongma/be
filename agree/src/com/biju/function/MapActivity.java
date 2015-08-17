@@ -52,11 +52,10 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.R;
-import com.github.volley_examples.utils.NotifiUtils;
 
-public class MapActivity extends Activity implements
-		OnGetGeoCoderResultListener, OnClickListener {
+public class MapActivity extends Activity implements OnGetGeoCoderResultListener, OnClickListener {
 
+	public static MapActivity Map;
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	private LatLng currentPt;
@@ -128,6 +127,7 @@ public class MapActivity extends Activity implements
 		mSearch.setOnGetGeoCodeResultListener(this);
 
 		initUI();
+		Map=this;
 	}
 
 	private void initUI() {
@@ -424,13 +424,10 @@ public class MapActivity extends Activity implements
 	
 			Intent intent = new Intent(MapActivity.this, TimeActivity.class);
 			startActivity(intent);
-			finish();
 	}
 
 	private void map_back() {
 		finish();
-		Intent intent=new Intent(MapActivity.this, NewPartyActivity.class);
-		startActivity(intent);
 	}
 
 
