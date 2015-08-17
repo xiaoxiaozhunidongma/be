@@ -174,8 +174,8 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 						sendBroadcast(intent);
 
 						//πÿ±’GroupActivityΩÁ√Ê
-						for (int i = 0; i < RefreshActivity.activList.size(); i++) {
-							RefreshActivity.activList.get(i).finish();
+						for (int i = 0; i < RefreshActivity.activList_1.size(); i++) {
+							RefreshActivity.activList_1.get(i).finish();
 						}
 						finish();
 					}

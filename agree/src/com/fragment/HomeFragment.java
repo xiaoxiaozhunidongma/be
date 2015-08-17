@@ -587,7 +587,6 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 					}
 				}
 			}
-
 			return inflater;
 		}
 
