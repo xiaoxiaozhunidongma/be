@@ -25,6 +25,7 @@ import android.widget.TextView;
 
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
 import com.biju.Interface;
@@ -39,8 +40,6 @@ import com.github.volley_examples.utils.GsonUtils;
 @SuppressLint("NewApi")
 public class GroupActivity extends FragmentActivity implements OnClickListener,OnTouchListener, OnGestureListener {
 
-	public static GroupActivity group;
-	
 	private FragmentTabHost mTabhost;
 	public static int pk_group;
 
@@ -79,8 +78,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_tab);
-		group=this;
-		
+		//把当前界面加入list中
+		RefreshActivity.activList.add(GroupActivity.this);
 		//获取sd卡中的pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		Log.e("GroupActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
@@ -261,6 +260,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 	}
 
 	public void group_back() {
+		RefreshActivity.activList.clear();
 		finish();
 	}
 
