@@ -39,6 +39,7 @@ import com.BJ.javabean.Teamupdateback;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.produceRequestCodeListenner;
@@ -99,6 +100,13 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 		initreadUserGroupRelation1();
 		returndata();
 		initUI();
+		Log.e("TeamSettingActivity", "进入了=========+onCreate()");
+	}
+	
+	@Override
+	protected void onStart() {
+		Log.e("TeamSettingActivity", "进入了=========+onStart()");
+		super.onStart();
 	}
 
 	private void initreadUserGroupRelation1() {
@@ -166,7 +174,9 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 						sendBroadcast(intent);
 
 						//关闭GroupActivity界面
-						GroupActivity.group.finish();
+						for (int i = 0; i < RefreshActivity.activList.size(); i++) {
+							RefreshActivity.activList.get(i).finish();
+						}
 						finish();
 					}
 				} else {
