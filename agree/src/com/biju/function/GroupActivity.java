@@ -26,6 +26,7 @@ import android.widget.TextView;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
 import com.BJ.utils.SdPkUser;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
@@ -86,10 +87,10 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 
 		initUI();
 		Intent intent = getIntent();
-		pk_group = intent.getIntExtra("pk_group", pk_group);
+		pk_group = intent.getIntExtra(IConstant.HomePk_group, pk_group);
 
-		SharedPreferences PartyDetails_sp = getSharedPreferences("isPartyDetails_", 0);
-		partyDetails = PartyDetails_sp.getBoolean("PartyDetails", false);
+		SharedPreferences PartyDetails_sp = getSharedPreferences(IConstant.IsPartyDetails_, 0);
+		partyDetails = PartyDetails_sp.getBoolean(IConstant.PartyDetails, false);
 		if (partyDetails) {
 			mTabhost.setCurrentTab(1);
 			i = 1;
@@ -178,13 +179,11 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		groupInterface.setPostListener(new readUserGroupRelationListenner() {
 			@Override
 			public void success(String A) {
-				Groupuserback groupuserback = GsonUtils.parseJson(A,
-						Groupuserback.class);
+				Groupuserback groupuserback = GsonUtils.parseJson(A,Groupuserback.class);
 				Integer statusMsg = groupuserback.getStatusMsg();
 				if (statusMsg == 1) {
 					Log.e("GroupActivity", "返回小组关系ID====" + A);
-					List<Group_User> groupuser_returnData = groupuserback
-							.getReturnData();
+					List<Group_User> groupuser_returnData = groupuserback.getReturnData();
 					if (groupuser_returnData.size() > 0) {
 						Group_User group_user = groupuser_returnData.get(0);
 						pk_group_user = group_user.getPk_group_user();
@@ -257,7 +256,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 
 	private void group_setting() {
 		Intent intent = new Intent(GroupActivity.this,TeamSettingActivity.class);
-		intent.putExtra("Group", pk_group);
+		intent.putExtra(IConstant.Group, pk_group);
 		startActivity(intent);
 	}
 
@@ -272,10 +271,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		editor.putBoolean("Photo", false);
 		editor.commit();
 
-		SharedPreferences PartyDetails_sp = getSharedPreferences(
-				"isPartyDetails_", 0);
+		SharedPreferences PartyDetails_sp = getSharedPreferences(IConstant.IsPartyDetails_, 0);
 		Editor PartyDetails_editor = PartyDetails_sp.edit();
-		PartyDetails_editor.putBoolean("PartyDetails", false);
+		PartyDetails_editor.putBoolean(IConstant.PartyDetails, false);
 		PartyDetails_editor.commit();
 		super.onStop();
 	}

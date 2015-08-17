@@ -21,4 +21,10 @@ public interface IConstant {
 	public String ParTake="partake";
 	public String UserAllUoreParty="userAllmoreparty";
 	public String MoreParty="moreparty";
+	//使用在PartyDetailsActivity类，ScheduleFragment类，GroupActivity类的sp中
+	public String IsPartyDetails_="isPartyDetails_";
+	public String PartyDetails="PartyDetails";
+	//使用在GroupActivity类中和TeamSettingActivity类中
+	public String Group="Group";
+	
 }

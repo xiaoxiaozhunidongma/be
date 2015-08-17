@@ -163,12 +163,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		RelativeLayout bd_mapView_container = (RelativeLayout) findViewById(R.id.map_layout);
 		bd_mapView_container.addView(mMapView, params_map);
 		// addview edittext
-		RelativeLayout.LayoutParams params_show = new LayoutParams(
-				LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 50));
+		RelativeLayout.LayoutParams params_show = new LayoutParams(LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 50));
 		edit_show.setGravity(Gravity.CENTER);
 		params_show.setMargins(0, DensityUtil.dip2px(this, 200), 0, 0);
-		edit_show.setBackgroundColor(android.graphics.Color
-				.parseColor("#aaffffff"));
+		edit_show.setBackgroundColor(android.graphics.Color.parseColor("#aaffffff"));
 		edit_show.setTextColor(android.graphics.Color.parseColor("#cdcdcd"));
 		bd_mapView_container.addView(edit_show, params_show);
 
@@ -493,12 +491,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		LatLng llA = new LatLng(lat, lng);
 
 		// ÉèÖÃÐü¸¡µÄÍ¼°¸
-		BitmapDescriptor bdA = BitmapDescriptorFactory
-				.fromResource(drawableRes);
+		BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(drawableRes);
 		mOverLayList.add(bdA);
 
-		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA)
-				.zIndex(0).draggable(true);
+		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA).zIndex(0).draggable(true);
 		mMarkerD = (Marker) mBaiduMap.addOverlay(ooA);
 	}
 
@@ -639,9 +635,9 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			finish();
 		} else {
 			finish();
-			SharedPreferences PartyDetails_sp = getSharedPreferences("isPartyDetails_", 0);
+			SharedPreferences PartyDetails_sp = getSharedPreferences(IConstant.IsPartyDetails_, 0);
 			Editor editor = PartyDetails_sp.edit();
-			editor.putBoolean("PartyDetails", true);
+			editor.putBoolean(IConstant.PartyDetails, true);
 			editor.commit();
 		}
 

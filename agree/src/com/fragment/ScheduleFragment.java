@@ -82,8 +82,8 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 	@Override
 	public void onStart() {
-		SharedPreferences PartyDetails_sp = getActivity().getSharedPreferences("isPartyDetails_", 0);
-		boolean PartyDetails=PartyDetails_sp.getBoolean("PartyDetails", false);
+		SharedPreferences PartyDetails_sp = getActivity().getSharedPreferences(IConstant.IsPartyDetails_, 0);
+		boolean PartyDetails=PartyDetails_sp.getBoolean(IConstant.PartyDetails, false);
 		if(PartyDetails)
 		{
 			initreadUserGroupParty();

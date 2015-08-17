@@ -80,8 +80,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		LoginHuanXin();
 		initInterface();
 		ReadUserAllFriends();
-		mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout
-				.findViewById(R.id.friends_swipe_refresh);
+		mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.friends_swipe_refresh);
 		mFriends_swipe_refresh.setOnRefreshListener(this);
 
 		// 顶部刷新的样式
@@ -149,12 +148,10 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 				int status = readUserAllFriendsback.getStatusMsg();
 				if (status == 1) {
 					Log.e("FriendsFragment", "返回用户的所有已添加的好友========" + A);
-					List<ReadUserAllFriends> readUserAllFriendslist = readUserAllFriendsback
-							.getReturnData();
+					List<ReadUserAllFriends> readUserAllFriendslist = readUserAllFriendsback.getReturnData();
 					if (readUserAllFriendslist.size() > 0) {
 						for (int i = 0; i < readUserAllFriendslist.size(); i++) {
-							ReadUserAllFriends userAllFriends = readUserAllFriendslist
-									.get(i);
+							ReadUserAllFriends userAllFriends = readUserAllFriendslist.get(i);
 							AllFriends_List.add(userAllFriends);
 						}
 					}
@@ -178,10 +175,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	}
 
 	private void initUI() {
-		mLayout.findViewById(R.id.tab_friends_addbuddy_layout)
-				.setOnClickListener(this);
-		mLayout.findViewById(R.id.tab_friends_addbuddy)
-				.setOnClickListener(this);// 添加好友
+		mLayout.findViewById(R.id.tab_friends_addbuddy_layout).setOnClickListener(this);
+		mLayout.findViewById(R.id.tab_friends_addbuddy).setOnClickListener(this);// 添加好友
 		mFriends_add_layout = (RelativeLayout) mLayout
 				.findViewById(R.id.friends_add_layout);// 有好友的时候的布局
 		mFriends_add_tishi_layout = (RelativeLayout) mLayout

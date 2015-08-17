@@ -40,6 +40,7 @@ import com.BJ.utils.GridViewWithHeaderAndFooter;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.produceRequestCodeListenner;
 import com.biju.Interface.readAllPerRelationListenner;
@@ -93,7 +94,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 		Log.e("TeamSettingActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 		
 		Intent intent = getIntent();
-		pk_group = intent.getIntExtra("Group", pk_group);
+		pk_group = intent.getIntExtra(IConstant.Group, pk_group);
 
 		ReadUser();
 		initreadUserGroupRelation1();
@@ -144,8 +145,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 	private void returndata() {
 		Group readAllPerRelation_group = new Group();
 		readAllPerRelation_group.setPk_group(pk_group);
-		readuserinter.readAllPerRelation(TeamSettingActivity.this,
-				readAllPerRelation_group);
+		readuserinter.readAllPerRelation(TeamSettingActivity.this,readAllPerRelation_group);
 	}
 
 	private void ReadUser() {
@@ -159,12 +159,6 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 					Integer exitstatus = exitback.getStatusMsg();
 					if (exitstatus == 1) {
 						Log.e("TeamSettingActivity", "返回是否退出成功的结果-------" + A);
-						// 发广播进行更新gridview
-						Intent intent = new Intent();
-						intent.setAction("isRefresh");
-						intent.putExtra("refresh", true);
-						sendBroadcast(intent);
-
 						//关闭GroupActivity界面
 						GroupActivity.group.finish();
 						finish();
@@ -175,15 +169,13 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 					int statusmsg = teamupdateback.getStatusMsg();
 					if (statusmsg == 1) {
 						Log.e("TeamSettingActivity", "更新完的返回结果" + A);
-						SharedPreferences teamsetting_sp = getSharedPreferences(
-								"Setting", 0);
+						SharedPreferences teamsetting_sp = getSharedPreferences("Setting", 0);
 						Editor editor = teamsetting_sp.edit();
 						editor.putBoolean("setting", true);
 						editor.commit();
 						finish();
 					} else {
-						Toast.makeText(TeamSettingActivity.this,
-								"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
+						Toast.makeText(TeamSettingActivity.this,"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
 					}
 				}
 
@@ -206,19 +198,16 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 					if (object.toString().length() > 4) {
 						java.lang.reflect.Type type = new TypeToken<GroupCodeback2>() {
 						}.getType();
-						GroupCodeback2 groupcodeback2 = GsonUtils
-								.parseJsonArray(A, type);
+						GroupCodeback2 groupcodeback2 = GsonUtils.parseJsonArray(A, type);
 						int Group_statusmsg2 = groupcodeback2.getStatusMsg();
-						List<Group_Code2> grouplsit = (List<Group_Code2>) groupcodeback2
-								.getReturnData();
+						List<Group_Code2> grouplsit = (List<Group_Code2>) groupcodeback2.getReturnData();
 						if (Group_statusmsg2 == 1) {
 							Group_Code2 groupcode = grouplsit.get(0);
 							String requestcode = groupcode.getPk_group_code();
 							mTeamSetting_requestcode.setText(requestcode);
 						}
 					} else {
-						GroupCodeback groupcodeback = GsonUtils.parseJson(A,
-								GroupCodeback.class);
+						GroupCodeback groupcodeback = GsonUtils.parseJson(A,GroupCodeback.class);
 						int Group_statusmsg = groupcodeback.getStatusMsg();
 						if (Group_statusmsg == 1) {
 							String requestcode = groupcodeback.getReturnData();
@@ -246,15 +235,13 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 				int status = group_ReadAllUserback.getStatusMsg();
 				if (status == 1) {
 					Log.e("TeamSettingActivity", "读取出小组中的所有用户========" + A);
-					List<Group_ReadAllUser> allUsers = group_ReadAllUserback
-							.getReturnData();
+					List<Group_ReadAllUser> allUsers = group_ReadAllUserback.getReturnData();
 					if (allUsers.size() > 0) {
 						for (int i = 0; i < allUsers.size(); i++) {
 							Group_ReadAllUser readAllUser = allUsers.get(i);
 							group_readalluser_list.add(readAllUser);
 						}
-						Log.e("TeamSettingActivity", "加入到list中的东西====="
-								+ group_readalluser_list.toString());
+						Log.e("TeamSettingActivity", "加入到list中的东西====="+ group_readalluser_list.toString());
 					}
 					if (group_readalluser_list.size() > 0) {
 						mTeamsetting_gridview.setAdapter(adapter);
@@ -276,8 +263,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 				Integer statusMsg = groupuserback.getStatusMsg();
 				if (statusMsg == 1) {
 					Log.e("GroupActivity", "返回小组关系ID====" + A);
-					List<Group_User> groupuser_returnData = groupuserback
-							.getReturnData();
+					List<Group_User> groupuser_returnData = groupuserback.getReturnData();
 					if (groupuser_returnData.size() > 0) {
 						Group_User group_user = groupuser_returnData.get(0);
 						ischat = group_user.getMessage_warn();
@@ -314,20 +300,15 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 				android.R.color.holo_orange_light);
 
 		mTeamsetting_gridview = (GridViewWithHeaderAndFooter) findViewById(R.id.teamsetting_gridview);
-		mHeadView = View.inflate(TeamSettingActivity.this,
-				R.layout.teamsetting_foot_item, null);
+		mHeadView = View.inflate(TeamSettingActivity.this,R.layout.teamsetting_foot_item, null);
 		mTeamsetting_gridview.addFooterView(mHeadView);
-		mTeamSetting_requestcode = (TextView) mHeadView
-				.findViewById(R.id.TeamSetting_requestcode);// 生成邀请码
+		mTeamSetting_requestcode = (TextView) mHeadView.findViewById(R.id.TeamSetting_requestcode);// 生成邀请码
 		mTeamSetting_requestcode.setOnClickListener(this);
-		mTeamSetting_message = (TextView) mHeadView
-				.findViewById(R.id.TeamSetting_message);// 聚会信息提醒开关
+		mTeamSetting_message = (TextView) mHeadView.findViewById(R.id.TeamSetting_message);// 聚会信息提醒开关
 		mTeamSetting_message.setOnClickListener(this);
-		mTeamSetting_chat = (TextView) mHeadView
-				.findViewById(R.id.TeamSetting_chat);// 聊天信息开关
+		mTeamSetting_chat = (TextView) mHeadView.findViewById(R.id.TeamSetting_chat);// 聊天信息开关
 		mTeamSetting_chat.setOnClickListener(this);
-		mTeamSetting_phone = (TextView) mHeadView
-				.findViewById(R.id.TeamSetting_phone);// 公开手机号码开关
+		mTeamSetting_phone = (TextView) mHeadView.findViewById(R.id.TeamSetting_phone);// 公开手机号码开关
 		mTeamSetting_phone.setOnClickListener(this);
 		mHeadView.findViewById(R.id.TeamSetting_exit).setOnClickListener(this);// 退出小组
 
@@ -365,29 +346,23 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 			if (convertView == null) {
 				holder = new ViewHolder();
 				LayoutInflater layoutInflater = getLayoutInflater();
-				inflater = layoutInflater.inflate(
-						R.layout.teamsetting_gridview_item, null);
-				holder.TeamSetting_head = (ImageView) inflater
-						.findViewById(R.id.TeamSetting_head);
-				holder.TeamSetting_number = (TextView) inflater
-						.findViewById(R.id.TeamSetting_number);
+				inflater = layoutInflater.inflate(R.layout.teamsetting_gridview_item, null);
+				holder.TeamSetting_head = (ImageView) inflater.findViewById(R.id.TeamSetting_head);
+				holder.TeamSetting_number = (TextView) inflater.findViewById(R.id.TeamSetting_number);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
 				holder = (ViewHolder) inflater.getTag();
 			}
 
-			Log.e("TeamSettingActivity", "容器的长度========"
-					+ group_readalluser_list.size());
+			Log.e("TeamSettingActivity", "容器的长度========"+ group_readalluser_list.size());
 			if (group_readalluser_list.size() > 0) {
-				Group_ReadAllUser group_ReadAllUser = group_readalluser_list
-						.get(position);
+				Group_ReadAllUser group_ReadAllUser = group_readalluser_list.get(position);
 				Integer pk_user = group_ReadAllUser.getPk_user();
 				holder.TeamSetting_number.setText(pk_user + "");
 				useravatar_path = group_ReadAllUser.getAvatar_path();
 				completeURL = beginStr + useravatar_path + endStr;
-				PreferenceUtils.saveImageCache(TeamSettingActivity.this,
-						completeURL);// 存SP
+				PreferenceUtils.saveImageCache(TeamSettingActivity.this,completeURL);// 存SP
 				ImageLoaderUtils.getInstance().LoadImage(
 						TeamSettingActivity.this, completeURL,
 						holder.TeamSetting_head);
@@ -483,8 +458,7 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 		Group Group_teamsetting = new Group();
 		Group_teamsetting.setPk_group(pk_group);
 		Log.e("TeamSettingActivity", "Group_teamsetting" + pk_group);
-		readuserinter.produceRequestCode(TeamSettingActivity.this,
-				Group_teamsetting);
+		readuserinter.produceRequestCode(TeamSettingActivity.this,Group_teamsetting);
 	}
 
 	// 更新小组设置
