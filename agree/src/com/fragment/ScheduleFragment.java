@@ -28,9 +28,11 @@ import com.BJ.javabean.PartyRelationshipback;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.Partyback;
 import com.BJ.utils.SdPkUser;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.createPartyRelationListenner;
 import com.biju.Interface.readUserGroupPartyListenner;
+import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.PartyDetailsActivity;
@@ -52,7 +54,6 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private Party2 scheduleparty;
 	private Integer sD_pk_user;
 	private SwipeRefreshLayout mSchedule_swipe_refresh;
-
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -81,8 +82,8 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 	@Override
 	public void onStart() {
-		SharedPreferences PartyDetails_sp = getActivity().getSharedPreferences("isPartyDetails_", 0);
-		boolean PartyDetails=PartyDetails_sp.getBoolean("PartyDetails", false);
+		SharedPreferences PartyDetails_sp = getActivity().getSharedPreferences(IConstant.IsPartyDetails_, 0);
+		boolean PartyDetails=PartyDetails_sp.getBoolean(IConstant.PartyDetails, false);
 		if(PartyDetails)
 		{
 			initreadUserGroupParty();
@@ -93,8 +94,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	}
 	
 	private void initUI() {
-		mSchedule_prompt_layout = (RelativeLayout) mLayout
-				.findViewById(R.id.Schedule_prompt_layout);// 提示
+		mSchedule_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_prompt_layout);// 提示
 		mSchedule_listView=(ListView) mLayout.findViewById(R.id.schedule_listview);
 		adapter = new MyAdapter();
 		mSchedule_listView.setAdapter(adapter);
@@ -115,7 +115,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 						initcreatePartyRelation(fk_user, pk_party,pk_party_user);
 					} else {
 						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
-						intent.putExtra("oneParty", scheduleparty);
+						intent.putExtra(IConstant.OneParty, scheduleparty);
 						startActivity(intent);
 					}
 				}
@@ -165,16 +165,13 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			ViewHolder holder = null;
 			if (convertView == null) {
 				holder = new ViewHolder();
-				LayoutInflater layoutInflater = getActivity()
-						.getLayoutInflater();
+				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 				inflater = layoutInflater.inflate(R.layout.party_item, null);
-				holder.years_month = (TextView) inflater
-						.findViewById(R.id.years_month);
+				holder.years_month = (TextView) inflater.findViewById(R.id.years_month);
 				holder.name = (TextView) inflater.findViewById(R.id.name);
 				holder.times = (TextView) inflater.findViewById(R.id.times);
 				holder.address = (TextView) inflater.findViewById(R.id.address);
-				holder.party_unread_tag = (ImageView) inflater
-						.findViewById(R.id.party_unread_tag);
+				holder.party_unread_tag = (ImageView) inflater.findViewById(R.id.party_unread_tag);
 				holder.inNum=(TextView) inflater.findViewById(R.id.inNum);
 				inflater.setTag(holder);
 			} else {
@@ -221,8 +218,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			@Override
 			public void success(String A) {
 				partylist.clear();
-				Partyback partybackInterface = GsonUtils.parseJson(A,
-						Partyback.class);
+				Partyback partybackInterface = GsonUtils.parseJson(A,Partyback.class);
 				Integer statusMsg = partybackInterface.getStatusMsg();
 				if (statusMsg == 1) {
 					List<Party2> partys = partybackInterface.getReturnData();
@@ -256,10 +252,34 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 						.parseJson(A, PartyRelationshipback.class);
 				Integer statusMsg = partyRelationshipback.getStatusMsg();
 				if (statusMsg == 1) {
-					Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
-					intent.putExtra("oneParty", scheduleparty);
-					startActivity(intent);
+					Log.e("ScheduleFragment", "得到的关系结果===="+A);
+					Integer pk_party_user = partyRelationshipback.getReturnData();
+					Log.e("ScheduleFragment", "得到的pk_party_user111111===="+pk_party_user);
+					SdPkUser.setGetPk_party_user(pk_party_user);
+					Party_User party_user = new Party_User();
+					party_user.setPk_party_user(pk_party_user);
+					party_user.setRelationship(0);
+					party_user.setFk_party(scheduleparty.getPk_party());
+					party_user.setStatus(1);
+					scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
 				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		
+		scheduleInterface.setPostListener(new updateUserJoinMsgListenner() {
+
+			@Override
+			public void success(String A) {
+				Log.e("ScheduleFragment", "返回的是否更新成功" + A);
+				Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
+				intent.putExtra(IConstant.IsRelationship, true);
+				intent.putExtra(IConstant.OneParty, scheduleparty);
+				startActivity(intent);
 			}
 
 			@Override
@@ -281,6 +301,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		editor.commit();
 	}
 
+	//下拉刷新
 	@Override
 	public void onRefresh() {
 		new Handler().postDelayed(new Runnable() {

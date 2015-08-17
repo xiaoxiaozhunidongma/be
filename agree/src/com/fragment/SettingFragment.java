@@ -1,16 +1,9 @@
 package com.fragment;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StreamCorruptedException;
 import java.util.List;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -24,7 +17,6 @@ import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
-import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
@@ -59,7 +51,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public SettingFragment() {
 		// Required empty public constructor
 	}
-
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
