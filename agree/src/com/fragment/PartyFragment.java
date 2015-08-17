@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.content.Intent;
-import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -25,16 +24,13 @@ import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.UserAllPartyback;
 import com.BJ.utils.SdPkUser;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserAllPartyListenner;
 import com.biju.R;
 import com.biju.function.NewPartyActivity;
 import com.biju.function.PartyDetailsActivity;
 import com.github.volley_examples.utils.GsonUtils;
-import com.handmark.pulltorefresh.library.ILoadingLayout;
-import com.handmark.pulltorefresh.library.PullToRefreshBase;
-import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
-import com.handmark.pulltorefresh.library.PullToRefreshListView;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -135,6 +131,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 		adapter = new MyAdapter();
 		mParty_listView.setAdapter(adapter);
 
+		//listview的点击监听
 		mParty_listView.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -143,10 +140,9 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				int pos = arg2 - mParty_listView.getHeaderViewsCount();
 				if (pos >= 0) {
 					UserAllParty UserAllParty = userAllPartieList.get(pos);
-					Intent intent = new Intent(getActivity(),
-							PartyDetailsActivity.class);
-					intent.putExtra("UserAll", true);
-					intent.putExtra("UserAllParty", UserAllParty);
+					Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
+					intent.putExtra(IConstant.UserAll, true);
+					intent.putExtra(IConstant.UserAllParty, UserAllParty);
 					getActivity().startActivity(intent);
 				}
 			}
@@ -184,11 +180,9 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 			ViewHolder holder = null;
 			if (convertView == null) {
 				holder = new ViewHolder();
-				LayoutInflater layoutInflater = getActivity()
-						.getLayoutInflater();
+				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 				inflater = layoutInflater.inflate(R.layout.party_item, null);
-				holder.years_month = (TextView) inflater
-						.findViewById(R.id.years_month);
+				holder.years_month = (TextView) inflater.findViewById(R.id.years_month);
 				holder.name = (TextView) inflater.findViewById(R.id.name);
 				holder.times = (TextView) inflater.findViewById(R.id.times);
 				holder.address = (TextView) inflater.findViewById(R.id.address);
@@ -241,6 +235,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 		startActivity(intent);
 	}
 	
+	//下拉刷新
 	@Override
 	public void onRefresh() {
 		new Handler().postDelayed(new Runnable() {

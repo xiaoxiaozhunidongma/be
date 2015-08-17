@@ -88,8 +88,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("pk_group", pk_group);
 
-		SharedPreferences PartyDetails_sp = getSharedPreferences(
-				"isPartyDetails_", 0);
+		SharedPreferences PartyDetails_sp = getSharedPreferences("isPartyDetails_", 0);
 		partyDetails = PartyDetails_sp.getBoolean("PartyDetails", false);
 		if (partyDetails) {
 			mTabhost.setCurrentTab(1);

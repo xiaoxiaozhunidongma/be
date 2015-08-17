@@ -62,6 +62,7 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readPartyJoinMsgListenner;
 import com.biju.Interface.updateUserJoinMsgListenner;
@@ -290,9 +291,9 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	//首次进来时传值
 	private void initOneParty() {
 		Intent intent = getIntent();
-		userAll = intent.getBooleanExtra("UserAll", false);
+		userAll = intent.getBooleanExtra(IConstant.UserAll, false);
 		if (userAll) {
-			allParty = (UserAllParty) intent.getSerializableExtra("UserAllParty");
+			allParty = (UserAllParty) intent.getSerializableExtra(IConstant.UserAllParty);
 			Integer allrelationship = allParty.getRelationship();
 			pk_party_user = allParty.getPk_party_user();
 			pk_party = allParty.getPk_party();
@@ -341,8 +342,8 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			mLng = longitude;
 			edit_show.setText(location);
 		} else {
-			oneParty = (Party2) intent.getSerializableExtra("oneParty");
-			boolean isRelationship=intent.getBooleanExtra("isRelationship", false);
+			oneParty = (Party2) intent.getSerializableExtra(IConstant.OneParty);
+			boolean isRelationship=intent.getBooleanExtra(IConstant.IsRelationship, false);
 			Integer relationship = oneParty.getRelationship();
 			if(isRelationship)
 			{
@@ -558,24 +559,24 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	// 未表态
 	private void PartyDetails_did_not_say_prompt() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
-		intent.putExtra("CommentsList", 0);
-		intent.putExtra("not_say", pk_party);
+		intent.putExtra(IConstant.CommentsList, 0);
+		intent.putExtra(IConstant.Not_Say, pk_party);
 		startActivity(intent);
 	}
 
 	// 拒绝
 	private void PartyDetails_tv_refuse_prompt() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
-		intent.putExtra("CommentsList", 2);
-		intent.putExtra("refuse", pk_party);
+		intent.putExtra(IConstant.CommentsList, 2);
+		intent.putExtra(IConstant.Refuse, pk_party);
 		startActivity(intent);
 	}
 
 	// 参与
 	private void PartyDetails_tv_partake_prompt() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
-		intent.putExtra("CommentsList", 1);
-		intent.putExtra("partake", pk_party);
+		intent.putExtra(IConstant.CommentsList, 1);
+		intent.putExtra(IConstant.ParTake, pk_party);
 		startActivity(intent);
 
 	}
@@ -623,13 +624,12 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	}
 
 	private void PartyDetails_more() {
-		Intent intent = new Intent(PartyDetailsActivity.this,
-				MoreActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,MoreActivity.class);
 		if (userAll) {
-			intent.putExtra("userAllmoreparty", allParty);
-			intent.putExtra("UserAll", true);
+			intent.putExtra(IConstant.UserAllUoreParty, allParty);
+			intent.putExtra(IConstant.UserAll, true);
 		} else {
-			intent.putExtra("moreparty", oneParty);
+			intent.putExtra(IConstant.MoreParty, oneParty);
 		}
 		startActivity(intent);
 	}

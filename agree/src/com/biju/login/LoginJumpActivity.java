@@ -89,7 +89,7 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 			//跳转微信登录界面
 			final SendAuth.Req req = new SendAuth.Req();
 			req.scope = "snsapi_userinfo";
-			req.state = "carjob_wx_login";
+			req.state = "wechat_sdk_demo_test";
 			MyApplication.api.sendReq(req);
 			SdPkUser.setGetweixinLogin(true);
 		}

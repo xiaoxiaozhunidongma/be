@@ -10,10 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
-import android.content.BroadcastReceiver;
-import android.content.Context;
 import android.content.Intent;
-import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
@@ -33,7 +31,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
-import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
@@ -41,9 +38,9 @@ import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupMsgListenner;
-import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.NewteamActivity;
@@ -55,7 +52,8 @@ import com.github.volley_examples.utils.GsonUtils;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class HomeFragment extends Fragment implements OnClickListener , SwipeRefreshLayout.OnRefreshListener{
+public class HomeFragment extends Fragment implements OnClickListener,
+		SwipeRefreshLayout.OnRefreshListener {
 
 	private View mLayout;
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
@@ -65,21 +63,14 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	private GridViewWithHeaderAndFooter home_gridview;
 	private List<Group> users;
 	private ArrayList<Group> list = new ArrayList<Group>();
-	private ArrayList<Group> Codelist = new ArrayList<Group>();
 	private MyGridviewAdapter adapter;
 	private Interface homeInterface;
-	private boolean iscode;
-	private Integer fk_group;
-	private Group readhomeuser;
-
-	private MyReceiver receiver;
-	private boolean refresh;
 	private SwipeRefreshLayout swipeLayout;
-	
+
 	private Integer SD_pk_user;
-	private boolean isRegistered_one;
-	
+
 	private String fileName = getSDPath() + "/" + "saveData";
+
 	public String getSDPath() {
 		File sdDir = null;
 		boolean sdCardExist = Environment.getExternalStorageState().equals(
@@ -95,22 +86,19 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	public HomeFragment() {
 	}
 
-	@SuppressWarnings("deprecation")
 	@SuppressLint("InlinedApi")
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if (mLayout == null) {
 			mLayout = inflater.inflate(R.layout.fragment_home, container, false);
-			//提供gridview做布局判断
-			isRegistered_one=SdPkUser.isRegistered_one();
-			
+
 			FileInputStream fis;
 			try {
 				fis = new FileInputStream(fileName);
 				ObjectInputStream ois = new ObjectInputStream(fis);
 				Person person = (Person) ois.readObject();
-				SD_pk_user=person.pk_user;
+				SD_pk_user = person.pk_user;
 				SdPkUser.setsD_pk_user(SD_pk_user);
 				ois.close();
 			} catch (FileNotFoundException e) {
@@ -122,27 +110,22 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-			
 
 			initUI(inflater);
 			adapter.notifyDataSetChanged();
-			IntentFilter filter = new IntentFilter();
-			filter.addAction("isRefresh");
-			receiver = new MyReceiver();
-			getActivity().registerReceiver(receiver, filter);
-			if (!iscode) {
-				initNewTeam();
-			}
-			
+			initNewTeam();
 
 			swipeLayout = (SwipeRefreshLayout) mLayout.findViewById(R.id.swipe_refresh);
 			swipeLayout.setOnRefreshListener(this);
-			
+
 			// 顶部刷新的样式
-			swipeLayout.setColorSchemeResources(android.R.color.holo_red_light, android.R.color.holo_green_light,
-					android.R.color.holo_blue_bright, android.R.color.holo_orange_light);
+			swipeLayout.setColorSchemeResources(android.R.color.holo_red_light,
+					android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright,
+					android.R.color.holo_orange_light);
 
 		}
+		Log.e("HomeFragment", "进入了onCreateView()=========");
 		return mLayout;
 	}
 
@@ -153,7 +136,7 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 			fis = new FileInputStream(fileName);
 			ObjectInputStream ois = new ObjectInputStream(fis);
 			Person person = (Person) ois.readObject();
-			SD_pk_user=person.pk_user;
+			SD_pk_user = person.pk_user;
 			SdPkUser.setsD_pk_user(SD_pk_user);
 			ois.close();
 		} catch (FileNotFoundException e) {
@@ -165,48 +148,32 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 		} catch (ClassNotFoundException e) {
 			e.printStackTrace();
 		}
+		Log.e("HomeFragment", "进入了onStart()========");
+
+		list.clear();
+		initNewTeam();
+		adapter.notifyDataSetChanged();
 		super.onStart();
 	}
-	
+
+	@Override
+	public void onResume() {
+		Log.e("HomeFragment", "进入了onResume()========");
+		SharedPreferences requestcode_sp = getActivity().getSharedPreferences(IConstant.RequestCode, 0);
+		boolean refresh = requestcode_sp.getBoolean(IConstant.Refresh, false);
+		if (refresh) {
+			list.clear();
+			initNewTeam();
+			adapter.notifyDataSetChanged();
+		}
+		super.onResume();
+	}
+
 	public void prepareData(Integer pk_user) {
 		ReadTeam(pk_user);
 	}
 
-	class MyReceiver extends BroadcastReceiver {
-
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			refresh = intent.getBooleanExtra("refresh", false);
-			iscode = intent.getBooleanExtra("isCode", false);
-			if (!iscode) {
-				if (refresh) {
-					list.clear();
-					initNewTeam();
-					adapter.notifyDataSetChanged();
-					Log.e("HomeFragment", "有接受到广播123456789======");
-				}
-			} else {
-				readhomeuser = (Group) intent
-						.getSerializableExtra("readhomeuser");
-				fk_group = readhomeuser.getPk_group();
-				Log.e("HomeFragment", "使用邀请码添加后的fk_group======" + fk_group);
-				Group_User group_User = new Group_User();
-				group_User.setFk_group(fk_group);
-				group_User.setFk_user(SD_pk_user);
-				group_User.setRole(2);
-				group_User.setStatus(1);
-				homeInterface.userJoin2gourp(getActivity(), group_User);
-				initNewTeam();
-				Codelist.add(0, readhomeuser);
-				adapter.notifyDataSetChanged();
-			}
-		}
-
-	}
-
 	public void initNewTeam() {
-//		SD_pk_user = SdPkUser.getsD_pk_user();
-//		Log.e("HomeFragment", "从SD卡中获取到的Pk_user2222222222" + SD_pk_user);
 		ReadTeam(SD_pk_user);
 	}
 
@@ -219,84 +186,23 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 
 			@Override
 			public void success(String A) {
-				if (iscode) {
-					Codelist.clear();
-					Groupback homeback = GsonUtils
-							.parseJson(A, Groupback.class);
-					int homeStatusMsg = homeback.getStatusMsg();
-					if (homeStatusMsg == 1) {
-						Log.e("HomeFragment", "读取用户小组信息2===" + A);
-						users = homeback.getReturnData();
-						if (users.size() > 0) {
-							for (int i = 0; i < users.size(); i++) {
-								Group readhomeuser_1 = users.get(i);
-								Log.e("HomeFragment", "readhomeuser==="
-										+ readhomeuser_1.getPk_group());
-								Codelist.add(readhomeuser_1);
-							}
-							Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="
-									+ Codelist.toString());
+				PhoneLoginActivity.list.clear();
+				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
+				int homeStatusMsg = homeback.getStatusMsg();
+				if (homeStatusMsg == 1) {
+					Log.e("HomeFragment", "读取用户小组信息222222222===" + A);
+					users = homeback.getReturnData();
+					if (users.size() > 0) {
+						for (int i = 0; i < users.size(); i++) {
+							Group readhomeuser_1 = users.get(i);
+							Log.e("HomeFragment", "readhomeuser==="+ readhomeuser_1.getPk_group());
+							PhoneLoginActivity.list.add(readhomeuser_1);
 						}
+						Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="+ PhoneLoginActivity.list.toString());
 					}
 					adapter.notifyDataSetChanged();
-
-				} else {
-					if (refresh) {
-						list.clear();
-						Groupback homeback = GsonUtils.parseJson(A,
-								Groupback.class);
-						int homeStatusMsg = homeback.getStatusMsg();
-						if (homeStatusMsg == 1) {
-							Log.e("HomeFragment", "读取用户小组信息2===" + A);
-							users = homeback.getReturnData();
-							if (users.size() > 0) {
-								for (int i = 0; i < users.size(); i++) {
-									Group readhomeuser_1 = users.get(i);
-									Log.e("HomeFragment", "readhomeuser==="
-											+ readhomeuser_1.getPk_group());
-									list.add(readhomeuser_1);
-								}
-								Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="
-										+ list.toString());
-							}
-						}
-						adapter.notifyDataSetChanged();
-
-					} else {
-						PhoneLoginActivity.list.clear();
-						Groupback homeback = GsonUtils.parseJson(A,
-								Groupback.class);
-						int homeStatusMsg = homeback.getStatusMsg();
-						if (homeStatusMsg == 1) {
-							Log.e("HomeFragment", "读取用户小组信息222222222===" + A);
-							users = homeback.getReturnData();
-							if (users.size() > 0) {
-								for (int i = 0; i < users.size(); i++) {
-									Group readhomeuser_1 = users.get(i);
-									Log.e("HomeFragment", "readhomeuser==="+ readhomeuser_1.getPk_group());
-									PhoneLoginActivity.list.add(readhomeuser_1);
-								}
-								Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="+ PhoneLoginActivity.list.toString());
-							}
-							adapter.notifyDataSetChanged();
-						}
-					}
 				}
 
-			}
-
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
-
-		homeInterface.setPostListener(new userJoin2gourpListenner() {
-
-			@Override
-			public void success(String A) {
-				Log.e("HomeFragment", "读取用户小组信息使用邀请码添加后的===" + A);
-				adapter.notifyDataSetChanged();
 			}
 
 			@Override
@@ -309,8 +215,7 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 	private void initUI(LayoutInflater inflater) {
 		mLayout.findViewById(R.id.tab_home_new_layout).setOnClickListener(this);// 新建小组
 		mLayout.findViewById(R.id.tab_home_new).setOnClickListener(this);// 新建小组
-		home_gridview = (GridViewWithHeaderAndFooter) mLayout
-				.findViewById(R.id.home_gridview);
+		home_gridview = (GridViewWithHeaderAndFooter) mLayout.findViewById(R.id.home_gridview);
 		home_gridview.setSelector(new ColorDrawable(Color.TRANSPARENT));// 去除gridview点击后的背景颜色
 
 		home_gridview.setOnItemClickListener(new OnItemClickListener() {
@@ -318,66 +223,29 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				if (iscode) {
-					if (Codelist.size() == arg2) {
-						Intent intent = new Intent(getActivity(),
-								NewteamActivity.class);
-						startActivity(intent);
-					} else {
-						Group group = Codelist.get(arg2);
-						int pk_group = group.getPk_group();
-						Intent intent = new Intent(getActivity(),
-								GroupActivity.class);
-						intent.putExtra("pk_group", pk_group);
-						Log.e("HomeFragment", "pk_group1111111111" + pk_group);
-						startActivity(intent);
-					}
+				if (PhoneLoginActivity.list.size() == arg2) {
+					Intent intent = new Intent(getActivity(),NewteamActivity.class);
+					startActivity(intent);
 				} else {
-					if (refresh) {
-						if (list.size() == arg2) {
-							Intent intent = new Intent(getActivity(),
-									NewteamActivity.class);
-							startActivity(intent);
-						} else {
-							Group group = list.get(arg2);
-							int pk_group = group.getPk_group();
-							Intent intent = new Intent(getActivity(),
-									GroupActivity.class);
-							intent.putExtra("pk_group", pk_group);
-							Log.e("HomeFragment", "pk_group2222222222" + pk_group);
-							startActivity(intent);
-						}
-
-					} else {
-						if (PhoneLoginActivity.list.size() == arg2) {
-							Intent intent = new Intent(getActivity(),
-									NewteamActivity.class);
-							startActivity(intent);
-						} else {
-							Group group = PhoneLoginActivity.list.get(arg2);
-							int pk_group = group.getPk_group();
-							Intent intent = new Intent(getActivity(),
-									GroupActivity.class);
-							intent.putExtra("pk_group", pk_group);
-							Log.e("HomeFragment", "pk_group333333333" + pk_group);
-							startActivity(intent);
-						}
-					}
+					Group group = PhoneLoginActivity.list.get(arg2);
+					int pk_group = group.getPk_group();
+					Intent intent = new Intent(getActivity(),GroupActivity.class);
+					intent.putExtra(IConstant.HomePk_group, pk_group);
+					Log.e("HomeFragment", "pk_group333333333" + pk_group);
+					startActivity(intent);
 				}
 
 			}
 		});
 
 		View view = inflater.inflate(R.layout.home_gridview_foot, null);
-		TextView home_requestcode = (TextView) view
-				.findViewById(R.id.home_requestcode);
+		TextView home_requestcode = (TextView) view.findViewById(R.id.home_requestcode);
 		home_gridview.addFooterView(view);
 		home_requestcode.setOnClickListener(new OnClickListener() {
 
 			@Override
 			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(),
-						RequestCodeActivity.class);
+				Intent intent = new Intent(getActivity(),RequestCodeActivity.class);
 				startActivity(intent);
 
 			}
@@ -394,15 +262,8 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 
 		@Override
 		public int getCount() {
-			if (iscode) {
-				return (Codelist.size() + 1);
-			} else {
-				if (refresh) {
-					return (list.size() + 1);
-				} else {
-					return (PhoneLoginActivity.list.size() + 1);
-				}
-			}
+			return (PhoneLoginActivity.list.size() + 1);
+
 		}
 
 		@Override
@@ -419,172 +280,27 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 		public View getView(int position, View convertView, ViewGroup parent) {
 			View inflater = null;
 			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-			if (iscode) {
-				if (isRegistered_one) {
-					if (Codelist.size() > 0) {
-						if (position < Codelist.size()) {
-							inflater = layoutInflater.inflate(
-									R.layout.home_gridview_item, null);
-							home_item_head = (ImageView) inflater
-									.findViewById(R.id.home_item_head);
-							home_item_name = (TextView) inflater
-									.findViewById(R.id.home_item_name);
-							Group homeuser_gridview = Codelist.get(position);
-							String homeAvatar_path = homeuser_gridview
-									.getAvatar_path();
-							String homenickname = homeuser_gridview.getName();
-							home_item_name.setText(homenickname);
-							completeURL = beginStr + homeAvatar_path + endStr;
-							PreferenceUtils.saveImageCache(getActivity(),
-									completeURL);
-							homeImageLoaderUtils.getInstance().LoadImage(
-									getActivity(), completeURL, home_item_head);
-						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
-						}
-					} else {
-						inflater = layoutInflater.inflate(
-								R.layout.home_teamadd_item, null);
-					}
+			if(PhoneLoginActivity.list.size()==0)
+			{
+				inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
+				Log.e("HomeFragment", "PhoneLoginActivity.list.size()=======" + PhoneLoginActivity.list.size());
+			}else
+			{
+				if (position < PhoneLoginActivity.list.size()) {
+					inflater = layoutInflater.inflate(R.layout.home_gridview_item, null);
+					home_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
+					home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
+					Group homeuser_gridview = PhoneLoginActivity.list.get(position);
+					String homeAvatar_path = homeuser_gridview.getAvatar_path();
+					String homenickname = homeuser_gridview.getName();
+					home_item_name.setText(homenickname);
+					completeURL = beginStr + homeAvatar_path + endStr;
+					PreferenceUtils.saveImageCache(getActivity(), completeURL);
+					homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+							completeURL, home_item_head);
+					
 				} else {
-					if (position < Codelist.size()) {
-						inflater = layoutInflater.inflate(
-								R.layout.home_gridview_item, null);
-						home_item_head = (ImageView) inflater
-								.findViewById(R.id.home_item_head);
-						home_item_name = (TextView) inflater
-								.findViewById(R.id.home_item_name);
-						Group homeuser_gridview = Codelist.get(position);
-						String homeAvatar_path = homeuser_gridview
-								.getAvatar_path();
-						String homenickname = homeuser_gridview.getName();
-						home_item_name.setText(homenickname);
-						completeURL = beginStr + homeAvatar_path + endStr;
-						PreferenceUtils.saveImageCache(getActivity(),
-								completeURL);
-						homeImageLoaderUtils.getInstance().LoadImage(
-								getActivity(), completeURL, home_item_head);
-
-					} else {
-						inflater = layoutInflater.inflate(
-								R.layout.home_teamadd_item, null);
-					}
-				}
-
-			} else {
-				if (refresh) {
-					if (isRegistered_one) {
-						if (list.size() > 0) {
-							if (position < list.size()) {
-								inflater = layoutInflater.inflate(
-										R.layout.home_gridview_item, null);
-								home_item_head = (ImageView) inflater
-										.findViewById(R.id.home_item_head);
-								home_item_name = (TextView) inflater
-										.findViewById(R.id.home_item_name);
-								Group homeuser_gridview = list.get(position);
-								String homeAvatar_path = homeuser_gridview
-										.getAvatar_path();
-								String homenickname = homeuser_gridview
-										.getName();
-								home_item_name.setText(homenickname);
-								completeURL = beginStr + homeAvatar_path
-										+ endStr;
-								PreferenceUtils.saveImageCache(getActivity(),
-										completeURL);
-								homeImageLoaderUtils.getInstance().LoadImage(
-										getActivity(), completeURL,
-										home_item_head);
-							} else {
-								inflater = layoutInflater.inflate(
-										R.layout.home_teamadd_item, null);
-							}
-						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
-						}
-					} else {
-						if (position < list.size()) {
-							inflater = layoutInflater.inflate(
-									R.layout.home_gridview_item, null);
-							home_item_head = (ImageView) inflater
-									.findViewById(R.id.home_item_head);
-							home_item_name = (TextView) inflater
-									.findViewById(R.id.home_item_name);
-							Group homeuser_gridview = list.get(position);
-							String homeAvatar_path = homeuser_gridview
-									.getAvatar_path();
-							String homenickname = homeuser_gridview.getName();
-							home_item_name.setText(homenickname);
-							completeURL = beginStr + homeAvatar_path + endStr;
-							PreferenceUtils.saveImageCache(getActivity(),
-									completeURL);
-							homeImageLoaderUtils.getInstance().LoadImage(
-									getActivity(), completeURL, home_item_head);
-
-						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
-						}
-					}
-				} else {
-					if (isRegistered_one) {
-						if (PhoneLoginActivity.list.size() > 0) {
-							if (position < PhoneLoginActivity.list.size()) {
-								inflater = layoutInflater.inflate(
-										R.layout.home_gridview_item, null);
-								home_item_head = (ImageView) inflater
-										.findViewById(R.id.home_item_head);
-								home_item_name = (TextView) inflater
-										.findViewById(R.id.home_item_name);
-								Group homeuser_gridview = PhoneLoginActivity.list
-										.get(position);
-								String homeAvatar_path = homeuser_gridview
-										.getAvatar_path();
-								String homenickname = homeuser_gridview
-										.getName();
-								home_item_name.setText(homenickname);
-								completeURL = beginStr + homeAvatar_path
-										+ endStr;
-								PreferenceUtils.saveImageCache(getActivity(),
-										completeURL);
-								homeImageLoaderUtils.getInstance().LoadImage(
-										getActivity(), completeURL,
-										home_item_head);
-							} else {
-								inflater = layoutInflater.inflate(
-										R.layout.home_teamadd_item, null);
-							}
-						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
-						}
-					} else {
-						if (position < PhoneLoginActivity.list.size()) {
-							inflater = layoutInflater.inflate(
-									R.layout.home_gridview_item, null);
-							home_item_head = (ImageView) inflater
-									.findViewById(R.id.home_item_head);
-							home_item_name = (TextView) inflater
-									.findViewById(R.id.home_item_name);
-							Group homeuser_gridview = PhoneLoginActivity.list
-									.get(position);
-							String homeAvatar_path = homeuser_gridview
-									.getAvatar_path();
-							String homenickname = homeuser_gridview.getName();
-							home_item_name.setText(homenickname);
-							completeURL = beginStr + homeAvatar_path + endStr;
-							PreferenceUtils.saveImageCache(getActivity(),
-									completeURL);
-							homeImageLoaderUtils.getInstance().LoadImage(
-									getActivity(), completeURL, home_item_head);
-
-						} else {
-							inflater = layoutInflater.inflate(
-									R.layout.home_teamadd_item, null);
-						}
-					}
+					inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
 				}
 			}
 
@@ -623,8 +339,10 @@ public class HomeFragment extends Fragment implements OnClickListener , SwipeRef
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				swipeLayout.setRefreshing(false);
+				list.clear();
+				initNewTeam();
 				adapter.notifyDataSetChanged();
+				swipeLayout.setRefreshing(false);
 			}
 		}, 3000);
 	}

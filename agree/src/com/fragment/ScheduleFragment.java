@@ -28,6 +28,7 @@ import com.BJ.javabean.PartyRelationshipback;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.Partyback;
 import com.BJ.utils.SdPkUser;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.createPartyRelationListenner;
 import com.biju.Interface.readUserGroupPartyListenner;
@@ -93,8 +94,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	}
 	
 	private void initUI() {
-		mSchedule_prompt_layout = (RelativeLayout) mLayout
-				.findViewById(R.id.Schedule_prompt_layout);// 提示
+		mSchedule_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_prompt_layout);// 提示
 		mSchedule_listView=(ListView) mLayout.findViewById(R.id.schedule_listview);
 		adapter = new MyAdapter();
 		mSchedule_listView.setAdapter(adapter);
@@ -115,7 +115,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 						initcreatePartyRelation(fk_user, pk_party,pk_party_user);
 					} else {
 						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
-						intent.putExtra("oneParty", scheduleparty);
+						intent.putExtra(IConstant.OneParty, scheduleparty);
 						startActivity(intent);
 					}
 				}
@@ -218,8 +218,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			@Override
 			public void success(String A) {
 				partylist.clear();
-				Partyback partybackInterface = GsonUtils.parseJson(A,
-						Partyback.class);
+				Partyback partybackInterface = GsonUtils.parseJson(A,Partyback.class);
 				Integer statusMsg = partybackInterface.getStatusMsg();
 				if (statusMsg == 1) {
 					List<Party2> partys = partybackInterface.getReturnData();
@@ -278,8 +277,8 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			public void success(String A) {
 				Log.e("ScheduleFragment", "返回的是否更新成功" + A);
 				Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
-				intent.putExtra("isRelationship", true);
-				intent.putExtra("oneParty", scheduleparty);
+				intent.putExtra(IConstant.IsRelationship, true);
+				intent.putExtra(IConstant.OneParty, scheduleparty);
 				startActivity(intent);
 			}
 
@@ -302,6 +301,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		editor.commit();
 	}
 
+	//下拉刷新
 	@Override
 	public void onRefresh() {
 		new Handler().postDelayed(new Runnable() {

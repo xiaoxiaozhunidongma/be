@@ -1,5 +1,7 @@
 package com.BJ.utils;
 
+import com.BJ.javabean.Group;
+
 
 
 
@@ -50,5 +52,15 @@ public class SdPkUser {
 
 	public static void setGetPk_party_user(Integer getPk_party_user) {
 		SdPkUser.getPk_party_user = getPk_party_user;
+	}
+	
+	//使用邀请码加入小组时进行对象的传值
+	public static Group getgroup;
+	public static Group getGetgroup() {
+		return getgroup;
+	}
+
+	public static void setGetgroup(Group getgroup) {
+		SdPkUser.getgroup = getgroup;
 	}
 }

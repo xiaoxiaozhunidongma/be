@@ -25,6 +25,7 @@ import com.BJ.javabean.Relation;
 import com.BJ.javabean.ReturnData;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readPartyJoinMsgListenner;
 import com.biju.R;
@@ -50,8 +51,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private String endStr = "/original";
 	private String useravatar_path;
 	private String completeURL;
-	private String TestcompleteURL = beginStr
-			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
+	private String TestcompleteURL = beginStr+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private int commentsList_msg;
 	private MyAdapter adapter;
 	private int partakeNum;
@@ -81,8 +81,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 				}.getType();
 				ReadPartyback partyback = GsonUtils.parseJsonArray(A, type);
 				ReturnData returnData = partyback.getReturnData();
-				Log.e("CommentsListActivity",
-						"当前returnData:" + returnData.toString());
+				Log.e("CommentsListActivity","当前returnData:" + returnData.toString());
 				List<Relation> relationList = returnData.getRelation();
 				if (relationList.size() > 0) {
 					for (int i = 0; i < relationList.size(); i++) {
@@ -92,32 +91,26 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 						switch (relationship) {
 						case 0:
 							not_sayNum++;
-							Log.e("CommentsListActivity", "当前not_sayNum的数量"
-									+ not_sayNum + "=======" + i);
+							Log.e("CommentsListActivity", "当前not_sayNum的数量"+ not_sayNum + "=======" + i);
 							not_sayList.add(relationList.get(i));
 							break;
 						case 1:
 							partakeNum++;
-							Log.e("CommentsListActivity", "当前partakeNum的数量"
-									+ partakeNum + "=======" + i);
+							Log.e("CommentsListActivity", "当前partakeNum的数量"+ partakeNum + "=======" + i);
 							partackList.add(relationList.get(i));
 							break;
 						case 2:
 							refuseNum++;
-							Log.e("CommentsListActivity", "当前refuseNum的数量"
-									+ refuseNum + "=======" + i);
+							Log.e("CommentsListActivity", "当前refuseNum的数量"+ refuseNum + "=======" + i);
 							refuseList.add(relationList.get(i));
 							break;
 						default:
 							break;
 						}
 					}
-					mComments_list_partake_count.setText(String
-							.valueOf(partakeNum));
-					mComments_list_refuse_count.setText(String
-							.valueOf(refuseNum));
-					mComments_list_not_say_count.setText(String
-							.valueOf(not_sayNum));
+					mComments_list_partake_count.setText(String.valueOf(partakeNum));
+					mComments_list_refuse_count.setText(String.valueOf(refuseNum));
+					mComments_list_not_say_count.setText(String.valueOf(not_sayNum));
 					partakeNum = 0;
 					refuseNum = 0;
 					not_sayNum = 0;
@@ -134,31 +127,25 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 
 	private void initData() {
 		Intent intent = getIntent();
-		commentsList_msg = intent.getIntExtra("CommentsList", 0);
+		commentsList_msg = intent.getIntExtra(IConstant.CommentsList, 0);
 		switch (commentsList_msg) {
 		case 0:
-			mComments_list_not_say_layout
-					.setBackgroundResource(R.drawable.ok_1);
-			mComments_list_partake_layout
-					.setBackgroundResource(R.drawable.ok_3);
+			mComments_list_not_say_layout.setBackgroundResource(R.drawable.ok_1);
+			mComments_list_partake_layout.setBackgroundResource(R.drawable.ok_3);
 			mComments_list_refuse_layout.setBackgroundResource(R.drawable.ok_3);
-			pk_party = intent.getStringExtra("not_say");
+			pk_party = intent.getStringExtra(IConstant.Not_Say);
 			break;
 		case 1:
-			mComments_list_partake_layout
-					.setBackgroundResource(R.drawable.ok_1);
-			mComments_list_not_say_layout
-					.setBackgroundResource(R.drawable.ok_3);
+			mComments_list_partake_layout.setBackgroundResource(R.drawable.ok_1);
+			mComments_list_not_say_layout.setBackgroundResource(R.drawable.ok_3);
 			mComments_list_refuse_layout.setBackgroundResource(R.drawable.ok_3);
-			pk_party = intent.getStringExtra("partake");
+			pk_party = intent.getStringExtra(IConstant.ParTake);
 			break;
 		case 2:
 			mComments_list_refuse_layout.setBackgroundResource(R.drawable.ok_1);
-			mComments_list_partake_layout
-					.setBackgroundResource(R.drawable.ok_3);
-			mComments_list_not_say_layout
-					.setBackgroundResource(R.drawable.ok_3);
-			pk_party = intent.getStringExtra("refuse");
+			mComments_list_partake_layout.setBackgroundResource(R.drawable.ok_3);
+			mComments_list_not_say_layout.setBackgroundResource(R.drawable.ok_3);
+			pk_party = intent.getStringExtra(IConstant.Refuse);
 			break;
 		default:
 			break;
@@ -227,14 +214,10 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			if (convertView == null) {
 				holder = new ViewHolder();
 				LayoutInflater layoutInflater = getLayoutInflater();
-				inflater = layoutInflater.inflate(R.layout.commentslist_item,
-						null);
-				holder.commentslist_item_head = (ImageView) inflater
-						.findViewById(R.id.commentslist_item_head);
-				holder.commentslist_item_nickname = (TextView) inflater
-						.findViewById(R.id.commentslist_item_nickname);
-				holder.commentslist_item_status = (TextView) inflater
-						.findViewById(R.id.commentslist_item_status);
+				inflater = layoutInflater.inflate(R.layout.commentslist_item,null);
+				holder.commentslist_item_head = (ImageView) inflater.findViewById(R.id.commentslist_item_head);
+				holder.commentslist_item_nickname = (TextView) inflater.findViewById(R.id.commentslist_item_nickname);
+				holder.commentslist_item_status = (TextView) inflater.findViewById(R.id.commentslist_item_status);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -246,37 +229,31 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 				holder.commentslist_item_status.setText("未表态");
 				String useravatar_path = relation.getAvatar_path();
 				completeURL = beginStr + useravatar_path + endStr;
-				PreferenceUtils.saveImageCache(CommentsListActivity.this,
-						completeURL);// 存SP
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
 				ImageLoaderUtils.getInstance().LoadImage(
 						CommentsListActivity.this, completeURL,
 						holder.commentslist_item_head);
-				holder.commentslist_item_nickname.setText(relation
-						.getNickname());
+				holder.commentslist_item_nickname.setText(relation.getNickname());
 			} else if (commentsList_msg == 1) {
 				Relation relation = partackList.get(position);
 				holder.commentslist_item_status.setText("参与");
 				String useravatar_path1 = relation.getAvatar_path();
 				completeURL = beginStr + useravatar_path1 + endStr;
-				PreferenceUtils.saveImageCache(CommentsListActivity.this,
-						completeURL);// 存SP
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
 				ImageLoaderUtils.getInstance().LoadImage(
 						CommentsListActivity.this, completeURL,
 						holder.commentslist_item_head);
-				holder.commentslist_item_nickname.setText(relation
-						.getNickname());
+				holder.commentslist_item_nickname.setText(relation.getNickname());
 			} else {
 				Relation relation = refuseList.get(position);
 				holder.commentslist_item_status.setText("拒绝");
 				String useravatar_path1 = relation.getAvatar_path();
 				completeURL = beginStr + useravatar_path1 + endStr;
-				PreferenceUtils.saveImageCache(CommentsListActivity.this,
-						completeURL);// 存SP
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
 				ImageLoaderUtils.getInstance().LoadImage(
 						CommentsListActivity.this, completeURL,
 						holder.commentslist_item_head);
-				holder.commentslist_item_nickname.setText(relation
-						.getNickname());
+				holder.commentslist_item_nickname.setText(relation.getNickname());
 			}
 			return inflater;
 		}

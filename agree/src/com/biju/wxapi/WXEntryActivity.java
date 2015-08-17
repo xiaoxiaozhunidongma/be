@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 
 import com.BJ.javabean.Access_Token;
@@ -70,10 +71,10 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			initdata();
 			break;
 		case BaseResp.ErrCode.ERR_USER_CANCEL:
-			if (!weixinLogin) {
+			boolean weixinLogin1 = SdPkUser.isGetweixinLogin();
+			if (!weixinLogin1) {
 				Log.e("WXEntryActivity", "有进入到这来了222222222========");
-				Intent intent = new Intent(WXEntryActivity.this,
-						UserSettingActivity.class);
+				Intent intent = new Intent(WXEntryActivity.this,UserSettingActivity.class);
 				startActivity(intent);
 				overridePendingTransition(0, 0);
 			}
@@ -117,5 +118,24 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			}
 		});
 
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			boolean weixinLogin = SdPkUser.isGetweixinLogin();
+			if (!weixinLogin) {
+				Log.e("WXEntryActivity", "有进入到这来了33333333========");
+				Intent intent = new Intent(WXEntryActivity.this,UserSettingActivity.class);
+				startActivity(intent);
+				overridePendingTransition(0, 0);
+			}
+			break;
+
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }
