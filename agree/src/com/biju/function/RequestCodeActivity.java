@@ -1,20 +1,12 @@
 package com.biju.function;
 
+import java.util.ArrayList;
 import java.util.List;
 
-import com.BJ.javabean.Group;
-import com.BJ.javabean.Group_Code;
-import com.BJ.javabean.Groupback;
-import com.biju.Interface;
-import com.biju.Interface.useRequestCode2JoinListenner;
-import com.biju.R;
-import com.github.volley_examples.utils.GsonUtils;
-
-import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -24,6 +16,22 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
+
+import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_Code;
+import com.BJ.javabean.Group_User;
+import com.BJ.javabean.Groupback;
+import com.BJ.javabean.RequestCodeback;
+import com.BJ.javabean.User;
+import com.BJ.utils.SdPkUser;
+import com.biju.IConstant;
+import com.biju.Interface;
+import com.biju.Interface.readUserGroupMsgListenner;
+import com.biju.Interface.useRequestCode2JoinListenner;
+import com.biju.Interface.userJoin2gourpListenner;
+import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
 
 public class RequestCodeActivity extends Activity implements OnClickListener {
 
@@ -31,11 +39,19 @@ public class RequestCodeActivity extends Activity implements OnClickListener {
 	private TextView mRequest_tv_code;
 	private TextView mRequest_OK;
 	private Interface requestcode_interface;
+	private Integer sD_pk_user;
+	private ArrayList<Group> readuesrlist = new ArrayList<Group>();
+	private Integer pk_group;
+	private Group readhomeuser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_code);
+		//从SD卡中获取到的Pk_user
+		sD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("RequestCodeActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
+		
 		initUI();
 		initInterface();
 	}
@@ -53,15 +69,78 @@ public class RequestCodeActivity extends Activity implements OnClickListener {
 					List<Group> users = requestcode.getReturnData();
 					if(users.size()>0)
 					{
-						Group readhomeuser = users.get(0);
-						Intent intent=new Intent();
-						intent.setAction("isRefresh");
-						intent.putExtra("isCode", true);
-						intent.putExtra("readhomeuser", readhomeuser);
-						sendBroadcast(intent);
-						finish();
+						readhomeuser = users.get(0);
+						//查找是否已添加过该小组
+						User homeuser = new User();
+						homeuser.setPk_user(sD_pk_user);
+						requestcode_interface.readUserGroupMsg(RequestCodeActivity.this, homeuser);
 					}
 				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		
+		//读取用户小组信息使用邀请码添加后的监听
+		requestcode_interface.setPostListener(new userJoin2gourpListenner() {
+
+			@Override
+			public void success(String A) {
+				RequestCodeback requestCodeback=GsonUtils.parseJson(A, RequestCodeback.class);
+				Integer status=requestCodeback.getStatusMsg();
+				if(status==1)
+				{
+					Log.e("RequestCodeActivity", "读取用户小组信息使用邀请码添加后的===" + A);
+					SharedPreferences requestcode_sp=getSharedPreferences(IConstant.RequestCode, 0);
+					Editor editor=requestcode_sp.edit();
+					editor.putBoolean(IConstant.Refresh, true);
+					editor.commit();
+					finish();
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		
+		//读取出的用户小组信息然后进行判断是否已添加
+		requestcode_interface.setPostListener(new readUserGroupMsgListenner() {
+
+			@Override
+			public void success(String A) {
+				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
+				int homeStatusMsg = homeback.getStatusMsg();
+				if (homeStatusMsg == 1) {
+					Log.e("RequestCodeActivity", "读取出的用户小组信息==========" + A);
+					List<Group> users = homeback.getReturnData();
+					if (users.size() > 0) {
+						for (int i = 0; i < users.size(); i++) {
+							Group readhomeuser_1 = users.get(i);
+							readuesrlist.add(readhomeuser_1);
+						}
+					}
+					for (int i = 0; i < readuesrlist.size(); i++) {
+						pk_group = readuesrlist.get(i).getPk_group();
+						if (String.valueOf(pk_group).equals(String.valueOf(readhomeuser.getPk_group()))) {
+							Toast.makeText(RequestCodeActivity.this, "已经加入过该小组",Toast.LENGTH_SHORT).show();
+						}else
+						{
+							Integer fk_group=readhomeuser.getPk_group();
+							Group_User group_User = new Group_User();
+							group_User.setFk_group(fk_group);
+							group_User.setFk_user(sD_pk_user);
+							group_User.setRole(2);
+							group_User.setStatus(1);
+							requestcode_interface.userJoin2gourp(RequestCodeActivity.this, group_User);
+						}
+					}
+				}
+
 			}
 
 			@Override
@@ -126,9 +205,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener {
 		String pk_group_code = mRequest_edt_code.getText().toString().trim();
 		Group_Code group_Code = new Group_Code();
 		group_Code.setPk_group_code(pk_group_code);
-		requestcode_interface.useRequestCode2Join(RequestCodeActivity.this,
-				group_Code);
-
+		requestcode_interface.useRequestCode2Join(RequestCodeActivity.this,group_Code);
 	}
 
 	private void request_tv_code() {

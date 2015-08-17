@@ -2,19 +2,10 @@ package com.biju.function;
 
 import java.util.List;
 
-import com.BJ.javabean.Group;
-import com.BJ.javabean.Group_Code;
-import com.BJ.javabean.Groupback;
-import com.biju.Interface;
-import com.biju.Interface.useRequestCode2JoinListenner;
-import com.biju.R;
-import com.github.volley_examples.utils.GsonUtils;
-
-import android.os.Bundle;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
+import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -24,6 +15,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
+
+import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_Code;
+import com.BJ.javabean.Groupback;
+import com.BJ.utils.SdPkUser;
+import com.biju.IConstant;
+import com.biju.Interface;
+import com.biju.Interface.useRequestCode2JoinListenner;
+import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
 
 public class RequestCode2Activity extends Activity implements OnClickListener {
 
@@ -54,11 +55,11 @@ public class RequestCode2Activity extends Activity implements OnClickListener {
 					if(users.size()>0)
 					{
 						Group readhomeuser = users.get(0);
-						Intent intent=new Intent();
-						intent.setAction("isRefresh2");
-						intent.putExtra("isCode2", true);
-						intent.putExtra("readhomeuser", readhomeuser);
-						sendBroadcast(intent);
+						SdPkUser.setGetgroup(readhomeuser);
+						SharedPreferences requestcode2_sp=getSharedPreferences(IConstant.IsRefresh, 0);
+						Editor editor=requestcode2_sp.edit();
+						editor.putBoolean(IConstant.IsCode2, true);
+						editor.commit();
 						finish();
 					}
 				}

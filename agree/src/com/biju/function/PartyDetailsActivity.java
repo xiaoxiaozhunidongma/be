@@ -31,6 +31,7 @@ import com.BJ.javabean.Relation;
 import com.BJ.javabean.ReturnData;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.utils.DensityUtil;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Weeks;
 import com.baidu.location.BDLocation;
@@ -62,6 +63,7 @@ import com.baidu.mapapi.search.geocode.GeoCodeResult;
 import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readPartyJoinMsgListenner;
 import com.biju.Interface.updateUserJoinMsgListenner;
@@ -70,9 +72,6 @@ import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
 public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResultListener, OnClickListener {
-	
-	
-	public static PartyDetailsActivity PartyDetails;
 	
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
@@ -145,7 +144,9 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
-		PartyDetails=this;
+		//加入到list中
+		RefreshActivity.activList_2.add(PartyDetailsActivity.this);
+		//获取sd卡中的sD_pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		initUI();
 		initInterface();
@@ -162,12 +163,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		RelativeLayout bd_mapView_container = (RelativeLayout) findViewById(R.id.map_layout);
 		bd_mapView_container.addView(mMapView, params_map);
 		// addview edittext
-		RelativeLayout.LayoutParams params_show = new LayoutParams(
-				LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 50));
+		RelativeLayout.LayoutParams params_show = new LayoutParams(LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 50));
 		edit_show.setGravity(Gravity.CENTER);
 		params_show.setMargins(0, DensityUtil.dip2px(this, 200), 0, 0);
-		edit_show.setBackgroundColor(android.graphics.Color
-				.parseColor("#aaffffff"));
+		edit_show.setBackgroundColor(android.graphics.Color.parseColor("#aaffffff"));
 		edit_show.setTextColor(android.graphics.Color.parseColor("#cdcdcd"));
 		bd_mapView_container.addView(edit_show, params_show);
 
@@ -290,9 +289,9 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	//首次进来时传值
 	private void initOneParty() {
 		Intent intent = getIntent();
-		userAll = intent.getBooleanExtra("UserAll", false);
+		userAll = intent.getBooleanExtra(IConstant.UserAll, false);
 		if (userAll) {
-			allParty = (UserAllParty) intent.getSerializableExtra("UserAllParty");
+			allParty = (UserAllParty) intent.getSerializableExtra(IConstant.UserAllParty);
 			Integer allrelationship = allParty.getRelationship();
 			pk_party_user = allParty.getPk_party_user();
 			pk_party = allParty.getPk_party();
@@ -341,8 +340,8 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			mLng = longitude;
 			edit_show.setText(location);
 		} else {
-			oneParty = (Party2) intent.getSerializableExtra("oneParty");
-			boolean isRelationship=intent.getBooleanExtra("isRelationship", false);
+			oneParty = (Party2) intent.getSerializableExtra(IConstant.OneParty);
+			boolean isRelationship=intent.getBooleanExtra(IConstant.IsRelationship, false);
 			Integer relationship = oneParty.getRelationship();
 			if(isRelationship)
 			{
@@ -492,12 +491,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		LatLng llA = new LatLng(lat, lng);
 
 		// 设置悬浮的图案
-		BitmapDescriptor bdA = BitmapDescriptorFactory
-				.fromResource(drawableRes);
+		BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(drawableRes);
 		mOverLayList.add(bdA);
 
-		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA)
-				.zIndex(0).draggable(true);
+		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA).zIndex(0).draggable(true);
 		mMarkerD = (Marker) mBaiduMap.addOverlay(ooA);
 	}
 
@@ -558,24 +555,24 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	// 未表态
 	private void PartyDetails_did_not_say_prompt() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
-		intent.putExtra("CommentsList", 0);
-		intent.putExtra("not_say", pk_party);
+		intent.putExtra(IConstant.CommentsList, 0);
+		intent.putExtra(IConstant.Not_Say, pk_party);
 		startActivity(intent);
 	}
 
 	// 拒绝
 	private void PartyDetails_tv_refuse_prompt() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
-		intent.putExtra("CommentsList", 2);
-		intent.putExtra("refuse", pk_party);
+		intent.putExtra(IConstant.CommentsList, 2);
+		intent.putExtra(IConstant.Refuse, pk_party);
 		startActivity(intent);
 	}
 
 	// 参与
 	private void PartyDetails_tv_partake_prompt() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
-		intent.putExtra("CommentsList", 1);
-		intent.putExtra("partake", pk_party);
+		intent.putExtra(IConstant.CommentsList, 1);
+		intent.putExtra(IConstant.ParTake, pk_party);
 		startActivity(intent);
 
 	}
@@ -623,13 +620,12 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	}
 
 	private void PartyDetails_more() {
-		Intent intent = new Intent(PartyDetailsActivity.this,
-				MoreActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,MoreActivity.class);
 		if (userAll) {
-			intent.putExtra("userAllmoreparty", allParty);
-			intent.putExtra("UserAll", true);
+			intent.putExtra(IConstant.UserAllUoreParty, allParty);
+			intent.putExtra(IConstant.UserAll, true);
 		} else {
-			intent.putExtra("moreparty", oneParty);
+			intent.putExtra(IConstant.MoreParty, oneParty);
 		}
 		startActivity(intent);
 	}
@@ -639,11 +635,11 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			finish();
 		} else {
 			finish();
-			SharedPreferences PartyDetails_sp = getSharedPreferences("isPartyDetails_", 0);
+			SharedPreferences PartyDetails_sp = getSharedPreferences(IConstant.IsPartyDetails_, 0);
 			Editor editor = PartyDetails_sp.edit();
-			editor.putBoolean("PartyDetails", true);
+			editor.putBoolean(IConstant.PartyDetails, true);
 			editor.commit();
 		}
-
+		RefreshActivity.activList_2.clear();
 	}
 }

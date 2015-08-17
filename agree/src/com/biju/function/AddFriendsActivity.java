@@ -1,11 +1,5 @@
 package com.biju.function;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -16,7 +10,6 @@ import android.app.Activity;
 import android.content.AsyncQueryHandler;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
@@ -49,6 +42,7 @@ import com.BJ.utils.ContactBean;
 import com.BJ.utils.DensityUtil;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.SdPkUser;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.addFriendListenner;
 import com.biju.Interface.becomeFriendListenner;
@@ -112,7 +106,7 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 		Log.e("AddFriendsActivity", "从SD卡中获取到的Pk_user" + SD_pk_user);
 
 		Intent intent = getIntent();
-		size = intent.getIntExtra("size", 0);
+		size = intent.getIntExtra(IConstant.Size, 0);
 
 		// 实例化
 		asyncQueryHandler = new MyAsyncQueryHandler(getContentResolver());
@@ -145,13 +139,11 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 				ByAdd_list.clear();
 				pk_userlist.clear();
 				Userphonelist.clear();
-				CheckFriendsback contactback = GsonUtils.parseJson(A,
-						CheckFriendsback.class);
+				CheckFriendsback contactback = GsonUtils.parseJson(A,CheckFriendsback.class);
 				Integer status = contactback.getStatusMsg();
 				if (status == 1) {
 					Log.e("AddFriendsActivity", "返回回来的匹配结果======" + A);
-					List<CheckFriends> contactlist = contactback
-							.getReturnData();
+					List<CheckFriends> contactlist = contactback.getReturnData();
 					if (contactlist.size() > 0) {
 						for (int i = 0; i < contactlist.size(); i++) {
 							CheckFriends contact = contactlist.get(i);
@@ -185,17 +177,13 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 							isAddThe = true;
 							isADD = true;
 							Log.e("AddFriendsActivity", "得到的发出邀请的用户==="+ AddThe_list.size());
-						} else if ("2".equals(String.valueOf(checkFriends
-								.getRelationship()))) {
+						} else if ("2".equals(String.valueOf(checkFriends.getRelationship()))) {
 							ByAdd_list.add(checkFriends);
 							isADD = true;
-							Log.e("AddFriendsActivity", "得到的被邀请的用户==="
-									+ ByAdd_list.size());
-						} else if ("3".equals(String.valueOf(checkFriends
-								.getRelationship()))) {
+							Log.e("AddFriendsActivity", "得到的被邀请的用户==="+ ByAdd_list.size());
+						} else if ("3".equals(String.valueOf(checkFriends.getRelationship()))) {
 							AlreadyFriends_list.add(checkFriends);
-							Log.e("AddFriendsActivity", "得到的已经是好友的用户==="
-									+ AlreadyFriends_list.size());
+							Log.e("AddFriendsActivity", "得到的已经是好友的用户==="+ AlreadyFriends_list.size());
 							//把已经是好友的但又绑定了手机号码的从通讯录中已经绑定号码但不是好友的显示列表中删除
 							for (int z = 0; z < contactFriends_list.size(); z++) {
 								Integer alreadyFriends_pk_user = contactFriends_list.get(z).getPk_user();
@@ -637,17 +625,12 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 			View inflater = null;
 			if (convertView == null) {
 				LayoutInflater layoutInflater = getLayoutInflater();
-				inflater = layoutInflater.inflate(R.layout.contact_list_item_1,
-						null);
+				inflater = layoutInflater.inflate(R.layout.contact_list_item_1,null);
 				holder = new ViewHolder();
-				holder.contact_list_item_1_name = (TextView) inflater
-						.findViewById(R.id.contact_list_item_1_name);
-				holder.contact_list_item_1_name_1 = (TextView) inflater
-						.findViewById(R.id.contact_list_item_1_name_1);
-				holder.contact_list_head = (ImageView) inflater
-						.findViewById(R.id.contact_list_head);
-				holder.contact_list_addfriends = (TextView) inflater
-						.findViewById(R.id.contact_list_addfriends);
+				holder.contact_list_item_1_name = (TextView) inflater.findViewById(R.id.contact_list_item_1_name);
+				holder.contact_list_item_1_name_1 = (TextView) inflater.findViewById(R.id.contact_list_item_1_name_1);
+				holder.contact_list_head = (ImageView) inflater.findViewById(R.id.contact_list_head);
+				holder.contact_list_addfriends = (TextView) inflater.findViewById(R.id.contact_list_addfriends);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -675,8 +658,7 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 			String completeURL = beginStr + avatar_path + endStr;
 			ImageLoaderUtils.getInstance().LoadImage(AddFriendsActivity.this,
 					completeURL, holder.contact_list_head);
-			holder.contact_list_addfriends
-					.setBackgroundResource(R.drawable.ok_click_selector);
+			holder.contact_list_addfriends.setBackgroundResource(R.drawable.ok_click_selector);
 			// 通讯录中成为好友点击监听
 			holder.contact_list_addfriends.setOnClickListener(new OnClickListener() {
 

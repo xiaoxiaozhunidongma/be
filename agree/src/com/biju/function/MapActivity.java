@@ -7,20 +7,19 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.Window;
+import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
+import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
+
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -412,7 +411,7 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 			strCity = StrAddress.substring(0, 6);
 			strGeocodekey = StrAddress.substring(6);
 		}else{
-			Toast.makeText(MapActivity.this, "长度格式：福建省厦门市湖里区小学路", Toast.LENGTH_SHORT).show();
+//			Toast.makeText(MapActivity.this, "长度格式：福建省厦门市湖里区小学路", Toast.LENGTH_SHORT).show();
 			return;
 		}
 		Log.e("MapActivity", "StrAddress:"+StrAddress);

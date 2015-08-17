@@ -28,6 +28,8 @@ import com.baidu.mapapi.navi.BaiduMapAppNotSupportNaviException;
 import com.baidu.mapapi.navi.BaiduMapNavigation;
 import com.baidu.mapapi.navi.NaviPara;
 import com.biju.R;
+import com.biju.function.PartyDetailsActivity.MyLocationListenner;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;

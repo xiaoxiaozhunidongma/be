@@ -8,18 +8,18 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.R;
 
 public class BeforeLoginActivity extends Activity implements OnClickListener{
-	public static BeforeLoginActivity BeforeLogin;
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_before_login);
+		RefreshActivity.activList_3.add(BeforeLoginActivity.this);
 		initUI();
-		BeforeLogin=this;
 	}
 
 	private void initUI() {

@@ -14,6 +14,8 @@ import com.BJ.javabean.Moreback;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.UserAllParty;
+import com.BJ.utils.RefreshActivity;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.userCanclePartyListenner;
 import com.biju.R;
@@ -32,13 +34,13 @@ public class MoreActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_more);
 		Intent intent = getIntent();
-		userAll = intent.getBooleanExtra("UserAll", false);
+		userAll = intent.getBooleanExtra(IConstant.UserAll, false);
 		if(userAll)
 		{
-			userAllParty = (UserAllParty) intent.getSerializableExtra("userAllmoreparty");
+			userAllParty = (UserAllParty) intent.getSerializableExtra(IConstant.UserAllUoreParty);
 		}else
 		{
-			moreparty = (Party2) intent.getSerializableExtra("moreparty");
+			moreparty = (Party2) intent.getSerializableExtra(IConstant.MoreParty);
 		}
 		initUI();
 		initInterface();
@@ -54,7 +56,9 @@ public class MoreActivity extends Activity implements OnClickListener {
 				Integer status = moreback.getStatusMsg();
 				if (status == 1) {
 					Log.e("MoreActivity", "返回是否删除成功" + A);
-					PartyDetailsActivity.PartyDetails.finish();
+					for (int i = 0; i < RefreshActivity.activList_2.size(); i++) {
+						RefreshActivity.activList_2.get(i).finish();
+					}
 					finish();
 				}
 			}

@@ -22,6 +22,7 @@ import android.view.Menu;
 import android.view.Window;
 
 import com.BJ.utils.Person;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
@@ -56,6 +57,7 @@ public class MainActivity extends FragmentActivity {
 
 		fragment.setArg(labels, tabIcons, fragments);
 		ft.commit();
+		RefreshActivity.activList_3.clear();
 		
 	}
 	

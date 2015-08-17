@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.javabean.User_User;
 import com.BJ.utils.ImageLoaderUtils;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.releaseFriendListenner;
 import com.biju.R;
@@ -12,7 +13,6 @@ import com.example.huanxin.ChatActivity;
 
 import android.os.Bundle;
 import android.app.Activity;
-
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Activity;
@@ -52,8 +52,8 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_friends_data);
 		Intent intent = getIntent();
-		mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("ReadUserAllFriends");
-		fk_user_from = intent.getIntExtra("fk_user_from", 0);
+		mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra(IConstant.ReadUserAllFriends);
+		fk_user_from = intent.getIntExtra(IConstant.Fk_user_from, 0);
 		initUI();
 		initInterface();
 		initFriendsData();
@@ -154,7 +154,7 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 	//к╫ад
 	private void FriendsData_PrivateChat() {
 		Intent intent=new Intent(FriendsDataActivity.this, ChatActivity.class);
-		intent.putExtra("allFriends", mAllFriends);
+		intent.putExtra(IConstant.AllFriends, mAllFriends);
 		startActivity(intent);
 	}
 
