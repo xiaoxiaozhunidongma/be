@@ -1,0 +1,1539 @@
+package com.biju;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
+import android.content.Context;
+import android.util.Log;
+
+import com.BJ.javabean.Chat;
+import com.BJ.javabean.CreateGroup;
+import com.BJ.javabean.FeedBack;
+import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_Code;
+import com.BJ.javabean.Group_User;
+import com.BJ.javabean.IDs;
+import com.BJ.javabean.Party;
+import com.BJ.javabean.Party2;
+import com.BJ.javabean.Party_User;
+import com.BJ.javabean.Phone;
+import com.BJ.javabean.PhoneArray;
+import com.BJ.javabean.Photo;
+import com.BJ.javabean.StrPhoneArray;
+import com.BJ.javabean.StringCreGroup;
+import com.BJ.javabean.User;
+import com.BJ.javabean.User_Chat;
+import com.BJ.javabean.User_User;
+import com.BJ.utils.Bean2Map;
+import com.BJ.utils.ImageLoaderUtils;
+import com.android.volley.VolleyError;
+import com.github.volley_examples.app.MyVolley;
+import com.github.volley_examples.app.VolleyListenner;
+
+
+
+public class Interface {
+	
+//	String url="http://120.25.218.3/webroot/sr_interface_android.php";
+	String url="http://203.195.159.110/webroot/sr_interface_android.php";
+	
+	private static Interface Thisinterface=new Interface();
+	private Interface(){
+		
+	}
+	public static  Interface getInstance() {
+		return Thisinterface;
+	}
+	
+	
+	//注册用户
+	String kRegAccount =  "11";
+	//检查昵称重复
+	String kCheckNickname =  "111";
+	//用户登录
+	String kUserLgin =  "12";
+	//更新用户的资料
+	String kUpdateUser =  "15";
+	//读取用户的资料
+	String kReadUser =  "17";
+	//请求服务器发送验证码
+	String kRequestVerCode= "18";
+	//根据手机号或者账户ID查找用户
+	String kFindUser= "19";
+	//新建小组
+	String kCreateGroup= "31";
+	//读取用户小组信息
+	String kReadGroupMsg= "32";
+	//读取用户小组关系
+	String kReadGroupRelation= "33";
+	//更新用户小组设置
+	String kUpdateGroupSet= "34";
+	//读取所有小组成员的关系
+	String kReadAllPerRelation= "36";
+	//生成邀请码
+	String kProduceRequestCode="37";
+	//使用邀请码加入小组
+	String kUseRequestCode2join = "38";
+	//用户加入小组
+	String kUserJoin2gourp= "39";
+	//读取用户所有聚会
+	String kReadUserAllParty= "41";
+	//读取用户在小组中的所有聚会
+	String kReadUserGroupParty= "43";
+	//更新用户对于聚会的参与信息
+	String kUpdateUserJoinMsg= "45";
+	//用户取消聚会
+	String kUserCancleParty= "46";
+	//增加聚会
+	String kAddParty= "47";
+	//读取聚会用户的参与信息
+	String kReadPartyJoinMsg= "48";
+	//建立一条新的聚会关系
+	String kCreatePartyRelation= "49";
+	//添加一条聊天数据
+	String kAddChatData= "52";
+	//读取小组的相册
+	String kReadPartyPhotos= "61";
+	//用户上传图片
+	String kUploadingPhoto= "62";
+	//用户删除图片
+	String kDeletePhoto= "63";
+	//添加好友关系
+	String kAddfriend= "71";
+	//读取好友关系
+	String kReadfriend= "72";
+	//匹配通讯录
+	String kMateComBook= "73";
+	//成为好友关系
+	String kBecomeFriend= "74";
+	//检查好友关系
+	String kCheckFriend= "75";
+	//解除好友关系
+	String kReleaseFriend= "76";
+	//增加一条私聊信息
+	String kAddChatMsg= "81";
+	//反馈
+	String kFeedBack= "91";
+	//获取图片签名
+	String kGetPictureSign= "101";
+	//test新建小组
+	String testGroup="{'group':{'last_post_message':'U5c0fU7ec4U6210U7acbU5566!','last_post_time':'2015-06-11 11:43:58',"
+			+ "'em_id':'1433994238427','name':'test','setup_time':'2015-06-11 11:43:58'},'member':[{'fk_user':30,'role':1}]}";
+	//test
+	String kTestInterface =  "1101";
+	public Map<String, String> packParams(Object classObject , String interfaceType) {
+		Map map = Bean2Map.ConvertObjToMap(classObject);
+		Log.e("Interface", "map------"+map);
+		JSONObject jsonObject=new JSONObject(map);
+		Map<String, String> params=new HashMap<String, String>();
+
+		
+		params.put("request_type", interfaceType);
+		Log.e("Interface", "小组json:"+jsonObject.toString());
+		params.put("request_data",jsonObject.toString());
+		
+		return params;
+	}
+	
+	//通讯录的packParams方法
+	ArrayList<String> string=new ArrayList<String>();
+	public Map<String, String> packParamsPhone(Object classObject , String interfaceType) throws JSONException {
+		
+		for (int i = 0; i < ((PhoneArray)classObject).getPhones().length; i++) {
+			String Strphone = ((PhoneArray)classObject).getPhones()[i];
+			string.add(Strphone);
+		}
+		
+		JSONArray array=new JSONArray(string.toString());
+		Integer user_id = ((PhoneArray)classObject).getUser_id();
+		StrPhoneArray strPhoneArray = new StrPhoneArray(user_id, array);
+		
+		Map map = Bean2Map.ConvertObjToMap(strPhoneArray);
+		Log.e("Interface", "map------"+map);
+		JSONObject jsonObject=new JSONObject(map);
+		Map<String, String> params=new HashMap<String, String>();
+		
+		
+		params.put("request_type", interfaceType);
+		Log.e("Interface", "小组json:"+jsonObject.toString());
+		params.put("request_data",jsonObject.toString());
+		
+		return params;
+	}
+	
+	class MyData{
+		private Integer fk_user;
+		private Integer role;
+		public MyData(Integer fk_user, Integer role) {
+			super();
+			this.fk_user = fk_user;
+			this.role = role;
+		}
+		@Override
+		public String toString() {
+			return "{fk_user=" + fk_user + ", role=" + role + "}";
+		}
+		
+	}
+	//新建小组的packParams（）方法
+	private StringCreGroup creGroup;
+	ArrayList<String> list=new ArrayList<String>();
+	public Map<String, String> packParams3(Object classObject , String interfaceType) {
+		list.clear();//先清空
+		try {
+			for (int i = 0; i < ((CreateGroup) classObject).getMember().length; i++) {
+				MyData myData = new MyData(((CreateGroup) classObject).getMember()[i].getFk_user(),
+						((CreateGroup) classObject).getMember()[i].getRole());
+				list.add(myData.toString());
+			}							
+			JSONArray array=new JSONArray(list.toString());
+			Map usemap = Bean2Map.ConvertObjToMap(((CreateGroup) classObject).getGroup());
+			JSONObject jsonObject=new JSONObject(usemap);
+			creGroup = new StringCreGroup(array, jsonObject);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		Map map = Bean2Map.ConvertObjToMap(creGroup);
+		Log.e("Interface3", "map------"+map);
+		JSONObject jsonObject=new JSONObject(map);
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("request_type", interfaceType);
+		Log.e("Interface3", "小组json:"+jsonObject.toString().replace("\\", ""));
+		params.put("request_data",jsonObject.toString().replace("\\", ""));
+		
+		return params;
+	}
+	//test新建小组
+	public Map<String, String> packParams2(Object classObject , String interfaceType) {
+		Map map = Bean2Map.ConvertObjToMap(classObject);
+		JSONObject jsonObject=new JSONObject(map);
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("request_type", interfaceType);
+		try {
+			JSONObject object=new JSONObject(testGroup);
+			Log.e("Interface2", "小组json:"+object.toString());
+			params.put("request_data",object.toString());
+			Log.e("", "4556645645646"+params.toString());
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		return params;
+	}
+	
+//	public void volleyPost(Context context,Map<String, String> params) {
+//		
+//		MyVolley.post(context, url, params, new VolleyListenner() {
+//
+//			@Override
+//			public void onErrorResponse(VolleyError error) {
+//				requestError(error);
+//				Log.e("失败", ""+error);
+//			}
+//			@Override
+//			public void onResponse(String response) {
+//				requestDone(response);
+//			}
+//		});	
+//	}
+	private void regNewAccountPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError37(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone37(response);
+			}
+		});	
+	}
+	private void checkNicknamePost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError36(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone36(response);
+			}
+		});	
+	}
+	private void userLoginPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError35(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone35(response);
+			}
+		});	
+	}
+	private void updateUserPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError34(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone34(response);
+			}
+		});	
+	}
+	private void readUserPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError33(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone33(response);
+			}
+		});	
+	}
+	private void requestVerCodePost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError32(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone32(response);
+			}
+		});	
+	}
+	private void findUserPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError31(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone31(response);
+			}
+		});	
+	}
+	private void createGroupPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError30(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone30(response);
+			}
+		});	
+	}
+	private void readUserGroupMsgPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError29(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone29(response);
+			}
+		});	
+	}
+	private void readUserGroupRelationPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError28(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone28(response);
+			}
+		});	
+	}
+	private void updateGroupSetPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			//26？？？？
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError26(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone26(response);
+			}
+		});	
+	}
+	private void readAllPerRelationPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError25(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone25(response);
+			}
+		});	
+	}
+	private void produceRequestCodePost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError24(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone24(response);
+			}
+		});	
+	}
+	private void useRequestCode2JoinPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError23(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone23(response);
+			}
+		});	
+	}
+	private void userJoin2gourpPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError22(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone22(response);
+			}
+		});	
+	}
+	private void readUserAllPartyPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError21(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone21(response);
+			}
+		});	
+	}
+	private void readUserGroupPartyPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError20(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone20(response);
+			}
+		});	
+	}
+	private void updateUserJoinMsgPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError19(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone19(response);
+			}
+		});	
+	}
+	private void userCanclePartyPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError18(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone18(response);
+			}
+		});	
+	}
+	private void addPartyPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError17(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone17(response);
+			}
+		});	
+	}
+	private void readPartyJoinMsgPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError16(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone16(response);
+			}
+		});	
+	}
+	private void createPartyRelationPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError15(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone15(response);
+			}
+		});	
+	}
+	private void addChatdataPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError14(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone14(response);
+			}
+		});	
+	}
+	private void readPartyPhotosPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError13(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone13(response);
+			}
+		});	
+	}
+	private void uploadingPhotoPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError12(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone12(response);
+			}
+		});	
+	}
+	private void deletePhotoPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError11(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone11(response);
+			}
+		});	
+	}
+	private void addFriendPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError10(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone10(response);
+			}
+		});	
+	}
+	private void readFriendPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError9(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone9(response);
+			}
+		});	
+	}
+	private void mateComBookPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError8(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone8(response);
+			}
+		});	
+	}
+	private void becomeFriendPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError7(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone7(response);
+			}
+		});	
+	}
+	private void checkFriendPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError6(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone6(response);
+			}
+		});	
+	}
+	private void releaseFriendPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError5(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone5(response);
+			}
+		});	
+	}
+	private void addChatMsgPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError4(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone4(response);
+			}
+		});	
+	}
+	private void feedBackPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError3(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone3(response);
+			}
+		});	
+	}
+	private void getPicSigntPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError2(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone2(response);
+			}
+		});	
+	}
+	
+	 //测试
+//	public void testIf(Context context) {
+//		
+//		Map<String, String> testMap = new HashMap<String, String>();
+//		testMap.put("name", "jim");
+//		JSONObject jsonObject=new JSONObject(testMap);
+//		
+//		Map<String, String> per =  new HashMap<String, String>();
+//		per.put("request_data", jsonObject.toString());
+//		per.put("request_type", kTestInterface);
+//		
+//		volleyPost(context,per); 
+//	}
+	
+	
+	//注册新用户
+	public void regNewAccount(Context context,User user) {
+		regNewAccountPost(context,packParams(user, kRegAccount));
+	}
+	//检查昵称重复
+	public void checkNickname(Context context,User user) {
+		checkNicknamePost(context,packParams(user, kCheckNickname));
+	}
+	//用户登录
+	public void userLogin(Context context,User user) {
+		userLoginPost(context,packParams(user, kUserLgin));
+	}
+	//更新用户的资料
+	public void updateUser(Context context,User user) {
+		updateUserPost(context,packParams(user, kUpdateUser));
+	}
+	//读取用户的资料
+	public void readUser(Context context,User user) {
+		readUserPost(context,packParams(user, kReadUser));
+	}
+	//请求服务器发送验证码
+	/**
+	 * @param context
+	 * @param user this user can be null!(这个对象可以是空的)
+	 */
+	public void requestVerCode(Context context,Phone phone) {//传入为??
+		requestVerCodePost(context,packParams(phone, kRequestVerCode));
+	}
+	//根据手机号或者账户ID查找用户
+	public void findUser(Context context,User user) {
+		findUserPost(context,packParams(user, kFindUser));
+	}
+	//新建小组
+	public void createGroup(Context context,CreateGroup creatGroup) {
+		createGroupPost(context,packParams3(creatGroup, kCreateGroup));
+	}
+//	//test新建小组
+//	public void createGroup2(Context context,StringCreGroup creGroup) {
+//		volleyPost(context,packParams2(creGroup, kCreateGroup));
+//	}
+	//读取用户小组信息
+	public void readUserGroupMsg(Context context,User user) {
+		readUserGroupMsgPost(context,packParams(user, kReadGroupMsg));
+	}
+	
+	//读取用户小组关系
+	public void readUserGroupRelation(Context context,Group_User group_User) {
+		readUserGroupRelationPost(context,packParams(group_User, kReadGroupRelation));
+	}
+	//更新用户小组设置
+	public void updateGroupSet(Context context,Group_User group_User) {
+		updateGroupSetPost(context,packParams(group_User, kUpdateGroupSet));
+	}
+	//读取所有小组成员的关系
+	public void readAllPerRelation(Context context,Group group) {
+		readAllPerRelationPost(context,packParams(group, kReadAllPerRelation));
+	}
+	//生成邀请码
+	public void produceRequestCode(Context context,Group group) {
+		produceRequestCodePost(context,packParams(group, kProduceRequestCode));
+	}
+	//使用邀请码加入小组
+	public void useRequestCode2Join(Context context,Group_Code code) {
+		useRequestCode2JoinPost(context,packParams(code, kUseRequestCode2join));
+	}
+	//用户加入小组
+	public void userJoin2gourp(Context context,Group_User group_User) {
+		userJoin2gourpPost(context,packParams(group_User, kUserJoin2gourp));
+	}
+	//读取用户所有聚会
+	public void readUserAllParty(Context context,User user) {
+		readUserAllPartyPost(context,packParams(user, kReadUserAllParty));
+	}
+	//读取用户在小组中的所有聚会
+	public void readUserGroupParty(Context context,IDs idsmap) {//...........传入字典
+		readUserGroupPartyPost(context,packParams(idsmap, kReadUserGroupParty));
+	}
+	//更新用户对于聚会的参与信息
+	public void updateUserJoinMsg(Context context,Party_User party_User) {
+		updateUserJoinMsgPost(context,packParams(party_User, kUpdateUserJoinMsg));
+	}
+	//用户取消聚会
+	public void userCancleParty(Context context,Party party) {
+		userCanclePartyPost(context,packParams(party, kUserCancleParty));
+	}
+	//增加聚会
+	public void addParty(Context context,Party party) {
+		addPartyPost(context,packParams(party, kAddParty));
+	}
+	//读取聚会用户的参与信息
+	public void readPartyJoinMsg(Context context,Party party) {
+		readPartyJoinMsgPost(context,packParams(party, kReadPartyJoinMsg));
+	}
+	//建立一条新的聚会关系
+	public void createPartyRelation(Context context,Party_User party_User) {
+		createPartyRelationPost(context,packParams(party_User, kCreatePartyRelation));
+	}
+	//添加一条聊天数据
+	public void addChatdata(Context context,Chat chat) {
+		addChatdataPost(context,packParams(chat, kAddChatData));
+	}
+	//读取小组的相册
+	public void readPartyPhotos(Context context,Group group) {
+		readPartyPhotosPost(context,packParams(group, kReadPartyPhotos));
+	}
+	//用户上传图片
+	public void uploadingPhoto(Context context,Photo photo) {
+		uploadingPhotoPost(context,packParams(photo, kUploadingPhoto));
+	}
+	//用户删除图片
+	public void deletePhoto(Context context,Photo photo) {
+		deletePhotoPost(context,packParams(photo, kDeletePhoto));
+	}
+	//添加好友关系
+	public void addFriend(Context context,User_User user_User) {
+		addFriendPost(context,packParams(user_User, kAddfriend));
+	}
+	//读取好友关系
+	public void readFriend(Context context,User user) {
+		readFriendPost(context,packParams(user, kReadfriend));
+	}
+	//匹配通讯录
+	/**
+	 * 
+	 * @param context
+	 * @param user this user can be null!(这个对象属性可以是空的)
+	 */
+	public void mateComBook(Context context,PhoneArray phonearray) {  //........传入？？？
+		try {
+			mateComBookPost(context,packParamsPhone(phonearray, kMateComBook));
+		} catch (JSONException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	//成为好友关系
+	public void becomeFriend(Context context,User_User user_User) {  
+		becomeFriendPost(context,packParams(user_User, kBecomeFriend));
+	}
+	//检查好友关系
+	public void checkFriend(Context context,User_User user_User) {  
+		checkFriendPost(context,packParams(user_User, kCheckFriend));
+	}
+	//解除好友关系
+	public void releaseFriend(Context context,User_User user_User) {  
+		releaseFriendPost(context,packParams(user_User, kReleaseFriend));
+	}
+	//增加一条私聊信息
+	public void addChatMsg(Context context,User_Chat user_Chat) {  
+		addChatMsgPost(context,packParams(user_Chat, kAddChatMsg));
+	}
+	//反馈
+	public void feedBack(Context context,FeedBack feedBack) {  
+		feedBackPost(context,packParams(feedBack, kFeedBack));
+	}
+	//获取图片签名
+	/**
+	 * 
+	 * @param context
+	 * @param user this user can be null!(这个对象属性可以是空的)
+	 */
+	public void getPicSign(Context context,User user) {  //.....传入？？？？？
+		getPicSigntPost(context,packParams(user, kGetPictureSign));
+	}
+	//接口部分
+//	private static UserInterface listener;
+	private static regNewAccountListenner newAccountListenner;
+	private static checkNicknameListenner nicknameListenner;
+	private static userLoginListenner loginListenner;
+	private static updateUserListenner updateUserListenner;
+	private static readUserListenner readuserListenner;
+	private static requestVerCodeListenner verCodeListenner;
+	private static findUserListenner finduserListenner;
+	private static createGroupListenner groupListenner;
+	private static readUserGroupMsgListenner userGroupMsgListenner;
+	private static readUserGroupRelationListenner groupRelationListenner;
+	private static updateGroupSetListenner groupSetListenner;
+	private static readAllPerRelationListenner allPerRelationListenner;
+	private static produceRequestCodeListenner requestCodeListenner;
+	private static useRequestCode2JoinListenner requestCode2JoinListenner;
+	private static userJoin2gourpListenner join2gourpListenner;
+	private static readUserAllPartyListenner allPartyListenner;
+	private static readUserGroupPartyListenner userGroupPartyListenner;
+	private static updateUserJoinMsgListenner userJoinMsgListenner;
+	private static userCanclePartyListenner canclePartyListenner;
+	private static addPartyListenner partyListenner;
+	private static readPartyJoinMsgListenner joinMsgListenner;
+	private static createPartyRelationListenner partyRelationListenner;
+	private static addChatdataListenner chatdataListenner;
+	private static readPartyPhotosListenner partyPhotosListenner;
+	private static uploadingPhotoListenner photoListenner2;
+	private static deletePhotoListenner photoListenner;
+	private static addFriendListenner friendListenner5;
+	private static readFriendListenner friendListenner4;
+	private static mateComBookListenner bookListenner;
+	private static becomeFriendListenner friendListenner3;
+	private static checkFriendListenner friendListenner2;
+	private static releaseFriendListenner friendListenner;
+	private static addChatMsgListenner chatMsgListenner;
+	private static feedBackListenner backListenner;
+	private static getPicSignListenner signListenner;
+
+	
+//	public interface UserInterface{
+//		void success(String A);
+//		void defail(Object B);
+//	}
+	public interface regNewAccountListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface checkNicknameListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface userLoginListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface updateUserListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface readUserListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface requestVerCodeListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface findUserListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface createGroupListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface readUserGroupMsgListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface readUserGroupRelationListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface updateGroupSetListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface readAllPerRelationListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface produceRequestCodeListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface useRequestCode2JoinListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface userJoin2gourpListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface readUserAllPartyListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface readUserGroupPartyListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface updateUserJoinMsgListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface userCanclePartyListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface addPartyListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface readPartyJoinMsgListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface createPartyRelationListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface addChatdataListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface readPartyPhotosListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface uploadingPhotoListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface deletePhotoListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface addFriendListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface readFriendListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface becomeFriendListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface mateComBookListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface checkFriendListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface releaseFriendListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface addChatMsgListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface feedBackListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	public interface getPicSignListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	
+	
+//	//开启监听
+//	public void setPostListener(UserInterface listener){
+//		this.listener=listener;
+//	}
+	//注册新用户
+	public void setPostListener(regNewAccountListenner listener){
+		this.newAccountListenner=listener;
+	}
+	//检查昵称重复
+	public void setPostListener(checkNicknameListenner listener){
+		this.nicknameListenner=listener;
+	}
+	//用户登录
+	public void setPostListener(userLoginListenner listener){
+		this.loginListenner=listener;
+	}
+	//更新用户的资料
+	public void setPostListener(updateUserListenner listener){
+		this.updateUserListenner=listener;
+	}
+	//读取用户的资料
+	public void setPostListener(readUserListenner listener){
+		this.readuserListenner=listener;
+	}
+	//请求服务器发送验证码
+	public void setPostListener(requestVerCodeListenner listener){
+		this.verCodeListenner=listener;
+	}
+	//根据手机号或者用户ID查找用户
+	public void setPostListener(findUserListenner listener){
+		this.finduserListenner=listener;
+	}
+	//新建小组
+	public void setPostListener(createGroupListenner listener){
+		this.groupListenner=listener;
+	}
+	//读取用户小组信息
+	public void setPostListener(readUserGroupMsgListenner listener){
+		this.userGroupMsgListenner=listener;
+	}
+	//读取用户小组关系
+	public void setPostListener(readUserGroupRelationListenner listener){
+		this.groupRelationListenner=listener;
+	}
+	//更新用户小组设置
+	public void setPostListener(updateGroupSetListenner listener){
+		this.groupSetListenner=listener;
+	}
+	//读取所有小组成员的关系
+	public void setPostListener(readAllPerRelationListenner listener){
+		this.allPerRelationListenner=listener;
+	}
+	//生成邀请码
+	public void setPostListener(produceRequestCodeListenner listener){
+		this.requestCodeListenner=listener;
+	}
+	//使用邀请码加入小组
+	public void setPostListener(useRequestCode2JoinListenner listener){
+		this.requestCode2JoinListenner=listener;
+	}
+	//用户加入小组
+	public void setPostListener(userJoin2gourpListenner listener){
+		this.join2gourpListenner=listener;
+	}
+	//读取用户所有聚会
+	public void setPostListener(readUserAllPartyListenner listener){
+		this.allPartyListenner=listener;
+	}
+	//读取用户在小组中的所以聚会
+	public void setPostListener(readUserGroupPartyListenner listener){
+		this.userGroupPartyListenner=listener;
+	}
+	//更新用户对于聚会的参与信息
+	public void setPostListener(updateUserJoinMsgListenner listener){
+		this.userJoinMsgListenner=listener;
+	}
+	//用户取消聚会
+	public void setPostListener(userCanclePartyListenner listener){
+		this.canclePartyListenner=listener;
+	}
+	//添加聚会
+	public void setPostListener(addPartyListenner listener){
+		this.partyListenner=listener;
+	}
+	//读取聚会用户的参与信息
+	public void setPostListener(readPartyJoinMsgListenner listener){
+		this.joinMsgListenner=listener;
+	}
+	//创建一条新的聚会关系
+	public void setPostListener(createPartyRelationListenner listener){
+		this.partyRelationListenner=listener;
+	}
+	//添加一条聊天数据
+	public void setPostListener(addChatdataListenner listener){
+		this.chatdataListenner=listener;
+	}
+	//读取小组相册
+	public void setPostListener(readPartyPhotosListenner listener){
+		this.partyPhotosListenner=listener;
+	}
+	//用户上传图片
+	public void setPostListener(uploadingPhotoListenner listener){
+		this.photoListenner2=listener;
+	}
+	//用户删除图片
+	public void setPostListener(deletePhotoListenner listener){
+		this.photoListenner=listener;
+	}
+	//添加好友关系
+	public void setPostListener(addFriendListenner listener){
+		this.friendListenner5=listener;
+	}
+	//读取好友关系
+	public void setPostListener(readFriendListenner listener){
+		this.friendListenner4=listener;
+	}
+	//匹配通讯录
+	public void setPostListener(mateComBookListenner listener){
+		this.bookListenner=listener;
+	}
+	//成为好友关系
+	public void setPostListener(becomeFriendListenner listener){
+		this.friendListenner3=listener;
+	}
+	//检查好友关系
+	public void setPostListener(checkFriendListenner listener){
+		this.friendListenner2=listener;
+	}
+	//解除好友关系
+	public void setPostListener(releaseFriendListenner listener){
+		this.friendListenner=listener;
+	}
+	//增加一条私聊信息
+	public void setPostListener(addChatMsgListenner listener){
+		this.chatMsgListenner=listener;
+	}
+	//反馈
+	public void setPostListener(feedBackListenner listener){
+		this.backListenner=listener;
+	}
+	//获取图片签名
+	public void setPostListener(getPicSignListenner listener){
+		this.signListenner=listener;
+	}
+	
+	
+//	public static void requestDone(String theObject) {
+//			listener.success(theObject);
+//	}
+//	public static void requestError(VolleyError error) {
+//		listener.defail(error);
+//	}
+	//获取图片签名
+	public static void requestDone2(String theObject) {
+		signListenner.success(theObject);
+	}
+	public static void requestError2(VolleyError error) {
+		signListenner.defail(error);
+	}
+	//反馈
+	public static void requestDone3(String theObject) {
+		backListenner.success(theObject);
+	}
+	public static void requestError3(VolleyError error) {
+		backListenner.defail(error);
+	}
+	//增加一条私聊信息
+	public static void requestDone4(String theObject) {
+		chatMsgListenner.success(theObject);
+	}
+	public static void requestError4(VolleyError error) {
+		chatMsgListenner.defail(error);
+	}
+	//解除好友关系
+	public static void requestDone5(String theObject) {
+		friendListenner.success(theObject);
+	}
+	public static void requestError5(VolleyError error) {
+		friendListenner.defail(error);
+	}
+	//检查好友关系
+	public static void requestDone6(String theObject) {
+		friendListenner2.success(theObject);
+	}
+	public static void requestError6(VolleyError error) {
+		friendListenner2.defail(error);
+	}
+	//成为好友关系
+	public static void requestDone7(String theObject) {
+		friendListenner3.success(theObject);
+	}
+	public static void requestError7(VolleyError error) {
+		friendListenner3.defail(error);
+	}
+	//匹配通讯录
+	public static void requestDone8(String theObject) {
+		bookListenner.success(theObject);
+	}
+	public static void requestError8(VolleyError error) {
+		bookListenner.defail(error);
+	}
+	//读取好友关系
+	public static void requestDone9(String theObject) {
+		friendListenner4.success(theObject);
+	}
+	public static void requestError9(VolleyError error) {
+		friendListenner4.defail(error);
+	}
+	//添加好友关系
+	public static void requestDone10(String theObject) {
+		friendListenner5.success(theObject);
+	}
+	public static void requestError10(VolleyError error) {
+		friendListenner5.defail(error);
+	}
+	//用户删除图片
+	public static void requestDone11(String theObject) {
+		photoListenner.success(theObject);
+	}
+	public static void requestError11(VolleyError error) {
+		photoListenner.defail(error);
+	}
+	//用户上传图片
+	public static void requestDone12(String theObject) {
+		photoListenner2.success(theObject);
+	}
+	public static void requestError12(VolleyError error) {
+		photoListenner2.defail(error);
+	}
+	//读取小组相册
+	public static void requestDone13(String theObject) {
+		partyPhotosListenner.success(theObject);
+	}
+	public static void requestError13(VolleyError error) {
+		partyPhotosListenner.defail(error);
+	}
+	//添加一条聊天数据
+	public static void requestDone14(String theObject) {
+		chatdataListenner.success(theObject);
+	}
+	public static void requestError14(VolleyError error) {
+		chatdataListenner.defail(error);
+	}
+	//创建一条新的聚会关系
+	public static void requestDone15(String theObject) {
+		partyRelationListenner.success(theObject);
+	}
+	public static void requestError15(VolleyError error) {
+		partyRelationListenner.defail(error);
+	}
+	//读取聚会用户的参与信息
+	public static void requestDone16(String theObject) {
+		joinMsgListenner.success(theObject);
+	}
+	public static void requestError16(VolleyError error) {
+		joinMsgListenner.defail(error);
+	}
+	//添加聚会
+	public static void requestDone17(String theObject) {
+		partyListenner.success(theObject);
+	}
+	public static void requestError17(VolleyError error) {
+		partyListenner.defail(error);
+	}
+	//用户取消聚会
+	public static void requestDone18(String theObject) {
+		canclePartyListenner.success(theObject);
+	}
+	public static void requestError18(VolleyError error) {
+		canclePartyListenner.defail(error);
+	}
+	//更新用户对于聚会的参与信息
+	public static void requestDone19(String theObject) {
+		userJoinMsgListenner.success(theObject);
+	}
+	public static void requestError19(VolleyError error) {
+		userJoinMsgListenner.defail(error);
+	}
+	//读取用户在小组中的所以聚会
+	public static void requestDone20(String theObject) {
+		userGroupPartyListenner.success(theObject);
+	}
+	public static void requestError20(VolleyError error) {
+		userGroupPartyListenner.defail(error);
+	}
+	//读取用户所有聚会
+	public static void requestDone21(String theObject) {
+		allPartyListenner.success(theObject);
+	}
+	public static void requestError21(VolleyError error) {
+		allPartyListenner.defail(error);
+	}
+	//用户加入小组
+	public static void requestDone22(String theObject) {
+		join2gourpListenner.success(theObject);
+	}
+	public static void requestError22(VolleyError error) {
+		join2gourpListenner.defail(error);
+	}
+	//使用邀请码加入小组
+	public static void requestDone23(String theObject) {
+		requestCode2JoinListenner.success(theObject);
+	}
+	public static void requestError23(VolleyError error) {
+		requestCode2JoinListenner.defail(error);
+	}
+	//生成邀请码
+	public static void requestDone24(String theObject) {
+		requestCodeListenner.success(theObject);
+	}
+	public static void requestError24(VolleyError error) {
+		requestCodeListenner.defail(error);
+	}
+	//读取所有小组成员的关系
+	public static void requestDone25(String theObject) {
+		allPerRelationListenner.success(theObject);
+	}
+	public static void requestError25(VolleyError error) {
+		allPerRelationListenner.defail(error);
+	}
+	//更新用户小组设置
+	public static void requestDone26(String theObject) {
+		groupSetListenner.success(theObject);
+	}
+	public static void requestError26(VolleyError error) {
+		groupSetListenner.defail(error);
+	}
+//	//读取用户小组信息
+//	public static void requestDone27(String theObject) {
+//		userGroupMsgListenner.success(theObject);
+//	}
+//	public static void requestError27(VolleyError error) {
+//		userGroupMsgListenner.defail(error);
+//	}
+	//读取用户小组关系
+	public static void requestDone28(String theObject) {
+		groupRelationListenner.success(theObject);
+	}
+	public static void requestError28(VolleyError error) {
+		groupRelationListenner.defail(error);
+	}
+	//读取用户小组信息
+	public static void requestDone29(String theObject) {
+			userGroupMsgListenner.success(theObject);
+	}
+	public static void requestError29(VolleyError error) {
+		userGroupMsgListenner.defail(error);
+	}
+	//新建小组
+	public static void requestDone30(String theObject) {
+		groupListenner.success(theObject);
+	}
+	public static void requestError30(VolleyError error) {
+		groupListenner.defail(error);
+	}
+	//根据手机号码或者ID查找用户
+	public static void requestDone31(String theObject) {
+		finduserListenner.success(theObject);
+	}
+	public static void requestError31(VolleyError error) {
+		finduserListenner.defail(error);
+	}
+	//请求服务器发送验证码
+	public static void requestDone32(String theObject) {
+		verCodeListenner.success(theObject);
+	}
+	public static void requestError32(VolleyError error) {
+		verCodeListenner.defail(error);
+	}
+	//读取用户资料
+	public static void requestDone33(String theObject) {
+		readuserListenner.success(theObject);
+	}
+	public static void requestError33(VolleyError error) {
+		readuserListenner.defail(error);
+	}
+	//更新用户资料
+	public static void requestDone34(String theObject) {
+		updateUserListenner.success(theObject);
+	}
+	public static void requestError34(VolleyError error) {
+		updateUserListenner.defail(error);
+	}
+	//用户登录
+	public static void requestDone35(String theObject) {
+		loginListenner.success(theObject);
+	}
+	public static void requestError35(VolleyError error) {
+		loginListenner.defail(error);
+	}
+	//检查昵称重复
+	public static void requestDone36(String theObject) {
+		nicknameListenner.success(theObject);
+	}
+	public static void requestError36(VolleyError error) {
+		nicknameListenner.defail(error);
+	}
+	//注册新用户
+	public static void requestDone37(String theObject) {
+		newAccountListenner.success(theObject);
+	}
+	public static void requestError37(VolleyError error) {
+		newAccountListenner.defail(error);
+	}
+}

@@ -1,0 +1,144 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".FindFriendsActivity" >
+
+    <RelativeLayout
+        android:id="@+id/findfriends_title"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <RelativeLayout
+            android:id="@+id/findfriends_back_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/findfriends_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="返回"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="查找好友"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/findfriends_before"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/findfriends_title"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="60.0dp"
+            android:gravity="center"
+            android:text="输入好友必聚号或者绑定的手机号"
+            android:textSize="18.0sp" />
+
+        <EditText
+            android:id="@+id/findfriends_number"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/textView3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40.0dp"
+            android:background="#ffffff"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="必聚号或者手机号" >
+
+            <requestFocus />
+        </EditText>
+
+        <TextView
+            android:id="@+id/findfriends_find"
+            android:layout_width="100.0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="查找好友"
+            android:textSize="18.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/findfriends_after"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/findfriends_title"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/findfriends_nickname"
+            android:layout_width="100.0dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="TextView"
+            android:textSize="17.0sp" />
+
+        <ImageView
+            android:id="@+id/findfriends_head"
+            android:layout_width="100.0dp"
+            android:layout_height="100.0dp"
+            android:layout_below="@+id/findfriends_nickname"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:src="@drawable/login_1" />
+
+        <TextView
+            android:id="@+id/findfriends_sendrequest"
+            android:layout_width="150.0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/findfriends_head"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"
+            android:gravity="center"
+            android:text="发送好友请求"
+            android:textSize="17.0sp" />
+
+        <TextView
+            android:id="@+id/findfriends_againfind"
+            android:layout_width="100.0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/findfriends_sendrequest"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="40dp"
+            android:gravity="center"
+            android:text="重新查找"
+            android:textSize="17.0sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

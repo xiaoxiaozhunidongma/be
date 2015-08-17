@@ -1,0 +1,244 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PartyDetailsActivity" >
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <RelativeLayout
+            android:id="@+id/PartyDetails_back_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/PartyDetails_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="返回"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/PartyDetails_more_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/PartyDetails_more"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="更多"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="聚会详情"
+            android:textColor="#000000"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/map_layout"
+        android:layout_width="match_parent"
+        android:layout_height="250dp"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true" >
+<!-- 代码中已经new出一个MapView -->
+<!--         <com.baidu.mapapi.map.MapView -->
+<!--             android:id="@+id/bmapView" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:layout_alignParentTop="true" -->
+<!--             android:clickable="true" /> -->
+
+<!--         <EditText -->
+<!--             android:id="@+id/edit_show" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="50dp" -->
+<!--             android:layout_alignParentBottom="true" -->
+<!--             android:layout_centerHorizontal="true" -->
+<!--             android:background="#aaffffff" -->
+<!--             android:ems="10" -->
+<!--             android:enabled="false" -->
+<!--             android:gravity="center" > -->
+
+<!--             <requestFocus /> -->
+<!--         </EditText> -->
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="80.0dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/map_layout" >
+
+        <TextView
+            android:id="@+id/PartyDetails_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="10dp"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textColor="#00aeae"
+            android:textSize="30.0sp" />
+
+        <TextView
+            android:id="@+id/PartyDetails_time"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:gravity="center_vertical"
+            android:text="TextView"
+            android:textSize="25.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="46dp" >
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/PartyDetails_tv_partake_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="参与"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/PartyDetails_tv_refuse_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="拒绝"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/PartyDetails_did_not_say_prompt"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="0.7"
+            android:gravity="center"
+            android:text="未表态"
+            android:textSize="18.0sp" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="40.0dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/linearLayout1" >
+
+        <TextView
+            android:id="@+id/PartyDetails_tv_partake"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/PartyDetails_tv_refuse"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/PartyDetails_did_not_say"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:text="0"
+            android:textSize="18.0sp" />
+    </LinearLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_marginTop="20dp"
+        android:layout_below="@+id/linearLayout2" >
+
+    <TextView
+        android:id="@+id/PartyDetails_partake"
+        android:layout_width="80.0dp"
+        android:layout_height="80.0dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="80dp"
+        android:background="@drawable/ok_2"
+        android:gravity="center"
+        android:text="参与"
+        android:textSize="18.0sp" />
+
+    <TextView
+        android:id="@+id/PartyDetails_refuse"
+        android:layout_width="80.0dp"
+        android:layout_height="80.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="40dp"
+        android:layout_toRightOf="@+id/PartyDetails_partake"
+        android:background="@drawable/ok_2"
+        android:gravity="center"
+        android:text="拒绝"
+        android:textSize="18.0sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

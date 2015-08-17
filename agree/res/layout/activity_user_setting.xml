@@ -1,0 +1,208 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".UserSettingActivity" >
+
+    <RelativeLayout
+        android:id="@+id/usersetting_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="账号设置"
+            android:textSize="18sp" />
+
+        <RelativeLayout
+            android:id="@+id/usersetting_save_1_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+             >
+
+            <TextView
+                android:id="@+id/usersetting_save_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="保存"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/usersetting_back_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/usersetting_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="返回"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/usersetting_pasword"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/usersetting"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/usersetting_layout"
+        android:layout_centerHorizontal="true" 
+        >
+
+        <ImageView
+            android:id="@+id/usersetting_head"
+            android:layout_width="80.0dp"
+            android:layout_height="80.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20.0dp"
+            android:src="@drawable/login_1" />
+
+        <TextView
+            android:id="@+id/usersetting_password"
+            android:layout_width="100.0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usersetting_nickname"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="设置密码"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/usersetting_sex"
+            android:layout_width="100.0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usersetting_password"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:gravity="center"
+            android:text="性别"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/usersetting_tv_phone"
+            android:layout_width="200.0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usersetting_sex"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="绑定手机号码"
+            android:gravity="center"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/usersetting_binding_weixin"
+            android:layout_width="200.0dp"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usersetting_tv_phone"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:text="绑定微信账号"
+            android:gravity="center"
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/usersetting_progress"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/usersetting_head"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="30dp"
+            android:textColor="#ffffff"
+            android:visibility="gone" />
+
+        <EditText
+            android:id="@+id/usersetting_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usersetting_head"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:background="#ffffff"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="请输入昵称" >
+
+            <requestFocus />
+        </EditText>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/usersetting_password_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/usersetting_layout"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" >
+
+        <TextView
+            android:id="@+id/usersetting_tv_password"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="75dp"
+            android:gravity="center"
+            android:text="请输入想要设置的密码"
+            android:textSize="20.0sp" />
+
+        <EditText
+            android:id="@+id/usersetting_edt_password_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usersetting_tv_password"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"
+            android:background="#ffffff"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="密码"
+            android:textSize="20.0sp" />
+
+        <requestFocus />
+
+        <EditText
+            android:id="@+id/usersetting_edt_password_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/usersetting_tv_password"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35dp"
+            android:background="#ffffff"
+            android:ems="10"
+            android:gravity="center"
+            android:hint="密码"
+            android:textSize="20.0sp"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+
+</RelativeLayout>

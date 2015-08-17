@@ -1,0 +1,140 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#ffffff"
+    tools:context=".NewteamActivity" >
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="63dp"
+        android:gravity="center"
+        android:text="鼓动加入的文本"
+        android:textColor="#aaaaaa"
+        android:textSize="17.0sp" />
+
+    <EditText
+        android:id="@+id/newteam_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/textView1"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="42dp"
+        android:background="#ffffff"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="小组名称"
+        android:textColor="#aaaaaa"
+        android:textSize="30.0sp" >
+
+        <requestFocus />
+    </EditText>
+
+    <ImageView
+        android:id="@+id/newteam_head"
+        android:layout_width="160.0dp"
+        android:layout_height="160.0dp"
+        android:layout_below="@+id/newteam_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25.0dp"
+        android:background="@drawable/newteam"
+        android:scaleType="fitXY"
+        android:visibility="invisible" />
+
+    <TextView
+        android:id="@+id/newteam_tv_head"
+        android:layout_width="160.0dp"
+        android:layout_height="160.0dp"
+        android:layout_below="@+id/newteam_name"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="25.0dp"
+        android:background="@drawable/newteam"
+        android:gravity="center"
+        android:text="选择小组封面"
+        android:textColor="#55aeae"
+        android:textSize="20.0sp" />
+
+    <TextView
+        android:id="@+id/newteam_requsetcode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="收到小组的邀请码?"
+        android:layout_marginBottom="50.0dp"
+        android:gravity="center"
+        android:textColor="#55aeae"
+        android:textSize="20.0sp"
+         />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <RelativeLayout
+            android:id="@+id/newteam_back_layout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/newteam_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="返回"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/newteam_OK_layout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/newteam_OK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="完成"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+			android:background="#aaaaaa"            
+            />
+
+    </RelativeLayout>
+
+    <ProgressBar
+        android:id="@+id/newteam_progressBar"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/newteam_head"
+        android:layout_alignRight="@+id/newteam_head"
+        android:layout_below="@+id/newteam_head"
+        android:visibility="gone"
+         />
+
+</RelativeLayout>

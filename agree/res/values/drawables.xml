@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <drawable name="moregray">#cdcdcd</drawable>
+    <drawable name="gray">#f0f0f0</drawable>
+    <drawable name="white">#ffffff</drawable>
+    <drawable name="eewhite">#eeffffff</drawable>
+    <drawable name="view_light">#fcfcfc</drawable>
+    <drawable name="black">#000000</drawable>
+</resources>

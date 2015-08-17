@@ -1,0 +1,55 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".PhotoFragment" >
+
+    <!-- TODO: Update blank fragment layout -->
+
+   <com.fragment.GridViewWithHeaderAndFooter
+        android:id="@+id/Photo_gridview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:columnWidth="90.0dp"
+        android:gravity="center"
+        android:horizontalSpacing="10.0dp"
+        android:numColumns="3"
+        android:stretchMode="columnWidth"
+        android:verticalSpacing="10dp"
+        android:layout_marginBottom="50.0dp"
+         >
+    </com.fragment.GridViewWithHeaderAndFooter>
+
+   <RelativeLayout
+       android:id="@+id/Photo_add"
+       android:layout_width="match_parent"
+       android:layout_height="50dp"
+       android:layout_alignParentBottom="true"
+       android:layout_centerHorizontal="true" 
+       android:background="#000000"
+       >
+
+       <TextView
+           android:id="@+id/textView1"
+           android:layout_width="match_parent"
+           android:layout_height="0.50dp"
+           android:layout_alignParentTop="true"
+           android:layout_centerHorizontal="true"
+			android:background="#aaaaaa"           
+            />
+
+       <TextView
+           android:id="@+id/textView2"
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:layout_centerHorizontal="true"
+           android:layout_centerVertical="true"
+           android:text="+ 添加新的照片"
+           android:textSize="17.0sp"
+           android:textColor="#ffffff"
+            />
+
+   </RelativeLayout>
+
+</RelativeLayout>

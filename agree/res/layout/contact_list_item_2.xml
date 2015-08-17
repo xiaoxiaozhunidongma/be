@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60.0dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/alpha" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+
+
+        <TextView
+            android:id="@+id/contact_list_2_OK"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:gravity="center|left"
+            android:text="同意添加"
+            android:padding="5.0dp"
+            android:layout_marginTop="5.0dp"
+            android:layout_marginBottom="5.0dp"
+            android:textColor="#00e3e3"
+            android:textSize="17.0sp" />
+
+        <ImageView
+            android:id="@+id/contact_list_2_head"
+            android:layout_width="50.0dp"
+            android:layout_height="50.0dp"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginTop="5.0dp"
+            android:src="@drawable/login_1" 
+            />
+
+        <TextView
+            android:id="@+id/contact_list_item_2_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="19dp"
+            android:layout_toLeftOf="@+id/contact_list_2_OK"
+            android:layout_toRightOf="@+id/contact_list_2_head"
+            android:gravity="left|center"
+            android:singleLine="true"
+            android:text="15614"
+            android:layout_marginRight="5.0dp"
+            android:textAppearance="?android:textAppearanceLarge" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

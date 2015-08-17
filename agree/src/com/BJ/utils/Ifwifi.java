@@ -1,0 +1,19 @@
+package com.BJ.utils;
+
+import android.content.Context;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
+public class Ifwifi {
+	public static boolean getNetworkConnected(Context context) { 
+		if (context != null) { 
+		ConnectivityManager mConnectivityManager = (ConnectivityManager) context 
+		.getSystemService(Context.CONNECTIVITY_SERVICE); 
+		NetworkInfo mNetworkInfo = mConnectivityManager.getActiveNetworkInfo(); 
+		if (mNetworkInfo != null) { 
+		return mNetworkInfo.isAvailable(); 
+		} 
+		} 
+		return false; 
+		}
+}
