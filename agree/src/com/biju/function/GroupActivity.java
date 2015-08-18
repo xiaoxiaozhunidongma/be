@@ -79,7 +79,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_tab);
 		//把当前界面加入list中
-		RefreshActivity.activList_1.add(GroupActivity.this);
+//		RefreshActivity.activList_1.add(GroupActivity.this);
 		//获取sd卡中的pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		Log.e("GroupActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);

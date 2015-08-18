@@ -145,7 +145,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
 		//加入到list中
-		RefreshActivity.activList_2.add(PartyDetailsActivity.this);
+//		RefreshActivity.activList_2.add(PartyDetailsActivity.this);
 		//获取sd卡中的sD_pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		initUI();
@@ -640,6 +640,6 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			editor.putBoolean(IConstant.PartyDetails, true);
 			editor.commit();
 		}
-		RefreshActivity.activList_2.clear();
+//		RefreshActivity.activList_2.clear();
 	}
 }

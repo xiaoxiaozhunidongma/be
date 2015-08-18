@@ -1,18 +1,11 @@
 package com.biju;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StreamCorruptedException;
 import java.util.ArrayList;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.os.Environment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
@@ -21,9 +14,7 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.Menu;
 import android.view.Window;
 
-import com.BJ.utils.Person;
 import com.BJ.utils.RefreshActivity;
-import com.BJ.utils.SdPkUser;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
@@ -31,7 +22,6 @@ import com.fragment.SettingFragment;
 import com.fragment.TabPagerFragment;
 
 public class MainActivity extends FragmentActivity {
-	//ghsdfg sdf asdkjgf kasgd kjsdg 
 	private FragmentTabHost mTabhost;
 	private TabPagerFragment fragment;
 	private ArrayList<Fragment> fragments;
@@ -58,7 +48,6 @@ public class MainActivity extends FragmentActivity {
 		fragment.setArg(labels, tabIcons, fragments);
 		ft.commit();
 		RefreshActivity.activList_3.clear();
-		
 	}
 	
 	@Override
