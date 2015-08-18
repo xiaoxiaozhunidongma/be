@@ -145,7 +145,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
 		//加入到list中
-//		RefreshActivity.activList_2.add(PartyDetailsActivity.this);
+//		RefreshActivity.activList_2.add(PartyDetailsActivity.this)
 		//获取sd卡中的sD_pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		initUI();
@@ -154,7 +154,9 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		initReadParty();
 		// addview 百度地图
 		BaiduMapOptions options = new BaiduMapOptions();
-		options.zoomGesturesEnabled(false);
+		options.zoomGesturesEnabled(false)
+		
+		
 		options.scaleControlEnabled(false);
 		options.scrollGesturesEnabled(false);
 		mMapView = new MapView(this, options);
