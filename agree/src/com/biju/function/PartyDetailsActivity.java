@@ -154,7 +154,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		initReadParty();
 		// addview °Ù¶ÈµØÍ¼
 		BaiduMapOptions options = new BaiduMapOptions();
-		options.zoomGesturesEnabled(false)
+		options.zoomGesturesEnabled(false);
 		
 		
 		options.scaleControlEnabled(false);
