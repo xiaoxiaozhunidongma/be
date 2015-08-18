@@ -56,10 +56,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 				Integer status = moreback.getStatusMsg();
 				if (status == 1) {
 					Log.e("MoreActivity", "返回是否删除成功" + A);
-					for (int i = 0; i < RefreshActivity.activList_2.size(); i++) {
-						RefreshActivity.activList_2.get(i).finish();
-					}
-					finish();
+					Intent intent=new Intent(MoreActivity.this, GroupActivity.class);
+					startActivity(intent);
 				}
 			}
 

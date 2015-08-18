@@ -72,7 +72,6 @@ import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
 public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResultListener, OnClickListener {
-	
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	public MyLocationListenner myListener = new MyLocationListenner();
@@ -99,7 +98,6 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	private String pk_party;
 	private Party2 oneParty;
 	private Integer pk_party_user;
-	private Integer fk_user1;
 	private UserAllParty allParty;
 	private boolean userAll;
 
@@ -144,8 +142,6 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
-		//加入到list中
-//		RefreshActivity.activList_2.add(PartyDetailsActivity.this)
 		//获取sd卡中的sD_pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		initUI();
@@ -239,7 +235,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 							break;
 						}
 						// 当前用户
-						if (String.valueOf(fk_user1).equals(String.valueOf(read_pk_user))) {
+						if (String.valueOf(sD_pk_user).equals(String.valueOf(read_pk_user))) {
 							Integer read_relationship = relation.getRelationship();
 							switch (read_relationship) {
 							case 0:
@@ -297,7 +293,6 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			Integer allrelationship = allParty.getRelationship();
 			pk_party_user = allParty.getPk_party_user();
 			pk_party = allParty.getPk_party();
-			fk_user1 = allParty.getFk_user();
 			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中======");
 			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中的allrelationship======"+ allrelationship);
 			switch (allrelationship) {
@@ -354,7 +349,6 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 				pk_party_user=oneParty.getPk_party_user();
 			}
 			pk_party = oneParty.getPk_party();
-			fk_user1 = oneParty.getFk_user();
 			if (relationship == null) {
 			} else {
 				switch (relationship) {
@@ -588,6 +582,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		party_user.setRelationship(1);
 		party_user.setStatus(1);
 		party_user.setFk_party(pk_party);
+		party_user.setFk_user(sD_pk_user);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 		
 		
@@ -609,6 +604,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		party_user.setRelationship(2);
 		party_user.setFk_party(pk_party);
 		party_user.setStatus(1);
+		party_user.setFk_user(sD_pk_user);
 		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 
 		
@@ -642,6 +638,5 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			editor.putBoolean(IConstant.PartyDetails, true);
 			editor.commit();
 		}
-//		RefreshActivity.activList_2.clear();
 	}
 }

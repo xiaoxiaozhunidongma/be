@@ -39,7 +39,6 @@ import com.BJ.javabean.Teamupdateback;
 import com.BJ.utils.GridViewWithHeaderAndFooter;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
-import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
 import com.biju.Interface;
@@ -47,6 +46,7 @@ import com.biju.Interface.produceRequestCodeListenner;
 import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.Interface.updateGroupSetListenner;
+import com.biju.MainActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
@@ -167,11 +167,8 @@ public class TeamSettingActivity extends Activity implements OnClickListener,
 					Integer exitstatus = exitback.getStatusMsg();
 					if (exitstatus == 1) {
 						Log.e("TeamSettingActivity", "返回是否退出成功的结果-------" + A);
-						//关闭GroupActivity界面
-						for (int i = 0; i < RefreshActivity.activList_1.size(); i++) {
-							RefreshActivity.activList_1.get(i).finish();
-						}
-						finish();
+						Intent intent=new Intent(TeamSettingActivity.this, MainActivity.class);
+						startActivity(intent);
 					}
 				} else {
 					Teamupdateback teamupdateback = GsonUtils.parseJson(A,
