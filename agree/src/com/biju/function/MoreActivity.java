@@ -14,6 +14,7 @@ import com.BJ.javabean.Moreback;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.UserAllParty;
+import com.BJ.utils.RefreshActivity;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.userCanclePartyListenner;
@@ -55,8 +56,8 @@ public class MoreActivity extends Activity implements OnClickListener {
 				Integer status = moreback.getStatusMsg();
 				if (status == 1) {
 					Log.e("MoreActivity", "返回是否删除成功" + A);
-					PartyDetailsActivity.PartyDetails.finish();
-					finish();
+					Intent intent=new Intent(MoreActivity.this, GroupActivity.class);
+					startActivity(intent);
 				}
 			}
 

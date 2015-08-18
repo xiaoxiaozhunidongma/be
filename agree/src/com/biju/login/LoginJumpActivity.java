@@ -10,6 +10,7 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
 
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.R;
 import com.biju.APP.MyApplication;
@@ -18,7 +19,6 @@ import com.tencent.mm.sdk.modelmsg.SendAuth;
 
 public class LoginJumpActivity extends Activity implements OnClickListener{
 
-	public static LoginJumpActivity LoginJump;
 	private TextView mLoginJump_phone;
 	private TextView mLoginJump_weixin;
 	private int registered;
@@ -40,8 +40,7 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 			mLoginJump_phone.setText("ÊÖ»úµÇÂ¼");
 			mLoginJump_weixin.setText("Î¢ÐÅµÇÂ¼");
 		}
-		
-		LoginJump=this;
+		RefreshActivity.activList_3.add(LoginJumpActivity.this);
 	}
 
 	private void initUI() {

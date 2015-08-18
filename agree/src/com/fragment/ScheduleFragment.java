@@ -77,11 +77,13 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 				android.R.color.holo_green_light,
 				android.R.color.holo_blue_bright,
 				android.R.color.holo_orange_light);
+		Log.e("ScheduleFragment", "进入了onStart()=========");
 		return mLayout;
 	}
-
+	
 	@Override
-	public void onStart() {
+	public void onResume() {
+		Log.e("ScheduleFragment", "进入了onResume() =========");
 		SharedPreferences PartyDetails_sp = getActivity().getSharedPreferences(IConstant.IsPartyDetails_, 0);
 		boolean PartyDetails=PartyDetails_sp.getBoolean(IConstant.PartyDetails, false);
 		if(PartyDetails)
@@ -89,10 +91,8 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			initreadUserGroupParty();
 			adapter.notifyDataSetChanged();
 		}
-		
-		super.onStart();
+		super.onResume();
 	}
-	
 	private void initUI() {
 		mSchedule_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_prompt_layout);// 提示
 		mSchedule_listView=(ListView) mLayout.findViewById(R.id.schedule_listview);
@@ -108,12 +108,13 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					Log.e("ScheduleFragment", "所点击中的行数" + arg2);
 					scheduleparty = partylist.get(pos);
 					Integer relatonship = scheduleparty.getRelationship();
-					Integer fk_user = scheduleparty.getFk_user();
 					String pk_party = scheduleparty.getPk_party();
-					Integer pk_party_user = scheduleparty.getPk_party_user();
+					Log.e("ScheduleFragment", "获取到的pk_party ========="+pk_party);
 					if (relatonship == null) {
-						initcreatePartyRelation(fk_user, pk_party,pk_party_user);
+						initcreatePartyRelation(sD_pk_user,pk_party);
+						Log.e("ScheduleFragment", "进入到relatonship为null的地方==========");
 					} else {
+						Log.e("ScheduleFragment", "进入到relatonship不为null的地方==========");
 						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
 						intent.putExtra(IConstant.OneParty, scheduleparty);
 						startActivity(intent);
@@ -124,12 +125,10 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 	}
 
-	private void initcreatePartyRelation(Integer fk_user, String pk_party,Integer pk_party_user) {
+	private void initcreatePartyRelation(Integer pk_user, String pk_party) {
 		Party_User readuserparty = new Party_User();
-		readuserparty.setPk_party_user(pk_party_user);
 		readuserparty.setFk_party(pk_party);
-		readuserparty.setFk_user(fk_user);
-		readuserparty.setStatus(1);
+		readuserparty.setFk_user(pk_user);
 		scheduleInterface.createPartyRelation(getActivity(), readuserparty);
 	}
 
@@ -255,12 +254,11 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					Log.e("ScheduleFragment", "得到的关系结果===="+A);
 					Integer pk_party_user = partyRelationshipback.getReturnData();
 					Log.e("ScheduleFragment", "得到的pk_party_user111111===="+pk_party_user);
+					//加入到工具类中
 					SdPkUser.setGetPk_party_user(pk_party_user);
 					Party_User party_user = new Party_User();
 					party_user.setPk_party_user(pk_party_user);
 					party_user.setRelationship(0);
-					party_user.setFk_party(scheduleparty.getPk_party());
-					party_user.setStatus(1);
 					scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
 				}
 			}

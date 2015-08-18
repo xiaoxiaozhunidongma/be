@@ -31,6 +31,7 @@ import com.BJ.javabean.updateback;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.Person;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
 import com.biju.Interface;
@@ -204,9 +205,9 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 					startActivity(intent);
 					finish();
 					//关闭首界面
-					BeforeLoginActivity.BeforeLogin.finish();;
-					//关闭登录界面
-					LoginJumpActivity.LoginJump.finish(); 
+					for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
+						RefreshActivity.activList_3.get(i).finish();
+					} 
 					if(phoneLogin)
 					{
 						//关闭手机登录界面
@@ -346,7 +347,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		//关闭自身
 		finish();
 		//关闭登录界面
-		LoginJumpActivity.LoginJump.finish(); 
+		RefreshActivity.activList_3.get(1).finish();
 		if(phoneLogin)
 		{
 			//关闭手机登录界面

@@ -36,6 +36,7 @@ import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
 import com.BJ.utils.Person;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.findUserListenner;
@@ -201,13 +202,11 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 							
 							Intent intent = new Intent(PhoneLoginActivity.this,MainActivity.class);
 							startActivity(intent);
-//							overridePendingTransition(0, 0);
 							finish();
-							//关闭首界面
-							BeforeLoginActivity.BeforeLogin.finish();;
-							//关闭登录界面
-							LoginJumpActivity.LoginJump.finish(); 
-							
+							//关闭之前的界面
+							for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
+								RefreshActivity.activList_3.get(i).finish();
+							}
 							
 							User readuser = new User();
 							readuser.setPk_user(Phone_pk_user);
@@ -344,7 +343,7 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 						niftyDialogBuilder.cancel();
 						finish();
 						//关闭登录界面
-						LoginJumpActivity.LoginJump.finish(); 
+						RefreshActivity.activList_3.get(1).finish();
 					}
 				}).setButton2Click(new OnClickListener() {
 

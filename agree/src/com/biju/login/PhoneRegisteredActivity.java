@@ -27,6 +27,7 @@ import com.BJ.javabean.Phone;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.findUserListenner;
@@ -262,12 +263,11 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 					Log.e("PhoneRegisteredActivity", "更新成功" + A);
 					Intent intent = new Intent(PhoneRegisteredActivity.this,MainActivity.class);
 					startActivity(intent);
-//					overridePendingTransition(0, 0);
 					finish();
 					//关闭首界面
-					BeforeLoginActivity.BeforeLogin.finish();;
-					//关闭登录界面
-					LoginJumpActivity.LoginJump.finish(); 
+					for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
+						RefreshActivity.activList_3.get(i).finish();
+					}
 				}
 			}
 
