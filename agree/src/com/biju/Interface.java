@@ -41,7 +41,6 @@ public class Interface {
 	
 //	String url="http://120.25.218.3/webroot/sr_interface_android.php";
 	String url="http://120.26.118.226/app/app_interface/sr_interface_android.php";
-//	String url="http://120.26.118.226/app/app_interface/";
 	
 	private static Interface Thisinterface=new Interface();
 	private Interface(){

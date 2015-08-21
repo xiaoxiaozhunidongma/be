@@ -28,6 +28,7 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
 import com.BJ.utils.PreferenceUtils;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
@@ -37,7 +38,6 @@ import com.github.volley_examples.utils.GsonUtils;
 
 public class NewPartyActivity extends Activity implements OnClickListener{
 
-	public static NewPartyActivity NewParty;
 	private GridView newparty_gridview;
 	private List<Group> users;
 	private ArrayList<Group> list = new ArrayList<Group>();
@@ -53,13 +53,14 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_party);
+		//加入List中
+		RefreshActivity.activList_2.add(NewPartyActivity.this);
 		//获取sd卡中的pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		Log.e("NewPartyActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 		
 		initUI();
 		initNewTeam();
-		NewParty=this;
 	}
 
 	@Override
@@ -125,13 +126,9 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 					long arg3) {
 				Group group = list.get(arg2);
 				int fk_group=group.getPk_group();
-				SharedPreferences sp=getSharedPreferences("isParty_fk_group", 0);
-				Editor editor=sp.edit();
-				editor.putInt("fk_group", fk_group);
-				editor.commit();
+				SdPkUser.setFk_group(fk_group);
 				Intent intent=new Intent(NewPartyActivity.this, MapActivity.class);
 				startActivity(intent);
-//				finish();
 			}
 		});
 	}
@@ -166,15 +163,12 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 			mNewParty_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
 			mNewParty_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
 			Group newparty_gridview = list.get(position);
-			String newpartyAvatar_path = newparty_gridview
-					.getAvatar_path();
+			String newpartyAvatar_path = newparty_gridview.getAvatar_path();
 			String homenickname = newparty_gridview.getName();
 			mNewParty_item_name.setText(homenickname);
 			completeURL = beginStr + newpartyAvatar_path + endStr;
-			PreferenceUtils.saveImageCache(NewPartyActivity.this,
-					completeURL);
-			homeImageLoaderUtils.getInstance().LoadImage(
-					NewPartyActivity.this, completeURL, mNewParty_item_head);
+			PreferenceUtils.saveImageCache(NewPartyActivity.this,completeURL);
+			homeImageLoaderUtils.getInstance().LoadImage(NewPartyActivity.this, completeURL, mNewParty_item_head);
 			return inflater;
 		}
 		

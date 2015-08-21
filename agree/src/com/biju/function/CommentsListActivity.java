@@ -156,8 +156,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private void initReadParty(String pk_party) {
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
-		mCommentInterface
-				.readPartyJoinMsg(CommentsListActivity.this, readparty);
+		mCommentInterface.readPartyJoinMsg(CommentsListActivity.this, readparty);
 	}
 
 	private void initUI() {

@@ -16,6 +16,7 @@ import android.widget.TextView;
 
 import com.BJ.javabean.Party;
 import com.BJ.javabean.PartyOkback;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Weeks;
 import com.biju.Interface;
@@ -55,8 +56,7 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 		Log.e("OkPartyActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 
 		// 得到fk_group
-		SharedPreferences sp3 = getSharedPreferences("isParty_fk_group", 0);
-		fk_group = sp3.getInt("fk_group", 0);
+		fk_group=SdPkUser.getFk_group();
 
 		initUI();
 		initData();
@@ -79,24 +79,21 @@ public class OkPartyActivity extends Activity implements OnClickListener {
 				{
 					Log.e("OkPartyActivity", "日程是否创建成功======" + A);
 					finish();
-					//关闭新建小组界面
-					NewPartyActivity.NewParty.finish();
-					//关闭地图界面
-					MapActivity.Map.finish();
-					//关闭时间日期界面
-					TimeActivity.Time.finish();
+					//关闭界面
+					for (int i = 0; i < RefreshActivity.activList_2.size(); i++) {
+						RefreshActivity.activList_2.get(i).finish();
+					}
+					
 				}
 			}
 
 			@Override
 			public void defail(Object B) {
 				finish();
-				//关闭新建小组界面
-				NewPartyActivity.NewParty.finish();
-				//关闭地图界面
-				MapActivity.Map.finish();
-				//关闭时间日期界面
-				TimeActivity.Time.finish();
+				//关闭界面
+				for (int i = 0; i < RefreshActivity.activList_2.size(); i++) {
+					RefreshActivity.activList_2.get(i).finish();
+				}
 			}
 		});
 	}

@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.IDs;
 import com.BJ.javabean.Party2;
@@ -54,6 +55,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private Party2 scheduleparty;
 	private Integer sD_pk_user;
 	private SwipeRefreshLayout mSchedule_swipe_refresh;
+	private int num=0;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -111,8 +113,15 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					String pk_party = scheduleparty.getPk_party();
 					Log.e("ScheduleFragment", "获取到的pk_party ========="+pk_party);
 					if (relatonship == null) {
-						initcreatePartyRelation(sD_pk_user,pk_party);
-						Log.e("ScheduleFragment", "进入到relatonship为null的地方==========");
+						if(num==0)
+						{
+							initcreatePartyRelation(sD_pk_user,pk_party);
+							Log.e("ScheduleFragment", "进入到relatonship为null的地方==========");
+							num++;
+						}else
+						{
+							Toast.makeText(getActivity(), "已结点击过了", Toast.LENGTH_SHORT).show();
+						}
 					} else {
 						Log.e("ScheduleFragment", "进入到relatonship不为null的地方==========");
 						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
@@ -259,6 +268,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					Party_User party_user = new Party_User();
 					party_user.setPk_party_user(pk_party_user);
 					party_user.setRelationship(0);
+					party_user.setType(1);
 					scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
 				}
 			}

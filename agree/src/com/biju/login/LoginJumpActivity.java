@@ -90,7 +90,7 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 			req.scope = "snsapi_userinfo";
 			req.state = "wechat_sdk_demo_test";
 			MyApplication.api.sendReq(req);
-			SdPkUser.setGetweixinLogin(true);
+			SdPkUser.setGetweixinBinding(false);
 		}
 	}
 

@@ -5,6 +5,8 @@
     <color name="msg_color">#FFFFFFFF</color>
     <color name="dialog_bg">#ffffff</color>
 <!--ffe74c3c  -->
-    <color name="btn_press_color">#FFa5281b</color>
-    <color name="btn_unpress_color">#FFc0392b</color>
+    <color name="btn_press_color">#FFd3d3d3</color>
+    <color name="btn_unpress_color">#FFffffff</color>
+<!--     <color name="btn_press_color">#FFa5281b</color> -->
+<!--     <color name="btn_unpress_color">#FFc0392b</color> -->
 </resources>

@@ -2,8 +2,10 @@ package com.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
-
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
@@ -19,7 +21,6 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.UserAllPartyback;
@@ -36,6 +37,8 @@ import com.github.volley_examples.utils.GsonUtils;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
+@SuppressLint("InlinedApi")
+@TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
 public class PartyFragment extends Fragment implements OnClickListener,SwipeRefreshLayout.OnRefreshListener {
 
 	private View mLayout;
@@ -77,6 +80,22 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 		super.onStart();
 	}
 
+	@Override
+	public void onResume() {
+		if (userAllPartieList.size() > 0) {
+			mParty_listView.setAdapter(adapter);
+			mTab_party_prompt_layout.setVisibility(View.GONE);
+			mTab_party_swipe_refresh.setVisibility(View.VISIBLE);
+			mParty_listView.setVisibility(View.VISIBLE);
+			adapter.notifyDataSetChanged();
+		} else {
+			mTab_party_prompt_layout.setVisibility(View.VISIBLE);
+			mTab_party_swipe_refresh.setVisibility(View.GONE);
+			mParty_listView.setVisibility(View.GONE);
+		}
+		super.onResume();
+	}
+	
 	private void initInterface() {
 		tab_party_interface = Interface.getInstance();
 		tab_party_interface.setPostListener(new readUserAllPartyListenner() {
@@ -96,12 +115,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 							userAllPartieList.add(userAllParty);
 						}
 					}
-					adapter.notifyDataSetChanged();
-					if (userAllPartieList.size() > 0) {
-						mTab_party_prompt_layout.setVisibility(View.GONE);
-					} else {
-						mTab_party_prompt_layout.setVisibility(View.VISIBLE);
-					}
+					Log.e("PartyFragment", "userAllPartieList.size()====="+userAllPartieList.size());
 				}
 			}
 
@@ -121,15 +135,13 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 	}
 
 	private void initUI() {
-		mLayout.findViewById(R.id.tab_party_new_layout)
-				.setOnClickListener(this);// 新建
+		mLayout.findViewById(R.id.tab_party_new_layout).setOnClickListener(this);// 新建
 		mLayout.findViewById(R.id.tab_party_new).setOnClickListener(this);
-		mTab_party_prompt_layout = (RelativeLayout) mLayout
-				.findViewById(R.id.tab_party_prompt_layout);// 提示布局
+		mTab_party_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.tab_party_prompt_layout);// 提示布局
 
 		mParty_listView =(ListView) mLayout.findViewById(R.id.tab_party_listview);
+		mParty_listView.setDividerHeight(0);//设置listview的item直接的间隙为0
 		adapter = new MyAdapter();
-		mParty_listView.setAdapter(adapter);
 
 		//listview的点击监听
 		mParty_listView.setOnItemClickListener(new OnItemClickListener() {

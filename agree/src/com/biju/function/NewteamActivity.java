@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -110,23 +111,23 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		format1 = sdf.format(new Date());
 	}
 	
-//	@Override
-//	protected void onResume() {
-//		SharedPreferences requestcode2_sp=getSharedPreferences(IConstant.IsRefresh, 0);
-//		read_requestcode2=requestcode2_sp.getBoolean(IConstant.IsCode2, false);
-//		if(read_requestcode2)
-//		{
-//			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
-//			mNewteam_head.setVisibility(View.VISIBLE);
-//			readhomeuser = SdPkUser.getgroup;
-//			mNewteam_name.setText(readhomeuser.getName());
-//			completeURL = beginStr + readhomeuser.getAvatar_path() + endStr;
-//			PreferenceUtils.saveImageCache(NewteamActivity.this,completeURL);
-//			homeImageLoaderUtils.getInstance().LoadImage(NewteamActivity.this, completeURL, mNewteam_head);
-//			readUser();
-//		}
-//		super.onResume();
-//	}
+	@Override
+	protected void onResume() {
+		SharedPreferences requestcode2_sp=getSharedPreferences(IConstant.IsRefresh, 0);
+		read_requestcode2=requestcode2_sp.getBoolean(IConstant.IsCode2, false);
+		if(read_requestcode2)
+		{
+			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
+			mNewteam_head.setVisibility(View.VISIBLE);
+			readhomeuser = SdPkUser.getgroup;
+			mNewteam_name.setText(readhomeuser.getName());
+			completeURL = beginStr + readhomeuser.getAvatar_path() + endStr;
+			PreferenceUtils.saveImageCache(NewteamActivity.this,completeURL);
+			homeImageLoaderUtils.getInstance().LoadImage(NewteamActivity.this, completeURL, mNewteam_head);
+			readUser();
+		}
+		super.onResume();
+	}
 
 	private void Interface() {
 		cregrouInter = Interface.getInstance();
@@ -459,5 +460,25 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	private void newteam_back() {
 		finish();
+		Finish();
+	}
+
+	private void Finish() {
+		SharedPreferences requestcode2_sp=getSharedPreferences(IConstant.IsRefresh, 0);
+		Editor editor=requestcode2_sp.edit();
+		editor.putBoolean(IConstant.IsCode2, false);
+		editor.commit();
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Finish();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Finish();
 	}
 }

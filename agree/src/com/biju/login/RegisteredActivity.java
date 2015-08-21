@@ -103,6 +103,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_registered);
+		RefreshActivity.activList_3.add(RegisteredActivity.this);
 		Intent intent = getIntent();
 		phoneRegistered_phone = intent.getStringExtra("phoneRegistered_phone");
 		phoneLogin = intent.getBooleanExtra("PhoneLogin", false);
@@ -206,20 +207,6 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 					Log.e("RegisteredActivity", "更新成功" + A);
 					Intent intent = new Intent(RegisteredActivity.this,MainActivity.class);
 					startActivity(intent);
-					finish();
-					//关闭首界面
-					for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
-						RefreshActivity.activList_3.get(i).finish();
-					} 
-					if(phoneLogin)
-					{
-						//关闭手机登录界面
-						PhoneLoginActivity.PhoneLogin.finish();
-					}else
-					{
-						//关闭手机注册界面
-						PhoneRegisteredActivity.phoneRegistered.finish();;
-					}
 			}
 	}
 
@@ -347,19 +334,8 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	}
 
 	private void registered_back() {
-		//关闭自身
-		finish();
-		//关闭登录界面
-		RefreshActivity.activList_3.get(1).finish();
-		if(phoneLogin)
-		{
-			//关闭手机登录界面
-			PhoneLoginActivity.PhoneLogin.finish();
-		}else
-		{
-			//关闭手机注册界面
-			PhoneRegisteredActivity.phoneRegistered.finish();;
-		}
+		Intent intent=new Intent(RegisteredActivity.this, BeforeLoginActivity.class);
+		startActivity(intent);
 	}
 	
 

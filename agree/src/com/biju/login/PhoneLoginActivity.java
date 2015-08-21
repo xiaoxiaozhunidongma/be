@@ -55,7 +55,6 @@ import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 @SuppressLint("ResourceAsColor")
 public class PhoneLoginActivity extends Activity implements OnClickListener{
 
-	public static PhoneLoginActivity PhoneLogin;
 	private RelativeLayout mPhoneLogin_before_layout;
 	private EditText mPhoneLogin_phone;
 	private TextView mPhoneLogin_send;
@@ -107,7 +106,7 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_phone_login);
 		initUI();
 		initInterface();
-		PhoneLogin=this;
+		RefreshActivity.activList_3.add(PhoneLoginActivity.this);
 	}
 
 	private void initInterface() {
@@ -202,11 +201,6 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 							
 							Intent intent = new Intent(PhoneLoginActivity.this,MainActivity.class);
 							startActivity(intent);
-							finish();
-							//关闭之前的界面
-							for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
-								RefreshActivity.activList_3.get(i).finish();
-							}
 							
 							User readuser = new User();
 							readuser.setPk_user(Phone_pk_user);

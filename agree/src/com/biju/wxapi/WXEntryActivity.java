@@ -6,12 +6,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
+import android.widget.Toast;
 
 import com.BJ.javabean.Access_Token;
+import com.BJ.javabean.User;
+import com.BJ.javabean.updateback;
 import com.BJ.utils.SdPkUser;
 import com.android.volley.VolleyError;
+import com.biju.Interface;
 import com.biju.R;
 import com.biju.APP.MyApplication;
+import com.biju.Interface.updateUserListenner;
 import com.biju.function.UserSettingActivity;
 import com.github.volley_examples.app.MyVolley;
 import com.github.volley_examples.app.VolleyListenner;
@@ -26,6 +31,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	private Context context = WXEntryActivity.this;
 	private String code;
 	private boolean weixinLogin;
+	private Interface mWeiXinInterface;
 
 	private void handleIntent(Intent paramIntent) {
 		MyApplication.api.handleIntent(paramIntent, this);
@@ -36,6 +42,29 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wxentry);
 		handleIntent(getIntent());
+		initInterface();
+	}
+
+	private void initInterface() {
+		mWeiXinInterface = Interface.getInstance();
+		mWeiXinInterface.setPostListener(new updateUserListenner() {
+
+			@Override
+			public void success(String A) {
+				// 更新用户资料成功
+				updateback usersetting_updateback = GsonUtils.parseJson(A,
+						updateback.class);
+				int a = usersetting_updateback.getStatusMsg();
+				if (a == 1) {
+					Log.e("WXEntryActivity", "更新成功" + A);
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
 	}
 
 	@Override
@@ -63,22 +92,15 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 		Log.e("WXEntryActivity", "resp==="+resp.errCode);
 		switch (resp.errCode) {
 		case BaseResp.ErrCode.ERR_OK:
-			weixinLogin = SdPkUser.isGetweixinLogin();
 			code = ((SendAuth.Resp) resp).code;
 			Log.e("WXEntryActivity", "获取的code======" + code);
 			initdata();
 			break;
 		case BaseResp.ErrCode.ERR_USER_CANCEL:
-			if (!weixinLogin) {
-				Log.e("WXEntryActivity", "有进入到这来了222222222========");
-				Intent intent = new Intent(WXEntryActivity.this,
-						UserSettingActivity.class);
-				startActivity(intent);
-				overridePendingTransition(0, 0);
-			}
+			finish();
 			break;
 		case BaseResp.ErrCode.ERR_AUTH_DENIED:
-			Log.e("WXEntryActivity", "WXEntryActivityWXEntryActivityWXEntryActivityWXEntryActivityWXEntryActivity~~");
+			finish();
 			break;
 		default:
 			break;
@@ -103,16 +125,35 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				Access_Token access_Token = GsonUtils.parseJson(response,Access_Token.class);
 				String openid=access_Token.getOpenid();
 				Log.e("WXEntryActivity", "返回来的openid========"+openid);
-				SdPkUser.setGetopenid(openid);
-				if(!weixinLogin)
+				if(!("".equals(openid)))
 				{
-					Intent intent = new Intent(WXEntryActivity.this,UserSettingActivity.class);
-					intent.putExtra("weixin", true);
-					startActivity(intent);
-					overridePendingTransition(0, 0);
+					boolean Binding_weixin=SdPkUser.isGetweixinBinding();
+					if(Binding_weixin)
+					{
+						//获取SD卡中的pk_user
+						Integer SD_pk_user = SdPkUser.getsD_pk_user();
+						User user=SdPkUser.getUser;
+						
+						User usersetting = new User();
+						usersetting.setPk_user(SD_pk_user);
+						usersetting.setJpush_id(user.getJpush_id());
+						usersetting.setNickname(user.getNickname());
+						usersetting.setPassword(user.getPassword());
+						usersetting.setSex(user.getSex());
+						usersetting.setStatus(1);
+						usersetting.setPhone(user.getPhone());
+						usersetting.setSetup_time(user.getSetup_time());
+						usersetting.setLast_login_time(user.getLast_login_time());
+						usersetting.setAvatar_path(user.getAvatar_path());
+						usersetting.setWechat_id(openid);//微信的唯一识别码
+						Log.e("WXEntryActivity", "第二次得到的用户信息2222222===="+SD_pk_user+"\n"+user.getJpush_id()+"\n"+
+								user.getNickname()+"\n"+user.getPassword()+"\n"+user.getSex()+"\n"+user.getPhone()+"\n"+user.getSetup_time()+"\n"
+								+user.getLast_login_time()+"\n"+user.getAvatar_path()+"\n"+openid);
+						mWeiXinInterface.updateUser(WXEntryActivity.this, usersetting);
+					}
 				}else
 				{
-					//进行对比openid后进行登录
+					Toast.makeText(WXEntryActivity.this, "绑定失败", Toast.LENGTH_SHORT).show();
 				}
 			}
 		});

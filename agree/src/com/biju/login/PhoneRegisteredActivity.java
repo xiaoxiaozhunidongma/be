@@ -44,7 +44,6 @@ import com.github.volley_examples.utils.GsonUtils;
 @SuppressLint("ResourceAsColor")
 public class PhoneRegisteredActivity extends Activity implements OnClickListener{
 
-	public static PhoneRegisteredActivity phoneRegistered;
 	private RelativeLayout mPhoneRegistered_before_layout;
 	private EditText mPhoneRegistered_phone;
 	private TextView mPhoneRegistered_send;
@@ -77,9 +76,9 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_phone_registered);
+		RefreshActivity.activList_3.add(PhoneRegisteredActivity.this);
 		initUI();
 		initInterface();
-		phoneRegistered=this;
 	}
 
 	private void initInterface() {
@@ -263,11 +262,6 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 					Log.e("PhoneRegisteredActivity", "更新成功" + A);
 					Intent intent = new Intent(PhoneRegisteredActivity.this,MainActivity.class);
 					startActivity(intent);
-					finish();
-					//关闭首界面
-					for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
-						RefreshActivity.activList_3.get(i).finish();
-					}
 				}
 			}
 

@@ -9,7 +9,6 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 
 import com.BJ.utils.RefreshActivity;
-import com.BJ.utils.SdPkUser;
 import com.biju.R;
 
 public class BeforeLoginActivity extends Activity implements OnClickListener{
