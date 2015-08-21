@@ -6,7 +6,7 @@
     <RelativeLayout
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
+        android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_margin="10.0dp"
         android:background="#d3d3d3" >
@@ -30,7 +30,6 @@
             android:gravity="center"
             android:text="TextView"
             android:textSize="17.0sp" />
-
     </RelativeLayout>
 
 </RelativeLayout>

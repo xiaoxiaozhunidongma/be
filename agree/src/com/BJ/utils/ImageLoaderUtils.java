@@ -42,7 +42,8 @@ public class ImageLoaderUtils {
 				.cacheOnDisk(true)
 				.considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)  //∏Ò Ω
-				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
+//				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
+				.imageScaleType(ImageScaleType.EXACTLY)
 				.build();
 		
 				

@@ -34,6 +34,7 @@
                 android:layout_centerVertical="true"
                 android:background="@drawable/ok_button" />
         </RelativeLayout>
+
     </RelativeLayout>
 
     <com.BJ.photo.ViewPagerFixed

@@ -1,5 +1,6 @@
 package com.biju.function;
 
+import java.io.File;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -18,6 +19,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -32,9 +34,11 @@ import com.BJ.javabean.Loginback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.photo.Bimp;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.InitHead;
+import com.BJ.utils.MyBimp;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
@@ -496,11 +500,28 @@ public class UserSettingActivity extends Activity implements OnClickListener {
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 			Cursor cursor = UserSettingActivity.this.getContentResolver()
 					.query(selectedImage, filePathColumn, null, null, null);
-			cursor.moveToFirst();
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			mFilePath = cursor.getString(columnIndex);
-			cursor.close();
-			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+			if(cursor!=null){
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				mFilePath = cursor.getString(columnIndex);
+				cursor.close();
+				cursor = null;
+				
+			}else{
+				File file = new File(selectedImage.getPath());
+				mFilePath=file.getAbsolutePath();
+				if (!file.exists()) {
+					Toast toast = Toast.makeText(this, "找不到图片", Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+					return;
+				}
+			}
+			Log.e("NewteamActivity", "mFilePath======"+mFilePath);
+//			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+//			Bitmap bmp = Bimp.revitionImageSize(mFilePath);
+			//这个mFilePath不可以用缩略图路径
+			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 			InitHead.initHead(bmp);// 画圆形头像
 			ishead = !ishead;
 		} catch (Exception e) {

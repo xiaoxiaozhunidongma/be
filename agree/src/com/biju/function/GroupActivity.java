@@ -33,6 +33,7 @@ import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
 import com.fragment.ChatFragment;
 import com.fragment.PhotoFragment;
+import com.fragment.PhotoFragment2;
 import com.fragment.ScheduleFragment;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -210,7 +211,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 				R.id.realtabcontent);
 		AddTab("1", "聊天", ChatFragment.class);
 		AddTab("2", "日程", ScheduleFragment.class);
-		AddTab("3", "相册", PhotoFragment.class);
+		AddTab("3", "相册", PhotoFragment2.class);
 
 		findViewById(R.id.group_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.group_back).setOnClickListener(this);

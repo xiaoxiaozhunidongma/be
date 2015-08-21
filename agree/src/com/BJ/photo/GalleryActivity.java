@@ -6,6 +6,7 @@ import java.util.List;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.fragment.PhotoFragment;
+import com.fragment.PhotoFragment2;
 
 import android.app.Activity;
 import android.content.Context;
@@ -66,8 +67,8 @@ public class GalleryActivity extends Activity {
 		PublicWay.activityList.add(this);
 		mContext = this;
 		// back_bt = (Button) findViewById(Res.getWidgetID("gallery_back"));
-		send_bt = (Button) findViewById(Res.getWidgetID("send_button"));
-		del_bt = (Button) findViewById(Res.getWidgetID("gallery_del"));
+		send_bt = (Button) findViewById(R.id.send_button);
+		del_bt = (Button) findViewById(R.id.gallery_del);
 		// back_bt.setOnClickListener(new BackListener());
 		send_bt.setOnClickListener(new GallerySendListener());
 		del_bt.setOnClickListener(new DelListener());
@@ -79,8 +80,8 @@ public class GalleryActivity extends Activity {
 		pager = (ViewPagerFixed) findViewById(Res.getWidgetID("gallery01"));
 		pager.setOnPageChangeListener(pageChangeListener);
 		//PhotoFragment.bitmaps
-		for (int i = 0; i < PhotoFragment.bitmaps.size(); i++) {
-			initListViews(PhotoFragment.bitmaps.get(i));
+		for (int i = 0; i < PhotoFragment2.bitmaps.size(); i++) {
+			initListViews(PhotoFragment2.bitmaps.get(i));
 		}
 
 		adapter = new MyPageAdapter(listViews);

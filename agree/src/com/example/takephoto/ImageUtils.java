@@ -13,6 +13,8 @@
  */
 package com.example.takephoto;
 
+import android.util.Log;
+
 import com.easemob.util.EMLog;
 import com.easemob.util.PathUtil;
 
@@ -39,6 +41,7 @@ public class ImageUtils {
 		String thumbImageName= thumbRemoteUrl.substring(thumbRemoteUrl.lastIndexOf("/") + 1, thumbRemoteUrl.length());
 		String path =PathUtil.getInstance().getImagePath()+"/"+ "th"+thumbImageName;
         EMLog.d("msg", "thum image path:" + path);
+        Log.e("ImageUtils", "thum image path:===="+path);
         return path;
     }
 	
