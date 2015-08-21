@@ -21,6 +21,7 @@ public class homeImageLoaderUtils {
 
 	public static void clearCache() {
 		ImageLoader.getInstance().clearDiskCache();
+		ImageLoader.getInstance().clearMemoryCache();
 	}
 
 	private homeImageLoaderUtils() {// 私有化构造
@@ -38,11 +39,12 @@ public class homeImageLoaderUtils {
 		.showImageForEmptyUri(R.drawable.preview_2)
 		.showImageOnFail(R.drawable.ic_error)
 		.cacheInMemory(false)//是否缓存在内存中
-		.displayer(new RoundedBitmapDisplayer(50))//设置圆角
-		.cacheOnDisk(false)//是否缓存在SD卡中
+//		.displayer(new RoundedBitmapDisplayer(50))//设置圆角
+		.cacheOnDisk(true)//是否缓存在SD卡中
 		.considerExifParams(true)
 		.bitmapConfig(Bitmap.Config.RGB_565)  //格式
-		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
+//		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
+		.imageScaleType(ImageScaleType.EXACTLY)
 		.build();
 		
 				

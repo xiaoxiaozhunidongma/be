@@ -5,7 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.Menu;
 import android.widget.Toast;
 
@@ -29,13 +28,11 @@ import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
-	@SuppressWarnings("unused")
 	private Context context = WXEntryActivity.this;
 	private String code;
 	private boolean weixinLogin;
 	private Interface mWeiXinInterface;
 
-	@SuppressWarnings("unused")
 	private void handleIntent(Intent paramIntent) {
 		MyApplication.api.handleIntent(paramIntent, this);
 	}
@@ -91,7 +88,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	@Override
 	public void onResp(BaseResp resp) {
-
+		
+		Log.e("WXEntryActivity", "resp==="+resp.errCode);
 		switch (resp.errCode) {
 		case BaseResp.ErrCode.ERR_OK:
 			code = ((SendAuth.Resp) resp).code;
@@ -103,6 +101,13 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			break;
 		case BaseResp.ErrCode.ERR_AUTH_DENIED:
 			finish();
+			if (!weixinLogin) {
+				Log.e("WXEntryActivity", "有进入到这来了222222222========");
+				Intent intent = new Intent(WXEntryActivity.this,
+						UserSettingActivity.class);
+				startActivity(intent);
+				overridePendingTransition(0, 0);
+			}
 			break;
 		default:
 			break;

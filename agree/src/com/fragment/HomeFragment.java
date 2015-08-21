@@ -112,7 +112,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			}
 
 			initUI(inflater);
-			adapter.notifyDataSetChanged();
+//			adapter.notifyDataSetChanged();
 			initNewTeam();
 
 			swipeLayout = (SwipeRefreshLayout) mLayout.findViewById(R.id.swipe_refresh);
@@ -287,7 +287,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			}else
 			{
 				if (position < PhoneLoginActivity.list.size()) {
-					inflater = layoutInflater.inflate(R.layout.home_gridview_item, null);
+						inflater = layoutInflater.inflate(R.layout.home_gridview_item, null);
+//					inflater.destroyDrawingCache();//?????????
 					home_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
 					home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
 					Group homeuser_gridview = PhoneLoginActivity.list.get(position);
@@ -296,8 +297,9 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					home_item_name.setText(homenickname);
 					completeURL = beginStr + homeAvatar_path + endStr;
 					PreferenceUtils.saveImageCache(getActivity(), completeURL);
-					homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-							completeURL, home_item_head);
+//					homeImageLoaderUtils.clearCache();
+						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+								completeURL, home_item_head);
 					
 				} else {
 					inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);

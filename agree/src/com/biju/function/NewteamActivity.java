@@ -21,6 +21,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +40,8 @@ import com.BJ.javabean.Newteamback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.RequestCodeback;
 import com.BJ.javabean.User;
+import com.BJ.photo.Bimp;
+import com.BJ.utils.MyBimp;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Utils;
@@ -50,6 +53,7 @@ import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
+import com.example.takephoto.ImageUtils;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
@@ -333,8 +337,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
 						Log.e("图片路径", "result.url" + result.url);
-						// 上传完成后删除SD中图片
-						deleteMybitmap(sDpath);
+//						 上传完成后删除SD中图片
+//						deleteMybitmap(sDpath);
 						group.setAvatar_path(result.fileId);
 						// 创建CreatGroup
 						Group_User group_User = new Group_User();
@@ -379,14 +383,31 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 			Cursor cursor = NewteamActivity.this.getContentResolver().query(
 					selectedImage, filePathColumn, null, null, null);
-			cursor.moveToFirst();
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			mFilePath = cursor.getString(columnIndex);
-			cursor.close();
-			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+			if(cursor!=null){
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				mFilePath = cursor.getString(columnIndex);
+				cursor.close();
+				cursor = null;
+				
+			}else{
+				File file = new File(selectedImage.getPath());
+				mFilePath=file.getAbsolutePath();
+				if (!file.exists()) {
+					Toast toast = Toast.makeText(this, "找不到图片", Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+					return;
+				}
+			}
+			Log.e("NewteamActivity", "mFilePath======"+mFilePath);
+//			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+//			Bitmap bmp = Bimp.revitionImageSize(mFilePath);
+			//这个mFilePath不可以用缩略图路径
+			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 
-			saveMyBitmap(bmp, newteam_name);
-			mFilePath = sDpath;// 图片在SD卡中的路径
+//			saveMyBitmap(bmp, newteam_name);
+//			mFilePath = sDpath;// 图片在SD卡中的路径
 
 			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
 			mNewteam_head.setVisibility(View.VISIBLE);

@@ -1,6 +1,7 @@
 package com.BJ.utils;
 
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.OutputStream;
@@ -14,6 +15,8 @@ import android.net.Uri;
 import android.util.Log;
 
 public class Utils {
+	private static Bitmap destBitmap;
+
 	public static class CompressOptions {
 		public static final int DEFAULT_WIDTH = 400;
 		public static final int DEFAULT_HEIGHT = 800;
@@ -49,8 +52,8 @@ public class Utils {
 		// return BitmapFactory.decodeFile(path, options);
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-
-		Bitmap temp = BitmapFactory.decodeFile(path, options);
+		options.inPurgeable = true;//这个参数不知道干嘛的。
+		options.inTempStorage = new byte[16*1024];
 
 		int actualWidth = options.outWidth;
 		int actualHeight = options.outHeight;
@@ -65,8 +68,18 @@ public class Utils {
 				desiredWidth, desiredHeight);
 
 		Bitmap bitmap = null;
-
-		Bitmap destBitmap = BitmapFactory.decodeFile(path, options);
+//?????????????????????????????????????????????????????????????????????????????????????????
+		FileInputStream fis;
+		try {
+			Log.e("UUUUUUUUUUUUUUUUU", "path===="+path);
+			Log.e("UUUUUUUUUUUUUUUUU!!!!", "path===="+path+"test.jpg");
+			fis = new FileInputStream(new File(path));
+			destBitmap = BitmapFactory.decodeStream(fis, null, options);
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+//		Bitmap destBitmap = BitmapFactory.decodeFile(path, options);
 
 		// If necessary, scale down to the maximal acceptable size.
 		if (destBitmap.getWidth() > desiredWidth

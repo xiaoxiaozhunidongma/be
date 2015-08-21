@@ -1,5 +1,6 @@
 package com.biju;
 
+import java.io.File;
 import java.util.ArrayList;
 
 import android.app.Activity;
@@ -16,11 +17,14 @@ import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.Window;
+import android.widget.Toast;
 
 import com.BJ.photo.Bimp;
 import com.BJ.utils.InitHead;
+import com.BJ.utils.MyBimp;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.fragment.FriendsFragment;
@@ -127,12 +131,29 @@ public class MainActivity extends FragmentActivity {
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 			Cursor cursor = MainActivity.this.getContentResolver().query(
 					selectedImage, filePathColumn, null, null, null);
-			cursor.moveToFirst();
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			mFilePath = cursor.getString(columnIndex);
-			cursor.close();
-			Bitmap bm = Bimp.revitionImageSize(mFilePath);
-			InitHead.initHead(bm);
+			if(cursor!=null){
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				mFilePath = cursor.getString(columnIndex);
+				cursor.close();
+				cursor = null;
+				
+			}else{
+				File file = new File(selectedImage.getPath());
+				mFilePath=file.getAbsolutePath();
+				if (!file.exists()) {
+					Toast toast = Toast.makeText(this, "找不到图片", Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+					return;
+				}
+			}
+			Log.e("NewteamActivity", "mFilePath======"+mFilePath);
+//			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+//			Bitmap bmp = Bimp.revitionImageSize(mFilePath);
+			//这个mFilePath不可以用缩略图路径
+			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
+			InitHead.initHead(bmp);
 			Log.e("MainActivity", "获取的图片路径=======" + mFilePath);
 			SdPkUser.setGetFilePath(mFilePath);
 		} catch (Exception e) {

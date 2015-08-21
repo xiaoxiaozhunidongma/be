@@ -138,7 +138,7 @@
     <string name="not_download">Did not download:</string>
     <string name="resend">重发</string>
     <string name="confirm_resend">确认重发该信息？</string>
-    <string name="Into_the_blacklist">Move to the blacklist?</string>
+    <string name="Into_the_blacklist">是否移入黑名单?</string>
     <string name="connect_failuer_toast">Please check the network or try again later</string>
     <string name="send_fail">Send failed</string>
     <string name="error_send_invalid_content">The message content is not allowed to be sent!</string>

@@ -8,12 +8,18 @@ import android.util.Log;
 import cn.jpush.android.api.JPushInterface;
 
 import com.BJ.javabean.User;
+import com.BJ.photo.Res;
 import com.baidu.mapapi.SDKInitializer;
 import com.easemob.EMCallBack;
 import com.example.takephoto.DemoHXSDKHelper;
+import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
+import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
+import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
+import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
+import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
@@ -31,6 +37,8 @@ public class MyApplication extends Application {
 		MyApplication.regId = regId;
 	}
 
+
+
 	public static IWXAPI api;
 	
 	@Override
@@ -38,17 +46,40 @@ public class MyApplication extends Application {
 		// TODO Auto-generated method stub
 		super.onCreate();
 		
+		Res.init(this);//初始化RES
+		
 		//注册微信
 		api = WXAPIFactory.createWXAPI(this, "wx9be30a70fcb480ae", 	 true); 
 		api.registerApp("wx9be30a70fcb480ae");
 		
 		//初始化imageloader
+		
+		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
+		.cacheInMemory(false).
+		imageScaleType(ImageScaleType.EXACTLY)
+		.cacheOnDisk(true).build();
+		
 		ImageLoaderConfiguration config = new
 				ImageLoaderConfiguration .Builder(getApplicationContext())
 				.threadPoolSize(5)
-				.threadPriority(Thread.MIN_PRIORITY + 3)
+//				.threadPriority(Thread.MIN_PRIORITY + 3)
 				.denyCacheImageMultipleSizesInMemory()//强制不能存重复的图片
 //				.memoryCache(new WeakMemoryCache()) //设置。。。
+				.threadPriority(Thread.NORM_PRIORITY - 2)
+.denyCacheImageMultipleSizesInMemory()
+.diskCacheFileNameGenerator(new Md5FileNameGenerator())
+.tasksProcessingOrder(QueueProcessingType.LIFO)
+.denyCacheImageMultipleSizesInMemory()
+// .memoryCache(new LruMemoryCache((int) (6 * 1024 * 1024)))
+.memoryCache(new WeakMemoryCache())
+.memoryCacheSize((int) (2 * 1024 * 1024))
+.memoryCacheSizePercentage(13)
+// default
+//.diskCache(new UnlimitedDiscCache(cacheDir))
+// default
+.diskCacheSize(50 * 1024 * 1024).diskCacheFileCount(100)
+.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
+.defaultDisplayImageOptions(defaultOptions).writeDebugLogs() // Remove
 				.build();
 //		initImageLoader(getApplicationContext());
 		ImageLoader.getInstance().init(config);

@@ -6,6 +6,7 @@ import java.util.List;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.fragment.PhotoFragment;
+import com.fragment.PhotoFragment2;
 
 import android.app.Activity;
 import android.content.Context;
@@ -62,12 +63,12 @@ public class GalleryActivity extends Activity {
 	public void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setContentView(Res.getLayoutID("plugin_camera_gallery"));// 切屏到主界面
+		setContentView(R.layout.plugin_camera_gallery);// 切屏到主界面
 		PublicWay.activityList.add(this);
 		mContext = this;
 		// back_bt = (Button) findViewById(Res.getWidgetID("gallery_back"));
-		send_bt = (Button) findViewById(Res.getWidgetID("send_button"));
-		del_bt = (Button) findViewById(Res.getWidgetID("gallery_del"));
+		send_bt = (Button) findViewById(R.id.send_button);
+		del_bt = (Button) findViewById(R.id.gallery_del);
 		// back_bt.setOnClickListener(new BackListener());
 		send_bt.setOnClickListener(new GallerySendListener());
 		del_bt.setOnClickListener(new DelListener());
@@ -78,8 +79,9 @@ public class GalleryActivity extends Activity {
 		// 为发送按钮设置文字
 		pager = (ViewPagerFixed) findViewById(Res.getWidgetID("gallery01"));
 		pager.setOnPageChangeListener(pageChangeListener);
-		for (int i = 0; i < Bimp.tempSelectBitmap.size(); i++) {
-			initListViews(Bimp.tempSelectBitmap.get(i).getBitmap());
+		//PhotoFragment.bitmaps
+		for (int i = 0; i < PhotoFragment2.bitmaps.size(); i++) {
+			initListViews(PhotoFragment2.bitmaps.get(i));
 		}
 
 		adapter = new MyPageAdapter(listViews);
@@ -120,20 +122,22 @@ public class GalleryActivity extends Activity {
 	private class DelListener implements OnClickListener {
 
 		public void onClick(View v) {
-			if (listViews.size() == 1) {
-				Bimp.tempSelectBitmap.clear();
-				Bimp.max = 0;
-				Intent intent = new Intent("data.broadcast.action");
-				sendBroadcast(intent);
-				finish();
-			} else {
-				Bimp.tempSelectBitmap.remove(location);
-				Bimp.max--;
-				pager.removeAllViews();
-				listViews.remove(location);
-				adapter.setListViews(listViews);
-				adapter.notifyDataSetChanged();
-			}
+//			if (listViews.size() == 1) {
+////				PhotoFragment.bitmaps.clear();
+//				Bimp.tempSelectBitmap.clear();
+//				Bimp.max = 0;
+//				Intent intent = new Intent("data.broadcast.action");
+//				sendBroadcast(intent);
+//				finish();
+//			} else {
+////				PhotoFragment.bitmaps.remove(location);
+//				Bimp.tempSelectBitmap.remove(location);
+//				Bimp.max--;
+//				pager.removeAllViews();
+//				listViews.remove(location);
+//				adapter.setListViews(listViews);
+//				adapter.notifyDataSetChanged();
+//			}
 		}
 	}
 

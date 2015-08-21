@@ -15,6 +15,7 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -28,8 +29,10 @@ import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.Registeredback;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.photo.Bimp;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.InitHead;
+import com.BJ.utils.MyBimp;
 import com.BJ.utils.Person;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
@@ -353,11 +356,28 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 			Cursor cursor = RegisteredActivity.this.getContentResolver().query(
 					selectedImage, filePathColumn, null, null, null);
-			cursor.moveToFirst();
-			int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-			mFilePath = cursor.getString(columnIndex);
-			cursor.close();
-			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+			if(cursor!=null){
+				cursor.moveToFirst();
+				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+				mFilePath = cursor.getString(columnIndex);
+				cursor.close();
+				cursor = null;
+				
+			}else{
+				File file = new File(selectedImage.getPath());
+				mFilePath=file.getAbsolutePath();
+				if (!file.exists()) {
+					Toast toast = Toast.makeText(this, "找不到图片", Toast.LENGTH_SHORT);
+					toast.setGravity(Gravity.CENTER, 0, 0);
+					toast.show();
+					return;
+				}
+			}
+			Log.e("NewteamActivity", "mFilePath======"+mFilePath);
+//			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+//			Bitmap bmp = Bimp.revitionImageSize(mFilePath);
+			//这个mFilePath不可以用缩略图路径
+			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 			InitHead.initHead(bmp);// 画圆形头像
 			isHead = !isHead;
 		} catch (Exception e) {

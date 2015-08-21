@@ -33,7 +33,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:background="#000000"
-        android:visibility="gone"
          >
 
         <TextView
@@ -49,28 +48,5 @@
 
     </RelativeLayout>
 
-<!-- </RelativeLayout> -->
-<!--     <RelativeLayout -->
-<!--         android:id="@+id/photo_upload_layout" -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="50.0dp" -->
-<!--         android:layout_alignParentBottom="true" -->
-<!--         android:layout_centerHorizontal="true" -->
-<!--         android:background="#000000" -->
-<!--         android:visibility="gone" -->
-<!--          > -->
-
-<!--         <TextView -->
-<!--             android:id="@+id/photo_upload" -->
-<!--             android:layout_width="wrap_content" -->
-<!--             android:layout_height="wrap_content" -->
-<!--             android:layout_centerHorizontal="true" -->
-<!--             android:layout_centerVertical="true" -->
-<!--             android:text="开始上传图片" -->
-<!--             android:textSize="17.0sp" -->
-<!--             android:textColor="#ffffff" -->
-<!--              /> -->
-
-<!--     </RelativeLayout> -->
 
 </RelativeLayout>

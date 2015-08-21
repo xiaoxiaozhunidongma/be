@@ -38,30 +38,19 @@ public class ImageLoaderUtils4Photos {
 
 	private void initUILOptions() {
 		options = new DisplayImageOptions.Builder()
-				.showImageOnLoading(R.drawable.preview_2)
-				.showImageForEmptyUri(R.drawable.preview_2)
+				.showImageOnLoading(R.drawable.plugin_camera_no_pictures)
+				.showImageForEmptyUri(R.drawable.plugin_camera_no_pictures)
 				.showImageOnFail(R.drawable.ic_error)
 				.cacheInMemory(false)//是否缓存在内存中
 				.displayer(new RoundedBitmapDisplayer(50))//设置圆角
-				.cacheOnDisk(false)//是否缓存在SD卡中
+				.cacheOnDisk(true)//是否缓存在SD卡中
 				.considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)  //格式
-				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
+//				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
+				.imageScaleType(ImageScaleType.EXACTLY)
 				.build();
 		
 				
-	}
-	public void LoadImage(AlbumGridViewAdapter albumGridViewAdapter,
-			String imagePath, ImageView imageView) {
-		// TODO Auto-generated method stub
-		ImageLoader.getInstance().displayImage(imagePath, imageView, options, null);
-		
-	}
-	public void LoadImage(FolderAdapter folderAdapter, String imagePath,
-			ImageView imageView) {
-		// TODO Auto-generated method stub
-		ImageLoader.getInstance().displayImage(imagePath, imageView, options, null);
-		
 	}
 
 }

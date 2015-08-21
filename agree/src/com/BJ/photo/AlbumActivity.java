@@ -26,10 +26,6 @@ import android.widget.Toast;
 import android.widget.ToggleButton;
 
 import com.biju.R;
-import com.fragment.PhotoFragment;
-
-
-
 import com.biju.function.GroupActivity;
 import com.fragment.PhotoFragment;
 
@@ -62,7 +58,6 @@ public class AlbumActivity extends Activity {
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setContentView(Res.getLayoutID("plugin_camera_album"));
 		setContentView(R.layout.plugin_camera_album);
 		PublicWay.activityList.add(this);
 		mContext = AlbumActivity.this;
@@ -77,6 +72,8 @@ public class AlbumActivity extends Activity {
 		isShowOkBt();
 		Log.e("AlbumActivity", "进入了onCreate=======");
 	}
+	
+	
 	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 
 		@Override
@@ -101,7 +98,7 @@ public class AlbumActivity extends Activity {
 	// 完成按钮的监听
 	private class AlbumSendListener implements OnClickListener {
 		public void onClick(View v) {
-			PhotoFragment.beginUpload.begin();
+//			PhotoFragment.beginUpload.begin();
 			
 			SharedPreferences sp=getSharedPreferences("isPhoto", 0);
 			Editor editor=sp.edit();
@@ -110,6 +107,7 @@ public class AlbumActivity extends Activity {
 			overridePendingTransition(R.anim.activity_translate_in, R.anim.activity_translate_out);
 //			intent.setClass(mContext, GroupActivity.class);
 //			startActivity(intent);
+			setResult(111);
 			finish();
 		}
 
@@ -124,8 +122,6 @@ public class AlbumActivity extends Activity {
 		dataList = new ArrayList<ImageItem>();
 		for (int i = 0; i < contentList.size(); i++) {
 			dataList.addAll(contentList.get(i).imageList);
-			ImageItem imageItem = dataList.get(i);//调试
-			imageItem.setImageId("");
 		}
 
 		mPhoto_num = (TextView) findViewById(R.id.photo_num);
@@ -222,7 +218,8 @@ public class AlbumActivity extends Activity {
 			Editor editor = sp.edit();
 			editor.putBoolean("Photo", true);
 			editor.commit();
-			Bimp.tempSelectBitmap.clear();
+			//??????????????????
+//			Bimp.tempSelectBitmap.clear();
 			finish();
 		}
 		return false;
@@ -240,5 +237,19 @@ public class AlbumActivity extends Activity {
 		// TODO Auto-generated method stub
 		unregisterReceiver(broadcastReceiver);
 		super.onDestroy();
+	}
+	
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		helper = AlbumHelper.getHelper();
+		helper.init(getApplicationContext());
+
+		contentList = helper.getImagesBucketList(false);
+		dataList = new ArrayList<ImageItem>();
+		for (int i = 0; i < contentList.size(); i++) {
+			dataList.addAll(contentList.get(i).imageList);
+		}
+		super.onStart();
 	}
 }
