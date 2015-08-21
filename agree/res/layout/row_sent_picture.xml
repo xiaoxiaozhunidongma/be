@@ -26,7 +26,7 @@
             android:layout_height="@dimen/size_avatar"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/margin_chat_activity"
-            android:background="@drawable/mini_avatar_shadow"
+            android:src="@drawable/mini_avatar_shadow"
             android:layout_alignBottom="@id/iv_sendPicture"
             android:scaleType="fitXY" />
 
@@ -96,6 +96,18 @@
             android:text="@string/text_delivered_msg"
             android:textSize="12sp"
             android:visibility="invisible" />
+
+                <TextView
+                    android:id="@+id/tv_sendtime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="5dp"
+                                android:layout_centerVertical="true"
+                    android:layout_toLeftOf="@+id/iv_sendPicture"
+                    android:text="15:32"
+                    android:textColor="#8e8e8e"
+                    android:textSize="12sp" />
+
     </RelativeLayout>
 
 </LinearLayout>

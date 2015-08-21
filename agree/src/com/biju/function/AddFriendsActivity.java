@@ -74,7 +74,6 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 	private ArrayList<CheckFriends> contactFriends_list = new ArrayList<CheckFriends>();
 	private String[] phoneArrays;
 	private MyAdapter adapter;
-	private int jj;
 
 	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
 	private String endStr = "/original";
@@ -209,7 +208,6 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 								String contactphone = phonelist2.get(j);
 								if (contact_list_phone.equals(contactphone)) {
 									contactFriends_list.add(checkFriends);
-									jj = j;
 									Log.e("AddFriendsActivity","得到的相同号码1111==="+ contact_list_phone);
 									Log.e("AddFriendsActivity","得到的相同号码2222===" + contactphone);
 									if (size == 0) {
@@ -243,30 +241,19 @@ public class AddFriendsActivity extends Activity implements OnClickListener,
 					if (isHeadview) {
 						float height1 = (float) (((NickNamelist.size()) * 60.0));
 						mContact_head_layout.setLayoutParams(new RelativeLayout.LayoutParams(
-										LayoutParams.MATCH_PARENT,
-										DensityUtil.dip2px(
-												AddFriendsActivity.this,
-												height1)));
+										LayoutParams.MATCH_PARENT,DensityUtil.dip2px(AddFriendsActivity.this,height1)));
 						mContact_head_listview.setAdapter(contactAdapter);
 					}
 
 					if (isADD) {
 						if (isAddThe) {
 							float height = (float) ((AddThe_list.size()) * 60.0);
-							mContact_head_listview_2_layout
-									.setLayoutParams(new RelativeLayout.LayoutParams(
-											LayoutParams.MATCH_PARENT,
-											DensityUtil.dip2px(
-													AddFriendsActivity.this,
-													height)));
+							mContact_head_listview_2_layout.setLayoutParams(new RelativeLayout.LayoutParams(
+											LayoutParams.MATCH_PARENT,DensityUtil.dip2px(AddFriendsActivity.this,height)));
 						} else {
 							float height = (float) ((ByAdd_list.size()) * 60.0);
-							mContact_head_listview_2_layout
-									.setLayoutParams(new RelativeLayout.LayoutParams(
-											LayoutParams.MATCH_PARENT,
-											DensityUtil.dip2px(
-													AddFriendsActivity.this,
-													height)));
+							mContact_head_listview_2_layout.setLayoutParams(new RelativeLayout.LayoutParams(
+											LayoutParams.MATCH_PARENT,DensityUtil.dip2px(AddFriendsActivity.this,height)));
 						}
 						mContact_head_listview_2.setAdapter(contactAdapter2);
 					}

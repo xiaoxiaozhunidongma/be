@@ -40,21 +40,16 @@
                 android:textColor="#d3d3d3"
                 android:textSize="17.0sp" />
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="match_parent"
-            android:layout_height="1.0dp"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="#aaaaaa" />
     </RelativeLayout>
 
+    
     <android.support.v4.widget.SwipeRefreshLayout
         android:id="@+id/tab_party_swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="50.0dp" >
+        android:layout_marginTop="50.0dp"
+        android:visibility="gone"
+         >
 
         <ListView
             android:id="@+id/tab_party_listview"
@@ -63,7 +58,8 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" >
         </ListView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>
+   
 
     <RelativeLayout
         android:id="@+id/tab_party_prompt_layout"
@@ -71,7 +67,8 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/tab_party_title_layout"
         android:layout_centerHorizontal="true"
-        android:visibility="gone" >
+        android:visibility="gone"
+         >
 
         <TextView
             android:id="@+id/textView3"
@@ -82,6 +79,12 @@
             android:layout_marginTop="45dp"
             android:text="你还没有参与过日程哦！"
             android:textColor="#ff0000" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:background="#aaaaaa" />
     </RelativeLayout>
 
 </RelativeLayout>

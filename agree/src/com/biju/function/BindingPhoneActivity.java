@@ -23,6 +23,7 @@ import com.BJ.javabean.Codeback;
 import com.BJ.javabean.Phone;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.requestVerCodeListenner;
 import com.biju.Interface.updateUserListenner;
@@ -53,7 +54,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_binding_phone);
 		Intent intent = getIntent();
-		user = (User) intent.getSerializableExtra("UserData");
+		user = (User) intent.getSerializableExtra(IConstant.UserData);
 		initUI();
 		initInterface();
 	}
@@ -131,16 +132,14 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				// 更新用户资料成功
-				updateback usersetting_updateback = GsonUtils.parseJson(A,
-						updateback.class);
+				updateback usersetting_updateback = GsonUtils.parseJson(A,updateback.class);
 				int a = usersetting_updateback.getStatusMsg();
 				if (a == 1) {
 					Log.e("UserSettingActivity", "更新成功" + A);
 					UserSettingActivity.UserSetting.getRefresh();
 					finish();
 				} else {
-					Toast.makeText(BindingPhoneActivity.this, "绑定失败，请重新绑定",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(BindingPhoneActivity.this, "绑定失败，请重新绑定",Toast.LENGTH_SHORT).show();
 				}
 			}
 
@@ -189,8 +188,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 							mBinding_phone_phone.setText(phone);
 							mBinding_phone_phone.setSelection(phone.length());
 						} else {
-							phone = phone.substring(0, 3) + " "
-									+ phone.substring(3);
+							phone = phone.substring(0, 3) + " "+ phone.substring(3);
 							mBinding_phone_phone.setText(phone);
 							mBinding_phone_phone.setSelection(phone.length());
 						}
@@ -200,8 +198,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 							mBinding_phone_phone.setText(phone);
 							mBinding_phone_phone.setSelection(phone.length());
 						} else {
-							phone = phone.substring(0, 8) + " "
-									+ phone.substring(8);
+							phone = phone.substring(0, 8) + " "+ phone.substring(8);
 							mBinding_phone_phone.setText(phone);
 							mBinding_phone_phone.setSelection(phone.length());
 						}
@@ -255,14 +252,12 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 		{
 			Phone binding_phone_1 = new Phone();
 			binding_phone_1.setPhone(binding_phone);
-			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,
-					binding_phone_1);
+			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,binding_phone_1);
 		}else
 		{
 			String code_1 = mBinding_phone_code.getText().toString().trim();
 			Log.e("BindingPhoneActivity", "所得到的验证码1111======" + code_1);
-			Log.e("BindingPhoneActivity", "所得到的验证码222222======"
-					+ mBinding_phone_codeback);
+			Log.e("BindingPhoneActivity", "所得到的验证码222222======"+ mBinding_phone_codeback);
 			if (Integer.valueOf(code_1).equals(mBinding_phone_codeback)) {
 				User usersetting = new User();
 				usersetting.setPk_user(user.getPk_user());
@@ -276,20 +271,17 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 				usersetting.setAvatar_path(user.getAvatar_path());
 				usersetting.setStatus(user.getStatus());
 				usersetting.setWechat_id(user.getWechat_id());
-				mBinding_phone_interface.updateUser(BindingPhoneActivity.this,
-						usersetting);
+				mBinding_phone_interface.updateUser(BindingPhoneActivity.this,usersetting);
 				
 			} else {
-				Toast.makeText(BindingPhoneActivity.this, "验证码错误！",
-						Toast.LENGTH_SHORT).show();
+				Toast.makeText(BindingPhoneActivity.this, "验证码错误！",Toast.LENGTH_SHORT).show();
 			}
 		}
 	}
 
 	private void binding_phone_send() {
 		if (phone == null) {
-			Toast.makeText(BindingPhoneActivity.this, "请先输入电话号码",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(BindingPhoneActivity.this, "请先输入电话号码",Toast.LENGTH_SHORT).show();
 		} else {
 			String phone1 = phone.substring(0, 3);
 			String phone2 = phone.substring(4, 8);
@@ -298,8 +290,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 			Log.e("BindingPhoneActivity", "所得到的电话号码======" + binding_phone);
 			Phone binding_phone_1 = new Phone();
 			binding_phone_1.setPhone(binding_phone);
-			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,
-					binding_phone_1);
+			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,binding_phone_1);
 			
 		}
 	}

@@ -1,23 +1,32 @@
 package com.biju.function;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
-
+import android.widget.RelativeLayout;
+import android.widget.RelativeLayout.LayoutParams;
 import com.BJ.javabean.FeedBack;
+import com.BJ.utils.DensityUtil;
 import com.biju.Interface;
 import com.biju.Interface.feedBackListenner;
 import com.biju.R;
 
+@SuppressLint("NewApi")
 public class FeedbackActivity extends Activity implements OnClickListener {
 
 	private EditText mFeedback_question;
 	private Interface feedbackinterface;
+	private RelativeLayout mFeedback_question_layout;
+	private float height1;
+	private float height3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +43,11 @@ public class FeedbackActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				Log.e("FeedbackActivity", "sdasdf aesrfdraedfaed");
+				Log.e("FeedbackActivity", "sdasdf aesrfdraedfaed"+A);
 			}
 
 			@Override
 			public void defail(Object B) {
-				// TODO Auto-generated method stub
 
 			}
 		});
@@ -51,6 +59,34 @@ public class FeedbackActivity extends Activity implements OnClickListener {
 		findViewById(R.id.feedback_send_layout).setOnClickListener(this);// 发送
 		findViewById(R.id.feedback_send).setOnClickListener(this);
 		mFeedback_question = (EditText) findViewById(R.id.feedback_question);// 问题
+		mFeedback_question_layout = (RelativeLayout) findViewById(R.id.feedback_question_layout);
+		mFeedback_question.addTextChangedListener(new TextWatcher() {
+			
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before, int count) {
+				String question=s.toString();
+				if(!("".equals(question)))
+				{
+					//得到布局中设置的行数
+					int num=mFeedback_question.getLineCount();
+					if(num>=4)
+					{
+						mFeedback_question.setLines(num+1);
+					}
+				}
+			}
+			
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+				
+			}
+			
+			@Override
+			public void afterTextChanged(Editable s) {
+				
+			}
+		});
 	}
 
 	@Override

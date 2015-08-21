@@ -175,5 +175,7 @@
     <string name="title_activity_phone_registered">PhoneRegisteredActivity</string>
     <string name="title_activity_phone_login">PhoneLoginActivity</string>
     <string name="title_activity_wxentry">WXEntryActivity</string>
+    <string name="title_activity_nickname">NicknameActivity</string>
+    <string name="title_activity_sex">SexActivity</string>
 
 </resources>

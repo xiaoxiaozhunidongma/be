@@ -134,7 +134,8 @@ https://github.com/android/platform_frameworks_base/blob/master/core/res/res/lay
                 android:layout_marginRight="5dp"
                 android:layout_marginTop="10.0dp"
                 android:text="OK"
-                android:visibility="gone" />
+                android:visibility="gone"
+                 />
 
             <TextView
                 android:id="@+id/textView2"

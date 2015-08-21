@@ -20,13 +20,13 @@ import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.Toast;
 
 import com.BJ.utils.KCalendar;
+import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.KCalendar.OnCalendarClickListener;
 import com.BJ.utils.KCalendar.OnCalendarDateChangedListener;
 import com.biju.R;
 
 public class TimeActivity extends Activity implements OnClickListener {
 
-	public static TimeActivity Time;
 	String date = null;// 设置默认选中的日期 格式为 “2014-04-05” 标准DATE格式
 	private KCalendar calendar;
 	private TextView popupwindow_calendar_month;
@@ -42,9 +42,10 @@ public class TimeActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_time);
+		//加入List中
+		RefreshActivity.activList_2.add(TimeActivity.this);
 		initUI();
 		initDate();
-		Time=this;
 	}
 
 	private void initDate() {
@@ -59,10 +60,8 @@ public class TimeActivity extends Activity implements OnClickListener {
 			Log.e("MainActivity", "进保存后的");
 			if (null != date) {
 
-				int years = Integer.parseInt(date.substring(0,
-						date.indexOf("-")));
-				int month = Integer.parseInt(date.substring(
-						date.indexOf("-") + 1, date.lastIndexOf("-")));
+				int years = Integer.parseInt(date.substring(0,date.indexOf("-")));
+				int month = Integer.parseInt(date.substring(date.indexOf("-") + 1, date.lastIndexOf("-")));
 				popupwindow_calendar_month.setText(years + "年" + month + "月");
 
 				calendar.showCalendar(years, month);

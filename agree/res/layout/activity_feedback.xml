@@ -2,12 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".FeedbackActivity"
     android:background="#ffffff"
-     >
+    tools:context=".FeedbackActivity" >
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
+        android:id="@+id/feedback_title_layout"
         android:layout_width="match_parent"
         android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
@@ -46,56 +45,102 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="发送"
+                android:text="完成"
                 android:textColor="#d3d3d3"
                 android:textSize="17.0sp" />
         </RelativeLayout>
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="用户反馈"
-            android:textSize="18.0sp" />
 
         <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
-            android:background="#aaaaaa"
-             />
-
+            android:background="#aaaaaa" />
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView2"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="22dp"
-        android:text="请描述您遇到的问题"
-        android:textSize="18.0sp"
-         />
+   
 
-    <EditText
-        android:id="@+id/feedback_question"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView2"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/feedback_title_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="16dp"
-        android:ems="10" 
-        android:layout_marginLeft="10.0dp"
-        android:layout_marginRight="10.0dp"
-        android:background="#ffffff"
-        android:hint="请输入问题:"
-        android:maxHeight="200.0dp"
-        android:maxLines="15"
-        />
-     <requestFocus />
+        android:background="#efefef" >
+
+        <RelativeLayout
+            android:id="@+id/feedback_prompt_layout"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="35.0dp"
+                android:text="输入你的想要反馈的问题以及对我们的建议"
+                android:textColor="#808080"
+                android:textSize="12.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/feedback_question_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/feedback_prompt_layout"
+            android:layout_marginTop="5.0dp"
+            android:background="#ffffff" >
+
+            <EditText
+                android:id="@+id/feedback_question"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:ems="10"
+                android:background="@null"
+                android:hint=""
+                android:lines="4"
+                android:gravity="top"
+                 >
+
+                <requestFocus />
+            </EditText>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="60.0dp"
+            android:layout_below="@+id/feedback_question_layout"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginTop="10.0dp"
+                android:text="小提示:"
+                android:textSize="12.0sp"
+                android:textColor="#808080"
+                 />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="30.0dp"
+                android:layout_marginLeft="20.0dp"
+                android:text="我们将十分重视你的意见!"
+                android:textSize="12.0sp"
+                android:textColor="#808080"
+                 />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
 
 </RelativeLayout>

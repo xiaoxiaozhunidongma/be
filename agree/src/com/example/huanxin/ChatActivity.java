@@ -76,7 +76,6 @@ import android.widget.Toast;
 import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
-import com.biju.IConstant;
 import com.biju.R;
 import com.easemob.EMCallBack;
 import com.easemob.EMChatRoomChangeListener;
@@ -211,7 +210,7 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 		activityInstance=this;
 		//...............................    ...........................
 		Intent intent = getIntent();
-		mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra(IConstant.AllFriends);
+		mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("allFriends");
 		
 		int pk_user = mAllFriends.getPk_user();
 		nickname = mAllFriends.getNickname();
@@ -536,6 +535,8 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 
 	private void unitUI() {
 		
+		findViewById(R.id.tv_detail).setOnClickListener(this);//详情
+		findViewById(R.id.rela_more).setOnClickListener(this);
 		findViewById(R.id.tv_back).setOnClickListener(this);
 		picture_source_rela = (RelativeLayout) findViewById(R.id.picture_source_rela);
 		picture_source_rela.setOnClickListener(this);
@@ -1029,6 +1030,9 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 						holder.pb = (ProgressBar) convertView.findViewById(R.id.progressBar);
 						holder.staus_iv = (ImageView) convertView.findViewById(R.id.msg_status);
 						holder.tv_usernick = (TextView) convertView.findViewById(R.id.tv_userid);
+						holder.tv_sendtime = (TextView) convertView.findViewById(R.id.tv_sendtime);
+						holder.tv_yymmdd = (TextView) convertView.findViewById(R.id.tv_yymmdd);
+						holder.tv_hhmm = (TextView) convertView.findViewById(R.id.tv_hhmm);
 					} catch (Exception e) {
 					}
 
@@ -1042,6 +1046,8 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 						holder.tv = (TextView) convertView.findViewById(R.id.tv_chatcontent);
 						holder.tv_usernick = (TextView) convertView.findViewById(R.id.tv_userid);
 						holder.tv_sendtime = (TextView) convertView.findViewById(R.id.tv_sendtime);
+						holder.tv_yymmdd = (TextView) convertView.findViewById(R.id.tv_yymmdd);
+						holder.tv_hhmm = (TextView) convertView.findViewById(R.id.tv_hhmm);
 					} catch (Exception e) {
 					}
 
@@ -1243,18 +1249,16 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 			}
 
 			TextView timestamp = (TextView) convertView.findViewById(R.id.timestamp);
-			TextView tv_yymmdd = (TextView) convertView.findViewById(R.id.tv_yymmdd);
-			TextView tv_hhmm = (TextView) convertView.findViewById(R.id.tv_hhmm);
 			
 			SimpleDateFormat format=new SimpleDateFormat("yy/M/d");
 			String yymmdd=format.format(new Date(message.getMsgTime()));
 			SimpleDateFormat format2=new SimpleDateFormat("HH:mm");
 			String HHmm=format2.format(new Date(message.getMsgTime()));
-			if(tv_yymmdd!=null){
-				tv_yymmdd.setText(yymmdd);
+			if(holder.tv_yymmdd!=null){
+				holder.tv_yymmdd.setText(yymmdd);
 			}
-			if(tv_hhmm!=null){
-				tv_hhmm.setText(HHmm);
+			if(holder.tv_hhmm!=null){
+				holder.tv_hhmm.setText(HHmm);
 			}
 
 //			if (position == 0) {
@@ -1341,10 +1345,12 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 					}
 					break;
 				case INPROGRESS: // 发送中
+					Log.e("ChatAc", "发送中=======");//此处并没有调用
 					holder.pb.setVisibility(View.VISIBLE);
 					holder.staus_iv.setVisibility(View.GONE);
-					//不显示发送时间
+//					不显示发送时间
 					if(holder.tv_sendtime !=null){
+						Log.e("ChatAc", "holder.tv_sendtime+++++++holder.tv_sendtime+++++++holder.tv_sendtime");
 						holder.tv_sendtime .setVisibility(View.GONE);
 					}
 					break;
@@ -1396,6 +1402,10 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 					holder.iv.setImageResource(R.drawable.default_image);
 					showDownloadImageProgress(message, holder);
 					// downloadImage(message, holder);
+//					不显示发送时间
+					if(holder.tv_sendtime !=null){
+						holder.tv_sendtime .setVisibility(View.GONE);
+					}
 				} else {
 					// "!!!! not back receive, show image directly");
 					holder.pb.setVisibility(View.GONE);
@@ -1433,13 +1443,23 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 				holder.pb.setVisibility(View.GONE);
 				holder.tv.setVisibility(View.GONE);
 				holder.staus_iv.setVisibility(View.GONE);
+				if(holder.tv_sendtime !=null){
+					holder.tv_sendtime .setVisibility(View.VISIBLE);
+				}
 				break;
 			case FAIL:
 				holder.pb.setVisibility(View.GONE);
 				holder.tv.setVisibility(View.GONE);
 				holder.staus_iv.setVisibility(View.VISIBLE);
+				if(holder.tv_sendtime !=null){
+					holder.tv_sendtime .setVisibility(View.GONE);
+				}
 				break;
 			case INPROGRESS:
+//				不显示发送时间
+				if(holder.tv_sendtime !=null){
+					holder.tv_sendtime .setVisibility(View.GONE);
+				}
 				holder.staus_iv.setVisibility(View.GONE);
 				holder.pb.setVisibility(View.VISIBLE);
 				holder.tv.setVisibility(View.VISIBLE);
@@ -1882,8 +1902,10 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 		 * @param position
 		 */
 		public void sendMsgInBackground(final EMMessage message, final ViewHolder holder) {
+			//这里为发送中....
 			holder.staus_iv.setVisibility(View.GONE);
 			holder.pb.setVisibility(View.VISIBLE);
+			holder.tv_sendtime.setVisibility(View.GONE);
 
 			final long start = System.currentTimeMillis();
 			// 调用sdk发送异步发送方法
@@ -1903,6 +1925,7 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 
 				@Override
 				public void onProgress(int progress, String status) {
+					Log.e("ChatAcs", "progress==="+progress);
 				}
 
 			});
@@ -1987,6 +2010,9 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 								// send success
 								holder.pb.setVisibility(View.GONE);
 								holder.tv.setVisibility(View.GONE);
+								if(holder.tv_sendtime !=null){
+									holder.tv_sendtime .setVisibility(View.VISIBLE);
+								}
 							}
 						});
 					}
@@ -2002,6 +2028,9 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 								holder.staus_iv.setVisibility(View.VISIBLE);
 								Toast.makeText(activity,
 										activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast), 0).show();
+								if(holder.tv_sendtime !=null){
+									holder.tv_sendtime .setVisibility(View.VISIBLE);
+								}
 							}
 						});
 					}
@@ -2011,6 +2040,10 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 						activity.runOnUiThread(new Runnable() {
 							public void run() {
 								holder.tv.setText(progress + "%");
+								//此处为发送中
+								if(holder.tv_sendtime !=null){
+									holder.tv_sendtime .setVisibility(View.GONE);
+								}
 							}
 						});
 					}
@@ -2063,6 +2096,8 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 							Toast.makeText(activity, activity.getString(R.string.send_fail) + activity.getString(R.string.connect_failuer_toast), 0)
 							.show();
 						}
+					}else if(message.status == EMMessage.Status.INPROGRESS){
+						
 					}
 
 					notifyDataSetChanged();
@@ -2231,6 +2266,7 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 			picture_source_rela.setVisibility(View.GONE);
 			break;
 		case R.id.iv_more:
+		case R.id.rela_more:
 			hideKeyboard();
 			picture_source_rela.setVisibility(View.VISIBLE);
 			break;
@@ -2832,6 +2868,8 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 		return listView;
 	}
 	public static class ViewHolder {
+		public TextView tv_hhmm;
+		public TextView tv_yymmdd;
 		public TextView tv_sendtime;
 		ImageView iv;
 		TextView tv;

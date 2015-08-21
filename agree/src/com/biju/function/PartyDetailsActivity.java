@@ -142,6 +142,8 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
+		//加入list中
+		RefreshActivity.activList_1.add(PartyDetailsActivity.this);
 		//获取sd卡中的sD_pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		initUI();

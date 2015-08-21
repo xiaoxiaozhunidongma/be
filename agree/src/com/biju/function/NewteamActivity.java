@@ -13,6 +13,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -438,5 +439,25 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	private void newteam_back() {
 		finish();
+		Finish();
+	}
+
+	private void Finish() {
+		SharedPreferences requestcode2_sp=getSharedPreferences(IConstant.IsRefresh, 0);
+		Editor editor=requestcode2_sp.edit();
+		editor.putBoolean(IConstant.IsCode2, false);
+		editor.commit();
+	}
+	
+	@Override
+	protected void onStop() {
+		super.onStop();
+		Finish();
+	}
+	
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		Finish();
 	}
 }

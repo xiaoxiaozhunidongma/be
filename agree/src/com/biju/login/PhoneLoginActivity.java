@@ -55,7 +55,6 @@ import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 @SuppressLint("ResourceAsColor")
 public class PhoneLoginActivity extends Activity implements OnClickListener{
 
-	public static PhoneLoginActivity PhoneLogin;
 	private RelativeLayout mPhoneLogin_before_layout;
 	private EditText mPhoneLogin_phone;
 	private TextView mPhoneLogin_send;
@@ -107,7 +106,7 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_phone_login);
 		initUI();
 		initInterface();
-		PhoneLogin=this;
+		RefreshActivity.activList_3.add(PhoneLoginActivity.this);
 	}
 
 	private void initInterface() {
@@ -198,15 +197,10 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 							//进行登录
 							Log.e("PhoneLoginActivity", "得到已绑定该手机号码的用户"+user.getPk_user());
 							Integer Phone_pk_user=user.getPk_user();
-							loadBaseNeedLoginMethod(Phone_pk_user);
+//							loadBaseNeedLoginMethod(Phone_pk_user);
 							
 							Intent intent = new Intent(PhoneLoginActivity.this,MainActivity.class);
 							startActivity(intent);
-							finish();
-							//关闭之前的界面
-							for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
-								RefreshActivity.activList_3.get(i).finish();
-							}
 							
 							User readuser = new User();
 							readuser.setPk_user(Phone_pk_user);
@@ -381,15 +375,15 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 	}
 	
 	
-	//预先读取首界面的网络请求内容
-	private void loadBaseNeedLoginMethod(Integer pk_user) {
-
-		// 首页数据更新
-		if (mHomeFragmen != null) {
-			mHomeFragmen.prepareData(pk_user);
-		}
-
-	}
+//	//预先读取首界面的网络请求内容
+//	private void loadBaseNeedLoginMethod(Integer pk_user) {
+//
+//		// 首页数据更新
+//		if (mHomeFragmen != null) {
+//			mHomeFragmen.prepareData(pk_user);
+//		}
+//
+//	}
 
 
 	private void initUI() {

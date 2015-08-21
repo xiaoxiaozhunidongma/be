@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.BJ.utils.RefreshActivity;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -54,7 +55,6 @@ import com.biju.R;
 
 public class MapActivity extends Activity implements OnGetGeoCoderResultListener, OnClickListener {
 
-	public static MapActivity Map;
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	private LatLng currentPt;
@@ -113,8 +113,9 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
+		//加入List中
+		RefreshActivity.activList_2.add(MapActivity.this);
 		// 地图初始化
-
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 		initMap();
@@ -126,7 +127,6 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		mSearch.setOnGetGeoCodeResultListener(this);
 
 		initUI();
-		Map=this;
 	}
 
 	private void initUI() {

@@ -169,9 +169,9 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		super.onResume();
 	}
 
-	public void prepareData(Integer pk_user) {
-		ReadTeam(pk_user);
-	}
+//	public void prepareData(Integer pk_user) {
+//		ReadTeam(pk_user);
+//	}
 
 	public void initNewTeam() {
 		ReadTeam(SD_pk_user);

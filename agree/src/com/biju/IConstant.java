@@ -31,5 +31,8 @@ public interface IConstant {
 	public String Fk_user_from="fk_user_from";
 	public String Size="size";
 	public String AllFriends="allFriends";
+	//使用在SettingFragment类和Bindingphone类中
+	public String UserData="UserData";
+	
 	
 }

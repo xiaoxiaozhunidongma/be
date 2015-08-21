@@ -1,8 +1,5 @@
 package com.BJ.utils;
 
-import com.biju.function.UserSettingActivity;
-import com.biju.login.RegisteredActivity;
-
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -10,6 +7,9 @@ import android.graphics.Paint;
 import android.graphics.PorterDuff;
 import android.graphics.PorterDuffXfermode;
 import android.graphics.Rect;
+
+import com.biju.login.RegisteredActivity;
+import com.fragment.SettingFragment;
 
 public class InitHead {
 	// 对图片进行修改，变成圆形
@@ -49,9 +49,9 @@ public class InitHead {
 		}
 	}
 	private static void usersetting(Bitmap resultBmp) {
-		if(UserSettingActivity.mUsersetting_head!=null)
+		if(SettingFragment.mSetting_head_1!=null)
 		{
-			UserSettingActivity.mUsersetting_head.setImageBitmap(resultBmp);
+			SettingFragment.mSetting_head_1.setImageBitmap(resultBmp);
 		}
 	}
 	

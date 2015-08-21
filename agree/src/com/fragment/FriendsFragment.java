@@ -181,6 +181,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		mFriends_add_layout = (RelativeLayout) mLayout.findViewById(R.id.friends_add_layout);// 有好友的时候的布局
 		mFriends_add_tishi_layout = (RelativeLayout) mLayout.findViewById(R.id.friends_add_tishi_layout);// 没有好友的时候的提示布局
 		mFriends_listview = (ListView) mLayout.findViewById(R.id.friends_listview);// listview布局
+		mFriends_listview.setDividerHeight(0);//设置listview的item直接的间隙为0
 		adapter = new MyAdapter();
 		
 		mFriends_listview.setOnItemClickListener(this);

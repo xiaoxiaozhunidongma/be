@@ -44,7 +44,6 @@ import com.github.volley_examples.utils.GsonUtils;
 @SuppressLint("ResourceAsColor")
 public class PhoneRegisteredActivity extends Activity implements OnClickListener{
 
-	public static PhoneRegisteredActivity phoneRegistered;
 	private RelativeLayout mPhoneRegistered_before_layout;
 	private EditText mPhoneRegistered_phone;
 	private TextView mPhoneRegistered_send;
@@ -77,9 +76,9 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_phone_registered);
+		RefreshActivity.activList_3.add(PhoneRegisteredActivity.this);
 		initUI();
 		initInterface();
-		phoneRegistered=this;
 	}
 
 	private void initInterface() {
@@ -175,7 +174,7 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 							readuser.setPk_user(Phone_pk_user);
 							phoneRegisteredInterface.readUser(PhoneRegisteredActivity.this, readuser);
 							
-							loadBaseNeedLoginMethod(Phone_pk_user);
+//							loadBaseNeedLoginMethod(Phone_pk_user);
 							//把pk_user保存进一个工具类中
 							SdPkUser.setsD_pk_user(Phone_pk_user);
 						}
@@ -263,11 +262,6 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 					Log.e("PhoneRegisteredActivity", "更新成功" + A);
 					Intent intent = new Intent(PhoneRegisteredActivity.this,MainActivity.class);
 					startActivity(intent);
-					finish();
-					//关闭首界面
-					for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
-						RefreshActivity.activList_3.get(i).finish();
-					}
 				}
 			}
 
@@ -279,15 +273,15 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 
 	}
 	
-	//预先读取首界面的网络请求内容
-	private void loadBaseNeedLoginMethod(Integer pk_user) {
-
-		// 首页数据更新
-		if (mHomeFragmen != null) {
-			mHomeFragmen.prepareData(pk_user);
-		}
-
-	}
+//	//预先读取首界面的网络请求内容
+//	private void loadBaseNeedLoginMethod(Integer pk_user) {
+//
+//		// 首页数据更新
+//		if (mHomeFragmen != null) {
+//			mHomeFragmen.prepareData(pk_user);
+//		}
+//
+//	}
 	
 	//用户进行登录
 	private void updateLogin() {

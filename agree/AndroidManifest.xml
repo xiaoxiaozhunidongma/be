@@ -166,14 +166,14 @@
         <activity
             android:name="com.biju.MainActivity"
             android:label="@string/app_name"
-            android:launchMode="singleTask"
-             >
+            android:launchMode="singleTask" >
         </activity>
 
         <!-- 打开应用显现的首界面 -->
         <activity
             android:name="com.biju.login.BeforeLoginActivity"
-            android:label="@string/title_activity_before_login" >
+            android:label="@string/title_activity_before_login"
+            android:launchMode="singleTask" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -225,8 +225,7 @@
         <activity
             android:name="com.biju.function.GroupActivity"
             android:label="@string/title_activity_group"
-            android:launchMode="singleTask"
-             >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.biju.function.TeamSettingActivity"
@@ -435,13 +434,22 @@
         </activity>
         <activity
             android:name="com.biju.wxapi.WXEntryActivity"
-            android:label="@string/title_activity_wxentry"
-             >
-              <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="sdksample"/>
+            android:label="@string/title_activity_wxentry" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="sdksample" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.biju.function.NicknameActivity"
+            android:label="@string/title_activity_nickname" >
+        </activity>
+        <activity
+            android:name="com.biju.function.SexActivity"
+            android:label="@string/title_activity_sex" >
         </activity>
     </application>
 
