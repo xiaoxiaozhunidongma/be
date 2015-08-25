@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 
@@ -70,8 +71,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 	private int verticalMinDistance = 180;
 	private int minVelocity = 0;
 	
-	private int i = 0;
 	private Integer sD_pk_user;
+	private int currentTab;
 
 
 	@Override
@@ -91,7 +92,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		partyDetails = PartyDetails_sp.getBoolean(IConstant.PartyDetails, false);
 		if (partyDetails) {
 			mTabhost.setCurrentTab(1);
-			i = 1;
+			currentTab = 1;
 		}
 
 		initInterface();
@@ -100,6 +101,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		initGesture();
 	}
 
+	@SuppressWarnings("deprecation")
 	private void initGesture() {
 		mGestureDetector = new GestureDetector((OnGestureListener) this);
 	}
@@ -109,17 +111,51 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		if (e1.getX() - e2.getX() > verticalMinDistance
 				&& Math.abs(velocityX) > minVelocity) {
 			// 切换Activity
-			if (i < 3) {
-				i++;
-				mTabhost.setCurrentTab(i);
+			if(currentTab<2)
+			{
+				currentTab++;
+				int tab=currentTab%3;
+				switch (tab) {
+				case 0:
+					mTabhost.setCurrentTab(0);
+					break;
+				case 1:
+					mTabhost.setCurrentTab(1);
+					break;
+				case 2:
+					mTabhost.setCurrentTab(2);
+					break;
+				default:
+					break;
+				}
+			}else
+			{
+				currentTab=2;
 			}
 		} else if (e2.getX() - e1.getX() > verticalMinDistance
 				&& Math.abs(velocityX) > minVelocity) {
-			if (i >= 0) {
-				i--;
-				mTabhost.setCurrentTab(i);
+			if(currentTab>0)
+			{
+				currentTab--;
+				int tab=currentTab%3;
+				switch (tab) {
+				case 0:
+					mTabhost.setCurrentTab(0);
+					break;
+				case 1:
+					mTabhost.setCurrentTab(1);
+					break;
+				case 2:
+					mTabhost.setCurrentTab(2);
+					break;
+				default:
+					break;
+				}		
+				}
+			}else
+			{
+				currentTab=0;
 			}
-		}
 		return false;
 	}
 
@@ -167,7 +203,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		photo = sp.getBoolean("Photo", false);
 		if (photo) {
 			mTabhost.setCurrentTab(2);
-			i = 2;
+			currentTab = 2;
 		}
 		super.onStart();
 	}
@@ -207,11 +243,11 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 
 	private void initUI() {
 		mTabhost = (FragmentTabHost) findViewById(android.R.id.tabhost);
-		mTabhost.setup(GroupActivity.this, getSupportFragmentManager(),
-				R.id.realtabcontent);
+		mTabhost.setup(GroupActivity.this, getSupportFragmentManager(),R.id.realtabcontent);
 		AddTab("1", "聊天", ChatFragment.class);
 		AddTab("2", "日程", ScheduleFragment.class);
 		AddTab("3", "相册", PhotoFragment2.class);
+		currentTab = mTabhost.getCurrentTab();
 
 		findViewById(R.id.group_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.group_back).setOnClickListener(this);
@@ -227,6 +263,27 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		tab_text.setText(title);
 		tab_text.setTextSize(17);
 		mTabhost.addTab(tabSpec.setIndicator(view), clas, null);
+		//tabhost的监听
+				mTabhost.setOnTabChangedListener(new OnTabChangeListener() {
+					
+					@Override
+					public void onTabChanged(String tabId) {
+						int TabId=Integer.valueOf(tabId);
+						switch (TabId) {
+						case 1:
+							currentTab=0;
+							break;
+						case 2:
+							currentTab=1;
+							break;
+						case 3:
+							currentTab=2;
+							break;
+						default:
+							break;
+						}
+					}
+				});
 	}
 
 	@Override

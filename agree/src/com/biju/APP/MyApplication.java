@@ -32,92 +32,84 @@ public class MyApplication extends Application {
 		return regId;
 	}
 
-
 	public static void setRegId(String regId) {
 		MyApplication.regId = regId;
 	}
 
-
-
 	public static IWXAPI api;
-	
+
 	@Override
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-		
-		Res.init(this);//初始化RES
-		
-		//注册微信
-		api = WXAPIFactory.createWXAPI(this, "wx9be30a70fcb480ae", 	 true); 
+
+		Res.init(this);// 初始化RES
+
+		// 注册微信
+		api = WXAPIFactory.createWXAPI(this, "wx9be30a70fcb480ae", true);
 		api.registerApp("wx9be30a70fcb480ae");
-		
-		//初始化imageloader
-		
+
+		// 初始化imageloader
+
 		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-		.cacheInMemory(false).
-		imageScaleType(ImageScaleType.EXACTLY)
-		.cacheOnDisk(true).build();
-		
-		ImageLoaderConfiguration config = new
-				ImageLoaderConfiguration .Builder(getApplicationContext())
+				.cacheInMemory(false).imageScaleType(ImageScaleType.EXACTLY)
+				.cacheOnDisk(true).build();
+
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+				getApplicationContext())
 				.threadPoolSize(5)
-//				.threadPriority(Thread.MIN_PRIORITY + 3)
-				.denyCacheImageMultipleSizesInMemory()//强制不能存重复的图片
-//				.memoryCache(new WeakMemoryCache()) //设置。。。
-				.threadPriority(Thread.NORM_PRIORITY - 2)
-.denyCacheImageMultipleSizesInMemory()
-.diskCacheFileNameGenerator(new Md5FileNameGenerator())
-.tasksProcessingOrder(QueueProcessingType.LIFO)
-.denyCacheImageMultipleSizesInMemory()
-// .memoryCache(new LruMemoryCache((int) (6 * 1024 * 1024)))
-.memoryCache(new WeakMemoryCache())
-.memoryCacheSize((int) (2 * 1024 * 1024))
-.memoryCacheSizePercentage(13)
-// default
-//.diskCache(new UnlimitedDiscCache(cacheDir))
-// default
-.diskCacheSize(50 * 1024 * 1024).diskCacheFileCount(100)
-.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
-.defaultDisplayImageOptions(defaultOptions).writeDebugLogs() // Remove
+				// .threadPriority(Thread.MIN_PRIORITY + 3)
+				.denyCacheImageMultipleSizesInMemory()
+				// 强制不能存重复的图片
+				// .memoryCache(new WeakMemoryCache()) //设置。。。
+				// .threadPriority(Thread.NORM_PRIORITY - 2)
+				.diskCacheFileNameGenerator(new Md5FileNameGenerator())
+				.tasksProcessingOrder(QueueProcessingType.LIFO)
+				// .memoryCache(new LruMemoryCache((int) (6 * 1024 * 1024)))
+				.memoryCache(new WeakMemoryCache())
+				.memoryCacheSize((int) (2 * 1024 * 1024))
+				.memoryCacheSizePercentage(13)
+				// default
+				// .diskCache(new UnlimitedDiscCache(cacheDir))
+				// default
+				.diskCacheSize(50 * 1024 * 1024).diskCacheFileCount(100)
+				.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
+				.defaultDisplayImageOptions(defaultOptions).writeDebugLogs() // Remove
 				.build();
-//		initImageLoader(getApplicationContext());
+		// initImageLoader(getApplicationContext());
 		ImageLoader.getInstance().init(config);
 		// 地图初始化
 		SDKInitializer.initialize(this);
 		// 极光推送
 		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush
-		
+
 		regId = JPushInterface.getRegistrationID(MyApplication.this);
 		Log.e("MyApplication", "得到的ID===================" + regId);
-		
-		//环信
-        applicationContext = this;
-        instance = this;
 
-        /**
-         * this function will initialize the HuanXin SDK
-         * 
-         * @return boolean true if caller can continue to call HuanXin related APIs after calling onInit, otherwise false.
-         * 
-         * 环信初始化SDK帮助函数
-         * 返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
-         * 
-         * for example:
-         * 例子：
-         * 
-         * public class DemoHXSDKHelper extends HXSDKHelper
-         * 
-         * HXHelper = new DemoHXSDKHelper();
-         * if(HXHelper.onInit(context)){
-         *     // do HuanXin related work
-         * }
-         */
-        hxSDKHelper.onInit(applicationContext);
-		
+		// 环信
+		applicationContext = this;
+		instance = this;
+
+		/**
+		 * this function will initialize the HuanXin SDK
+		 * 
+		 * @return boolean true if caller can continue to call HuanXin related
+		 *         APIs after calling onInit, otherwise false.
+		 * 
+		 *         环信初始化SDK帮助函数
+		 *         返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
+		 * 
+		 *         for example: 例子：
+		 * 
+		 *         public class DemoHXSDKHelper extends HXSDKHelper
+		 * 
+		 *         HXHelper = new DemoHXSDKHelper();
+		 *         if(HXHelper.onInit(context)){ // do HuanXin related work }
+		 */
+		hxSDKHelper.onInit(applicationContext);
+
 	}
-
 
 	public static void initImageLoader(Context context) {
 		// This configuration tuning is custom. You can tune every option, you
@@ -137,13 +129,13 @@ public class MyApplication extends Application {
 		// Initialize ImageLoader with configuration.
 		ImageLoader.getInstance().init(config);
 	}
-	
-	//环信初始化
+
+	// 环信初始化
 	public static Context applicationContext;
 	private static MyApplication instance;
 	// login user name
 	public final String PREF_USERNAME = "username";
-	
+
 	/**
 	 * 当前用户nickname,为了苹果推送不是userid而是昵称
 	 */
@@ -153,14 +145,14 @@ public class MyApplication extends Application {
 	public static MyApplication getInstance() {
 		return instance;
 	}
- 
+
 	/**
 	 * 获取内存中好友user list
 	 *
 	 * @return
 	 */
 	public Map<String, com.example.domain.User> getContactList() {
-	    return hxSDKHelper.getContactList();
+		return hxSDKHelper.getContactList();
 	}
 
 	/**
@@ -169,7 +161,7 @@ public class MyApplication extends Application {
 	 * @param contactList
 	 */
 	public void setContactList(Map<String, com.example.domain.User> contactList) {
-	    hxSDKHelper.setContactList(contactList);
+		hxSDKHelper.setContactList(contactList);
 	}
 
 	/**
@@ -178,7 +170,7 @@ public class MyApplication extends Application {
 	 * @return
 	 */
 	public String getUserName() {
-	    return hxSDKHelper.getHXId();
+		return hxSDKHelper.getHXId();
 	}
 
 	/**
@@ -196,7 +188,7 @@ public class MyApplication extends Application {
 	 * @param user
 	 */
 	public void setUserName(String username) {
-	    hxSDKHelper.setHXId(username);
+		hxSDKHelper.setHXId(username);
 	}
 
 	/**
@@ -206,7 +198,7 @@ public class MyApplication extends Application {
 	 * @param pwd
 	 */
 	public void setPassword(String pwd) {
-	    hxSDKHelper.setPassword(pwd);
+		hxSDKHelper.setPassword(pwd);
 	}
 
 	/**
@@ -214,7 +206,7 @@ public class MyApplication extends Application {
 	 */
 	public void logout(final EMCallBack emCallBack) {
 		// 先调用sdk logout，在清理app中自己的数据
-	    hxSDKHelper.logout(emCallBack);
+		hxSDKHelper.logout(emCallBack);
 	}
 
 }

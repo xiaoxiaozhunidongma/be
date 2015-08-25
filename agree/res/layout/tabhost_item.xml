@@ -10,6 +10,7 @@
             android:layout_height="30.0dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
+            android:layout_marginTop="5.0dp"
             android:src="@drawable/tab_home_selector" />
 
         <TextView

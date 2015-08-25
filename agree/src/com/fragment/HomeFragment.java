@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -20,20 +21,23 @@ import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
+import android.view.Display;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
-import com.BJ.utils.GridViewWithHeaderAndFooter;
+import com.BJ.utils.FooterView;
 import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
@@ -60,14 +64,16 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private String endStr = "/original";
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
-	private GridViewWithHeaderAndFooter home_gridview;
+	private GridView home_gridview;
 	private List<Group> users;
-	private ArrayList<Group> list = new ArrayList<Group>();
 	private MyGridviewAdapter adapter;
 	private Interface homeInterface;
 	private SwipeRefreshLayout swipeLayout;
 
 	private Integer SD_pk_user;
+	private int EvenNumber;
+	private int Size;
+	private FooterView footerView;
 
 	private String fileName = getSDPath() + "/" + "saveData";
 
@@ -112,7 +118,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			}
 
 			initUI(inflater);
-//			adapter.notifyDataSetChanged();
+			// adapter.notifyDataSetChanged();
 			initNewTeam();
 
 			swipeLayout = (SwipeRefreshLayout) mLayout.findViewById(R.id.swipe_refresh);
@@ -150,7 +156,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		}
 		Log.e("HomeFragment", "进入了onStart()========");
 
-		list.clear();
 		initNewTeam();
 		adapter.notifyDataSetChanged();
 		super.onStart();
@@ -162,16 +167,11 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		SharedPreferences requestcode_sp = getActivity().getSharedPreferences(IConstant.RequestCode, 0);
 		boolean refresh = requestcode_sp.getBoolean(IConstant.Refresh, false);
 		if (refresh) {
-			list.clear();
 			initNewTeam();
 			adapter.notifyDataSetChanged();
 		}
 		super.onResume();
 	}
-
-//	public void prepareData(Integer pk_user) {
-//		ReadTeam(pk_user);
-//	}
 
 	public void initNewTeam() {
 		ReadTeam(SD_pk_user);
@@ -198,7 +198,16 @@ public class HomeFragment extends Fragment implements OnClickListener,
 							Log.e("HomeFragment", "readhomeuser==="+ readhomeuser_1.getPk_group());
 							PhoneLoginActivity.list.add(readhomeuser_1);
 						}
+						// 赋值长度
+						EvenNumber = PhoneLoginActivity.list.size() % 2;
+						Size = PhoneLoginActivity.list.size();
+						Log.e("HomeFragment", "EvenNumber的值为========"+ EvenNumber);
+						Log.e("HomeFragment", "Size的值为========" + Size);
 						Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="+ PhoneLoginActivity.list.toString());
+						if (PhoneLoginActivity.list.size() > 0) {
+							home_gridview.setAdapter(adapter);
+						}
+
 					}
 					adapter.notifyDataSetChanged();
 				}
@@ -215,7 +224,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private void initUI(LayoutInflater inflater) {
 		mLayout.findViewById(R.id.tab_home_new_layout).setOnClickListener(this);// 新建小组
 		mLayout.findViewById(R.id.tab_home_new).setOnClickListener(this);// 新建小组
-		home_gridview = (GridViewWithHeaderAndFooter) mLayout.findViewById(R.id.home_gridview);
+		home_gridview = (GridView) mLayout.findViewById(R.id.home_gridview);
 		home_gridview.setSelector(new ColorDrawable(Color.TRANSPARENT));// 去除gridview点击后的背景颜色
 
 		home_gridview.setOnItemClickListener(new OnItemClickListener() {
@@ -223,47 +232,66 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				if (PhoneLoginActivity.list.size() == arg2) {
-					Intent intent = new Intent(getActivity(),NewteamActivity.class);
-					startActivity(intent);
+				if (EvenNumber == 0) {
+					if (PhoneLoginActivity.list.size() == arg2) {
+						Intent intent = new Intent(getActivity(),NewteamActivity.class);
+						startActivity(intent);
+						Log.e("HomeFragment", "进入了新建小组==========");
+					} else if (PhoneLoginActivity.list.size() + 1 == arg2) {
+						Log.e("HomeFragment", "点击到了最后一个不能点击的==========");
+					} else if (PhoneLoginActivity.list.size() + 2 == arg2) {
+						Log.e("HomeFragment", "点击到了邀请码的这个==========");
+					} else {
+						Log.e("HomeFragment", "点击到了小组的==========");
+						Group group = PhoneLoginActivity.list.get(arg2);
+						int pk_group = group.getPk_group();
+						Intent intent = new Intent(getActivity(),GroupActivity.class);
+						intent.putExtra(IConstant.HomePk_group, pk_group);
+						Log.e("HomeFragment", "pk_group333333333" + pk_group);
+						startActivity(intent);
+					}
 				} else {
-					Group group = PhoneLoginActivity.list.get(arg2);
-					int pk_group = group.getPk_group();
-					Intent intent = new Intent(getActivity(),GroupActivity.class);
-					intent.putExtra(IConstant.HomePk_group, pk_group);
-					Log.e("HomeFragment", "pk_group333333333" + pk_group);
-					startActivity(intent);
+					if (PhoneLoginActivity.list.size() == arg2) {
+						Intent intent = new Intent(getActivity(),NewteamActivity.class);
+						startActivity(intent);
+					} else {
+						Group group = PhoneLoginActivity.list.get(arg2);
+						int pk_group = group.getPk_group();
+						Intent intent = new Intent(getActivity(),GroupActivity.class);
+						intent.putExtra(IConstant.HomePk_group, pk_group);
+						Log.e("HomeFragment", "pk_group333333333" + pk_group);
+						startActivity(intent);
+					}
 				}
 
 			}
 		});
 
-		View view = inflater.inflate(R.layout.home_gridview_foot, null);
-		TextView home_requestcode = (TextView) view.findViewById(R.id.home_requestcode);
-		home_gridview.addFooterView(view);
-		home_requestcode.setOnClickListener(new OnClickListener() {
-
-			@Override
-			public void onClick(View v) {
-				Intent intent = new Intent(getActivity(),RequestCodeActivity.class);
-				startActivity(intent);
-
-			}
-		});
-
 		adapter = new MyGridviewAdapter();
-		home_gridview.setAdapter(adapter);
+	}
+
+	private int getDisplayWidth(Activity activity) {
+		Display display = activity.getWindowManager().getDefaultDisplay();
+		int width = display.getWidth();
+		return width;
+	}
+
+	class ViewHolder {
+		ImageView home_item_head;
+		TextView home_item_name;
 	}
 
 	class MyGridviewAdapter extends BaseAdapter {
 
-		private ImageView home_item_head;
-		private TextView home_item_name;
-
 		@Override
 		public int getCount() {
-			return (PhoneLoginActivity.list.size() + 1);
-
+			if (EvenNumber == 0) {
+				Log.e("HomeFragment", "进入EvenNumber的值为0的地方这时候的size为========"+ (PhoneLoginActivity.list.size() + 1));
+				return (Size + 3);
+			} else {
+				Log.e("HomeFragment", "进入EvenNumber的值不为0的地方========");
+				return (Size + 2);
+			}
 		}
 
 		@Override
@@ -278,33 +306,107 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
+
+			if (EvenNumber == 0) {
+				if (position == PhoneLoginActivity.list.size() + 2) {
+					if (footerView == null) {
+						Log.e("HomeFragment", "进入EvenNumber的值为0的布局中了========");
+						footerView = new FooterView(parent.getContext());
+						GridView.LayoutParams pl = new GridView.LayoutParams(
+								getDisplayWidth((getActivity())),
+								LayoutParams.WRAP_CONTENT);
+						footerView.setLayoutParams(pl);
+						footerView.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								Intent intent = new Intent(getActivity(),RequestCodeActivity.class);
+								startActivity(intent);
+							}
+						});
+					}
+					return footerView;
+				}
+			} else {
+				if (position == PhoneLoginActivity.list.size() + 1) {
+					if (footerView == null) {
+						Log.e("HomeFragment", "进入EvenNumber的值不为0的布局中了========");
+						footerView = new FooterView(parent.getContext());
+						GridView.LayoutParams pl = new GridView.LayoutParams(
+								getDisplayWidth((getActivity())),
+								LayoutParams.WRAP_CONTENT);
+						footerView.setLayoutParams(pl);
+						footerView.setOnClickListener(new OnClickListener() {
+
+							@Override
+							public void onClick(View v) {
+								Intent intent = new Intent(getActivity(),RequestCodeActivity.class);
+								startActivity(intent);
+							}
+						});
+					}
+					return footerView;
+				}
+			}
+
+			ViewHolder holder = null;
 			View inflater = null;
-			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-			if(PhoneLoginActivity.list.size()==0)
-			{
-				inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
-				Log.e("HomeFragment", "PhoneLoginActivity.list.size()=======" + PhoneLoginActivity.list.size());
-			}else
-			{
+			if (convertView == null || convertView != null&& convertView == footerView) {
+				holder = new ViewHolder();
+				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 				if (position < PhoneLoginActivity.list.size()) {
-						inflater = layoutInflater.inflate(R.layout.home_gridview_item, null);
-//					inflater.destroyDrawingCache();//?????????
-					home_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
-					home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
+					inflater = layoutInflater.inflate(R.layout.home_gridview_item, null);
+					holder.home_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
+					holder.home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
+					Log.e("HomeFragment", "进入inflater11111111111========");
+				} else if (position == PhoneLoginActivity.list.size()) {
+					inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
+					Log.e("HomeFragment", "进入inflater2222222222========");
+				} else {
+					inflater = layoutInflater.inflate(R.layout.home_teamadd_item_1, null);
+					Log.e("HomeFragment", "进入inflater33333333333========");
+				}
+				inflater.setTag(holder);
+
+			} else {
+				inflater = convertView;
+				holder = (ViewHolder) inflater.getTag();
+			}
+
+			if (EvenNumber == 0) {
+				Log.e("HomeFragment","进入EvenNumber的值为0的布局中了11111111111========");
+				Log.e("HomeFragment","进入EvenNumber的值为0的布局中了11111111111的PhoneLoginActivity.list.size()========"+ PhoneLoginActivity.list.size());
+				if (position < PhoneLoginActivity.list.size()) {
+					Log.e("HomeFragment","进入EvenNumber的值为0的布局中了11111111111的position========"+ position);
 					Group homeuser_gridview = PhoneLoginActivity.list.get(position);
 					String homeAvatar_path = homeuser_gridview.getAvatar_path();
 					String homenickname = homeuser_gridview.getName();
-					home_item_name.setText(homenickname);
+					holder.home_item_name.setText(homenickname);
 					completeURL = beginStr + homeAvatar_path + endStr;
 					PreferenceUtils.saveImageCache(getActivity(), completeURL);
-//					homeImageLoaderUtils.clearCache();
-						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-								completeURL, home_item_head);
-					
+					homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+							completeURL, holder.home_item_head);
+				} else if (position == PhoneLoginActivity.list.size()) {
+					Log.e("HomeFragment","此时的position==PhoneLoginActivity.list.size()11111111111========");
 				} else {
-					inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
+
+				}
+			} else {
+				if (position < PhoneLoginActivity.list.size()) {
+					Log.e("HomeFragment","进入EvenNumber的值不为0的布局中了1111111111========");
+					Group homeuser_gridview = PhoneLoginActivity.list.get(position);
+					String homeAvatar_path = homeuser_gridview.getAvatar_path();
+					String homenickname = homeuser_gridview.getName();
+					holder.home_item_name.setText(homenickname);
+					completeURL = beginStr + homeAvatar_path + endStr;
+					PreferenceUtils.saveImageCache(getActivity(), completeURL);
+					homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+							completeURL, holder.home_item_head);
+				} else {
+
 				}
 			}
+
 			return inflater;
 		}
 
@@ -340,7 +442,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				list.clear();
 				initNewTeam();
 				adapter.notifyDataSetChanged();
 				swipeLayout.setRefreshing(false);

@@ -5,11 +5,189 @@
     tools:context=".SexActivity" >
 
     <RelativeLayout
+        android:id="@+id/Sex_title_layout"
         android:layout_width="match_parent"
         android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
          >
+
+        <RelativeLayout
+            android:id="@+id/Set_back_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+             >
+
+            <TextView
+                android:id="@+id/Set_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="返回"
+                android:textSize="17.0dp"
+                android:textColor="#d3d3d3"
+                 />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/Set_OK_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+             >
+
+            <TextView
+                android:id="@+id/Set_OK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="完成"
+                android:textSize="17.0sp"
+                android:textColor="#d3d3d3"
+                 />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:background="#aaaaaa"
+             />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Sex_title_layout"
+        android:layout_centerHorizontal="true"
+        android:background="#efefef" >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginTop="35.0dp"
+                android:text="请选择你的性别"
+                android:textColor="#808080"
+                android:textSize="12.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="150.0dp"
+            android:layout_below="@+id/relativeLayout1"
+            android:layout_centerHorizontal="true" >
+
+            <RelativeLayout
+                android:id="@+id/Set_man"
+                android:layout_width="match_parent"
+                android:layout_height="50.0dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="#ffffff"
+                 >
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:text="男"
+                    android:textColor="#000000"
+                    android:textSize="15.0sp" />
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:background="#aaaaaa" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/Set_woman"
+                android:layout_width="match_parent"
+                android:layout_height="50.0dp"
+                android:layout_below="@+id/Set_man"
+                android:layout_centerHorizontal="true"
+                android:background="#ffffff"
+				>
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:text="女"
+                    android:textColor="#000000"
+                    android:textSize="15.0sp" />
+
+                <TextView
+                    android:id="@+id/textView8"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:background="#aaaaaa" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/Set_other"
+                android:layout_width="match_parent"
+                android:layout_height="50.0dp"
+                android:layout_below="@+id/Set_woman"
+                android:layout_centerHorizontal="true" 
+                android:background="#ffffff"
+                >
+
+                <TextView
+                    android:id="@+id/textView9"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:text="其他"
+                    android:textSize="15.0sp"
+                    android:textColor="#000000"
+                     />
+
+                <TextView
+                    android:id="@+id/textView10"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:background="#aaaaaa"
+                    />
+
+            </RelativeLayout>
+        </RelativeLayout>
+
     </RelativeLayout>
 
 </RelativeLayout>

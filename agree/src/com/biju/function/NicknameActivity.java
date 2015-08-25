@@ -62,7 +62,7 @@ public class NicknameActivity extends Activity implements OnClickListener{
 						updateback.class);
 				int a = usersetting_updateback.getStatusMsg();
 				if (a == 1) {
-					Log.e("UserSettingActivity", "更新成功" + A);
+					Log.e("NicknameActivity", "更新成功" + A);
 					finish();
 				}
 			}

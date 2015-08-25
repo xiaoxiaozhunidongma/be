@@ -136,7 +136,6 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 				int a = usersetting_updateback.getStatusMsg();
 				if (a == 1) {
 					Log.e("UserSettingActivity", "更新成功" + A);
-					UserSettingActivity.UserSetting.getRefresh();
 					finish();
 				} else {
 					Toast.makeText(BindingPhoneActivity.this, "绑定失败，请重新绑定",Toast.LENGTH_SHORT).show();
