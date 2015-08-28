@@ -3,6 +3,7 @@ package com.fragment;
 import java.util.List;
 
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -23,6 +24,7 @@ import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.getPicSignListenner;
@@ -120,9 +122,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mLayout = inflater.inflate(R.layout.fragment_setting, container, false);
-		User4head();
-		Log.e("SettingFragment", "进入了onCreateView()====================");
+		if(mLayout==null){
+			mLayout = inflater.inflate(R.layout.fragment_setting, container, false);
+			Log.e("SettingFragment", "进入了onCreateView()====================");
+		}
 		return mLayout;
 	}
 
@@ -331,6 +334,15 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		mSetting_feedback.setOnClickListener(this);
 		mSetting_about_us.setOnClickListener(this);
 		mSetting_Exit.setOnClickListener(this);
+		
+		mLayout.findViewById(R.id.Setting_next_1);
+		mLayout.findViewById(R.id.Setting_next_2);
+		mLayout.findViewById(R.id.Setting_next_3);
+		mLayout.findViewById(R.id.Setting_next_4);
+		mLayout.findViewById(R.id.Setting_next_5);
+		mLayout.findViewById(R.id.Setting_next_6);
+		mLayout.findViewById(R.id.Setting_next_7);
+		mLayout.findViewById(R.id.Setting_next_8);
 	}
 
 	@Override
@@ -555,4 +567,23 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		Setting_readuserinter.getPicSign(getActivity(), new User());
 	}
 
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		homeImageLoaderUtils.clearCache();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
+		
+		Drawable(mSetting_head);
+		Drawable(mSetting_head_1);
+	}
+
+	@SuppressWarnings("deprecation")
+	private void Drawable(ImageView mSetting_head_12) {
+		Drawable d = mSetting_head_12.getDrawable();  
+		if (d != null) d.setCallback(null);  
+		mSetting_head_12.setImageDrawable(null);  
+		mSetting_head_12.setBackgroundDrawable(null);
+	}
+	
 }

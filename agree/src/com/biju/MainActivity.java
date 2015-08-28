@@ -144,7 +144,22 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 		Editor PartyDetails_editor = PartyDetails_sp.edit();
 		PartyDetails_editor.putBoolean("PartyDetails", false);
 		PartyDetails_editor.commit();
+		
+		SharedPreferences sp = getSharedPreferences("isdate", 0);
+		Editor editor = sp.edit();
+		editor.putBoolean("date", false);
+		editor.commit();
+		
+		SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
+		Editor timeeditor = time_sp.edit();
+		timeeditor.putBoolean(IConstant.IsTimeChoose, false);
+		timeeditor.commit();
 
+		SharedPreferences map_sp=getSharedPreferences(IConstant.IsMap, 0);
+		Editor mapeditor=map_sp.edit();
+		mapeditor.putBoolean(IConstant.IsMapChoose, false);
+		mapeditor.commit();
+		
 	}
 
 	@Override

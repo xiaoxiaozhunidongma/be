@@ -2,8 +2,8 @@ package com.biju.function;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -23,6 +24,7 @@ import com.BJ.javabean.Codeback;
 import com.BJ.javabean.Phone;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.requestVerCodeListenner;
@@ -33,26 +35,27 @@ import com.github.volley_examples.utils.GsonUtils;
 @SuppressLint("ResourceAsColor")
 public class BindingPhoneActivity extends Activity implements OnClickListener {
 
+	private BindingPhoneActivity BindingPhone;
 	private User user;
 	private EditText mBinding_phone_phone;
 	private RelativeLayout mBinding_phone_before;
 	private RelativeLayout mBinding_phone_after;
-	private EditText mBinding_phone_code;
-	private TextView mBinding_phone_send;
 	private Interface mBinding_phone_interface;
 	private Integer mBinding_phone_codeback;
 	private String phone;
 	private String binding_phone;
-	private int sum=60;
-	private TextView mBinding_phone_OK;
+	private int sum = 60;
 	private boolean isagain;
 	private boolean isOK;
+	private RelativeLayout mBinding_phone_send_layout;
+	private RelativeLayout mBinding_phone_OK_layout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_binding_phone);
+		BindingPhone = this;
 		Intent intent = getIntent();
 		user = (User) intent.getSerializableExtra(IConstant.UserData);
 		initUI();
@@ -72,53 +75,63 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 					Code code = (Code) codeback.getReturnData();
 					mBinding_phone_codeback = code.getCode();
 					Log.e("BindingPhoneActivity","返回验证码是否发送成功======" + code.getCode());
-					//发送一次后再60s内不能再发送第二次
-					mBinding_phone_OK.post(new Runnable() {
-						
-						@Override
-						public void run() {
-							sum--;
-							if (sum > 0) {
-								mBinding_phone_OK.setText(sum + "秒后重新发送");
-								mBinding_phone_OK.postDelayed(this, 1000);
-								mBinding_phone_OK.setEnabled(false);
-								mBinding_phone_code.addTextChangedListener(new TextWatcher() {
-									
-									@Override
-									public void onTextChanged(CharSequence s, int start, int before, int count) {
-										String code=s.toString();
-										if(code!=null)
-										{
-											isOK=true;
-											sum=0;
-										}
-									}
-									@Override
-									public void beforeTextChanged(CharSequence s, int start, int count,
-											int after) {
-									}
-									@Override
-									public void afterTextChanged(Editable s) {
-									}
-								});
-							} else {
-								if(isOK)
-								{
-									mBinding_phone_OK.setText("完成验证");
-									mBinding_phone_OK.setEnabled(true);
-									isagain=false;
-								}else
-								{
-									mBinding_phone_OK.setText("发送验证码");
-									isagain=true;
-									sum = 60;
-									mBinding_phone_OK.setEnabled(true);
-								}
-							}
-						}
-					});
-					mBinding_phone_before.setVisibility(View.GONE);
-					mBinding_phone_after.setVisibility(View.VISIBLE);
+					// 发送一次后再60s内不能再发送第二次
+					// mBinding_phone_OK.post(new Runnable() {
+					//
+					// @Override
+					// public void run() {
+					// sum--;
+					// if (sum > 0) {
+					// mBinding_phone_OK.setText(sum + "秒后重新发送");
+					// mBinding_phone_OK.postDelayed(this, 1000);
+					// mBinding_phone_OK.setEnabled(false);
+					// mBinding_phone_code.addTextChangedListener(new
+					// TextWatcher() {
+					//
+					// @Override
+					// public void onTextChanged(CharSequence s, int start, int
+					// before, int count) {
+					// String code=s.toString();
+					// if(code!=null)
+					// {
+					// isOK=true;
+					// sum=0;
+					// }
+					// }
+					// @Override
+					// public void beforeTextChanged(CharSequence s, int start,
+					// int count,
+					// int after) {
+					// }
+					// @Override
+					// public void afterTextChanged(Editable s) {
+					// }
+					// });
+					// } else {
+					// if(isOK)
+					// {
+					// mBinding_phone_OK.setText("完成验证");
+					// mBinding_phone_OK.setEnabled(true);
+					// isagain=false;
+					// }else
+					// {
+					// mBinding_phone_OK.setText("发送验证码");
+					// isagain=true;
+					// sum = 60;
+					// mBinding_phone_OK.setEnabled(true);
+					// }
+					// }
+					// }
+					// });
+					mBinding_phone_before.setVisibility(View.GONE);// 输入手机号码界面隐藏
+					mBinding_phone_after.setVisibility(View.VISIBLE);// 输入验证码界面显示
+
+					mBinding_phone_send_layout.setVisibility(View.GONE);// 发送手机号码按钮隐藏
+					mBinding_phone_OK_layout.setVisibility(View.VISIBLE);// 发送验证码按钮显示
+					// 隐藏输入法
+					InputMethodManager imm = (InputMethodManager) mBinding_phone_send_layout
+							.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+					imm.hideSoftInputFromWindow(mBinding_phone_send_layout.getWindowToken(), 0);
 				}
 			}
 
@@ -152,17 +165,19 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 
 	private void initUI() {
 		findViewById(R.id.binding_phone_back_layout).setOnClickListener(this);
-		findViewById(R.id.binding_phone_back).setOnClickListener(this);//返回
+		findViewById(R.id.binding_phone_back).setOnClickListener(this);// 返回
 		mBinding_phone_phone = (EditText) findViewById(R.id.binding_phone_phone);// 输入手机号
 		mBinding_phone_phone.setInputType(EditorInfo.TYPE_CLASS_PHONE);// 点击电话号码时直接弹出数字键盘
-		mBinding_phone_send = (TextView) findViewById(R.id.binding_phone_send);
-		mBinding_phone_send.setOnClickListener(this);// 发送验证码
+		findViewById(R.id.binding_phone_send).setOnClickListener(this);// 发送手机号码
+		mBinding_phone_send_layout = (RelativeLayout) findViewById(R.id.binding_phone_send_layout);
+		mBinding_phone_send_layout.setOnClickListener(this);
 		mBinding_phone_before = (RelativeLayout) findViewById(R.id.binding_phone_before);// 发送前
 		mBinding_phone_after = (RelativeLayout) findViewById(R.id.binding_phone_after);// 发送后
-		mBinding_phone_code = (EditText) findViewById(R.id.binding_phone_code);// 输入验证码
-		mBinding_phone_OK = (TextView) findViewById(R.id.binding_phone_OK);
-		mBinding_phone_OK.setOnClickListener(this);// 完成验证
-		mBinding_phone_send.setTextColor(R.color.lightgray1);
+		findViewById(R.id.binding_phone_OK).setOnClickListener(this);
+		mBinding_phone_OK_layout = (RelativeLayout) findViewById(R.id.binding_phone_OK_layout);
+		mBinding_phone_OK_layout.setOnClickListener(this);// 完成验证码验证
+		TextView mBinding_phone_prompt = (TextView) findViewById(R.id.binding_phone_prompt);
+		mBinding_phone_prompt.setText("小提示:" + "\n" + "手机号码为11位纯数字," + "\n"+ "不需要在号码前加上0或者+86");
 		mBinding_phone_phone_listener();
 	}
 
@@ -170,16 +185,12 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 		mBinding_phone_phone.addTextChangedListener(new TextWatcher() {
 
 			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
+			public void onTextChanged(CharSequence s, int start, int before,int count) {
 				phone = s.toString();
 				Log.e("BindingPhoneActivity", "所得到的电话号码phone======" + phone);
 				if (phone == null) {
-					mBinding_phone_send.setTextColor(R.color.lightgray1);
 
 				} else {
-					mBinding_phone_send.setTextColor(Color.RED);
-
 					int length = phone.length();
 					if (length == 4) {
 						if (phone.substring(3).equals(new String(" "))) {
@@ -228,9 +239,11 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.binding_phone_send:
+		case R.id.binding_phone_send_layout:
 			binding_phone_send();
 			break;
 		case R.id.binding_phone_OK:
+		case R.id.binding_phone_OK_layout:
 			binding_phone_OK();
 			break;
 		case R.id.binding_phone_back_layout:
@@ -247,14 +260,12 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 	}
 
 	private void binding_phone_OK() {
-		if(isagain)
-		{
+		if (isagain) {
 			Phone binding_phone_1 = new Phone();
 			binding_phone_1.setPhone(binding_phone);
 			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,binding_phone_1);
-		}else
-		{
-			String code_1 = mBinding_phone_code.getText().toString().trim();
+		} else {
+			String code_1 = SdPkUser.getCode;
 			Log.e("BindingPhoneActivity", "所得到的验证码1111======" + code_1);
 			Log.e("BindingPhoneActivity", "所得到的验证码222222======"+ mBinding_phone_codeback);
 			if (Integer.valueOf(code_1).equals(mBinding_phone_codeback)) {
@@ -271,7 +282,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 				usersetting.setStatus(user.getStatus());
 				usersetting.setWechat_id(user.getWechat_id());
 				mBinding_phone_interface.updateUser(BindingPhoneActivity.this,usersetting);
-				
+
 			} else {
 				Toast.makeText(BindingPhoneActivity.this, "验证码错误！",Toast.LENGTH_SHORT).show();
 			}
@@ -290,7 +301,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 			Phone binding_phone_1 = new Phone();
 			binding_phone_1.setPhone(binding_phone);
 			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,binding_phone_1);
-			
+
 		}
 	}
 

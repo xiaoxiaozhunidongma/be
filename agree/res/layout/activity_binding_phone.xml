@@ -12,16 +12,6 @@
         android:layout_centerHorizontal="true" >
 
         <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="绑定手机"
-            android:textColor="#000000"
-            android:textSize="18.0sp" />
-
-        <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
@@ -45,6 +35,43 @@
                 android:textColor="#d3d3d3"
                 android:textSize="17.0sp" />
         </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/binding_phone_OK_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:visibility="gone" >
+
+            <TextView
+                android:id="@+id/binding_phone_OK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="完成"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/binding_phone_send_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/binding_phone_send"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="完成"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -52,95 +79,92 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/binding_phone_layout"
-        android:layout_centerHorizontal="true" 
-        >
+        android:layout_centerHorizontal="true"
+        android:background="#efefef" >
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="60.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginTop="35.0dp"
+                android:text="请输入你的手机号码"
+                android:textColor="#808080"
+                android:textSize="12.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="50.0dp"
+            android:layout_alignParentLeft="true"
             android:layout_below="@+id/relativeLayout1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
-            android:text="输入手机号以发送验证码"
-            android:textSize="17.0sp" />
+            android:background="#ffffff" >
 
-        <EditText
-            android:id="@+id/binding_phone_phone"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView4"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="55dp"
-            android:background="@null"
-            android:ems="10"
-            android:gravity="center"
-            android:hint="输入手机号码"
-            android:phoneNumber="true"
-            android:maxLength="13"
-            android:textSize="20.0sp" >
+            <EditText
+                android:id="@+id/binding_phone_phone"
+                android:layout_width="match_parent"
+                android:layout_height="40.0dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginRight="20.0dp"
+                android:background="@null"
+                android:ems="10"
+                android:gravity="left|center"
+                android:hint="手机号码"
+                android:textSize="17.0sp" >
 
-            <requestFocus />
-        </EditText>
+                <requestFocus />
+            </EditText>
+        </RelativeLayout>
 
-        <TextView
-            android:id="@+id/binding_phone_send"
-            android:layout_width="150.0dp"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/binding_phone_phone"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="55dp"
-            android:gravity="center"
-            android:text="发送验证码"
-            android:textSize="20.0sp" />
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="100.0dp"
+            android:layout_below="@+id/relativeLayout2"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/binding_phone_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="10.0dp"
+                android:text="小提示:"
+                android:textColor="#808080"
+                android:textSize="12.0sp" />
+        </RelativeLayout>
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/binding_phone_after"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
         android:layout_below="@+id/binding_phone_layout"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-        >
+        android:background="#efefef"
+        android:visibility="gone" >
 
-        <TextView
-            android:id="@+id/textView5"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
+        <com.BJ.utils.VerifyCodeView
+            android:id="@+id/verifyCodeView1"
+            android:layout_width="match_parent"
+            android:layout_height="50.0dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="60dp"
-            android:text="验证码发送成功" 
-            android:textSize="17.0sp"
-            />
-
-        <EditText
-            android:id="@+id/binding_phone_code"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/textView5"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="55dp"
-            android:textSize="20.0sp"
-            android:gravity="center"
-            android:ems="10"
-            android:background="@null"
-            android:hint="输入验证码" 
-            />
-
-        <TextView
-            android:id="@+id/binding_phone_OK"
-            android:layout_width="150.0dp"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-             android:layout_marginTop="55dp"
-            android:text="完成验证" 
-            android:textSize="20.0sp"
-            android:gravity="center"
-            />
-
+            android:layout_marginLeft="40.0dp"
+            android:layout_marginRight="40.0dp"
+            android:background="#efefef"
+            android:layout_marginTop="50.0dp" />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -58,6 +58,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="30.0dp"
+                    android:contentDescription="@string/app_name"
                     android:src="@drawable/yuan_gray_1" />
 
                 <RelativeLayout
@@ -72,6 +73,7 @@
                         android:layout_height="80.0dp"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/login_1" />
 
                     <ImageView
@@ -80,6 +82,7 @@
                         android:layout_height="80.0dp"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/login_1"
                         android:visibility="gone" />
 
@@ -168,22 +171,23 @@
                         android:background="#aaaaaa" />
 
                     <ImageView
-                        android:id="@+id/imageView3"
+                        android:id="@+id/Setting_next_1"
                         android:layout_width="20.0dp"
                         android:layout_height="20.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
 
                     <TextView
                         android:id="@+id/Setting_Nickname"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/imageView3"
-                        android:layout_alignTop="@+id/imageView3"
+                        android:layout_alignBottom="@+id/Setting_next_1"
+                        android:layout_alignTop="@+id/Setting_next_1"
                         android:layout_marginRight="5.0dp"
-                        android:layout_toLeftOf="@+id/imageView3"
+                        android:layout_toLeftOf="@+id/Setting_next_1"
                         android:gravity="right|center"
                         android:text="姓名"
                         android:textColor="#808080"
@@ -218,22 +222,23 @@
                         android:background="#aaaaaa" />
 
                     <ImageView
-                        android:id="@+id/imageView4"
+                        android:id="@+id/Setting_next_2"
                         android:layout_width="20.0dp"
                         android:layout_height="20.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
 
                     <TextView
                         android:id="@+id/Setting_Sex"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/imageView4"
-                        android:layout_alignTop="@+id/imageView4"
+                        android:layout_alignBottom="@+id/Setting_next_2"
+                        android:layout_alignTop="@+id/Setting_next_2"
                         android:layout_marginRight="5.0dp"
-                        android:layout_toLeftOf="@+id/imageView4"
+                        android:layout_toLeftOf="@+id/Setting_next_2"
                         android:gravity="right|center"
                         android:text="性别"
                         android:textColor="#808080"
@@ -268,22 +273,23 @@
                         android:background="#aaaaaa" />
 
                     <ImageView
-                        android:id="@+id/imageView5"
+                        android:id="@+id/Setting_next_3"
                         android:layout_width="20.0dp"
                         android:layout_height="20.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
 
                     <TextView
                         android:id="@+id/Setting_Phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignBottom="@+id/imageView5"
-                        android:layout_alignTop="@+id/imageView5"
+                        android:layout_alignBottom="@+id/Setting_next_3"
+                        android:layout_alignTop="@+id/Setting_next_3"
                         android:layout_marginRight="5.0dp"
-                        android:layout_toLeftOf="@+id/imageView5"
+                        android:layout_toLeftOf="@+id/Setting_next_3"
                         android:gravity="right|center"
                         android:text="手机号"
                         android:textColor="#808080"
@@ -317,12 +323,13 @@
                         android:background="#aaaaaa" />
 
                     <ImageView
-                        android:id="@+id/imageView6"
+                        android:id="@+id/Setting_next_4"
                         android:layout_width="20.0dp"
                         android:layout_height="20.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
                 </RelativeLayout>
             </RelativeLayout>
@@ -389,12 +396,13 @@
                         android:background="#aaaaaa" />
 
                     <ImageView
-                        android:id="@+id/imageView7"
+                        android:id="@+id/Setting_next_5"
                         android:layout_width="20.0dp"
                         android:layout_height="20.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
                 </RelativeLayout>
 
@@ -425,12 +433,13 @@
                         android:background="#aaaaaa" />
 
                     <ImageView
-                        android:id="@+id/imageView7"
+                        android:id="@+id/Setting_next_5"
                         android:layout_width="20.0dp"
                         android:layout_height="20.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
                 </RelativeLayout>
             </RelativeLayout>
@@ -496,12 +505,13 @@
                         android:background="#aaaaaa" />
 
                     <ImageView
-                        android:id="@+id/imageView8"
+                        android:id="@+id/Setting_next_6"
                         android:layout_width="20.0dp"
                         android:layout_height="20.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
                 </RelativeLayout>
 
@@ -532,12 +542,13 @@
                         android:background="#aaaaaa" />
 
                     <ImageView
-                        android:id="@+id/imageView8"
+                        android:id="@+id/Setting_next_7"
                         android:layout_width="20.0dp"
                         android:layout_height="20.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
                 </RelativeLayout>
             </RelativeLayout>
@@ -601,12 +612,13 @@
                         android:background="#aaaaaa" />
 
                     <ImageView
-                        android:id="@+id/imageView9"
+                        android:id="@+id/Setting_next_8"
                         android:layout_width="20.0dp"
                         android:layout_height="20.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
+                        android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
                 </RelativeLayout>
             </RelativeLayout>

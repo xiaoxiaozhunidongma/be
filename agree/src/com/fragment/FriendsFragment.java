@@ -5,6 +5,7 @@ import java.util.List;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -28,6 +29,7 @@ import com.BJ.javabean.ReadUserAllFriendsback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readFriendListenner;
@@ -71,25 +73,28 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mLayout = inflater.inflate(R.layout.fragment_friends, container, false);
-		
-		//获取SD卡中的pk_user
-		SD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("HomeFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
-
-		initUI();
-		LoginHuanXin();
-		initInterface();
-		ReadUserAllFriends();
-		mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.friends_swipe_refresh);
-		mFriends_swipe_refresh.setOnRefreshListener(this);
-
-		// 顶部刷新的样式
-		mFriends_swipe_refresh.setColorSchemeResources(
-				android.R.color.holo_red_light,
-				android.R.color.holo_green_light,
-				android.R.color.holo_blue_bright,
-				android.R.color.holo_orange_light);
+		if(mLayout==null)
+		{
+			mLayout = inflater.inflate(R.layout.fragment_friends, container, false);
+			
+			//获取SD卡中的pk_user
+			SD_pk_user = SdPkUser.getsD_pk_user();
+			Log.e("HomeFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+			
+			initUI();
+			LoginHuanXin();
+			initInterface();
+//		ReadUserAllFriends();
+			mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.friends_swipe_refresh);
+			mFriends_swipe_refresh.setOnRefreshListener(this);
+			
+			// 顶部刷新的样式
+			mFriends_swipe_refresh.setColorSchemeResources(
+					android.R.color.holo_red_light,
+					android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright,
+					android.R.color.holo_orange_light);
+		}
 		return mLayout;
 	}
 
@@ -183,7 +188,6 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		mFriends_listview = (ListView) mLayout.findViewById(R.id.friends_listview);// listview布局
 		mFriends_listview.setDividerHeight(0);//设置listview的item直接的间隙为0
 		adapter = new MyAdapter();
-		
 		mFriends_listview.setOnItemClickListener(this);
 	}
 
@@ -291,5 +295,13 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		startActivity(intent);
 	}
 
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		homeImageLoaderUtils.clearCache();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
+	}
 
 }

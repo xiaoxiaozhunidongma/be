@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -92,8 +93,6 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	private TextView mPartyDetails_tv_partake;
 	private TextView mPartyDetails_tv_refuse;
 	private TextView mPartyDetails_did_not_say;
-	private TextView mPartyDetails_partake;
-	private TextView mPartyDetails_refuse;
 	private Interface readpartyInterface;
 	private String pk_party;
 	private Party2 oneParty;
@@ -102,6 +101,11 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	private boolean userAll;
 
 	private Integer sD_pk_user;
+	
+	private int oklist[] = new int[] { R.drawable.ok_1,
+			R.drawable.ok_2};
+	private Button mPartyDetails_partake;
+	private Button mPartyDetails_refuse;
 
 
 	/**
@@ -241,18 +245,18 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 							Integer read_relationship = relation.getRelationship();
 							switch (read_relationship) {
 							case 0:
-								mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-								mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+								mPartyDetails_partake.setBackgroundResource(oklist[1]);
+								mPartyDetails_refuse.setBackgroundResource(oklist[1]);
 								Log.e("PartyDetailsActivity", "用户未表态======"+ relationship);
 								break;
 							case 1:
-								mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
-								mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+								mPartyDetails_partake.setBackgroundResource(oklist[0]);
+								mPartyDetails_refuse.setBackgroundResource(oklist[1]);
 								Log.e("PartyDetailsActivity", "用户已参与======="+ relationship);
 								break;
 							case 2:
-								mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-								mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
+								mPartyDetails_partake.setBackgroundResource(oklist[1]);
+								mPartyDetails_refuse.setBackgroundResource(oklist[0]);
 								Log.e("PartyDetailsActivity", "用户已拒绝=========="+ relationship);
 								break;
 							default:
@@ -297,25 +301,25 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			pk_party = allParty.getPk_party();
 			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中======");
 			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中的allrelationship======"+ allrelationship);
-			switch (allrelationship) {
-			case 0:
-				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
-				Log.e("PartyDetailsActivity", "用户未表态======" + allrelationship);
-				break;
-			case 1:
-				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
-				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
-				Log.e("PartyDetailsActivity", "用户已参与=======" + allrelationship);
-				break;
-			case 2:
-				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
-				Log.e("PartyDetailsActivity", "用户已拒绝=========="+ allrelationship);
-				break;
-			default:
-				break;
-			}
+//			switch (allrelationship) {
+//			case 0:
+//				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
+//				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+//				Log.e("PartyDetailsActivity", "用户未表态======" + allrelationship);
+//				break;
+//			case 1:
+//				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
+//				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+//				Log.e("PartyDetailsActivity", "用户已参与=======" + allrelationship);
+//				break;
+//			case 2:
+//				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
+//				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
+//				Log.e("PartyDetailsActivity", "用户已拒绝=========="+ allrelationship);
+//				break;
+//			default:
+//				break;
+//			}
 			String Begin_time = allParty.getBegin_time();
 			String years = Begin_time.substring(0, 4);
 			String months = Begin_time.substring(5, 7);
@@ -351,28 +355,28 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 				pk_party_user=oneParty.getPk_party_user();
 			}
 			pk_party = oneParty.getPk_party();
-			if (relationship == null) {
-			} else {
-				switch (relationship) {
-				case 0:
-					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
-					Log.e("PartyDetailsActivity", "用户未表态======" + relationship);
-					break;
-				case 1:
-					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
-					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
-					Log.e("PartyDetailsActivity", "用户已参与=======" + relationship);
-					break;
-				case 2:
-					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
-					Log.e("PartyDetailsActivity", "用户已拒绝=========="+ relationship);
-					break;
-				default:
-					break;
-				}
-			}
+//			if (relationship == null) {
+//			} else {
+//				switch (relationship) {
+//				case 0:
+//					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
+//					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+//					Log.e("PartyDetailsActivity", "用户未表态======" + relationship);
+//					break;
+//				case 1:
+//					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
+//					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
+//					Log.e("PartyDetailsActivity", "用户已参与=======" + relationship);
+//					break;
+//				case 2:
+//					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
+//					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
+//					Log.e("PartyDetailsActivity", "用户已拒绝=========="+ relationship);
+//					break;
+//				default:
+//					break;
+//				}
+//			}
 			String Begin_time = oneParty.getBegin_time();
 			String years = Begin_time.substring(0, 4);
 			String months = Begin_time.substring(5, 7);
@@ -408,10 +412,11 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		mPartyDetails_tv_partake = (TextView) findViewById(R.id.PartyDetails_tv_partake);// 参与数量
 		mPartyDetails_tv_refuse = (TextView) findViewById(R.id.PartyDetails_tv_refuse);// 拒绝数量
 		mPartyDetails_did_not_say = (TextView) findViewById(R.id.PartyDetails_did_not_say);// 未表态
-		mPartyDetails_partake = (TextView) findViewById(R.id.PartyDetails_partake);// 选择参与
-		mPartyDetails_partake.setOnClickListener(this);
-		mPartyDetails_refuse = (TextView) findViewById(R.id.PartyDetails_refuse);// 选择拒绝
+		mPartyDetails_partake = (Button) findViewById(R.id.PartyDetails_partake);
+		mPartyDetails_partake.setOnClickListener(this);//参与图片
+		mPartyDetails_refuse = (Button) findViewById(R.id.PartyDetails_refuse);
 		mPartyDetails_refuse.setOnClickListener(this);
+		
 		edit_show = new EditText(this);
 		findViewById(R.id.PartyDetails_back_layout).setOnClickListener(this);
 		findViewById(R.id.PartyDetails_back).setOnClickListener(this);
@@ -420,6 +425,9 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		findViewById(R.id.PartyDetails_tv_partake_prompt).setOnClickListener(this);// 参与提示字符
 		findViewById(R.id.PartyDetails_tv_refuse_prompt).setOnClickListener(this);// 拒绝提示字符
 		findViewById(R.id.PartyDetails_did_not_say_prompt).setOnClickListener(this);// 未表态提示字符
+		
+	
+	
 	}
 
 	private void initListener() {
@@ -528,10 +536,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			PartyDetails_more();
 			break;
 		case R.id.PartyDetails_partake:// 参与
-			PartyDetails_refuse();
+			PartyDetails_partake();
 			break;
 		case R.id.PartyDetails_refuse:// 拒绝
-			PartyDetails_partake();
+			PartyDetails_refuse();
 			break;
 		case R.id.PartyDetails_tv_partake_prompt:
 		case R.id.PartyDetails_tv_partake:
@@ -575,9 +583,9 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 	}
 
-	private void PartyDetails_refuse() {
-		mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
-		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
+	private void PartyDetails_partake() {
+		mPartyDetails_refuse.setBackgroundResource(oklist[1]);
+		mPartyDetails_partake.setBackgroundResource(oklist[0]);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
 		Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222" + pk_party_user);
@@ -597,9 +605,9 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		toast.show();
 	}
 
-	private void PartyDetails_partake() {
-		mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
-		mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
+	private void PartyDetails_refuse() {
+		mPartyDetails_refuse.setBackgroundResource(oklist[0]);
+		mPartyDetails_partake.setBackgroundResource(oklist[1]);
 		Party_User party_user = new Party_User();
 		party_user.setPk_party_user(pk_party_user);
 		Log.e("PartyDetailsActivity", "得到的getPk_party_user333333333" + pk_party_user);

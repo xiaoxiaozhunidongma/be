@@ -1,8 +1,10 @@
 package com.biju.function;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -18,13 +20,15 @@ import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
 import android.widget.Toast;
-
+import cn.pedant.SweetAlert.SweetAlertDialog;
 import com.BJ.utils.KCalendar;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.KCalendar.OnCalendarClickListener;
 import com.BJ.utils.KCalendar.OnCalendarDateChangedListener;
+import com.biju.IConstant;
 import com.biju.R;
 
+@SuppressLint("SimpleDateFormat")
 public class TimeActivity extends Activity implements OnClickListener {
 
 	String date = null;// 设置默认选中的日期 格式为 “2014-04-05” 标准DATE格式
@@ -36,6 +40,10 @@ public class TimeActivity extends Activity implements OnClickListener {
 	private int mMinute;
 	private int h;
 	private int m;
+	private Integer currentMonth_2;
+	private Integer oldMonth_2;
+	private Integer currentDay_2;
+	private Integer oldDay_2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +51,6 @@ public class TimeActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_time);
 		//加入List中
-		RefreshActivity.activList_2.add(TimeActivity.this);
 		initUI();
 		initDate();
 	}
@@ -72,16 +79,26 @@ public class TimeActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI() {
-		findViewById(R.id.time_back_layout).setOnClickListener(this);
-		findViewById(R.id.time_back).setOnClickListener(this);// 返回
-		findViewById(R.id.time_next_layout).setOnClickListener(this);// 下一步
-		mTime_next = (TextView) findViewById(R.id.time_next);
+		findViewById(R.id.Time_back_layout).setOnClickListener(this);
+		findViewById(R.id.Time_back).setOnClickListener(this);// 返回
+		findViewById(R.id.Time_back_layout).setOnClickListener(this);// 下一步
+		mTime_next = (TextView) findViewById(R.id.Time_OK);
 		mTime_next.setOnClickListener(this);
 		mTimePicker = (TimePicker) findViewById(R.id.timePicker);
 		// OnChangeListener buc = new OnChangeListener();
 		// mTime_next.setOnClickListener(buc);
 		// 是否使用24小时制
-		mTimePicker.setIs24HourView(true);
+		SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
+		boolean istimechoose = time_sp.getBoolean(IConstant.IsTimeChoose, false);
+		mTimePicker.setIs24HourView(false);
+		if(istimechoose)
+		{
+			Integer hour = time_sp.getInt(IConstant.Hour, 0);
+			Integer minute = time_sp.getInt(IConstant.Minute, 0);
+			mTimePicker.setCurrentHour(hour);
+			mTimePicker.setCurrentMinute(minute);
+		}
+		
 		TimeListener times = new TimeListener();
 		mTimePicker.setOnTimeChangedListener(times);
 	}
@@ -103,7 +120,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 		 */
 		@Override
 		public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
-			Log.e("TimeActivity", "h:" + hourOfDay + " m:" + minute);
+			Log.e("TimeActivity", "最后选定的h:" + hourOfDay + "最后选定的m:" + minute);
 			mHour = hourOfDay;
 			mMinute = minute;
 		}
@@ -120,44 +137,172 @@ public class TimeActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.time_back_layout:
-		case R.id.time_back:
+		case R.id.Time_back_layout:
+		case R.id.Time_back:
 			time_back();
 			break;
-		case R.id.time_next_layout:
-		case R.id.time_next:
-			time_next();
+		case R.id.Time_OK_layout:
+		case R.id.Time_OK:
+			Time_OK();
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void time_next() {
+	private void Time_OK() {
 		if (!(date != null)) {
-			Toast.makeText(TimeActivity.this, "请先选择日期!", Toast.LENGTH_SHORT)
-					.show();
+			SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
+			sd.setTitleText("提示");
+			sd.setContentText("活动日期不能为空哦~");
+			sd.show();
 		} else {
-			if (!(mHour != 0)) {
-				Toast.makeText(TimeActivity.this, "请先选择时间__时!",
-						Toast.LENGTH_SHORT).show();
-			} else {
-				if (!(mMinute != 0)) {
-					Toast.makeText(TimeActivity.this, "请先选择时间__分!",
-							Toast.LENGTH_SHORT).show();
-				} else {
-					SharedPreferences sp = getSharedPreferences("isParty", 0);
-					Editor editor = sp.edit();
-					editor.putInt("hour", mHour);
-					editor.putInt("minute", mMinute);
-					editor.putString("isCalendar", date);
-					Log.e("TimeActivity", "date=========" + date);
-					editor.commit();
-					Intent intent = new Intent(TimeActivity.this,OkPartyActivity.class);
-					startActivity(intent);
+			if(mHour==0)
+			{
+				SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
+				sd.setTitleText("提示");
+				sd.setContentText("活动时间不能为空哦~");
+				sd.show();
+			}else
+			{
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy:MM:dd HH:mm:ss");
+				String time=sdf.format(new Date());
+				String CurrentYears=time.substring(0, 4);
+				String CurrentMonth=time.substring(5, 7);
+				String CurrentDay=time.substring(8, 10);
+				String CurrentHour=time.substring(11, 13);
+				String CurrentMinute=time.substring(14, 16);
+				Log.e("TimeActivity", "获取当前的年==========="+CurrentYears);
+				Log.e("TimeActivity", "获取当前的月==========="+CurrentMonth);
+				Log.e("TimeActivity", "获取当前的日==========="+CurrentDay);
+				Log.e("TimeActivity", "获取当前的时==========="+CurrentHour);
+				Log.e("TimeActivity", "获取当前的分==========="+CurrentMinute);
+				
+				String OldYears=date.substring(0, 4);
+				String OldMonth=date.substring(5, 7);
+				String OldDay=date.substring(8, 10);
+				Log.e("TimeActivity", "获取用户选择的年==========="+OldYears);
+				Log.e("TimeActivity", "获取用户选择的月==========="+OldMonth);
+				Log.e("TimeActivity", "获取用户选择的日==========="+OldDay);
+				
+				if(Integer.valueOf(OldYears)<Integer.valueOf(CurrentYears))
+				{
+					OldTime();
+					Log.e("TimeActivity", "判断年的时候的=========进入了选择的小于当前的");
+				}else
+				{
+					Log.e("TimeActivity", "判断年的时候的=========进入了选择的大于当前的");
+					Month(CurrentMonth, OldMonth);
+					//判断当前是月和用户选择的月
+					if(oldMonth_2<currentMonth_2)
+					{
+						Log.e("TimeActivity", "判断月的时候的=========进入了选择的小于当前的");
+						OldTime();
+					}else if(oldMonth_2==currentMonth_2)
+					{
+
+						Log.e("TimeActivity", "判断月的时候的=========进入了选择的等于当前的");
+						Day(CurrentDay, OldDay);
+						
+						if(oldDay_2<currentDay_2)
+						{
+							Log.e("TimeActivity", "判断日的时候的=========进入了选择的小于当前的");
+							OldTime();
+						}else if(oldDay_2==currentDay_2)
+						{
+							Log.e("TimeActivity", "判断日的时候的=========进入了选择的等于当前的");
+							if(mHour<(Integer.valueOf(CurrentHour)+3))
+							{
+								Log.e("TimeActivity", "判断时的时候的=========进入了选择的小于当前的");
+								SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
+								sd.setTitleText("提示");
+								sd.setContentText("聚会开始的时间必须是当前时间的三个小时后哦~");
+								sd.show();
+							}
+							else
+							{
+								Log.e("TimeActivity", "判断时的时候的=========进入了选择的大于当前的");
+								//做完成聚会的过程
+								timesp();
+							}
+						}else
+						{
+							Log.e("TimeActivity", "判断日的时候的=========进入了选择的大于当前的");
+							//做完成聚会的过程
+							timesp();
+						}
+					
+					}else
+					{
+						Log.e("TimeActivity", "判断月的时候的=========进入了选择的大于当前的");
+						//做完成聚会的过程
+						timesp();
+					}
+					
 				}
 			}
 		}
+	}
+
+	private void Day(String CurrentDay, String OldDay) {
+		//判断日是否超过10
+		String CurrentDay_1=CurrentDay.substring(0);
+		if(Integer.valueOf(CurrentDay_1)>0)
+		{
+			currentDay_2 = Integer.valueOf(CurrentDay);
+		}else
+		{
+			currentDay_2=Integer.valueOf(CurrentDay.substring(1));
+		}
+		
+		String OldDay_1=OldDay.substring(0);
+		if(Integer.valueOf(OldDay_1)>0)
+		{
+			oldDay_2 = Integer.valueOf(OldDay);
+		}else
+		{
+			oldDay_2 = Integer.valueOf(OldDay.substring(1));
+		}
+	}
+
+	private void timesp() {
+		SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
+		Editor editor = time_sp.edit();
+		editor.putBoolean(IConstant.IsTimeChoose, true);
+		editor.putInt(IConstant.Hour, mHour);
+		editor.putInt(IConstant.Minute, mMinute);
+		editor.putString(IConstant.IsCalendar, date);
+		Log.e("TimeActivity", "date=========" + date);
+		editor.commit();
+		finish();
+	}
+
+	private void Month(String CurrentMonth, String OldMonth) {
+		//判断月份是否超过10
+		String CurrentMonth_1=CurrentMonth.substring(0);
+		if(Integer.valueOf(CurrentMonth_1)>0)
+		{
+			currentMonth_2 = Integer.valueOf(CurrentMonth);
+		}else
+		{
+			currentMonth_2=Integer.valueOf(CurrentMonth.substring(1));
+		}
+		
+		String OldMonth_1=OldMonth.substring(0);
+		if(Integer.valueOf(OldMonth_1)>0)
+		{
+			oldMonth_2 = Integer.valueOf(OldMonth);
+		}else
+		{
+			oldMonth_2 = Integer.valueOf(OldMonth.substring(1));
+		}
+	}
+
+	private void OldTime() {
+		SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
+		sd.setTitleText("提示");
+		sd.setContentText("不能选择过去的时间哦~");
+		sd.show();
 	}
 
 	private void time_back() {
@@ -174,13 +319,11 @@ public class TimeActivity extends Activity implements OnClickListener {
 		if (null != date) {
 
 			int years = Integer.parseInt(date.substring(0, date.indexOf("-")));
-			int month = Integer.parseInt(date.substring(date.indexOf("-") + 1,
-					date.lastIndexOf("-")));
+			int month = Integer.parseInt(date.substring(date.indexOf("-") + 1,date.lastIndexOf("-")));
 			popupwindow_calendar_month.setText(years + "年" + month + "月");
 
 			calendar.showCalendar(years, month);
-			calendar.setCalendarDayBgColor(date,
-					R.drawable.calendar_date_focused);
+			calendar.setCalendarDayBgColor(date,R.drawable.calendar_date_focused);
 		}
 
 		List<String> list = new ArrayList<String>(); // 设置标记列表

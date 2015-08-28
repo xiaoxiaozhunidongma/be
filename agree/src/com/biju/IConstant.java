@@ -8,12 +8,15 @@ public interface IConstant {
 	public String IsCode2="isCode2";
 	public String ReadHomeUser="readhomeuser";
 	public String HomePk_group="pk_group";
+	
 	//使用在PartyFragment类中
 	public String UserAll="UserAll";
 	public String UserAllParty="UserAllParty";
+	
 	//使用在ScheduleFragment类中
 	public String OneParty="oneParty";
 	public String IsRelationship="isRelationship";
+	
 	//使用在PartyDetailsActivity类和CommentsListActivity中
 	public String CommentsList="CommentsList";
 	public String Not_Say="not_say";
@@ -21,18 +24,40 @@ public interface IConstant {
 	public String ParTake="partake";
 	public String UserAllUoreParty="userAllmoreparty";
 	public String MoreParty="moreparty";
+	
 	//使用在PartyDetailsActivity类，ScheduleFragment类，GroupActivity类的sp中
 	public String IsPartyDetails_="isPartyDetails_";
 	public String PartyDetails="PartyDetails";
+	
 	//使用在GroupActivity类中和TeamSettingActivity类中
 	public String Group="Group";
+	
 	//使用在FriendsFragment类和FriendsDataActivity类和ChatActivity类中
 	public String ReadUserAllFriends="ReadUserAllFriends";
 	public String Fk_user_from="fk_user_from";
 	public String Size="size";
 	public String AllFriends="allFriends";
+	
 	//使用在SettingFragment类和Bindingphone类中
 	public String UserData="UserData";
+	public String Sdcard="sdcard";
 	
+	//从map到addnewparty
+	public String IsMapChoose="ismapchoose";
+	public String IsAddress="isAddress";
+	public String MLng="mLng";
+	public String MLat="mLat";
+	public String IsMap="ismap";
 	
+	//从time到addnewparty
+	public String IsTime="istime";
+	public String IsTimeChoose="istimechoose";
+	public String Hour="hour";
+	public String Minute="minute";
+	public String IsCalendar="isCalendar";
+	
+	//从ScheduleFragment到addnewparty
+	public String Fk_group="fk_group";
+	public String AddRefresh="addrefresh";
+	public String IsAddRefresh="isaddrefresh";
 }

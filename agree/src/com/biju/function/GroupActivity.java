@@ -330,6 +330,11 @@ public class GroupActivity extends FragmentActivity implements OnClickListener,O
 		Editor PartyDetails_editor = PartyDetails_sp.edit();
 		PartyDetails_editor.putBoolean(IConstant.PartyDetails, false);
 		PartyDetails_editor.commit();
+		
+		SharedPreferences refresh_sp=getSharedPreferences(IConstant.AddRefresh, 0);
+		Editor editor2=refresh_sp.edit();
+		editor2.putBoolean(IConstant.IsAddRefresh, false);
+		editor2.commit();
 		super.onStop();
 	}
 

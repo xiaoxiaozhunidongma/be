@@ -37,7 +37,7 @@ import android.widget.TextView;
 public class GalleryActivity extends Activity {
 	private Intent intent;
 	// // 发送按钮
-	private Button send_bt;
+//	private Button send_bt;
 	// 删除按钮
 	private Button del_bt;
 	// 顶部显示预览图片位置的textview
@@ -64,18 +64,18 @@ public class GalleryActivity extends Activity {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.plugin_camera_gallery);// 切屏到主界面
-		PublicWay.activityList.add(this);
+//		PublicWay.activityList.add(this);
 		mContext = this;
 		// back_bt = (Button) findViewById(Res.getWidgetID("gallery_back"));
-		send_bt = (Button) findViewById(R.id.send_button);
+//		send_bt = (Button) findViewById(R.id.send_button);
 		del_bt = (Button) findViewById(R.id.gallery_del);
 		// back_bt.setOnClickListener(new BackListener());
-		send_bt.setOnClickListener(new GallerySendListener());
+//		send_bt.setOnClickListener(new GallerySendListener());
 		del_bt.setOnClickListener(new DelListener());
 		intent = getIntent();
 		Bundle bundle = intent.getExtras();
 		position = Integer.parseInt(intent.getStringExtra("position"));
-		isShowOkBt();
+//		isShowOkBt();
 		// 为发送按钮设置文字
 		pager = (ViewPagerFixed) findViewById(Res.getWidgetID("gallery01"));
 		pager.setOnPageChangeListener(pageChangeListener);
@@ -154,17 +154,17 @@ public class GalleryActivity extends Activity {
 
 	}
 
-	public void isShowOkBt() {
-		if (Bimp.tempSelectBitmap.size() > 0) {
-			send_bt.setPressed(true);
-			send_bt.setClickable(true);
-			send_bt.setTextColor(Color.WHITE);
-		} else {
-			send_bt.setPressed(false);
-			send_bt.setClickable(false);
-			send_bt.setTextColor(Color.parseColor("#E1E0DE"));
-		}
-	}
+//	public void isShowOkBt() {
+//		if (Bimp.tempSelectBitmap.size() > 0) {
+//			send_bt.setPressed(true);
+//			send_bt.setClickable(true);
+//			send_bt.setTextColor(Color.WHITE);
+//		} else {
+//			send_bt.setPressed(false);
+//			send_bt.setClickable(false);
+//			send_bt.setTextColor(Color.parseColor("#E1E0DE"));
+//		}
+//	}
 
 	class MyPageAdapter extends PagerAdapter {
 

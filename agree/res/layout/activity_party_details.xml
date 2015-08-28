@@ -71,27 +71,30 @@
         android:layout_height="250dp"
         android:layout_below="@+id/relativeLayout1"
         android:layout_centerHorizontal="true" >
-<!-- 代码中已经new出一个MapView -->
-<!--         <com.baidu.mapapi.map.MapView -->
-<!--             android:id="@+id/bmapView" -->
-<!--             android:layout_width="match_parent" -->
-<!--             android:layout_height="match_parent" -->
-<!--             android:layout_alignParentTop="true" -->
-<!--             android:clickable="true" /> -->
 
-<!--         <EditText -->
-<!--             android:id="@+id/edit_show" -->
-<!--             android:layout_width="match_parent" -->
-<!--             android:layout_height="50dp" -->
-<!--             android:layout_alignParentBottom="true" -->
-<!--             android:layout_centerHorizontal="true" -->
-<!--             android:background="#aaffffff" -->
-<!--             android:ems="10" -->
-<!--             android:enabled="false" -->
-<!--             android:gravity="center" > -->
+        <!-- 代码中已经new出一个MapView -->
+        <!-- <com.baidu.mapapi.map.MapView -->
+        <!-- android:id="@+id/bmapView" -->
+        <!-- android:layout_width="match_parent" -->
+        <!-- android:layout_height="match_parent" -->
+        <!-- android:layout_alignParentTop="true" -->
+        <!-- android:clickable="true" /> -->
 
-<!--             <requestFocus /> -->
-<!--         </EditText> -->
+
+        <!-- <EditText -->
+        <!-- android:id="@+id/edit_show" -->
+        <!-- android:layout_width="match_parent" -->
+        <!-- android:layout_height="50dp" -->
+        <!-- android:layout_alignParentBottom="true" -->
+        <!-- android:layout_centerHorizontal="true" -->
+        <!-- android:background="#aaffffff" -->
+        <!-- android:ems="10" -->
+        <!-- android:enabled="false" -->
+        <!-- android:gravity="center" > -->
+
+
+        <!-- <requestFocus /> -->
+        <!-- </EditText> -->
     </RelativeLayout>
 
     <RelativeLayout
@@ -212,33 +215,44 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
-        android:layout_marginTop="20dp"
-        android:layout_below="@+id/linearLayout2" >
+        android:layout_below="@+id/linearLayout2"
+        android:layout_marginTop="20dp" >
 
-    <TextView
-        android:id="@+id/PartyDetails_partake"
-        android:layout_width="80.0dp"
-        android:layout_height="80.0dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="80dp"
-        android:background="@drawable/ok_2"
-        android:gravity="center"
-        android:text="参与"
-        android:textSize="18.0sp" />
+        <RelativeLayout
+            android:id="@+id/relativeLayout4"
+            android:layout_width="100.0dp"
+            android:layout_height="100.0dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="40dp"
+            android:layout_marginTop="20dp" >
 
-    <TextView
-        android:id="@+id/PartyDetails_refuse"
-        android:layout_width="80.0dp"
-        android:layout_height="80.0dp"
-        android:layout_alignParentTop="true"
-        android:layout_marginLeft="40dp"
-        android:layout_toRightOf="@+id/PartyDetails_partake"
-        android:background="@drawable/ok_2"
-        android:gravity="center"
-        android:text="拒绝"
-        android:textSize="18.0sp" />
+            <Button
+                android:id="@+id/PartyDetails_partake"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ok_2"
+                android:text="参与" />
+        </RelativeLayout>
 
+        <RelativeLayout
+            android:layout_width="100.0dp"
+            android:layout_height="100.0dp"
+            android:layout_alignParentRight="true"
+            android:layout_marginRight="40dp"
+            android:layout_marginTop="20.0dp" >
+
+            <Button
+                android:id="@+id/PartyDetails_refuse"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/ok_2"
+                android:text="拒绝" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

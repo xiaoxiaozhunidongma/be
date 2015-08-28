@@ -106,4 +106,14 @@ public class SdPkUser {
 	public static void setGetSexUser(User getSexUser) {
 		SdPkUser.getSexUser = getSexUser;
 	}
+	
+	//从VerifyCodeView到bindingphone传验证码
+	public static String getCode;
+	public static String getGetCode() {
+		return getCode;
+	}
+
+	public static void setGetCode(String getCode) {
+		SdPkUser.getCode = getCode;
+	}
 }

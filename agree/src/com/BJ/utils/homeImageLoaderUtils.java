@@ -2,6 +2,7 @@ package com.BJ.utils;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.biju.R;
@@ -19,6 +20,7 @@ public class homeImageLoaderUtils {
 	}
 
 	public static void clearCache() {
+		Log.e("homeImageLoaderUtils", "有调用到这个来==============================");
 		ImageLoader.getInstance().clearDiskCache();
 		ImageLoader.getInstance().clearMemoryCache();
 	}
