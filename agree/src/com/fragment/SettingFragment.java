@@ -406,8 +406,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		if (!("".equals(mUserPhone))) {
 			Phone_NiftyDialogBuilder();
 		} else {
-			Intent intent = new Intent(getActivity(),
-					BindingPhoneActivity.class);
+			Intent intent = new Intent(getActivity(),BindingPhoneActivity.class);
 			intent.putExtra(IConstant.UserData, Setting_readuser);
 			startActivity(intent);
 		}

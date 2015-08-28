@@ -295,13 +295,14 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		} else {
 			newteam_name = mNewteam_name.getText().toString().trim();
 			group = new Group();
-			group.setName(newteam_name);
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
 			String format2 = sdf.format(new Date());
 
 			group.setSetup_time(format1);
-			group.setLast_post_time(format2);
 			group.setLast_post_message("asdfsd");
+			group.setStatus(1);
+			group.setName(newteam_name);
+			group.setLast_post_time(format2);
 
 			Interface interface1 = Interface.getInstance();
 			interface1.getPicSign(this, new User());
@@ -348,8 +349,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						Group_User[] members = { group_User };
 						CreateGroup creatGroup = new CreateGroup(members, group);
 						Log.e("NewteamActivity", "group:" + group.toString());
-						cregrouInter.createGroup(NewteamActivity.this,
-								creatGroup);// 测试
+						cregrouInter.createGroup(NewteamActivity.this,creatGroup);// 测试
 						finish();
 					}
 

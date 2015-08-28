@@ -12,7 +12,6 @@ import com.BJ.photo.Res;
 import com.baidu.mapapi.SDKInitializer;
 import com.easemob.EMCallBack;
 import com.example.takephoto.DemoHXSDKHelper;
-import com.nostra13.universalimageloader.cache.disc.impl.UnlimitedDiscCache;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
 import com.nostra13.universalimageloader.cache.disc.naming.Md5FileNameGenerator;
 import com.nostra13.universalimageloader.cache.memory.impl.WeakMemoryCache;
@@ -42,7 +41,7 @@ public class MyApplication extends Application {
 	public void onCreate() {
 		// TODO Auto-generated method stub
 		super.onCreate();
-
+		
 		Res.init(this);// 初始化RES
 
 		// 注册微信
@@ -56,6 +55,7 @@ public class MyApplication extends Application {
 				.cacheOnDisk(true).build();
 
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+				
 				getApplicationContext())
 				.threadPoolSize(5)
 				// .threadPriority(Thread.MIN_PRIORITY + 3)
@@ -63,7 +63,7 @@ public class MyApplication extends Application {
 				// 强制不能存重复的图片
 				// .memoryCache(new WeakMemoryCache()) //设置。。。
 				
-				.threadPriority(Thread.NORM_PRIORITY - 2)
+//				.threadPriority(Thread.NORM_PRIORITY - 2)
 				.diskCacheFileNameGenerator(new Md5FileNameGenerator())
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
 				// .memoryCache(new LruMemoryCache((int) (6 * 1024 * 1024)))

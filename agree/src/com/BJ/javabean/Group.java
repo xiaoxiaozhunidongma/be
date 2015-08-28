@@ -2,28 +2,16 @@ package com.BJ.javabean;
 
 import java.io.Serializable;
 
-import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 
-@Table (name="t_group")
 public class Group implements Serializable{
-	@Column
 	private Integer pk_group;
-	@Column
 	private String em_id;
-	@Column
 	private String name;
-	@Column
 	private String setup_time;
-	@Column
 	private String last_post_time;
-	@Column
 	private String last_post_message;
-	@Column
 	private String avatar_path;
-	@Column
 	private String remark;
-	@Column
 	private Integer status;
 	
 	public Group(){}

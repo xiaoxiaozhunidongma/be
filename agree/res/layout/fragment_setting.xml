@@ -81,8 +81,7 @@
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
                         android:src="@drawable/login_1"
-                        android:visibility="gone"
-                         />
+                        android:visibility="gone" />
 
                     <TextView
                         android:id="@+id/Setting_progress"
@@ -90,12 +89,10 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
+                        android:text="sda"
                         android:textColor="#ffffff"
                         android:textSize="15.0sp"
-                        android:text="sda"
-                        android:visibility="gone"
-                         />
-
+                        android:visibility="gone" />
                 </RelativeLayout>
 
                 <TextView
@@ -149,7 +146,7 @@
                     android:layout_height="50.0dp"
                     android:layout_below="@+id/relativeLayout3"
                     android:layout_centerHorizontal="true"
-                    android:background="#ffffff" >
+                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
                         android:id="@+id/textView5"
@@ -185,14 +182,12 @@
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/imageView3"
                         android:layout_alignTop="@+id/imageView3"
-                        android:layout_toLeftOf="@+id/imageView3"
-                        android:text="姓名"
-                        android:textSize="12.0sp"
-                        android:textColor="#808080"
                         android:layout_marginRight="5.0dp"
+                        android:layout_toLeftOf="@+id/imageView3"
                         android:gravity="right|center"
-                         />
-
+                        android:text="姓名"
+                        android:textColor="#808080"
+                        android:textSize="12.0sp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -201,7 +196,7 @@
                     android:layout_height="50.0dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:background="#ffffff" >
+                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
                         android:id="@+id/textView7"
@@ -230,20 +225,19 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
                         android:src="@drawable/jiantou" />
-                    
+
                     <TextView
                         android:id="@+id/Setting_Sex"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/imageView4"
                         android:layout_alignTop="@+id/imageView4"
-                        android:layout_toLeftOf="@+id/imageView4"
-                        android:text="性别"
-                        android:textSize="12.0sp"
-                        android:textColor="#808080"
                         android:layout_marginRight="5.0dp"
+                        android:layout_toLeftOf="@+id/imageView4"
                         android:gravity="right|center"
-                         />
+                        android:text="性别"
+                        android:textColor="#808080"
+                        android:textSize="12.0sp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -252,7 +246,7 @@
                     android:layout_height="50.0dp"
                     android:layout_below="@+id/Setting_Sex_change"
                     android:layout_centerHorizontal="true"
-                    android:background="#ffffff" >
+                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
                         android:id="@+id/textView9"
@@ -281,20 +275,19 @@
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
                         android:src="@drawable/jiantou" />
-                    
+
                     <TextView
                         android:id="@+id/Setting_Phone"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignBottom="@+id/imageView5"
                         android:layout_alignTop="@+id/imageView5"
-                        android:layout_toLeftOf="@+id/imageView5"
-                        android:text="手机号"
-                        android:textSize="12.0sp"
-                        android:textColor="#808080"
                         android:layout_marginRight="5.0dp"
+                        android:layout_toLeftOf="@+id/imageView5"
                         android:gravity="right|center"
-                         />
+                        android:text="手机号"
+                        android:textColor="#808080"
+                        android:textSize="12.0sp" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -303,7 +296,7 @@
                     android:layout_height="50.0dp"
                     android:layout_below="@+id/Setting_Binding_phone"
                     android:layout_centerHorizontal="true"
-                    android:background="#ffffff" >
+                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
                         android:id="@+id/textView11"
@@ -374,7 +367,7 @@
                     android:layout_height="50.0dp"
                     android:layout_below="@+id/relativeLayout6"
                     android:layout_centerHorizontal="true"
-                    android:background="#ffffff" >
+                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
                         android:id="@+id/textView15"
@@ -411,7 +404,7 @@
                     android:layout_height="50.0dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:background="#ffffff" >
+                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
                         android:id="@+id/textView17"
@@ -481,7 +474,7 @@
                     android:layout_height="50.0dp"
                     android:layout_below="@+id/relativeLayout8"
                     android:layout_centerHorizontal="true"
-                    android:background="#ffffff" >
+                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
                         android:id="@+id/textView21"
@@ -518,7 +511,7 @@
                     android:layout_height="50.0dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:background="#ffffff" >
+                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
                         android:id="@+id/textView23"
@@ -587,7 +580,7 @@
                     android:layout_height="50.0dp"
                     android:layout_below="@+id/relativeLayout10"
                     android:layout_centerHorizontal="true"
-                    android:background="#ffffff" >
+                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
                         android:id="@+id/textView27"

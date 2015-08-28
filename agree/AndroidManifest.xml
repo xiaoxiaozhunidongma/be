@@ -205,10 +205,6 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
         <activity
-            android:name="com.biju.function.UserSettingActivity"
-            android:label="@string/title_activity_user_setting" >
-        </activity>
-        <activity
             android:name="com.biju.function.AddFriendsActivity"
             android:label="@string/title_activity_add_buddy" >
         </activity>

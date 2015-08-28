@@ -1,7 +1,6 @@
 package com.biju;
 
 import java.io.File;
-import java.util.ArrayList;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -12,17 +11,23 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
-import android.support.v4.app.FragmentManager;
-import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.GestureDetector.OnGestureListener;
 import android.view.Gravity;
 import android.view.Menu;
+import android.view.MotionEvent;
+import android.view.View;
+import android.view.View.OnTouchListener;
 import android.view.Window;
+import android.widget.ImageView;
+import android.widget.TabHost.OnTabChangeListener;
+import android.widget.TabHost.TabSpec;
+import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BJ.photo.Bimp;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.MyBimp;
 import com.BJ.utils.RefreshActivity;
@@ -31,41 +36,83 @@ import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
 import com.fragment.SettingFragment;
-import com.fragment.TabPagerFragment;
 
-public class MainActivity extends FragmentActivity {
-	private TabPagerFragment fragment;
-	private ArrayList<Fragment> fragments;
-	String[] labels = new String[] { "小组", "聚会", "好友", "我" };
-	int[] tabIcons = new int[] { R.drawable.tab_home_selector,
+public class MainActivity extends FragmentActivity implements OnTouchListener,
+		OnGestureListener {
+	private FragmentTabHost mTabhost;
+	private int tab_imagelist[] = new int[] { R.drawable.tab_home_selector,
 			R.drawable.tab_party_selector, R.drawable.tab_friends_selector,
 			R.drawable.tab_setting_selector };
 
 	private String mFilePath;
 
+	@SuppressWarnings("unused")
+	private GestureDetector mGestureDetector;
+	private int verticalMinDistance = 180;
+	private int minVelocity = 0;
+	private int currentTab;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.activity_map);
+		setContentView(R.layout.fragment_tabs);
 
 		// 关闭之前的界面
 		for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
 			RefreshActivity.activList_3.get(i).finish();
 		}
 
-		FragmentManager fm = getSupportFragmentManager();
-		FragmentTransaction ft = fm.beginTransaction();
-		fragment = new com.fragment.TabPagerFragment();
-		ft.add(R.id.container, fragment);
-		fragments = new ArrayList<Fragment>();
-		fragments.add(new HomeFragment());
-		fragments.add(new PartyFragment());
-		fragments.add(new FriendsFragment());
-		fragments.add(new SettingFragment());
+		initUI();// 初始化Tabhost
+		initGesture();
+	}
 
-		fragment.setArg(labels, tabIcons, fragments);
-		ft.commit();
+	private void initUI() {
+		mTabhost = (FragmentTabHost) findViewById(android.R.id.tabhost);
+		mTabhost.setup(this, getSupportFragmentManager(), R.id.realtabcontent);
+		AddTab("1", "小组", 0, HomeFragment.class);
+		AddTab("2", "聚会", 1, PartyFragment.class);
+		AddTab("3", "好友", 2, FriendsFragment.class);
+		AddTab("4", "我", 3, SettingFragment.class);
+		currentTab = mTabhost.getCurrentTab();
+		Log.e("MainActivity", "当前的currentTab============" + currentTab);
+	}
+
+	private void AddTab(String tag, final String title, final int i, Class cls) {
+		TabSpec tabSpec = mTabhost.newTabSpec(tag);
+		View view = getLayoutInflater().inflate(R.layout.tabhost_item, null);
+		ImageView tab_image = (ImageView) view.findViewById(R.id.tab_image);
+		TextView tab_text = (TextView) view.findViewById(R.id.tab_name);
+		tab_text.setText(title);
+		tab_text.setTextSize(10);
+		tab_image.setImageResource(tab_imagelist[i]);
+		mTabhost.addTab(tabSpec.setIndicator(view), cls, null);
+		//tabhost的监听
+		mTabhost.setOnTabChangedListener(new OnTabChangeListener() {
+			
+			@Override
+			public void onTabChanged(String tabId) {
+				Log.e("MainActivity", "当前的tabId============" + tabId);
+				int TabId=Integer.valueOf(tabId);
+				switch (TabId) {
+				case 1:
+					currentTab=0;
+					break;
+				case 2:
+					currentTab=1;
+					break;
+				case 3:
+					currentTab=2;
+					break;
+				case 4:
+					currentTab=3;
+					break;
+
+				default:
+					break;
+				}
+			}
+		});
 	}
 
 	@Override
@@ -75,27 +122,6 @@ public class MainActivity extends FragmentActivity {
 			RefreshActivity.activList_3.get(i).finish();
 		}
 		super.onStart();
-	}
-
-	@Override
-	protected void onNewIntent(Intent intent) {
-		super.onNewIntent(intent);
-		// Intent intent = getIntent();
-		int id = intent.getIntExtra("HomeFragment", -1);
-		if (id == 1) {
-			fragment.setItem(0);
-		}
-
-		if (id == 2) {
-			fragment.setItem(1);
-		}
-		if (id == 3) {
-			fragment.setItem(2);
-		}
-		if (id == 4) {
-			fragment.setItem(3);
-		}
-
 	}
 
 	@Override
@@ -113,7 +139,8 @@ public class MainActivity extends FragmentActivity {
 		editor1.putBoolean("Photo", false);
 		editor1.commit();
 
-		SharedPreferences PartyDetails_sp = getSharedPreferences("isPartyDetails_", 0);
+		SharedPreferences PartyDetails_sp = getSharedPreferences(
+				"isPartyDetails_", 0);
 		Editor PartyDetails_editor = PartyDetails_sp.edit();
 		PartyDetails_editor.putBoolean("PartyDetails", false);
 		PartyDetails_editor.commit();
@@ -131,27 +158,28 @@ public class MainActivity extends FragmentActivity {
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 			Cursor cursor = MainActivity.this.getContentResolver().query(
 					selectedImage, filePathColumn, null, null, null);
-			if(cursor!=null){
+			if (cursor != null) {
 				cursor.moveToFirst();
 				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 				mFilePath = cursor.getString(columnIndex);
 				cursor.close();
 				cursor = null;
+
+			} else {
 				
-			}else{
 				File file = new File(selectedImage.getPath());
-				mFilePath=file.getAbsolutePath();
+				mFilePath = file.getAbsolutePath();
 				if (!file.exists()) {
-					Toast toast = Toast.makeText(this, "找不到图片", Toast.LENGTH_SHORT);
+					Toast toast = Toast.makeText(this, "找不到图片",Toast.LENGTH_SHORT);
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
 					return;
 				}
 			}
-			Log.e("NewteamActivity", "mFilePath======"+mFilePath);
-//			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-//			Bitmap bmp = Bimp.revitionImageSize(mFilePath);
-			//这个mFilePath不可以用缩略图路径
+			Log.e("MainActivity", "mFilePath======" + mFilePath);
+			// Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+			// Bitmap bmp = Bimp.revitionImageSize(mFilePath);
+			// 这个mFilePath不可以用缩略图路径
 			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 			InitHead.initHead(bmp);
 			Log.e("MainActivity", "获取的图片路径=======" + mFilePath);
@@ -159,6 +187,113 @@ public class MainActivity extends FragmentActivity {
 		} catch (Exception e) {
 			Log.e("", "catch:" + e.getMessage());
 		}
+	}
+
+	// 滑动过程
+	@SuppressWarnings("deprecation")
+	private void initGesture() {
+		mGestureDetector = new GestureDetector((OnGestureListener) this);
+	}
+
+	@Override
+	public boolean onDown(MotionEvent e) {
+		return false;
+	}
+
+	@Override
+	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+			float velocityY) {
+		if (e1.getX() - e2.getX() > verticalMinDistance
+				&& Math.abs(velocityX) > minVelocity) {
+			// 切换Activity
+			if(currentTab<3)
+			{
+				currentTab++;
+				int tab = currentTab % 4;
+				Log.e("MainActivity", "当前的currentTab++============" + currentTab);
+				Log.e("MainActivity", "当前的tab++=============" + tab);
+				switch (tab) {
+				case 0:
+					mTabhost.setCurrentTab(0);
+					break;
+				case 1:
+					mTabhost.setCurrentTab(1);
+					break;
+				case 2:
+					mTabhost.setCurrentTab(2);
+					break;
+				case 3:
+					mTabhost.setCurrentTab(3);
+					break;
+					
+				default:
+					break;
+				}
+			}else
+			{
+				currentTab=3;
+			}
+		} else if (e2.getX() - e1.getX() > verticalMinDistance
+				&& Math.abs(velocityX) > minVelocity) {
+			if(currentTab>0)
+			{
+				currentTab--;
+				int tab = currentTab % 4;
+				Log.e("MainActivity", "当前的currentTab--============" + currentTab);
+				Log.e("MainActivity", "当前的tab--=============" + tab);
+				switch (tab) {
+				case 0:
+					mTabhost.setCurrentTab(0);
+					break;
+				case 1:
+					mTabhost.setCurrentTab(1);
+					break;
+				case 2:
+					mTabhost.setCurrentTab(2);
+					break;
+				case 3:
+					mTabhost.setCurrentTab(3);
+					break;
+					
+				default:
+					break;
+				}
+			}else
+			{
+				currentTab=0;
+			}
+		}
+		return false;
+	}
+
+	@Override
+	public void onLongPress(MotionEvent e) {
+	}
+
+	@Override
+	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+			float distanceY) {
+		return false;
+	}
+
+	@Override
+	public void onShowPress(MotionEvent e) {
+	}
+
+	@Override
+	public boolean onSingleTapUp(MotionEvent e) {
+		return false;
+	}
+
+	@Override
+	public boolean onTouch(View v, MotionEvent event) {
+		return mGestureDetector.onTouchEvent(event);
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent ev) {
+		mGestureDetector.onTouchEvent(ev);
+		return super.dispatchTouchEvent(ev);
 	}
 
 }

@@ -14,10 +14,9 @@ import com.BJ.javabean.updateback;
 import com.BJ.utils.SdPkUser;
 import com.android.volley.VolleyError;
 import com.biju.Interface;
+import com.biju.Interface.updateUserListenner;
 import com.biju.R;
 import com.biju.APP.MyApplication;
-import com.biju.Interface.updateUserListenner;
-import com.biju.function.UserSettingActivity;
 import com.github.volley_examples.app.MyVolley;
 import com.github.volley_examples.app.VolleyListenner;
 import com.github.volley_examples.utils.GsonUtils;
@@ -28,9 +27,9 @@ import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
+	@SuppressWarnings("unused")
 	private Context context = WXEntryActivity.this;
 	private String code;
-	private boolean weixinLogin;
 	private Interface mWeiXinInterface;
 
 	private void handleIntent(Intent paramIntent) {
@@ -88,8 +87,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	@Override
 	public void onResp(BaseResp resp) {
-		
-		Log.e("WXEntryActivity", "resp==="+resp.errCode);
 		switch (resp.errCode) {
 		case BaseResp.ErrCode.ERR_OK:
 			code = ((SendAuth.Resp) resp).code;

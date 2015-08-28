@@ -8,7 +8,6 @@ import com.biju.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
-import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class homeImageLoaderUtils {
 	private static homeImageLoaderUtils imageLoaderUtils = new homeImageLoaderUtils() {
@@ -46,7 +45,6 @@ public class homeImageLoaderUtils {
 //		.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
 		.imageScaleType(ImageScaleType.EXACTLY)
 		.build();
-		
 				
 	}
 
