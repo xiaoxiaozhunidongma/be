@@ -51,6 +51,7 @@ import com.baidu.mapapi.search.geocode.GeoCoder;
 import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeOption;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
+import com.biju.IConstant;
 import com.biju.R;
 
 public class MapActivity extends Activity implements OnGetGeoCoderResultListener, OnClickListener {
@@ -113,8 +114,6 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_main);
-		//加入List中
-		RefreshActivity.activList_2.add(MapActivity.this);
 		// 地图初始化
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
@@ -130,10 +129,10 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 	}
 
 	private void initUI() {
-		findViewById(R.id.map_back_layout).setOnClickListener(this);// 返回
-		findViewById(R.id.map_back).setOnClickListener(this);
-		findViewById(R.id.map_next_layout).setOnClickListener(this);// 下一步
-		findViewById(R.id.map_next).setOnClickListener(this);
+		findViewById(R.id.Map_back_layout).setOnClickListener(this);// 返回
+		findViewById(R.id.Map_back).setOnClickListener(this);
+		findViewById(R.id.Map_OK_layout).setOnClickListener(this);// 下一步
+		findViewById(R.id.Map_OK).setOnClickListener(this);
 		edit_address = (EditText) findViewById(R.id.edit_address);
 	}
 
@@ -358,6 +357,7 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		float mLat_1=(float) mLat;
 		Log.e("MapActivity", "mLng_1:"+mLng_1);
 		Log.e("MapActivity", "mLat_1:"+mLat_1);
+		//进行传地址经纬度和具体地址
 		SharedPreferences sp=getSharedPreferences("isParty", 0);
 		Editor editor=sp.edit();
 		editor.putString("isAddress", result.getAddress());
@@ -379,11 +379,12 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		float mLat_1=(float) mLat;
 		Log.e("MapActivity", "点击mLng_1:"+mLng_1);
 		Log.e("MapActivity", "点击mLat_1:"+mLat_1);
-		SharedPreferences sp=getSharedPreferences("isParty", 0);
-		Editor editor=sp.edit();
-		editor.putString("isAddress", result.getAddress());
-		editor.putFloat("mLng", mLng_1);
-		editor.putFloat("mLat", mLat_1);
+		SharedPreferences map_sp=getSharedPreferences(IConstant.IsMap, 0);
+		Editor editor=map_sp.edit();
+		editor.putBoolean(IConstant.IsMapChoose, true);
+		editor.putString(IConstant.IsAddress, result.getAddress());
+		editor.putFloat(IConstant.MLng, mLng_1);
+		editor.putFloat(IConstant.MLat, mLat_1);
 		editor.commit();
 		
 	}
@@ -392,20 +393,20 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.map_back_layout:
-		case R.id.map_back:
+		case R.id.Map_back_layout:
+		case R.id.Map_back:
 			map_back();
 			break;
-		case R.id.map_next_layout:
-		case R.id.map_next:
-			map_next();
+		case R.id.Map_OK_layout:
+		case R.id.Map_OK:
+			Map_OK();
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void map_next() {
+	private void Map_OK() {
 		String StrAddress = edit_address.getText().toString();
 		if(StrAddress.length()>=9){
 			strCity = StrAddress.substring(0, 6);
@@ -420,9 +421,7 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 		if(strCity!=null&&strGeocodekey!=null){
 			mSearch.geocode(new GeoCodeOption().city(strCity).address(strGeocodekey));
 		}
-	
-			Intent intent = new Intent(MapActivity.this, TimeActivity.class);
-			startActivity(intent);
+		finish();
 	}
 
 	private void map_back() {

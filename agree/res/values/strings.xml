@@ -177,5 +177,6 @@
     <string name="title_activity_wxentry">WXEntryActivity</string>
     <string name="title_activity_nickname">NicknameActivity</string>
     <string name="title_activity_sex">SexActivity</string>
+    <string name="title_activity_add_new_party">AddNewPartyActivity</string>
 
 </resources>

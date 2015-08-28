@@ -56,20 +56,23 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mLayout = inflater.inflate(R.layout.fragment_party, container, false);
-		initUI();
-		initInterface();
-		initParty();
-		
-		mTab_party_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.tab_party_swipe_refresh);
-		mTab_party_swipe_refresh.setOnRefreshListener(this);
-
-		// 顶部刷新的样式
-		mTab_party_swipe_refresh.setColorSchemeResources(
-				android.R.color.holo_red_light,
-				android.R.color.holo_green_light,
-				android.R.color.holo_blue_bright,
-				android.R.color.holo_orange_light);
+		if(mLayout==null)
+		{
+			mLayout = inflater.inflate(R.layout.fragment_party, container, false);
+			initUI();
+			initInterface();
+			initParty();
+			
+			mTab_party_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.tab_party_swipe_refresh);
+			mTab_party_swipe_refresh.setOnRefreshListener(this);
+			
+			// 顶部刷新的样式
+			mTab_party_swipe_refresh.setColorSchemeResources(
+					android.R.color.holo_red_light,
+					android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright,
+					android.R.color.holo_orange_light);
+		}
 		return mLayout;
 	}
 
@@ -260,4 +263,10 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 		}, 3000);
 	}
 
+	@Override
+	public void onDestroyView() {
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
+		super.onDestroyView();
+	}
 }

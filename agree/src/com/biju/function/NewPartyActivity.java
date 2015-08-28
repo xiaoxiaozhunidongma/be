@@ -54,8 +54,6 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_party);
-		//加入List中
-		RefreshActivity.activList_2.add(NewPartyActivity.this);
 		//获取sd卡中的pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		Log.e("NewPartyActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);

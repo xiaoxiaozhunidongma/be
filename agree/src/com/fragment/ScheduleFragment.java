@@ -13,6 +13,7 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -35,6 +36,7 @@ import com.biju.Interface.createPartyRelationListenner;
 import com.biju.Interface.readUserGroupPartyListenner;
 import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
+import com.biju.function.AddNewPartyActivity;
 import com.biju.function.GroupActivity;
 import com.biju.function.PartyDetailsActivity;
 import com.github.volley_examples.utils.GsonUtils;
@@ -43,11 +45,10 @@ import com.github.volley_examples.utils.GsonUtils;
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener{
+public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener,OnClickListener{
 
 	private View mLayout;
 	private Interface scheduleInterface;
-	private RelativeLayout mSchedule_prompt_layout;
 	private ListView mSchedule_listView;
 	private ArrayList<Party2> partylist = new ArrayList<Party2>();
 	private MyAdapter adapter = null;
@@ -56,6 +57,9 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private Integer sD_pk_user;
 	private SwipeRefreshLayout mSchedule_swipe_refresh;
 	private int num=0;
+	private TextView mSchedule_prompt_new_party;
+	private RelativeLayout mSchedule_new_party_layout;
+	private TextView mSchedule_new_party;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -93,10 +97,25 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			initreadUserGroupParty();
 			adapter.notifyDataSetChanged();
 		}
+		
+		SharedPreferences refresh_sp=getActivity().getSharedPreferences(IConstant.AddRefresh, 0);
+		boolean isaddrefresh=refresh_sp.getBoolean(IConstant.IsAddRefresh, false);
+		if(isaddrefresh)
+		{
+			initreadUserGroupParty();
+			adapter.notifyDataSetChanged();
+		}
+		
 		super.onResume();
 	}
 	private void initUI() {
-		mSchedule_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_prompt_layout);// 提示
+		mSchedule_prompt_new_party = (TextView) mLayout.findViewById(R.id.Schedule_prompt_new_party);//提示
+		mSchedule_new_party_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_new_party_layout);//添加新的聚会
+		mSchedule_new_party = (TextView) mLayout.findViewById(R.id.Schedule_new_party);
+		mSchedule_new_party_layout.setOnClickListener(this);
+		mSchedule_new_party.setOnClickListener(this);
+		
+		
 		mSchedule_listView=(ListView) mLayout.findViewById(R.id.schedule_listview);
 		adapter = new MyAdapter();
 		mSchedule_listView.setAdapter(adapter);
@@ -229,6 +248,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 				Partyback partybackInterface = GsonUtils.parseJson(A,Partyback.class);
 				Integer statusMsg = partybackInterface.getStatusMsg();
 				if (statusMsg == 1) {
+					Log.e("ScheduleFragment", "读取出小组中的聚会信息===" + A);
 					List<Party2> partys = partybackInterface.getReturnData();
 					if (partys.size() > 0) {
 						for (int i = 0; i < partys.size(); i++) {
@@ -236,12 +256,12 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 							partylist.add(schedule);
 						}
 					}
-					Log.e("ScheduleFragment", "读取出小组中的聚会信息===" + A);
 				}
 				if (partylist.size() > 0) {
-					mSchedule_prompt_layout.setVisibility(View.GONE);
+					mSchedule_prompt_new_party.setVisibility(View.GONE);
 				} else {
-					mSchedule_prompt_layout.setVisibility(View.VISIBLE);
+					mSchedule_prompt_new_party.setVisibility(View.VISIBLE);
+					Log.e("ScheduleFragment", "进入了没有聚会时候的提醒中==========");
 				}
 				adapter.notifyDataSetChanged();
 			}
@@ -320,5 +340,25 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 				adapter.notifyDataSetChanged();
 			}
 		}, 3000);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.Schedule_new_party:
+		case R.id.Schedule_new_party_layout:
+			Schedule_new_party();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	//新建聚会
+	private void Schedule_new_party() {
+		Intent intent=new Intent(getActivity(), AddNewPartyActivity.class);
+		intent.putExtra(IConstant.Fk_group, GroupActivity.getPk_group());
+		startActivity(intent);
 	}
 }

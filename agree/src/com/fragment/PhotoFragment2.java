@@ -112,9 +112,6 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-
-		if (mLayout == null) {
-
 			mLayout = inflater.inflate(R.layout.activity_selectimg, container,false);
 			
 			//获取sd卡中的pk_user
@@ -139,7 +136,6 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 //					}
 //				}
 //			});
-		}
 		return mLayout;
 	}
 	
@@ -172,6 +168,7 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 					String path = listphotos.get(i).getPath();
 					if(!"".equals(path)){
 						//??????????????????
+						Log.e("PhotoFragment2", "所获取的的路径path============"+path);
 						Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(path, 400, 400);
 						bitmaps.add(convertToBitmap);
 					}
@@ -219,9 +216,17 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 
 	@Override
 	public void onDestroyView() {
+		//获取浏览图片bitmap容器
+		for (int i = 0; i < bitmaps.size(); i++) {
+			Bitmap bitmap = bitmaps.get(i);
+			//回收内存
+			if(!bitmap.isRecycled()){
+				bitmap.recycle();
+			}
+		}
+		//先清空
+		bitmaps.clear();
 		super.onDestroyView();
-		ViewGroup parent = (ViewGroup) mLayout.getParent();
-		parent.removeView(mLayout);
 	}
 	
 	@Override

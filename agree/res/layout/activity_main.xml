@@ -4,174 +4,138 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity" >
 
-     <com.baidu.mapapi.map.MapView
-         android:id="@+id/bmapView"
-         android:layout_width="match_parent"
-         android:layout_height="match_parent"
-         android:layout_alignParentTop="true"
-         android:clickable="true" 
-         android:layout_marginTop="50dp"/>
+    <com.baidu.mapapi.map.MapView
+        android:id="@+id/bmapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentTop="true"
+        android:layout_marginTop="50dp"
+        android:clickable="true" />
 
-     <RelativeLayout
-         android:id="@+id/map_title_layout"
-         android:layout_width="match_parent"
-         android:layout_height="50.0dp"
-         android:layout_alignParentTop="true"
-         android:layout_centerHorizontal="true"
-         >
+    <RelativeLayout
+        android:id="@+id/Map_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
 
-         <RelativeLayout
-             android:id="@+id/map_back_layout"
-             android:layout_width="80.0dp"
-             android:layout_height="match_parent"
-             android:layout_alignParentLeft="true"
-             android:layout_centerVertical="true"
-              >
+        <RelativeLayout
+            android:id="@+id/Map_back_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
 
-             <TextView
-                 android:id="@+id/map_back"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_centerHorizontal="true"
-                 android:layout_centerVertical="true"
-                 android:text="返回" 
-                 android:textSize="17.0sp"
-                 android:textColor="#d3d3d3"
-                 />
+            <TextView
+                android:id="@+id/Map_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="返回"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
 
-         </RelativeLayout>
+        <TextView
+            android:id="@+id/Map_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="选择地点"
+            android:textColor="#000000"
+            android:textSize="18.0sp" />
 
-         <TextView
-             android:id="@+id/map_title"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_centerHorizontal="true"
-             android:layout_centerVertical="true"
-             android:text="选择地点" 
-             android:textSize="18.0sp"
-             android:textColor="#000000"
-             />
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+    </RelativeLayout>
 
-         <RelativeLayout
-             android:id="@+id/map_next_layout"
-             android:layout_width="80.0dp"
-             android:layout_height="match_parent"
-             android:layout_alignParentRight="true"
-             android:layout_centerVertical="true"
-             
-             >
+    <RelativeLayout
+        android:id="@+id/Map_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
 
-             <TextView
-                 android:id="@+id/map_next"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_centerHorizontal="true"
-                 android:layout_centerVertical="true"
-                 android:text="下一步" />
+        <RelativeLayout
+            android:id="@+id/Map_back_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
 
-         </RelativeLayout>
+            <TextView
+                android:id="@+id/Map_back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="返回"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
 
-         <TextView
-             android:id="@+id/textView1"
-             android:layout_width="match_parent"
-             android:layout_height="0.50dp"
-             android:layout_alignParentBottom="true"
-             android:background="#aaaaaa"
-             
-             />
+        <TextView
+            android:id="@+id/Map_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="选择地点"
+            android:textColor="#000000"
+            android:textSize="18.0sp" />
 
-     </RelativeLayout>
+        <RelativeLayout
+            android:id="@+id/Map_OK_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
 
-     <RelativeLayout
-         android:id="@+id/map_title_layout"
-         android:layout_width="match_parent"
-         android:layout_height="50.0dp"
-         android:layout_alignParentTop="true"
-         android:layout_centerHorizontal="true"
-         >
+            <TextView
+                android:id="@+id/Map_OK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="完成"
+                android:textColor="#d3d3d3"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
 
-         <RelativeLayout
-             android:id="@+id/map_back_layout"
-             android:layout_width="80.0dp"
-             android:layout_height="match_parent"
-             android:layout_alignParentLeft="true"
-             android:layout_centerVertical="true"
-              >
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+    </RelativeLayout>
 
-             <TextView
-                 android:id="@+id/map_back"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_centerHorizontal="true"
-                 android:layout_centerVertical="true"
-                 android:text="返回" 
-                 android:textSize="17.0sp"
-                 android:textColor="#d3d3d3"
-                 />
+    <ImageView
+        android:id="@+id/imageView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/iconfont2"
+        android:visibility="invisible" />
 
-         </RelativeLayout>
+    <EditText
+        android:id="@+id/edit_address"
+        android:layout_width="match_parent"
+        android:layout_height="45dp"
+        android:layout_alignTop="@+id/bmapView"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="5dp"
+        android:background="#ffffff"
+        android:ems="10"
+        android:gravity="center"
+        android:hint="使用文本输入地址" >
 
-         <TextView
-             android:id="@+id/map_title"
-             android:layout_width="wrap_content"
-             android:layout_height="wrap_content"
-             android:layout_centerHorizontal="true"
-             android:layout_centerVertical="true"
-             android:text="选择地点" 
-             android:textSize="18.0sp"
-             android:textColor="#000000"
-             />
-
-         <RelativeLayout
-             android:id="@+id/map_next_layout"
-             android:layout_width="80.0dp"
-             android:layout_height="match_parent"
-             android:layout_alignParentRight="true"
-             android:layout_centerVertical="true"
-             
-             >
-
-             <TextView
-                 android:id="@+id/map_next"
-                 android:layout_width="wrap_content"
-                 android:layout_height="wrap_content"
-                 android:layout_centerHorizontal="true"
-                 android:layout_centerVertical="true"
-                 android:text="下一步" />
-
-         </RelativeLayout>
-
-         <TextView
-             android:id="@+id/textView1"
-             android:layout_width="match_parent"
-             android:layout_height="0.50dp"
-             android:layout_alignParentBottom="true"
-             android:background="#aaaaaa"
-             
-             />
-
-     </RelativeLayout>
-
-     <ImageView
-         android:id="@+id/imageView1"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:src="@drawable/iconfont2" 
-         android:visibility="invisible"/>
-
-     <EditText
-         android:id="@+id/edit_address"
-         android:layout_width="match_parent"
-         android:layout_height="45dp"
-         android:layout_alignTop="@+id/bmapView"
-         android:layout_centerHorizontal="true"
-         android:ems="10"
-         android:background="#ffffff" 
-         android:layout_marginTop="5dp"
-         android:gravity="center"
-         android:hint="使用文本输入地址">
-
-         <requestFocus />
-     </EditText>
+        <requestFocus />
+    </EditText>
 
 </RelativeLayout>

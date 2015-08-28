@@ -39,6 +39,7 @@ import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.findUserListenner;
 import com.biju.Interface.getPicSignListenner;
@@ -205,6 +206,7 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 //							loadBaseNeedLoginMethod(Phone_pk_user);
 							
 							Intent intent = new Intent(PhoneLoginActivity.this,MainActivity.class);
+							intent.putExtra(IConstant.Sdcard, true);
 							startActivity(intent);
 							
 							User readuser = new User();
@@ -217,8 +219,7 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 							
 							Person person = new Person(Phone_pk_user);
 							try {
-								ObjectOutputStream oos = new ObjectOutputStream(
-										new FileOutputStream(fileName));
+								ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
 								oos.writeObject(person);
 								oos.close();
 							} catch (FileNotFoundException e) {

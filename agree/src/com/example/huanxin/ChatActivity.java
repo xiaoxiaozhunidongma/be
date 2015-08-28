@@ -212,11 +212,13 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 		Intent intent = getIntent();
 		mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("allFriends");
 		
-		int pk_user = mAllFriends.getPk_user();
-		nickname = mAllFriends.getNickname();
-		avatar_path = mAllFriends.getAvatar_path();
-		toChatUsername=String.valueOf(pk_user);
-//		toChatUsername="a";
+		if(mAllFriends!=null){
+			int pk_user = mAllFriends.getPk_user();
+			nickname = mAllFriends.getNickname();
+			avatar_path = mAllFriends.getAvatar_path();
+			toChatUsername=String.valueOf(pk_user);
+//			toChatUsername="a";
+		}
 		unitUI();
 
 //				unitGroup();
