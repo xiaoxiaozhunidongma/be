@@ -19,6 +19,7 @@ import com.BJ.javabean.Loginback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.utils.AsynImageLoader;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
@@ -138,7 +139,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		if (isWIFI) {
 			returndata();
 		} else {
-			ImageLoaderUtils.getInstance().LoadImage(getActivity(),completeURL, mSetting_head);
+//			ImageLoaderUtils.getInstance().LoadImage(getActivity(),completeURL, mSetting_head);
+			AsynImageLoader asynImageLoader = new AsynImageLoader();
+			asynImageLoader.showRoudImageAsyn(mSetting_head, completeURL, R.drawable.login_1,getActivity());
 		}
 	}
 
@@ -224,8 +227,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 					mSetting_Phone.setText(mUserPhone);
 					completeURL = beginStr + mUserAvatar_path + endStr;
 					PreferenceUtils.saveImageCache(getActivity(), completeURL);// ¥ÊSP
-					ImageLoaderUtils.getInstance().LoadImage(getActivity(),
-							completeURL, mSetting_head);
+//					ImageLoaderUtils.getInstance().LoadImage(getActivity(),
+//							completeURL, mSetting_head);
+					AsynImageLoader asynImageLoader = new AsynImageLoader();
+					asynImageLoader.showRoudImageAsyn(mSetting_head, completeURL, R.drawable.login_1,getActivity());
 				}
 			}
 

@@ -46,9 +46,12 @@ import com.BJ.javabean.User;
 import com.BJ.photo.AlbumActivity;
 import com.BJ.photo.Bimp;
 import com.BJ.photo.GalleryActivity;
+import com.BJ.utils.AsynImageLoader;
+import com.BJ.utils.AsynImageLoader.ImageCallback;
 import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.MyBimp;
 import com.BJ.utils.Path2Bitmap;
+import com.BJ.utils.PicUtil;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.getPicSignListenner;
@@ -174,6 +177,7 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 					}
 					
 				}
+				
 				
 				if(listphotos!=null&&listphotos.size()>0){
 					String pk_photo = listphotos.get(0).getPk_photo();
@@ -439,7 +443,9 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 			
 			if(listphotos!=null){
 					String url=beginStr+listphotos.get(position).getPk_photo()+endStr;//ÍêÕûÂ·¾¶
-					ImageLoaderUtils4Photos.getInstance().LoadImage(getActivity(), url, holder.image);
+//					ImageLoaderUtils4Photos.getInstance().LoadImage(getActivity(), url, holder.image);
+					AsynImageLoader asynImageLoader = new AsynImageLoader();
+					asynImageLoader.showImageAsyn(holder.image, url, R.drawable.preview_2,getActivity());
 			}
 
 			return convertView;

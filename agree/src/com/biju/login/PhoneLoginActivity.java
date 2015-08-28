@@ -36,6 +36,7 @@ import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
 import com.BJ.utils.Person;
+import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
@@ -81,6 +82,10 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 	private String device_id;
 	private Integer status;
 	private String wechat_id;
+	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
+	private String endStr = "/original";
+	// ÍêÕûÂ·¾¶completeURL=beginStr+result.filepath+endStr;
+	private String completeURL = "";
 	
 	private String fileName = getSDPath() + "/" + "saveData";
 	public String getSDPath() {
@@ -253,6 +258,8 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 						pk_user = readuser.getPk_user();
 						mNickname = readuser.getNickname();
 						mAvatar_path = readuser.getAvatar_path();
+						completeURL = beginStr + mAvatar_path + endStr;
+						PreferenceUtils.saveImageCache(PhoneLoginActivity.this, completeURL);
 						mPhone = readuser.getPhone();
 						mPassword = readuser.getPassword();
 						sex = readuser.getSex();

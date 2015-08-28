@@ -17,7 +17,8 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:scaleType="fitXY"
-            android:src="@drawable/newteam" />
+            android:src="@drawable/newteam" 
+            />
 
         <RelativeLayout
             android:layout_width="match_parent"

@@ -254,13 +254,6 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 		group.setStatus(1);
 		instance.readPartyPhotos(getActivity(), group);
 		
-		//Ïú»Ù½çÃæ
-		for (int i = 0; i < PublicWay.activityList.size(); i++) {
-		if (null != PublicWay.activityList.get(i)) {
-			PublicWay.activityList.get(i).finish();
-		}
-		System.gc();
-	}
 	}
 
 //	private void initBeginUplistener() {
