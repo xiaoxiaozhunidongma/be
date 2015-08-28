@@ -31,7 +31,7 @@ public class homeImageLoaderUtils {
 
 	public void LoadImage(Context context, String url, ImageView imageView) {
 		//图片要设置大小！
-		ImageLoader.getInstance().displayImage(url, imageView, options, null);
+		ImageLoader.getInstance().displayImage(url, imageView, options);
 	}
 
 	private void initUILOptions() {

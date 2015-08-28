@@ -181,6 +181,7 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 				cursor = null;
 
 			} else {
+				
 				File file = new File(selectedImage.getPath());
 				mFilePath = file.getAbsolutePath();
 				if (!file.exists()) {

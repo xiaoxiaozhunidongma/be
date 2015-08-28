@@ -13,7 +13,7 @@ import com.fragment.SettingFragment;
 
 public class InitHead {
 	// 对图片进行修改，变成圆形
-	public static void initHead(Bitmap bm) {
+	public static Bitmap initHead(Bitmap bm) {
 		// 裁剪图片
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
@@ -23,10 +23,12 @@ public class InitHead {
 		int sampleSize = calculateInSampleSize(options, dstWidth, dstWidth);
 		options.inSampleSize = sampleSize;
 		options.inJustDecodeBounds = false;
+		options.inPurgeable = true; 
+		options.inInputShareable = true; 
 		Bitmap bmp = bm;
 		// 绘制图片
 		Bitmap resultBmp = Bitmap.createBitmap(dstWidth, dstWidth,
-				Bitmap.Config.ARGB_8888);
+				Bitmap.Config.ARGB_8888);//如果是565不会是圆形
 		Paint paint = new Paint();
 		paint.setAntiAlias(true);
 		Canvas canvas = new Canvas(resultBmp);
@@ -36,9 +38,10 @@ public class InitHead {
 		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 		canvas.drawBitmap(bmp, new Rect(0, 0, bmp.getWidth(), bmp.getWidth()),
 				new Rect(0, 0, dstWidth, dstWidth), paint);
-		Registered(resultBmp);
-		usersetting(resultBmp);
-		bmp.recycle();
+//		Registered(resultBmp);
+//		usersetting(resultBmp);
+//		bmp.recycle();
+		return resultBmp;
 	}
 
 

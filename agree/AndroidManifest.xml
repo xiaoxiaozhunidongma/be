@@ -90,7 +90,7 @@
         <!-- 百度签名 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="wVPLhs0pEqbegYMGNWCUmboz" />
+            android:value="yGkNOAGTinoQq0oFRuksvUIi" />
         <!-- 百度签名 -->
         <activity
             android:name="com.biju.MainActivity"
