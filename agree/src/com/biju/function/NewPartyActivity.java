@@ -32,6 +32,7 @@ import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.R;
@@ -125,8 +126,8 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 					long arg3) {
 				Group group = list.get(arg2);
 				int fk_group=group.getPk_group();
-				SdPkUser.setFk_group(fk_group);
-				Intent intent=new Intent(NewPartyActivity.this, MapActivity.class);
+				Intent intent=new Intent(NewPartyActivity.this, AddNewPartyActivity.class);
+				intent.putExtra(IConstant.Fk_group, fk_group);
 				startActivity(intent);
 			}
 		});

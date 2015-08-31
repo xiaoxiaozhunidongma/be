@@ -1,14 +1,14 @@
 package com.biju.function;
 
 import java.util.UUID;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -17,7 +17,6 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Party;
@@ -55,6 +54,10 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private Integer hour;
 	private Integer minute;
 
+	private int TotalCount1=0;
+	private int TotalCount2=0;
+	private int TotalCount3=0;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -195,22 +198,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		mAdd_New_Party_address.setOnClickListener(this);
 		mAdd_New_Party_time_details = (TextView) findViewById(R.id.Add_New_Party_time_details);// 时间详情
 		mAdd_New_Party_address_details = (TextView) findViewById(R.id.Add_New_Party_address_details);// 地址详情
-		mAdd_New_Party_name.addTextChangedListener(new TextWatcher() {
-			
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before, int count) {
-				partyname = s.toString();
-			}
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-		});
 	}
-
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		// Inflate the menu; this adds items to the action bar if it is present.
@@ -252,12 +241,52 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		startActivity(intent);
 	}
 
+	private void TotalCount(String Ems) {
+		Pattern p1 = Pattern.compile("[0-9]*"); 
+		Matcher m1 = p1.matcher(Ems);
+		if(m1.matches())
+		{
+			Log.e("AddNewPartyActivity", "输入的是数字===========");
+			TotalCount1=TotalCount1+1;
+		}else
+		{
+			Pattern p2=Pattern.compile("[a-zA-Z]");
+			Matcher m2=p2.matcher(Ems);
+			if(m2.matches())
+			{
+				Log.e("AddNewPartyActivity", "输入的是字母===========");
+				TotalCount2=TotalCount2+1;
+			}else
+			{
+				Pattern p3=Pattern.compile("[\u4e00-\u9fa5]");
+				Matcher m3=p3.matcher(Ems);
+				if(m3.matches())
+				{
+					Log.e("AddNewPartyActivity", "输入的是汉字===========");
+					TotalCount3=TotalCount3+2;
+				}
+			}
+		}
+	}
+	
+	
 	// 完成
 	private void Add_New_Party_OK() {
-		if(partyname==null)
+		String ems=mAdd_New_Party_name.getText().toString().trim();
+		if("".equals(ems))
 		{
-			SweetAlerDialog();
-		}else if(partyname.length()<3)
+		}else
+		{
+			TotalCount1=0;
+			TotalCount2=0;
+			TotalCount3=0;
+			for (int i = 0; i < ems.length(); i++) {
+				String Ems=String.valueOf(ems.charAt(i));
+				TotalCount(Ems);
+			}
+		}
+		int TotalCount=TotalCount1+TotalCount2+TotalCount3;
+		if(TotalCount<2)
 		{
 			SweetAlerDialog();
 		}else

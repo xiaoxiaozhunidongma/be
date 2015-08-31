@@ -63,7 +63,6 @@ public class ChineseOrEnglishTextWatcher implements TextWatcher {
 				NicknameActivity.mNickname_warn_layout.setVisibility(View.GONE);
 			}
 		}
-
 	}
 
 	@Override

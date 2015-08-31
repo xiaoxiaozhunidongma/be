@@ -84,7 +84,7 @@ public class NicknameActivity extends Activity implements OnClickListener{
 		Nickname_prompt.setVisibility(View.VISIBLE);
 		Nickname_prompt.setText("用户姓名长度不能小于2个字符,"+"\n"+"最多只能包含14个字符,可以使用英文字母,"+"\n"+"数字或者中文构成,但是不能使用特殊的字符,"+"\n"+"如:'[]:;|=,+#?<>'等,"+"\n"+"也不能使用包含有空格");
 		mNickname_nickname.addTextChangedListener((TextWatcher) new ChineseOrEnglishTextWatcher(mNickname_nickname,14));//限制输入14个字符
-		mNickname_warn_layout = (RelativeLayout) findViewById(R.id.Nickname_warn_layout);
+		mNickname_warn_layout = (RelativeLayout) findViewById(R.id.Nickname_warn_layout);//字符大于或小于时提示
 	
 	}
 

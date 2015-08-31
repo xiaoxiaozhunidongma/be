@@ -59,15 +59,6 @@ public class SdPkUser {
 		SdPkUser.getgroup = getgroup;
 	}
 	
-	//在新建日程时传pk_group
-	public static Integer fk_group;
-	public static Integer getFk_group() {
-		return fk_group;
-	}
-
-	public static void setFk_group(Integer fk_group) {
-		SdPkUser.fk_group = fk_group;
-	}
 	//绑定微信传user进行更新
 	public static User getUser;
 	public static User getGetUser() {
