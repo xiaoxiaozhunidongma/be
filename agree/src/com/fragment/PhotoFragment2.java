@@ -448,9 +448,9 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 			
 			if(listphotos!=null){
 					String url=beginStr+listphotos.get(position).getPk_photo()+endStr;//ÍêÕûÂ·¾¶
-//					ImageLoaderUtils4Photos.getInstance().LoadImage(getActivity(), url, holder.image);
-					AsynImageLoader asynImageLoader = new AsynImageLoader();
-					asynImageLoader.showImageAsyn(holder.image, url, R.drawable.preview_2,getActivity());
+					ImageLoaderUtils4Photos.getInstance().LoadImage(getActivity(), url, holder.image);
+//					AsynImageLoader asynImageLoader = new AsynImageLoader();
+//					asynImageLoader.showImageAsyn(holder.image, url, R.drawable.preview_2,getActivity());
 			}
 
 			return convertView;

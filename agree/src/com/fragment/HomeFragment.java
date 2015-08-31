@@ -221,9 +221,12 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		mLayout.findViewById(R.id.tab_home_new).setOnClickListener(this);// 新建小组
 		home_gridview = (GridView) mLayout.findViewById(R.id.home_gridview);
 		home_gridview.setSelector(new ColorDrawable(Color.TRANSPARENT));// 去除gridview点击后的背景颜色
+<<<<<<< HEAD
 
 		//是否滑动时候暂停加载
 		home_gridview.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));   
+=======
+>>>>>>> ZZY
 		home_gridview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
@@ -366,8 +369,10 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
 						PreferenceUtils.saveImageCache(getActivity(), completeURL);
-						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-								completeURL, home_item_head);
+//						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+//								completeURL, home_item_head);
+						AsynImageLoader asynImageLoader = new AsynImageLoader();
+						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
 					} else if (position == PhoneLoginActivity.list.size()) {
 					} else {
 						
@@ -384,7 +389,11 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						completeURL = beginStr + homeAvatar_path + endStr;
 						PreferenceUtils.saveImageCache(getActivity(), completeURL);
 //						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+<<<<<<< HEAD
 //						completeURL, holder.home_item_head);
+=======
+//								completeURL, home_item_head);
+>>>>>>> ZZY
 						AsynImageLoader asynImageLoader = new AsynImageLoader();
 						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
 					} else {
