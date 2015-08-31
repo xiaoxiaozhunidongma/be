@@ -167,9 +167,9 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 			mNewParty_item_name.setText(homenickname);
 			completeURL = beginStr + newpartyAvatar_path + endStr;
 			PreferenceUtils.saveImageCache(NewPartyActivity.this,completeURL);
-//			homeImageLoaderUtils.getInstance().LoadImage(NewPartyActivity.this, completeURL, mNewParty_item_head);
-			AsynImageLoader asynImageLoader = new AsynImageLoader();
-			asynImageLoader.showImageAsyn(mNewParty_item_head, completeURL, R.drawable.newteam,NewPartyActivity.this);
+			homeImageLoaderUtils.getInstance().LoadImage(NewPartyActivity.this, completeURL, mNewParty_item_head);
+//			AsynImageLoader asynImageLoader = new AsynImageLoader();
+//			asynImageLoader.showImageAsyn(mNewParty_item_head, completeURL, R.drawable.newteam,NewPartyActivity.this);
 			return inflater;
 		}
 		

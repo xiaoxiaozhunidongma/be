@@ -363,8 +363,10 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
 						PreferenceUtils.saveImageCache(getActivity(), completeURL);
-						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-								completeURL, home_item_head);
+//						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+//								completeURL, home_item_head);
+						AsynImageLoader asynImageLoader = new AsynImageLoader();
+						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
 					} else if (position == PhoneLoginActivity.list.size()) {
 					} else {
 						
@@ -381,7 +383,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						completeURL = beginStr + homeAvatar_path + endStr;
 						PreferenceUtils.saveImageCache(getActivity(), completeURL);
 //						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-//								completeURL, holder.home_item_head);
+//								completeURL, home_item_head);
 						AsynImageLoader asynImageLoader = new AsynImageLoader();
 						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
 					} else {
