@@ -1,5 +1,10 @@
 package com.biju.login;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -7,6 +12,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Color;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -27,6 +33,7 @@ import com.BJ.javabean.Phone;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.utils.Person;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
@@ -35,6 +42,7 @@ import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.Interface.requestVerCodeListenner;
 import com.biju.Interface.updateUserListenner;
+import com.biju.IConstant;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
@@ -69,7 +77,19 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 	private String device_id;
 	private Integer status;
 	private String wechat_id;
-	private HomeFragment mHomeFragmen;
+	private String fileName = getSDPath() + "/" + "saveData";
+
+	public String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
+	}
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -176,6 +196,18 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 							
 							//把pk_user保存进一个工具类中
 							SdPkUser.setsD_pk_user(Phone_pk_user);
+							//保存进sd卡
+							Person person = new Person(Phone_pk_user);
+							try {
+								ObjectOutputStream oos = new ObjectOutputStream(
+										new FileOutputStream(fileName));
+								oos.writeObject(person);
+								oos.close();
+							} catch (FileNotFoundException e) {
+								e.printStackTrace();
+							} catch (IOException e) {
+								e.printStackTrace();
+							}
 						}
 					}
 				} else {
@@ -193,6 +225,7 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 							//进行注册
 							Intent intent=new Intent(PhoneRegisteredActivity.this, RegisteredActivity.class);
 							intent.putExtra("phoneRegistered_phone", phoneRegistered_phone);
+							intent.putExtra("PhoneLogin", true);
 							startActivity(intent);
 							finish();
 						}
@@ -260,6 +293,7 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 				if (a == 1) {
 					Log.e("PhoneRegisteredActivity", "更新成功" + A);
 					Intent intent = new Intent(PhoneRegisteredActivity.this,MainActivity.class);
+					intent.putExtra(IConstant.Sdcard, true);
 					startActivity(intent);
 				}
 			}

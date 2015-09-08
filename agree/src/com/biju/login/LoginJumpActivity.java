@@ -81,8 +81,12 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 		if(1==registered)
 		{
 			//跳转微信注册界面
-//			Intent intent=new Intent(LoginJumpActivity.this, PhoneRegisteredActivity.class);
-//			startActivity(intent);
+			final SendAuth.Req req = new SendAuth.Req();
+			req.scope = "snsapi_userinfo";
+			req.state = "wechat_sdk_demo_test";
+			MyApplication.api.sendReq(req);
+			
+			SdPkUser.setWeixinRegistered(true);
 			
 		}else
 		{
@@ -92,6 +96,7 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 			req.scope = "snsapi_userinfo";
 			req.state = "wechat_sdk_demo_test";
 			MyApplication.api.sendReq(req);
+			
 			SdPkUser.setGetweixinBinding(false);
 		}
 	}

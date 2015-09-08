@@ -178,5 +178,7 @@
     <string name="title_activity_nickname">NicknameActivity</string>
     <string name="title_activity_sex">SexActivity</string>
     <string name="title_activity_add_new_party">AddNewPartyActivity</string>
+    <string name="title_activity_add_friends2">AddFriends2Activity</string>
+    <string name="title_activity_contact_search">ContactSearchActivity</string>
 
 </resources>

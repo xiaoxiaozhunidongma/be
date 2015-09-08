@@ -60,4 +60,17 @@ public interface IConstant {
 	public String Fk_group="fk_group";
 	public String AddRefresh="addrefresh";
 	public String IsAddRefresh="isaddrefresh";
+	
+	//Schedule到partydetailes中
+	public String Schedule="Schedule";
+	public String Pk_party_user="pk_party_user";
+	public String Pk_party="pk_party";
+	public String fk_group="fk_group";
+	
+	//more到Schedule
+	public String MoreRefresh="morerefresh";
+	public String Morecancle="morecancle";
+	
+	//partyfragmnet到partydetails
+	public String Partyfragmnet="partyfragmnet";
 }

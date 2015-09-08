@@ -106,6 +106,14 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			adapter.notifyDataSetChanged();
 		}
 		
+		SharedPreferences more_sp=getActivity().getSharedPreferences(IConstant.MoreRefresh, 0);
+		boolean iscancle=more_sp.getBoolean(IConstant.Morecancle, false);
+		if(iscancle)
+		{
+			initreadUserGroupParty();
+			adapter.notifyDataSetChanged();
+		}
+		
 		super.onResume();
 	}
 	private void initUI() {
@@ -146,6 +154,13 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
 						intent.putExtra(IConstant.OneParty, scheduleparty);
 						startActivity(intent);
+						
+						SharedPreferences Schedule_sp=getActivity().getSharedPreferences(IConstant.Schedule, 0);
+						Editor editor=Schedule_sp.edit();
+						editor.putInt(IConstant.Pk_party_user, scheduleparty.getPk_party_user());
+						editor.putString(IConstant.Pk_party, scheduleparty.getPk_party());
+						editor.putInt(IConstant.fk_group, scheduleparty.getFk_group());
+						editor.commit();
 					}
 				}
 			}
@@ -283,8 +298,24 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					Log.e("ScheduleFragment", "得到的关系结果===="+A);
 					Integer pk_party_user = partyRelationshipback.getReturnData();
 					Log.e("ScheduleFragment", "得到的pk_party_user111111===="+pk_party_user);
+					if(pk_party_user!=null)
+					{
+						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
+						intent.putExtra(IConstant.IsRelationship, true);
+						intent.putExtra(IConstant.OneParty, scheduleparty);
+						startActivity(intent);
+						
+						SharedPreferences Schedule_sp=getActivity().getSharedPreferences(IConstant.Schedule, 0);
+						Editor editor=Schedule_sp.edit();
+						editor.putInt(IConstant.Pk_party_user, scheduleparty.getPk_party_user());
+						editor.putString(IConstant.Pk_party, scheduleparty.getPk_party());
+						editor.putInt(IConstant.fk_group, scheduleparty.getFk_group());
+						editor.commit();
+						Log.e("ScheduleFragment", "得到的第一个pk_party_user======="+pk_party_user);
+					}
+					
 					//加入到工具类中
-					SdPkUser.setGetPk_party_user(pk_party_user);
+//					SdPkUser.setGetPk_party_user(pk_party_user);
 					Party_User party_user = new Party_User();
 					party_user.setPk_party_user(pk_party_user);
 					party_user.setRelationship(0);
@@ -304,10 +335,6 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			@Override
 			public void success(String A) {
 				Log.e("ScheduleFragment", "返回的是否更新成功" + A);
-				Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
-				intent.putExtra(IConstant.IsRelationship, true);
-				intent.putExtra(IConstant.OneParty, scheduleparty);
-				startActivity(intent);
 			}
 
 			@Override

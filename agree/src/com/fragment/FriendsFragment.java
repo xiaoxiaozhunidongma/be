@@ -5,7 +5,6 @@ import java.util.List;
 
 import android.annotation.TargetApi;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -34,7 +33,7 @@ import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readFriendListenner;
 import com.biju.R;
-import com.biju.function.AddFriendsActivity;
+import com.biju.function.AddFriends2Activity;
 import com.biju.function.FriendsDataActivity;
 import com.easemob.EMCallBack;
 import com.easemob.chat.EMChatManager;
@@ -84,7 +83,6 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			initUI();
 			LoginHuanXin();
 			initInterface();
-//		ReadUserAllFriends();
 			mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.friends_swipe_refresh);
 			mFriends_swipe_refresh.setOnRefreshListener(this);
 			
@@ -270,8 +268,9 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 	private void tab_friends_addbuddy() {
 		Integer size=AllFriends_List.size();
-		Intent intent = new Intent(getActivity(), AddFriendsActivity.class);
+		Intent intent = new Intent(getActivity(), AddFriends2Activity.class);
 		intent.putExtra(IConstant.Size, size);
+		getActivity().overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
 		startActivity(intent);
 	}
 

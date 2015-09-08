@@ -15,21 +15,24 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_ReadAllUser;
+import com.BJ.javabean.Group_ReadAllUserback;
+import com.BJ.javabean.Loginback;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
+import com.BJ.javabean.Party3;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.ReadPartyback;
 import com.BJ.javabean.Relation;
 import com.BJ.javabean.ReturnData;
+import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.utils.DensityUtil;
 import com.BJ.utils.RefreshActivity;
@@ -66,13 +69,16 @@ import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
 import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.Interface.findUserListenner;
+import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readPartyJoinMsgListenner;
 import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
-public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResultListener, OnClickListener {
+public class PartyDetailsActivity extends Activity implements
+		OnGetGeoCoderResultListener, OnClickListener {
 	private MapView mMapView;
 	private BaiduMap mBaiduMap;
 	public MyLocationListenner myListener = new MyLocationListenner();
@@ -84,29 +90,31 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	private LocationClient mLocClient;
 	private LocationMode tempMode = LocationMode.Hight_Accuracy;
 	private ArrayList<BitmapDescriptor> mOverLayList = new ArrayList<BitmapDescriptor>();
+	private ArrayList<Group_ReadAllUser> PartyDetailsList = new ArrayList<Group_ReadAllUser>();
+	private ArrayList<Relation> partakeNumList = new ArrayList<Relation>();
 	private Marker mMarkerD;
 	private GeoCoder mSearch;
 	private EditText edit_show;
 
-	private TextView mPartyDetails_name;
-	private TextView mPartyDetails_time;
-	private TextView mPartyDetails_tv_partake;
-	private TextView mPartyDetails_tv_refuse;
-	private TextView mPartyDetails_did_not_say;
 	private Interface readpartyInterface;
-	private String pk_party;
 	private Party2 oneParty;
 	private Integer pk_party_user;
 	private UserAllParty allParty;
 	private boolean userAll;
 
 	private Integer sD_pk_user;
-	
-	private int oklist[] = new int[] { R.drawable.ok_1,
-			R.drawable.ok_2};
-	private Button mPartyDetails_partake;
-	private Button mPartyDetails_refuse;
 
+	private TextView mPartyDetails_partyaddress;
+	private TextView mPartyDetails_partyname;
+	private TextView mPartyDetails_partytime;
+	private TextView mPartyDetails_partypayment;
+	private TextView mPartyDetails_partake_number;
+	private TextView mPartyDetails_did_not_say_number;
+	private TextView mPartyDetails_party_organizer;
+	private TextView mPartyDetails_apply;
+	private String pk_party;
+	private Integer fk_group;
+	private int not_sayNum;
 
 	/**
 	 * 定位SDK监听函数
@@ -146,28 +154,33 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
-		//加入list中
+		// 加入list中
 		RefreshActivity.activList_1.add(PartyDetailsActivity.this);
-		//获取sd卡中的sD_pk_user
+		// 获取sd卡中的sD_pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
+
 		initUI();
 		initInterface();
 		initOneParty();
-		initReadParty();
+		returndata();
+//		initReadParty();// 读取聚会详情
+			
 		// addview 百度地图
 		BaiduMapOptions options = new BaiduMapOptions();
 		options.zoomGesturesEnabled(false);
-		
-		
+
 		options.scaleControlEnabled(false);
 		options.scrollGesturesEnabled(false);
 		mMapView = new MapView(this, options);
 		RelativeLayout.LayoutParams params_map = new RelativeLayout.LayoutParams(
 				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		RelativeLayout bd_mapView_container = (RelativeLayout) findViewById(R.id.map_layout);
+		RelativeLayout bd_mapView_container = (RelativeLayout) findViewById(R.id.PartyDetails_map_layout);
+		
+		
 		bd_mapView_container.addView(mMapView, params_map);
 		// addview edittext
-		RelativeLayout.LayoutParams params_show = new LayoutParams(LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 50));
+		RelativeLayout.LayoutParams params_show = new LayoutParams(
+				LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 50));
 		edit_show.setGravity(Gravity.CENTER);
 		params_show.setMargins(0, DensityUtil.dip2px(this, 200), 0, 0);
 		edit_show.setBackgroundColor(android.graphics.Color.parseColor("#aaffffff"));
@@ -187,8 +200,43 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 		// 初始化地图
 		initMap();
+		Log.e("PartyDetailsActivity", "在onCreate()==========");
 	}
-
+	
+	@Override
+	protected void onStart() {
+		super.onStart();
+		Log.e("PartyDetailsActivity", "在onStart()==========");
+		initInterface();
+		if(userAll)
+		{
+			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Partyfragmnet, 0);
+			pk_party_user=PartyDetails_sp.getInt(IConstant.Pk_party_user, 0);
+			pk_party=PartyDetails_sp.getString(IConstant.Pk_party, "");
+			fk_group=PartyDetails_sp.getInt(IConstant.fk_group, 0);
+		}else
+		{
+			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Schedule, 0);
+			pk_party_user=PartyDetails_sp.getInt(IConstant.Pk_party_user, 0);
+			pk_party=PartyDetails_sp.getString(IConstant.Pk_party, "");
+			fk_group=PartyDetails_sp.getInt(IConstant.fk_group, 0);
+		}
+	}
+	
+	private void returndata() {
+		Log.e("PartyDetailsActivity", "开始再读一次1111111=========="+fk_group);
+		Group readAllPerRelation_group = new Group();
+		readAllPerRelation_group.setPk_group(fk_group);
+		readpartyInterface.readAllPerRelation(PartyDetailsActivity.this,readAllPerRelation_group);
+	}
+	
+	// 读取聚会详情
+	private void initReadParty() {
+		Log.e("PartyDetailsActivity", "也开始再读一次2222222=========="+pk_party);
+		Party readparty = new Party();
+		readparty.setPk_party(pk_party);
+		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,readparty);
+	}
 
 	private void initInterface() {
 		readpartyInterface = Interface.getInstance();
@@ -196,8 +244,8 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 			@Override
 			public void success(String A) {
+				returndata();
 				Log.e("PartyDetailsActivity", "返回的是否更新成功" + A);
-				initReadParty();
 			}
 
 			@Override
@@ -206,11 +254,7 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			}
 		});
 
-		
 		readpartyInterface.setPostListener(new readPartyJoinMsgListenner() {
-			private int partakeNum;
-			private int refuseNum;
-			private int not_sayNum;
 
 			@Override
 			public void success(String A) {
@@ -224,55 +268,41 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 				if (relationList.size() > 0) {
 					for (int i = 0; i < relationList.size(); i++) {
 						Relation relation = relationList.get(i);
-						Integer read_pk_user = relation.getPk_user();
 						// 判断参与、拒绝数
 						Integer relationship = relation.getRelationship();
 						switch (relationship) {
-						case 0:
-							not_sayNum++;
-							break;
 						case 1:
-							partakeNum++;
-							break;
-						case 2:
-							refuseNum++;
+							partakeNumList.add(relation);
 							break;
 						default:
 							break;
 						}
-						// 当前用户
-						if (String.valueOf(sD_pk_user).equals(String.valueOf(read_pk_user))) {
-							Integer read_relationship = relation.getRelationship();
-							switch (read_relationship) {
-							case 0:
-								mPartyDetails_partake.setBackgroundResource(oklist[1]);
-								mPartyDetails_refuse.setBackgroundResource(oklist[1]);
-								Log.e("PartyDetailsActivity", "用户未表态======"+ relationship);
-								break;
-							case 1:
-								mPartyDetails_partake.setBackgroundResource(oklist[0]);
-								mPartyDetails_refuse.setBackgroundResource(oklist[1]);
-								Log.e("PartyDetailsActivity", "用户已参与======="+ relationship);
-								break;
-							case 2:
-								mPartyDetails_partake.setBackgroundResource(oklist[1]);
-								mPartyDetails_refuse.setBackgroundResource(oklist[0]);
-								Log.e("PartyDetailsActivity", "用户已拒绝=========="+ relationship);
-								break;
-							default:
-								break;
-							}
-						}
 					}
-					Log.e("PartyDetailsActivity", "当前partakeNum的数量"+ partakeNum);
-					Log.e("PartyDetailsActivity", "当前refuseNum的数量"+ refuseNum);
+					Log.e("PartyDetailsActivity", "当前partakeNum的数量"+ partakeNumList.size());
 					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"+ not_sayNum);
-					mPartyDetails_tv_partake.setText(String.valueOf(partakeNum));
-					mPartyDetails_tv_refuse.setText(String.valueOf(refuseNum));
-					mPartyDetails_did_not_say.setText(String.valueOf(not_sayNum));
-					partakeNum = 0;
-					refuseNum = 0;
-					not_sayNum = 0;
+					mPartyDetails_partake_number.setText(String.valueOf(partakeNumList.size()));// 显示参与数量
+//					mPartyDetails_did_not_say_number.setText(String.valueOf(not_sayNum));// 显示未表态数量
+					if(partakeNumList.size()>0)
+					{
+						not_sayNum=PartyDetailsList.size()-partakeNumList.size();
+					}else
+					{
+						not_sayNum=PartyDetailsList.size();
+					}
+					mPartyDetails_did_not_say_number.setText(String.valueOf(not_sayNum));// 显示未表态数量
+					
+					
+					List<Party3> partylist=returnData.getParty();
+					if(partylist.size()>0)
+					{
+						Party3 readparty=partylist.get(0);
+						Integer pk_user=readparty.getFk_user();
+						//查找聚会创建者
+						User user = new User();
+						user.setPhone(String.valueOf(pk_user));
+						readpartyInterface.findUser(PartyDetailsActivity.this,user);
+					}
+
 				}
 			}
 
@@ -281,45 +311,69 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 			}
 		});
+		//查找创建者监听
+		readpartyInterface.setPostListener(new findUserListenner() {
+
+			@Override
+			public void success(String A) {
+				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,
+						Loginback.class);
+				int statusmsg = findfriends_statusmsg.getStatusMsg();
+				if (statusmsg == 1) {
+					// 取第一个Users[0]
+					List<User> Users = findfriends_statusmsg.getReturnData();
+					if (Users.size() >= 1) {
+						User user = Users.get(0);
+						mPartyDetails_party_organizer.setText("组织者: "+user.getNickname());
+
+					}
+				} 
+
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		
+		readpartyInterface.setPostListener(new readAllPerRelationListenner() {
+
+			@Override
+			public void success(String A) {
+				PartyDetailsList.clear();
+				Group_ReadAllUserback group_ReadAllUserback = GsonUtils.parseJson(A, Group_ReadAllUserback.class);
+				int status = group_ReadAllUserback.getStatusMsg();
+				if (status == 1) {
+					Log.e("PartyDetailsActivity", "读取出小组中的所有用户========" + A);
+					List<Group_ReadAllUser> allUsers = group_ReadAllUserback.getReturnData();
+					if (allUsers.size() > 0) {
+						for (int i = 0; i < allUsers.size(); i++) {
+							Group_ReadAllUser readAllUser = allUsers.get(i);
+							PartyDetailsList.add(readAllUser);
+						}
+						initReadParty();// 读取聚会详情
+					}
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		
 	}
 
-	//读取聚会详情
-	private void initReadParty() {
-		Party readparty = new Party();
-		readparty.setPk_party(pk_party);
-		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,readparty);
-	}
-
-	//首次进来时传值
+	// 首次进来时传值
 	private void initOneParty() {
 		Intent intent = getIntent();
 		userAll = intent.getBooleanExtra(IConstant.UserAll, false);
 		if (userAll) {
 			allParty = (UserAllParty) intent.getSerializableExtra(IConstant.UserAllParty);
-			Integer allrelationship = allParty.getRelationship();
 			pk_party_user = allParty.getPk_party_user();
 			pk_party = allParty.getPk_party();
-			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中======");
-			Log.e("PartyDetailsActivity", "有进入到所有的聚会当中的allrelationship======"+ allrelationship);
-//			switch (allrelationship) {
-//			case 0:
-//				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-//				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
-//				Log.e("PartyDetailsActivity", "用户未表态======" + allrelationship);
-//				break;
-//			case 1:
-//				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
-//				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
-//				Log.e("PartyDetailsActivity", "用户已参与=======" + allrelationship);
-//				break;
-//			case 2:
-//				mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-//				mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
-//				Log.e("PartyDetailsActivity", "用户已拒绝=========="+ allrelationship);
-//				break;
-//			default:
-//				break;
-//			}
+			fk_group = allParty.getFk_group();
 			String Begin_time = allParty.getBegin_time();
 			String years = Begin_time.substring(0, 4);
 			String months = Begin_time.substring(5, 7);
@@ -332,9 +386,10 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			// 调用计算星期几的方法
 			Weeks.CaculateWeekDay(y, m, d);
 			String week = Weeks.getweek();
-			mPartyDetails_name.setText(allParty.getName());
-			mPartyDetails_time.setText(years + "年" + months + "月" + days + "日"
-					+ "  " + week + "  " + hour + ":" + minute);
+			mPartyDetails_partyname.setText(allParty.getName());//显示聚会名称
+			mPartyDetails_partytime.setText(years + "年" + months + "月" + days + "日"
+					+ "  " + week + "  " + hour + ":" + minute);//显示聚会时间
+			mPartyDetails_partyaddress.setText(allParty.getLocation());//显示聚会地点
 
 			Double latitude = allParty.getLatitude();
 			Double longitude = allParty.getLongitude();
@@ -344,39 +399,12 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			edit_show.setText(location);
 		} else {
 			oneParty = (Party2) intent.getSerializableExtra(IConstant.OneParty);
-			boolean isRelationship=intent.getBooleanExtra(IConstant.IsRelationship, false);
-			Integer relationship = oneParty.getRelationship();
-			if(isRelationship)
-			{
-				pk_party_user =SdPkUser.getGetPk_party_user();
-				Log.e("PartyDetailsActivity", "得到的getPk_party_user111111111" + pk_party_user);
-			}else
-			{
-				pk_party_user=oneParty.getPk_party_user();
-			}
+//			isRelationship = intent.getBooleanExtra(IConstant.IsRelationship, false);
+			SharedPreferences partydetails_sp=getSharedPreferences(IConstant.Schedule, 0);
+			pk_party_user = partydetails_sp.getInt(IConstant.Pk_party_user, 0);
+			Log.e("PartyDetailsActivity", "得到的第二个getPk_party_user========="+ pk_party_user);
 			pk_party = oneParty.getPk_party();
-//			if (relationship == null) {
-//			} else {
-//				switch (relationship) {
-//				case 0:
-//					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-//					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
-//					Log.e("PartyDetailsActivity", "用户未表态======" + relationship);
-//					break;
-//				case 1:
-//					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_1);
-//					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_2);
-//					Log.e("PartyDetailsActivity", "用户已参与=======" + relationship);
-//					break;
-//				case 2:
-//					mPartyDetails_partake.setBackgroundResource(R.drawable.ok_2);
-//					mPartyDetails_refuse.setBackgroundResource(R.drawable.ok_1);
-//					Log.e("PartyDetailsActivity", "用户已拒绝=========="+ relationship);
-//					break;
-//				default:
-//					break;
-//				}
-//			}
+			fk_group = oneParty.getFk_group();
 			String Begin_time = oneParty.getBegin_time();
 			String years = Begin_time.substring(0, 4);
 			String months = Begin_time.substring(5, 7);
@@ -389,13 +417,12 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			// 调用计算星期几的方法
 			Weeks.CaculateWeekDay(y, m, d);
 			String week = Weeks.getweek();
-			Log.e("PartyDetailsActivity", "获取的时间======" + years + "年" + months
-					+ "月" + days + "日" + "  " + week + "  " + hour + ":"
-					+ minute);
-			mPartyDetails_name.setText(oneParty.getName());
-			mPartyDetails_time.setText(years + "年" + months + "月" + days + "日"
-					+ "  " + week + "  " + hour + ":" + minute);
-
+			mPartyDetails_partyname.setText(oneParty.getName());//显示聚会名称
+			mPartyDetails_partytime.setText(years + "年" + months + "月" + days + "日"
+					+ "  " + week + "  " + hour + ":" + minute);//显示聚会时间
+			mPartyDetails_partyaddress.setText(oneParty.getLocation());//显示聚会地点
+			
+			
 			Double latitude = oneParty.getLatitude();
 			Double longitude = oneParty.getLongitude();
 			String location = oneParty.getLocation();
@@ -403,31 +430,31 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 			mLng = longitude;
 			edit_show.setText(location);
 		}
-
 	}
 
 	private void initUI() {
-		mPartyDetails_name = (TextView) findViewById(R.id.PartyDetails_name);// 聚会名称
-		mPartyDetails_time = (TextView) findViewById(R.id.PartyDetails_time);// 聚会时间
-		mPartyDetails_tv_partake = (TextView) findViewById(R.id.PartyDetails_tv_partake);// 参与数量
-		mPartyDetails_tv_refuse = (TextView) findViewById(R.id.PartyDetails_tv_refuse);// 拒绝数量
-		mPartyDetails_did_not_say = (TextView) findViewById(R.id.PartyDetails_did_not_say);// 未表态
-		mPartyDetails_partake = (Button) findViewById(R.id.PartyDetails_partake);
-		mPartyDetails_partake.setOnClickListener(this);//参与图片
-		mPartyDetails_refuse = (Button) findViewById(R.id.PartyDetails_refuse);
-		mPartyDetails_refuse.setOnClickListener(this);
-		
+		mPartyDetails_partyaddress = (TextView) findViewById(R.id.PartyDetails_partyaddress);// 聚会地址
+		mPartyDetails_partyname = (TextView) findViewById(R.id.PartyDetails_partyname);// 聚会名称
+		mPartyDetails_partytime = (TextView) findViewById(R.id.PartyDetails_partytime);// 聚会时间
+		mPartyDetails_partypayment = (TextView) findViewById(R.id.PartyDetails_partypayment);// 付款方式
+		findViewById(R.id.PartyDetails_partake).setOnClickListener(this);// 参与
+		findViewById(R.id.PartyDetails_partake_layout).setOnClickListener(this);
+		findViewById(R.id.PartyDetails_partake_number_layout).setOnClickListener(this);// 参与数量
+		mPartyDetails_partake_number = (TextView) findViewById(R.id.PartyDetails_partake_number);
+		findViewById(R.id.PartyDetails_did_not_say).setOnClickListener(this);// 未表态
+		findViewById(R.id.PartyDetails_did_not_say_layout).setOnClickListener(this);
+		findViewById(R.id.PartyDetails_did_not_say_number_layout).setOnClickListener(this);// 未表态数量
+		mPartyDetails_did_not_say_number = (TextView) findViewById(R.id.PartyDetails_did_not_say_number);
+		mPartyDetails_party_organizer = (TextView) findViewById(R.id.PartyDetails_party_organizer);// 组织者
+		findViewById(R.id.PartyDetails_apply_layout).setOnClickListener(this);// 报名
+		mPartyDetails_apply = (TextView) findViewById(R.id.PartyDetails_apply);// 报名支付金额
+
 		edit_show = new EditText(this);
-		findViewById(R.id.PartyDetails_back_layout).setOnClickListener(this);
+		findViewById(R.id.PartyDetails_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.PartyDetails_back).setOnClickListener(this);
-		findViewById(R.id.PartyDetails_more_layout).setOnClickListener(this);
+		findViewById(R.id.PartyDetails_more_layout).setOnClickListener(this);// 设置
 		findViewById(R.id.PartyDetails_more).setOnClickListener(this);
-		findViewById(R.id.PartyDetails_tv_partake_prompt).setOnClickListener(this);// 参与提示字符
-		findViewById(R.id.PartyDetails_tv_refuse_prompt).setOnClickListener(this);// 拒绝提示字符
-		findViewById(R.id.PartyDetails_did_not_say_prompt).setOnClickListener(this);// 未表态提示字符
-		
-	
-	
+
 	}
 
 	private void initListener() {
@@ -497,10 +524,12 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		LatLng llA = new LatLng(lat, lng);
 
 		// 设置悬浮的图案
-		BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(drawableRes);
+		BitmapDescriptor bdA = BitmapDescriptorFactory
+				.fromResource(drawableRes);
 		mOverLayList.add(bdA);
 
-		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA).zIndex(0).draggable(true);
+		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA)
+				.zIndex(0).draggable(true);
 		mMarkerD = (Marker) mBaiduMap.addOverlay(ooA);
 	}
 
@@ -519,7 +548,8 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",Toast.LENGTH_LONG).show();
+			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",
+					Toast.LENGTH_LONG).show();
 			return;
 		}
 	}
@@ -535,47 +565,36 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 		case R.id.PartyDetails_more:
 			PartyDetails_more();
 			break;
-		case R.id.PartyDetails_partake:// 参与
-			PartyDetails_partake();
+		case R.id.PartyDetails_partake_layout:
+		case R.id.PartyDetails_partake:
+		case R.id.PartyDetails_partake_number_layout:
+		case R.id.PartyDetails_partake_number:
+			PartyDetails_partake_number();
 			break;
-		case R.id.PartyDetails_refuse:// 拒绝
-			PartyDetails_refuse();
-			break;
-		case R.id.PartyDetails_tv_partake_prompt:
-		case R.id.PartyDetails_tv_partake:
-			PartyDetails_tv_partake_prompt();
-			break;
-		case R.id.PartyDetails_tv_refuse_prompt:
-		case R.id.PartyDetails_tv_refuse:
-			PartyDetails_tv_refuse_prompt();
-			break;
-		case R.id.PartyDetails_did_not_say_prompt:
 		case R.id.PartyDetails_did_not_say:
-			PartyDetails_did_not_say_prompt();
+		case R.id.PartyDetails_did_not_say_layout:
+		case R.id.PartyDetails_did_not_say_number:
+		case R.id.PartyDetails_did_not_say_number_layout:
+			PartyDetails_did_not_say_number();
 			break;
+		case R.id.PartyDetails_apply_layout:
+		case R.id.PartyDetails_apply:
+			PartyDetails_apply_layout();
 		default:
 			break;
 		}
 	}
 
 	// 未表态
-	private void PartyDetails_did_not_say_prompt() {
+	private void PartyDetails_did_not_say_number() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra(IConstant.CommentsList, 0);
 		intent.putExtra(IConstant.Not_Say, pk_party);
 		startActivity(intent);
 	}
 
-	// 拒绝
-	private void PartyDetails_tv_refuse_prompt() {
-		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
-		intent.putExtra(IConstant.CommentsList, 2);
-		intent.putExtra(IConstant.Refuse, pk_party);
-		startActivity(intent);
-	}
-
 	// 参与
-	private void PartyDetails_tv_partake_prompt() {
+	private void PartyDetails_partake_number() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra(IConstant.CommentsList, 1);
 		intent.putExtra(IConstant.ParTake, pk_party);
@@ -583,52 +602,28 @@ public class PartyDetailsActivity extends Activity implements OnGetGeoCoderResul
 
 	}
 
-	private void PartyDetails_partake() {
-		mPartyDetails_refuse.setBackgroundResource(oklist[1]);
-		mPartyDetails_partake.setBackgroundResource(oklist[0]);
-		Party_User party_user = new Party_User();
-		party_user.setPk_party_user(pk_party_user);
-		Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222" + pk_party_user);
-		party_user.setRelationship(1);
-		party_user.setStatus(1);
-		party_user.setFk_party(pk_party);
-		party_user.setFk_user(sD_pk_user);
-		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
-		
-		
-		Toast toast = Toast.makeText(getApplicationContext(), "已参与",Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER, 0, 0);
-		LinearLayout toastView = (LinearLayout) toast.getView();
-		ImageView imageCodeProject = new ImageView(getApplicationContext());
-		imageCodeProject.setImageResource(R.drawable.checked);
-		toastView.addView(imageCodeProject, 0);
-		toast.show();
-	}
+	private void PartyDetails_apply_layout() {
+			Party_User party_user = new Party_User();
+			party_user.setPk_party_user(pk_party_user);
+			Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222"+ pk_party_user);
+			party_user.setRelationship(1);
+			party_user.setStatus(1);
+			party_user.setFk_party(pk_party);
+			party_user.setFk_user(sD_pk_user);
+			readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 
-	private void PartyDetails_refuse() {
-		mPartyDetails_refuse.setBackgroundResource(oklist[0]);
-		mPartyDetails_partake.setBackgroundResource(oklist[1]);
-		Party_User party_user = new Party_User();
-		party_user.setPk_party_user(pk_party_user);
-		Log.e("PartyDetailsActivity", "得到的getPk_party_user333333333" + pk_party_user);
-		party_user.setRelationship(2);
-		party_user.setFk_party(pk_party);
-		party_user.setStatus(1);
-		party_user.setFk_user(sD_pk_user);
-		readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
-
-		
-		Toast toast = Toast.makeText(getApplicationContext(), "已拒绝",Toast.LENGTH_SHORT);
-		toast.setGravity(Gravity.CENTER, 0, 0);
-		LinearLayout toastView = (LinearLayout) toast.getView();
-		ImageView imageCodeProject = new ImageView(getApplicationContext());
-		imageCodeProject.setImageResource(R.drawable.chahao);
-		toastView.addView(imageCodeProject, 0);
-		toast.show();
+//		Toast toast = Toast.makeText(getApplicationContext(), "已报名",Toast.LENGTH_SHORT);
+//		toast.setGravity(Gravity.CENTER, 0, 0);
+//		LinearLayout toastView = (LinearLayout) toast.getView();
+//		ImageView imageCodeProject = new ImageView(getApplicationContext());
+//		imageCodeProject.setImageResource(R.drawable.checked);
+//		toastView.addView(imageCodeProject, 0);
+//		toast.show();
 	}
 
 	private void PartyDetails_more() {
-		Intent intent = new Intent(PartyDetailsActivity.this,MoreActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,
+				MoreActivity.class);
 		if (userAll) {
 			intent.putExtra(IConstant.UserAllUoreParty, allParty);
 			intent.putExtra(IConstant.UserAll, true);

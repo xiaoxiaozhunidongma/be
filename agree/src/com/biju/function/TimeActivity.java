@@ -72,8 +72,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 				popupwindow_calendar_month.setText(years + "Äê" + month + "ÔÂ");
 
 				calendar.showCalendar(years, month);
-				calendar.setCalendarDayBgColor(date,
-						R.drawable.calendar_date_focused);
+				calendar.setCalendarDayBgColor(date,R.drawable.calendar_date_focused);
 			}
 		}
 	}

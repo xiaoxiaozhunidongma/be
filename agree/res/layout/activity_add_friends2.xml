@@ -2,8 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#ffffff"
-    tools:context=".AddFriendsActivity" >
+    tools:context=".AddFriends2Activity" >
 
     <RelativeLayout
         android:id="@+id/addbuddy_listview_layout"
@@ -68,26 +67,53 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/addbuddy_listview_layout"
-        android:layout_centerHorizontal="true" >
+        android:layout_below="@+id/addbuddy_listview_layout" >
 
-        <android.support.v4.widget.SwipeRefreshLayout
-            android:id="@+id/contact_swipe_refresh"
+        <TextView
+            android:id="@+id/fast_position"
+            android:layout_width="70dip"
+            android:layout_height="70dip"
+            android:layout_centerInParent="true"
+            android:layout_gravity="center_horizontal|top"
+            android:layout_margin="34dip"
+            android:background="@drawable/sort_icon_bg_click"
+            android:gravity="center"
+            android:padding="2dip"
+            android:textColor="#404040"
+            android:textSize="48dip"
+            android:visibility="invisible" />
+
+        <com.BJ.utils.QuickAlphabeticBar
+            android:id="@+id/fast_scroller"
+            android:layout_width="22dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="#ffffff"
+            android:scaleType="centerInside"
+            android:src="@drawable/dic_background" >
+        </com.BJ.utils.QuickAlphabeticBar>
+
+        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-             >
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/fast_scroller" >
 
-            <ListView
-                android:id="@+id/contact_list"
+            <android.support.v4.widget.SwipeRefreshLayout
+                android:id="@+id/contact_swipe_refresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:cacheColorHint="#000000"
-                android:divider="#00000000"
-                android:fadingEdge="none"
-                android:scrollbars="none"
-                android:scrollingCache="false"
-                android:visibility="visible" />
-        </android.support.v4.widget.SwipeRefreshLayout>
+                android:layout_height="match_parent" >
+
+                <ListView
+                    android:id="@+id/contact_list"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_toLeftOf="@+id/fast_scroller"
+                    android:background="#ffffff"
+                    android:visibility="visible" />
+            </android.support.v4.widget.SwipeRefreshLayout>
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

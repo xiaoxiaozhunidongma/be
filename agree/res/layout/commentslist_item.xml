@@ -10,25 +10,33 @@
         android:layout_centerHorizontal="true"
         >
 
-        <ImageView
-            android:id="@+id/commentslist_item_head"
-            android:layout_width="45.0dp"
-            android:layout_height="45.0dp"
+        <RelativeLayout
+            android:id="@+id/commentslist_item_head_layout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="30dp"
-            android:src="@drawable/ok_2" />
+            android:layout_marginLeft="25dp" 
+            >
 
-        <TextView
-            android:id="@+id/commentslist_item_nickname"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/commentslist_item_head"
-            android:layout_marginLeft="30dp"
-            android:layout_marginTop="5.0dp"
-            android:gravity="left"
-            android:layout_toRightOf="@+id/commentslist_item_head"
-            android:text="TextView" />
+            <ImageView
+                android:id="@+id/imageView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:scaleType="fitXY"
+                android:layout_margin="5.0dp"
+                android:src="@drawable/yuan_gray" />
+
+            <ImageView
+                android:id="@+id/commentslist_item_head"
+                android:layout_width="45.0dp"
+                android:layout_height="45.0dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/ok_2" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/commentslist_item_status"
@@ -36,7 +44,23 @@
             android:layout_height="wrap_content"
             android:layout_alignLeft="@+id/commentslist_item_nickname"
             android:layout_below="@+id/commentslist_item_nickname"
-            android:text="TextView" />
+            android:gravity="left|center"
+            android:text="TextView"
+            android:textColor="#d3d3d3"
+            android:textSize="15.0sp" />
+
+        <TextView
+            android:id="@+id/commentslist_item_nickname"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20.0dp"
+            android:layout_toRightOf="@+id/commentslist_item_head_layout"
+            android:gravity="left|center"
+            android:layout_marginTop="10.0dp"
+            android:text="TextView"
+            android:textColor="#000000"
+            android:textSize="20.0sp" />
 
     </RelativeLayout>
 

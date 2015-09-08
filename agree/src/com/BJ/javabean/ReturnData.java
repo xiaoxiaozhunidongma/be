@@ -7,14 +7,14 @@ import java.util.Map;
 
 public class ReturnData {
 
-	private List<Party> party = new ArrayList<Party>();
+	private List<Party3> party = new ArrayList<Party3>();
 	private List<Relation> relation = new ArrayList<Relation>();
 
 	/**
 	 * 
 	 * @return The party
 	 */
-	public List<Party> getParty() {
+	public List<Party3> getParty() {
 		return party;
 	}
 
@@ -23,7 +23,7 @@ public class ReturnData {
 	 * @param party
 	 *            The party
 	 */
-	public void setParty(List<Party> party) {
+	public void setParty(List<Party3> party) {
 		this.party = party;
 	}
 

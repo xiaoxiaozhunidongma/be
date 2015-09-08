@@ -2,9 +2,12 @@ package com.fragment;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -21,6 +24,7 @@ import android.widget.BaseAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.UserAllPartyback;
@@ -117,6 +121,14 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 							UserAllParty userAllParty = AllList.get(i);
 							userAllPartieList.add(userAllParty);
 						}
+						if(userAllPartieList.size()>0)
+						{
+							mParty_listView.setAdapter(adapter);
+							mTab_party_prompt_layout.setVisibility(View.GONE);
+							mTab_party_swipe_refresh.setVisibility(View.VISIBLE);
+							mParty_listView.setVisibility(View.VISIBLE);
+							adapter.notifyDataSetChanged();
+						}
 					}
 					Log.e("PartyFragment", "userAllPartieList.size()====="+userAllPartieList.size());
 				}
@@ -159,6 +171,13 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 					intent.putExtra(IConstant.UserAll, true);
 					intent.putExtra(IConstant.UserAllParty, UserAllParty);
 					getActivity().startActivity(intent);
+					
+					SharedPreferences Schedule_sp=getActivity().getSharedPreferences(IConstant.Partyfragmnet, 0);
+					Editor editor=Schedule_sp.edit();
+					editor.putInt(IConstant.Pk_party_user, UserAllParty.getPk_party_user());
+					editor.putString(IConstant.Pk_party, UserAllParty.getPk_party());
+					editor.putInt(IConstant.fk_group, UserAllParty.getFk_group());
+					editor.commit();
 				}
 			}
 		});

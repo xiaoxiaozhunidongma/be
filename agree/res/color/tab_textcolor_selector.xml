@@ -4,7 +4,7 @@
         android:color="@color/red"
         ></item>
 	<item android:state_selected="true" android:state_pressed="false"
-	    android:color="@color/red"
+	    android:color="@color/green_1"
 	    ></item>
 	<item 
 	    android:color="@color/lightgray"

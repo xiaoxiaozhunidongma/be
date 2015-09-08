@@ -92,6 +92,12 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 					editor1.putBoolean(IConstant.IsTimeChoose, false);
 					editor1.commit();
 					
+					//复原选过日期后的
+					SharedPreferences date_sp = getSharedPreferences("isdate", 0);
+					Editor editor3 = date_sp.edit();
+					editor3.putBoolean("date", false);
+					editor3.commit();
+					
 					SharedPreferences refresh_sp=getSharedPreferences(IConstant.AddRefresh, 0);
 					Editor editor2=refresh_sp.edit();
 					editor2.putBoolean(IConstant.IsAddRefresh, true);
@@ -191,6 +197,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		mAdd_New_Party_back.setOnClickListener(this);
 		mAdd_New_Party_OK_layout.setOnClickListener(this);
 		mAdd_New_Party_OK.setOnClickListener(this);
+		mAdd_New_Party_OK.setEnabled(true);
 		mAdd_New_Party_name = (EditText) findViewById(R.id.Add_New_Party_name);// 聚会名称
 		mAdd_New_Party_time = (RelativeLayout) findViewById(R.id.Add_New_Party_time);// 聚会时间
 		mAdd_New_Party_address = (RelativeLayout) findViewById(R.id.Add_New_Party_address);// 聚会地点
@@ -313,6 +320,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			Log.e("AddNewPartyActivity", "新建日程的mLat=====" + mLat);
 			Log.e("AddNewPartyActivity", "新建日程的地址=====" + address);
 			addNewParty_Interface.addParty(AddNewPartyActivity.this, party);
+			mAdd_New_Party_OK.setEnabled(false);
 		}
 
 	}
