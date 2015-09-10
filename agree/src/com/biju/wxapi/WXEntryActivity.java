@@ -102,7 +102,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 		default:
 			break;
 		}
-		finish();
+		Log.e("WXEntryActivity", "»ñÈ¡µÄresp.errCode======" + resp.errCode);
+//		finish();
 	}
 
 	private void initdata() {

@@ -15,6 +15,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.PicSignBack;
@@ -412,7 +413,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		// 跳转微信绑定界面
 		final SendAuth.Req req = new SendAuth.Req();
 		req.scope = "snsapi_userinfo";
-		req.state = "carjob_wx_login";
+		req.state = "wechat_sdk_demo_test";
 		MyApplication.api.sendReq(req);
 		SdPkUser.setGetUser(Setting_readuser);
 		SdPkUser.setGetweixinBinding(true);
@@ -448,76 +449,122 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 	// 绑定手机号码
 	private void Phone_NiftyDialogBuilder() {
-		final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
-				.getInstance(getActivity());
-		Effectstype effectstype = Effectstype.Shake;
-		niftyDialogBuilder.withTitle("提示").withTitleColor("#000000")
-				// 设置标题字体颜色
-				.withDividerColor("#ffffff")
-				// 设置对话框背景颜色
-				.withMessage("您已经绑定了手机号码，是否重新绑定另一个号码？")
-				// 对话框提示内容
-				.withMessageColor("#000000")
-				// 提示内容字体颜色
-				.withIcon(getResources().getDrawable(R.drawable.about_us))
-				// 设置对话框显示图片
-				.isCancelableOnTouchOutside(true).withDuration(700)
-				// 设置时间
-				.withEffect(effectstype).withButton1Text("取消")
-				.withButton2Text("确定").setButton1Click(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						niftyDialogBuilder.cancel();
-					}
-				}).setButton2Click(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(getActivity(),
-								BindingPhoneActivity.class);
-						intent.putExtra(IConstant.UserData, Setting_readuser);
-						startActivity(intent);
-						niftyDialogBuilder.cancel();
-					}
-				}).show();
+//		final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
+//				.getInstance(getActivity());
+//		Effectstype effectstype = Effectstype.Shake;
+//		niftyDialogBuilder.withTitle("提示").withTitleColor("#000000")
+//				// 设置标题字体颜色
+//				.withDividerColor("#ffffff")
+//				// 设置对话框背景颜色
+//				.withMessage("您已经绑定了手机号码，是否重新绑定另一个号码？")
+//				// 对话框提示内容
+//				.withMessageColor("#000000")
+//				// 提示内容字体颜色
+//				.withIcon(getResources().getDrawable(R.drawable.about_us))
+//				// 设置对话框显示图片
+//				.isCancelableOnTouchOutside(true).withDuration(700)
+//				// 设置时间
+//				.withEffect(effectstype).withButton1Text("取消")
+//				.withButton2Text("确定").setButton1Click(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						niftyDialogBuilder.cancel();
+//					}
+//				}).setButton2Click(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						Intent intent = new Intent(getActivity(),
+//								BindingPhoneActivity.class);
+//						intent.putExtra(IConstant.UserData, Setting_readuser);
+//						startActivity(intent);
+//						niftyDialogBuilder.cancel();
+//					}
+//				}).show();
+		
+		final SweetAlertDialog sd =new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE); 
+		sd.setTitleText("提示");  
+        sd.setContentText("您已经绑定了手机号码，是否重新绑定另一个号码？");  
+        sd.setCancelText("取消"); 
+        sd.setConfirmText("确定");  
+        sd.showCancelButton(true);  
+        sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {  
+             @Override  
+             public void onClick(SweetAlertDialog sDialog) { 
+            	 sd.cancel();
+             }  
+         })  
+         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {  
+             @Override  
+             public void onClick(SweetAlertDialog sDialog) { 
+            	sd.cancel();
+            	Intent intent = new Intent(getActivity(),BindingPhoneActivity.class);
+				intent.putExtra(IConstant.UserData, Setting_readuser);
+				startActivity(intent);
+             }  
+         })  
+         .show();  
 
 	}
 
 	// 退出登录
 	private void NiftyDialogBuilder() {
-		final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
-				.getInstance(getActivity());
-		Effectstype effectstype = Effectstype.Shake;
-		niftyDialogBuilder.withTitle("警告").withTitleColor("#000000")
-				// 设置标题字体颜色
-				.withDividerColor("#ffffff")
-				// 设置对话框背景颜色
-				.withMessage("确定要登出账号吗？" + "\n" + "保存的资料将会被清空哦~")
-				// 对话框提示内容
-				.withMessageColor("#000000")
-				// 提示内容字体颜色
-				.withIcon(getResources().getDrawable(R.drawable.about_us))
-				// 设置对话框显示图片
-				.isCancelableOnTouchOutside(true).withDuration(700)
-				// 设置时间
-				.withEffect(effectstype).withButton1Text("我再想想")
-				.withButton2Text("是的").setButton1Click(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						niftyDialogBuilder.cancel();
-					}
-				}).setButton2Click(new OnClickListener() {
-
-					@Override
-					public void onClick(View v) {
-						Intent intent = new Intent(getActivity(),BeforeLoginActivity.class);
-						startActivity(intent);
-						getActivity().finish();
-						niftyDialogBuilder.cancel();
-					}
-				}).show();
+//		final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
+//				.getInstance(getActivity());
+//		Effectstype effectstype = Effectstype.Shake;
+//		niftyDialogBuilder.withTitle("警告").withTitleColor("#000000")
+//				// 设置标题字体颜色
+//				.withDividerColor("#ffffff")
+//				// 设置对话框背景颜色
+//				.withMessage("确定要登出账号吗？" + "\n" + "保存的资料将会被清空哦~")
+//				// 对话框提示内容
+//				.withMessageColor("#000000")
+//				// 提示内容字体颜色
+//				.withIcon(getResources().getDrawable(R.drawable.about_us))
+//				// 设置对话框显示图片
+//				.isCancelableOnTouchOutside(true).withDuration(700)
+//				// 设置时间
+//				.withEffect(effectstype).withButton1Text("我再想想")
+//				.withButton2Text("是的").setButton1Click(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						niftyDialogBuilder.cancel();
+//					}
+//				}).setButton2Click(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						Intent intent = new Intent(getActivity(),BeforeLoginActivity.class);
+//						startActivity(intent);
+//						getActivity().finish();
+//						niftyDialogBuilder.cancel();
+//					}
+//				}).show();
+		
+		final SweetAlertDialog sd =new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE); 
+		sd.setTitleText("警告");  
+        sd.setContentText("确定要登出账号吗？" + "\n" + "保存的资料将会被清空哦~");  
+        sd.setCancelText("我再想想"); 
+        sd.setConfirmText("是的");  
+        sd.showCancelButton(true);  
+        sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {  
+             @Override  
+             public void onClick(SweetAlertDialog sDialog) { 
+            	 sd.cancel();
+             }  
+         })  
+         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {  
+             @Override  
+             public void onClick(SweetAlertDialog sDialog) { 
+            	sd.cancel();
+            	Intent intent = new Intent(getActivity(),BeforeLoginActivity.class);
+				startActivity(intent);
+				getActivity().finish();
+             }  
+         })  
+         .show();  
 
 	}
 

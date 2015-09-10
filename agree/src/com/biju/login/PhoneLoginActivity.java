@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Code;
 import com.BJ.javabean.Codeback;
@@ -46,6 +47,7 @@ import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.Interface.requestVerCodeListenner;
 import com.biju.Interface.updateUserListenner;
+import com.biju.function.BindingPhoneActivity;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
@@ -203,7 +205,6 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 							//进行登录
 							Log.e("PhoneLoginActivity", "得到已绑定该手机号码的用户"+user.getPk_user());
 							Integer Phone_pk_user=user.getPk_user();
-//							loadBaseNeedLoginMethod(Phone_pk_user);
 							
 							Intent intent = new Intent(PhoneLoginActivity.this,MainActivity.class);
 							intent.putExtra(IConstant.Sdcard, true);
@@ -322,77 +323,112 @@ public class PhoneLoginActivity extends Activity implements OnClickListener{
 	
 	//如果手机未注册弹出对话框进行选择
 	private void NiftyDialogBuilder() {
-		final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
-				.getInstance(this);
-		Effectstype effectstype = Effectstype.Shake;
-		niftyDialogBuilder.withTitle("提示").withTitleColor("#000000")
-				// 设置标题字体颜色
-				.withDividerColor("#ffffff")
-				// 设置对话框背景颜色
-				.withMessage("登录失败，该手机还未注册!"+"\n"+"是否进行注册？")
-				// 对话框提示内容
-				.withMessageColor("#000000")
-				// 提示内容字体颜色
-				.withIcon(getResources().getDrawable(R.drawable.about_us))
-				// 设置对话框显示图片
-				.isCancelableOnTouchOutside(true).withDuration(700)
-				// 设置时间
-				.withEffect(effectstype).withButton1Text("取消")
-				.withButton2Text("确定").setButton1Click(new OnClickListener() {
+//		final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
+//				.getInstance(this);
+//		Effectstype effectstype = Effectstype.Shake;
+//		niftyDialogBuilder.withTitle("提示").withTitleColor("#000000")
+//				// 设置标题字体颜色
+//				.withDividerColor("#ffffff")
+//				// 设置对话框背景颜色
+//				.withMessage("登录失败，该手机还未注册!"+"\n"+"是否进行注册？")
+//				// 对话框提示内容
+//				.withMessageColor("#000000")
+//				// 提示内容字体颜色
+//				.withIcon(getResources().getDrawable(R.drawable.about_us))
+//				// 设置对话框显示图片
+//				.isCancelableOnTouchOutside(true).withDuration(700)
+//				// 设置时间
+//				.withEffect(effectstype).withButton1Text("取消")
+//				.withButton2Text("确定").setButton1Click(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						niftyDialogBuilder.cancel();
+//						finish();
+//						//关闭登录界面
+//						RefreshActivity.activList_3.get(1).finish();
+//					}
+//				}).setButton2Click(new OnClickListener() {
+//
+//					@Override
+//					public void onClick(View v) {
+//						//获取图片签名字符串
+//						phoneLoginInterface.getPicSign(PhoneLoginActivity.this, new User());
+//						phoneLoginInterface.setPostListener(new getPicSignListenner() {
+//
+//							@Override
+//							public void success(String A) {
+//								Log.e("PhoneLoginActivity", "签名字符串：" + A);
+//								PicSignBack picSignBack = GsonUtils.parseJson(A,PicSignBack.class);
+//								String returnData = picSignBack.getReturnData();
+//								RegisteredActivity.setSIGN(returnData);
+//
+//								//进行注册
+//								Intent intent=new Intent(PhoneLoginActivity.this, RegisteredActivity.class);
+//								intent.putExtra("phoneRegistered_phone", phoneLogin_phone);
+//								intent.putExtra("PhoneLogin", true);
+//								startActivity(intent);
+//								finish();
+//							}
+//
+//							@Override
+//							public void defail(Object B) {
+//
+//							}
+//						});
+//						
+//						niftyDialogBuilder.cancel();
+//					}
+//				}).show();
+		
+		final SweetAlertDialog sd =new SweetAlertDialog(PhoneLoginActivity.this, SweetAlertDialog.WARNING_TYPE); 
+		sd.setTitleText("提示");  
+        sd.setContentText("登录失败，该手机还未注册!"+"\n"+"是否进行注册？");  
+        sd.setCancelText("取消"); 
+        sd.setConfirmText("确定");  
+        sd.showCancelButton(true);  
+        sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {  
+             @Override  
+             public void onClick(SweetAlertDialog sDialog) { 
+            	sd.cancel();
+            	finish();
+				//关闭登录界面
+				RefreshActivity.activList_3.get(1).finish();
+             }  
+         })  
+         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {  
+             @Override  
+             public void onClick(SweetAlertDialog sDialog) {
+            	//获取图片签名字符串
+					phoneLoginInterface.getPicSign(PhoneLoginActivity.this, new User());
+					phoneLoginInterface.setPostListener(new getPicSignListenner() {
 
-					@Override
-					public void onClick(View v) {
-						niftyDialogBuilder.cancel();
-						finish();
-						//关闭登录界面
-						RefreshActivity.activList_3.get(1).finish();
-					}
-				}).setButton2Click(new OnClickListener() {
+						@Override
+						public void success(String A) {
+							Log.e("PhoneLoginActivity", "签名字符串：" + A);
+							PicSignBack picSignBack = GsonUtils.parseJson(A,PicSignBack.class);
+							String returnData = picSignBack.getReturnData();
+							RegisteredActivity.setSIGN(returnData);
 
-					@Override
-					public void onClick(View v) {
-						//获取图片签名字符串
-						phoneLoginInterface.getPicSign(PhoneLoginActivity.this, new User());
-						phoneLoginInterface.setPostListener(new getPicSignListenner() {
+							//进行注册
+							Intent intent=new Intent(PhoneLoginActivity.this, RegisteredActivity.class);
+							intent.putExtra("phoneRegistered_phone", phoneLogin_phone);
+							intent.putExtra("PhoneLogin", true);
+							startActivity(intent);
+							finish();
+						}
 
-							@Override
-							public void success(String A) {
-								Log.e("PhoneLoginActivity", "签名字符串：" + A);
-								PicSignBack picSignBack = GsonUtils.parseJson(A,PicSignBack.class);
-								String returnData = picSignBack.getReturnData();
-								RegisteredActivity.setSIGN(returnData);
-
-								//进行注册
-								Intent intent=new Intent(PhoneLoginActivity.this, RegisteredActivity.class);
-								intent.putExtra("phoneRegistered_phone", phoneLogin_phone);
-								intent.putExtra("PhoneLogin", true);
-								startActivity(intent);
-								finish();
-							}
-
-							@Override
-							public void defail(Object B) {
-
-							}
-						});
-						
-						niftyDialogBuilder.cancel();
-					}
-				}).show();
+						@Override
+						public void defail(Object B) {
+							
+						}
+					});
+					sd.cancel();
+             } 
+         }) 
+         .show();  
 
 	}
-	
-	
-//	//预先读取首界面的网络请求内容
-//	private void loadBaseNeedLoginMethod(Integer pk_user) {
-//
-//		// 首页数据更新
-//		if (mHomeFragmen != null) {
-//			mHomeFragmen.prepareData(pk_user);
-//		}
-//
-//	}
-
 
 	private void initUI() {
 		findViewById(R.id.PhoneLogin_back_layout).setOnClickListener(this);
