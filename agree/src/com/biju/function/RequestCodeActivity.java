@@ -7,8 +7,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
@@ -151,33 +149,9 @@ public class RequestCodeActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI() {
-		mRequest_tv_code = (TextView) findViewById(R.id.request_tv_code);
-		mRequest_tv_code.setOnClickListener(this);
-		mRequest_edt_code = (EditText) findViewById(R.id.request_edt_code);// 输入验证码
-		mRequest_OK = (TextView) findViewById(R.id.request_OK);// 完成
-		mRequest_OK.setOnClickListener(this);
-		mRequest_edt_code.addTextChangedListener(new TextWatcher() {
-
-			@Override
-			public void onTextChanged(CharSequence s, int start, int before,
-					int count) {
-				if ("".equals(s.toString())) {
-					mRequest_OK.setVisibility(View.GONE);
-				} else {
-					mRequest_OK.setVisibility(View.VISIBLE);
-				}
-			}
-
-			@Override
-			public void beforeTextChanged(CharSequence s, int start, int count,
-					int after) {
-			}
-
-			@Override
-			public void afterTextChanged(Editable s) {
-			}
-		});
-
+		findViewById(R.id.Requestcode2_OK_layout).setOnClickListener(this);
+		findViewById(R.id.Requestcode2_OK).setOnClickListener(this);
+		findViewById(R.id.Requestcode2_verifyCodeView).setOnClickListener(this);
 	}
 
 	@Override
@@ -190,28 +164,26 @@ public class RequestCodeActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.request_tv_code:
-			request_tv_code();
+		case R.id.Requestcode2_OK_layout:
+		case R.id.Requestcode2_OK:
+			Requestcode2_OK();
 			break;
-		case R.id.request_OK:
-			request_OK();
+		case R.id.Requestcode2_verifyCodeView:
+			Requestcode2_verifyCodeView();
 			break;
 		default:
 			break;
 		}
 	}
 
-	private void request_OK() {
-		String pk_group_code = mRequest_edt_code.getText().toString().trim();
-		Group_Code group_Code = new Group_Code();
-		group_Code.setPk_group_code(pk_group_code);
-		requestcode_interface.useRequestCode2Join(RequestCodeActivity.this,group_Code);
+	private void Requestcode2_verifyCodeView() {
 	}
 
-	private void request_tv_code() {
-		mRequest_tv_code.setVisibility(View.GONE);
-		mRequest_edt_code.setVisibility(View.VISIBLE);
-		mRequest_OK.setVisibility(View.VISIBLE);
+	private void Requestcode2_OK() {
+		String code = SdPkUser.getCode;
+		Group_Code group_Code = new Group_Code();
+		group_Code.setPk_group_code(code);
+		requestcode_interface.useRequestCode2Join(RequestCodeActivity.this,group_Code);
 	}
 
 	@Override

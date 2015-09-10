@@ -84,7 +84,7 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 		ImageView tab_image = (ImageView) view.findViewById(R.id.tab_image);
 		TextView tab_text = (TextView) view.findViewById(R.id.tab_name);
 		tab_text.setText(title);
-		tab_text.setTextSize(10);
+		tab_text.setTextSize(15);
 		tab_image.setImageResource(tab_imagelist[i]);
 		mTabhost.addTab(tabSpec.setIndicator(view), cls, null);
 		//tabhostµÄ¼àÌý
@@ -139,8 +139,7 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 		editor1.putBoolean("Photo", false);
 		editor1.commit();
 
-		SharedPreferences PartyDetails_sp = getSharedPreferences(
-				"isPartyDetails_", 0);
+		SharedPreferences PartyDetails_sp = getSharedPreferences("isPartyDetails_", 0);
 		Editor PartyDetails_editor = PartyDetails_sp.edit();
 		PartyDetails_editor.putBoolean("PartyDetails", false);
 		PartyDetails_editor.commit();
@@ -218,8 +217,7 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 	@Override
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
 			float velocityY) {
-		if (e1.getX() - e2.getX() > verticalMinDistance
-				&& Math.abs(velocityX) > minVelocity) {
+		if (e1.getX() - e2.getX() > verticalMinDistance&& Math.abs(velocityX) > minVelocity) {
 			// ÇÐ»»Activity
 			if(currentTab<3)
 			{
@@ -230,15 +228,19 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 				switch (tab) {
 				case 0:
 					mTabhost.setCurrentTab(0);
+					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
 					break;
 				case 1:
 					mTabhost.setCurrentTab(1);
+					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
 					break;
 				case 2:
 					mTabhost.setCurrentTab(2);
+					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
 					break;
 				case 3:
 					mTabhost.setCurrentTab(3);
+					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
 					break;
 					
 				default:
@@ -248,8 +250,7 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 			{
 				currentTab=3;
 			}
-		} else if (e2.getX() - e1.getX() > verticalMinDistance
-				&& Math.abs(velocityX) > minVelocity) {
+		} else if (e2.getX() - e1.getX() > verticalMinDistance&& Math.abs(velocityX) > minVelocity) {
 			if(currentTab>0)
 			{
 				currentTab--;

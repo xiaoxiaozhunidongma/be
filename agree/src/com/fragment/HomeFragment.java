@@ -121,7 +121,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					android.R.color.holo_orange_light);
 
 		}
-		Log.e("HomeFragment", "进入了onCreateView()=========");
+		Log.e("HomeFragment", "进入了onCreateView()========="+sdcard);
 		return mLayout;
 	}
 
@@ -150,11 +150,10 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		if(sdcard)
 		{
 			InputSdcard();
-			Log.e("HomeFragment", "进入了onStart()中的input里了========");
+			Log.e("HomeFragment", "进入了onStart()中的input里了========"+SD_pk_user);
+			initNewTeam();
+			adapter.notifyDataSetChanged();
 		}
-		Log.e("HomeFragment", "进入了onStart()========");
-		initNewTeam();
-		adapter.notifyDataSetChanged();
 		super.onStart();
 	}
 
@@ -164,6 +163,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		SharedPreferences requestcode_sp = getActivity().getSharedPreferences(IConstant.RequestCode, 0);
 		refresh = requestcode_sp.getBoolean(IConstant.Refresh, false);
 		if (refresh) {
+			//获取SD卡中的pk_user
+			SD_pk_user = SdPkUser.getsD_pk_user();
 			initNewTeam();
 			adapter.notifyDataSetChanged();
 			Log.e("HomeFragment", "进入了onResume()的refresh========"+refresh);
@@ -203,9 +204,13 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						if (PhoneLoginActivity.list.size() > 0) {
 							home_gridview.setAdapter(adapter);
 						}
+							
 
 					}
 					adapter.notifyDataSetChanged();
+				}else
+				{
+					home_gridview.setAdapter(adapter);
 				}
 			}
 
@@ -263,6 +268,11 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		});
 
 		adapter = new MyGridviewAdapter();
+		if(PhoneLoginActivity.list.size() == 0)
+		{
+			Log.e("HomeFragment", "进入到了PhoneLoginActivity.list.size() == 0中========");
+			home_gridview.setAdapter(adapter);
+		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -295,7 +305,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-
+			Log.e("HomeFragment", "进入到了getView()中========");
 			if (EvenNumber == 0) {
 				if (position == PhoneLoginActivity.list.size() + 2) {
 					if (footerView == null) {
@@ -340,7 +350,15 @@ public class HomeFragment extends Fragment implements OnClickListener,
 				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 				if(PhoneLoginActivity.list.size()==0)
 				{
-					inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
+					if(position == PhoneLoginActivity.list.size())
+					{
+						inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
+						Log.e("HomeFragment", "进入到了size为0的地方========");
+					}else
+					{
+						inflater = layoutInflater.inflate(R.layout.home_teamadd_item_1, null);
+						Log.e("HomeFragment", "进入到了size为0的但是为空白的地方========");
+					}
 				}else
 				{
 					if (position < PhoneLoginActivity.list.size()) {
@@ -386,7 +404,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						completeURL = beginStr + homeAvatar_path + endStr;
 						PreferenceUtils.saveImageCache(getActivity(), completeURL);
 //						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-//						completeURL, holder.home_item_head);
+//								completeURL, home_item_head);
 						AsynImageLoader asynImageLoader = new AsynImageLoader();
 						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
 					} else {
@@ -430,11 +448,14 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		editor.commit();
 		
 		//清除缓存
-		homeImageLoaderUtils.clearCache();
-		Drawable d = home_item_head.getDrawable();  
-		if (d != null) d.setCallback(null);  
-		home_item_head.setImageDrawable(null);  
-		home_item_head.setBackgroundDrawable(null);
+		if(PhoneLoginActivity.list.size()>0)
+		{
+			homeImageLoaderUtils.clearCache();
+			Drawable d = home_item_head.getDrawable();  
+			if (d != null) d.setCallback(null);  
+			home_item_head.setImageDrawable(null);  
+			home_item_head.setBackgroundDrawable(null);
+		}
 		
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);

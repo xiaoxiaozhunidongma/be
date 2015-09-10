@@ -18,6 +18,15 @@
             android:text="TextView"
             android:textColor="@color/tab_textcolor_selector"
             android:textSize="17.0sp" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+             />
+
     </RelativeLayout>
 
 </RelativeLayout>

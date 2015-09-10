@@ -2,6 +2,8 @@ package com.biju.function;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -9,7 +11,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Toast;
+import android.widget.LinearLayout;
 
 import com.BJ.javabean.Moreback;
 import com.BJ.javabean.Party;
@@ -30,6 +32,9 @@ public class MoreActivity extends Activity implements OnClickListener {
 	private UserAllParty userAllParty;
 	private boolean userAll;
 	private Integer sD_pk_user;
+	private LinearLayout mMore_creator_layout;
+	private LinearLayout mMore_member_layout;
+	private Integer fk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -37,15 +42,19 @@ public class MoreActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_more);
 		sD_pk_user = SdPkUser.getsD_pk_user();
+		
 		Intent intent = getIntent();
 		userAll = intent.getBooleanExtra(IConstant.UserAll, false);
 		if(userAll)
 		{
 			userAllParty = (UserAllParty) intent.getSerializableExtra(IConstant.UserAllUoreParty);
+			fk_user = userAllParty.getFk_user();
 		}else
 		{
 			moreparty = (Party2) intent.getSerializableExtra(IConstant.MoreParty);
+			fk_user=moreparty.getFk_user();
 		}
+		
 		initUI();
 		initInterface();
 	}
@@ -68,6 +77,10 @@ public class MoreActivity extends Activity implements OnClickListener {
 						}
 					}else
 					{
+						SharedPreferences more_sp=getSharedPreferences(IConstant.MoreRefresh, 0);
+						Editor editor=more_sp.edit();
+						editor.putBoolean(IConstant.Morecancle, true);
+						editor.commit();
 						Intent intent=new Intent(MoreActivity.this, GroupActivity.class);
 						startActivity(intent);
 					}
@@ -83,8 +96,22 @@ public class MoreActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI() {
-		findViewById(R.id.more_cancel_layout).setOnClickListener(this);
-		findViewById(R.id.more_cancel).setOnClickListener(this);
+		findViewById(R.id.More_creator_cancel_layout).setOnClickListener(this);//取消聚会
+		findViewById(R.id.More_creator_cancel).setOnClickListener(this);
+		mMore_creator_layout = (LinearLayout) findViewById(R.id.More_creator_layout);//创建者
+		mMore_member_layout = (LinearLayout) findViewById(R.id.More_member_layout);//普通成员
+		if(String.valueOf(fk_user).equals(String.valueOf(sD_pk_user)))
+		{
+			mMore_creator_layout.setVisibility(View.VISIBLE);
+			mMore_member_layout.setVisibility(View.GONE);
+		}else
+		{
+			mMore_creator_layout.setVisibility(View.GONE);
+			mMore_member_layout.setVisibility(View.VISIBLE);
+		}
+		
+		findViewById(R.id.More_title_cancel_layout).setOnClickListener(this);
+		findViewById(R.id.More_title_cancel).setOnClickListener(this);//取消
 	}
 
 	@Override
@@ -103,44 +130,33 @@ public class MoreActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.more_cancel_layout:
-		case R.id.more_cancel:
+		case R.id.More_creator_cancel_layout:
+		case R.id.More_creator_cancel:
 			more_cancel_layout();
 			break;
-
+		case R.id.More_title_cancel_layout:
+		case R.id.More_title_cancel:
+			More_title_cancel();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void More_title_cancel() {
+		finish();
 	}
 
 	private void more_cancel_layout() {
 		Party more_party = new Party();
 		if(userAll)
 		{
-			Integer fk_user=userAllParty.getFk_user();
-			Log.e("MoreActivity", "当前的fk_user11111========="+fk_user);
-			Log.e("MoreActivity", "当前的sD_pk_user11111111========="+sD_pk_user);
-			if(String.valueOf(fk_user).equals(String.valueOf(sD_pk_user)))
-			{
-				more_party.setPk_party(userAllParty.getPk_party());
-				moreinterface.userCancleParty(MoreActivity.this, more_party);
-			}else
-			{
-				Toast.makeText(MoreActivity.this, "你没有删除该日程的权限", Toast.LENGTH_SHORT).show();
-			}
+			more_party.setPk_party(userAllParty.getPk_party());
+			moreinterface.userCancleParty(MoreActivity.this, more_party);
 		}else
 		{
-			Integer fk_user=moreparty.getFk_user();
-			Log.e("MoreActivity", "当前的fk_user2222222========="+fk_user);
-			Log.e("MoreActivity", "当前的sD_pk_user222222222========="+sD_pk_user);
-			if(String.valueOf(fk_user).equals(String.valueOf(sD_pk_user)))
-			{
-				more_party.setPk_party(moreparty.getPk_party());
-				moreinterface.userCancleParty(MoreActivity.this, more_party);
-			}else
-			{
-				Toast.makeText(MoreActivity.this, "你没有删除该日程的权限", Toast.LENGTH_SHORT).show();
-			}
+			more_party.setPk_party(moreparty.getPk_party());
+			moreinterface.userCancleParty(MoreActivity.this, more_party);
 		}
 	}
 

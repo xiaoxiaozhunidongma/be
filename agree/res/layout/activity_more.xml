@@ -6,121 +6,216 @@
     tools:context=".MoreActivity" >
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
+        android:id="@+id/More_title_cancel_layout"
         android:layout_width="match_parent"
-        android:layout_height="40.0dp"
+        android:layout_height="50.0dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10.0dp"
         android:layout_marginRight="10.0dp"
-        android:background="@drawable/more_corners" >
+        android:background="#ffffff" >
+
+        <!-- android:background="@drawable/more_corners" -->
+        <!-- 圆角 -->
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/More_title_cancel"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:layout_margin="5.0dp"
+            android:background="#e3e3e3"
             android:gravity="center"
-            android:text="取消"
-            android:textColor="#ff0000"
+            android:text="Cancel"
             android:textSize="20.0sp" />
     </RelativeLayout>
 
     <LinearLayout
+        android:id="@+id/More_creator_layout"
         android:layout_width="match_parent"
-        android:layout_height="200.0dp"
-        android:layout_above="@+id/relativeLayout1"
+        android:layout_height="185.0dp"
+        android:layout_above="@+id/More_title_cancel_layout"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="10dp"
         android:layout_marginLeft="10.0dp"
         android:layout_marginRight="10.0dp"
-        android:background="@drawable/more_corners"
-        android:orientation="vertical" >
+        android:background="#ffffff"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <!-- android:background="@drawable/more_corners" -->
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="50.0dp" >
+            android:layout_height="45.0dp" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dp"
+                android:text="提示"
+                android:textColor="#000000"
+                android:textSize="15.0sp" />
 
             <TextView
                 android:id="@+id/textView2"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="选择操作类型"
-                android:textSize="17.0sp" />
-
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="match_parent"
-                android:layout_height="0.50dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:background="#aaaaaa" />
+                android:text="选择想要对聚会做的操作类型"
+                android:textSize="13.0sp" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/more_cancel_layout"
+            android:id="@+id/More_creator_cancel_layout"
             android:layout_width="match_parent"
-            android:layout_height="50.0dp" >
+            android:layout_height="45.0dp" >
+
+            <!-- android:textColor="#ff0000" -->
 
             <TextView
-                android:id="@+id/more_cancel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:id="@+id/More_creator_cancel"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
+                android:layout_marginLeft="5.0dp"
+                android:layout_marginRight="5.0dp"
+                android:layout_marginTop="5.0dp"
+                android:background="#e3e3e3"
+                android:gravity="center"
                 android:text="取消聚会"
-                android:textColor="#ff0000"
                 android:textSize="17.0sp" />
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="match_parent"
-                android:layout_height="0.50dp"
-                android:layout_alignParentBottom="true"
-                android:background="#aaaaaa" />
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/More_creator_share_layout"
             android:layout_width="match_parent"
-            android:layout_height="50.0dp" >
+            android:layout_height="45.0dp" >
+
+            <!-- android:textColor="#0072e3" -->
 
             <TextView
-                android:id="@+id/textView6"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:text="分享"
-                android:textColor="#0072e3"
-                android:textSize="17.0sp" />
-
-            <TextView
-                android:id="@+id/textView7"
+                android:id="@+id/More_creator_share"
                 android:layout_width="match_parent"
-                android:layout_height="0.50dp"
+                android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:background="#aaaaaa" />
+                android:layout_marginLeft="5.0dp"
+                android:layout_marginRight="5.0dp"
+                android:layout_marginTop="5.0dp"
+                android:background="#e3e3e3"
+                android:gravity="center"
+                android:text="分享"
+                android:textSize="17.0sp" />
         </RelativeLayout>
 
         <RelativeLayout
+            android:id="@+id/More_creator_add_layout"
             android:layout_width="match_parent"
             android:layout_height="50.0dp" >
 
             <TextView
                 android:id="@+id/textView8"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
+                android:layout_margin="5.0dp"
+                android:background="#e3e3e3"
+                android:gravity="center"
                 android:text="添加到系统日历"
-                android:textColor="#0072e3"
                 android:textSize="17.0sp" />
         </RelativeLayout>
+        <!-- android:textColor="#0072e3" -->
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/More_member_layout"
+        android:layout_width="match_parent"
+        android:layout_height="140.0dp"
+        android:layout_above="@+id/More_title_cancel_layout"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="10dp"
+        android:layout_marginLeft="10.0dp"
+        android:layout_marginRight="10.0dp"
+        android:background="#ffffff"
+        android:orientation="vertical" >
+
+        <!-- android:background="@drawable/more_corners" -->
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="45.0dp" >
+
+            <TextView
+                android:id="@+id/textView11"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:text="选择想要对聚会做的操作类型"
+                android:textSize="13.0sp" />
+
+            <TextView
+                android:id="@+id/textView10"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="5.0dp"
+                android:text="提示"
+                android:textColor="#000000"
+                android:textSize="15.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/More_member_share_layout"
+            android:layout_width="match_parent"
+            android:layout_height="45.0dp" >
+
+            <TextView
+                android:id="@+id/More_member_share"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginLeft="5.0dp"
+                android:layout_marginRight="5.0dp"
+                android:layout_marginTop="5.0dp"
+                android:background="#e3e3e3"
+                android:gravity="center"
+                android:text="分享"
+                android:textSize="17.0sp" />
+
+            <!-- android:textColor="#0072e3" -->
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/More_member_add_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50.0dp" >
+
+            <TextView
+                android:id="@+id/More_member_add"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_margin="5.0dp"
+                android:background="#e3e3e3"
+                android:gravity="center"
+                android:text="添加到系统日历"
+                android:textSize="17.0sp" />
+        </RelativeLayout>
+        <!-- android:textColor="#0072e3" -->
     </LinearLayout>
 
 </RelativeLayout>

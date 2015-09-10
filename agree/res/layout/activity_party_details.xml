@@ -2,10 +2,12 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".PartyDetailsActivity" >
+    tools:context=".PartyDetailsActivity"
+    android:background="#ffffff"
+     >
 
     <RelativeLayout
-        android:id="@+id/relativeLayout1"
+        android:id="@+id/PartyDetails_title_layout"
         android:layout_width="match_parent"
         android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
@@ -65,194 +67,264 @@
             android:background="#aaaaaa" />
     </RelativeLayout>
 
-    <RelativeLayout
-        android:id="@+id/map_layout"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
-        android:layout_below="@+id/relativeLayout1"
-        android:layout_centerHorizontal="true" >
-
-        <!-- 代码中已经new出一个MapView -->
-        <!-- <com.baidu.mapapi.map.MapView -->
-        <!-- android:id="@+id/bmapView" -->
-        <!-- android:layout_width="match_parent" -->
-        <!-- android:layout_height="match_parent" -->
-        <!-- android:layout_alignParentTop="true" -->
-        <!-- android:clickable="true" /> -->
-
-
-        <!-- <EditText -->
-        <!-- android:id="@+id/edit_show" -->
-        <!-- android:layout_width="match_parent" -->
-        <!-- android:layout_height="50dp" -->
-        <!-- android:layout_alignParentBottom="true" -->
-        <!-- android:layout_centerHorizontal="true" -->
-        <!-- android:background="#aaffffff" -->
-        <!-- android:ems="10" -->
-        <!-- android:enabled="false" -->
-        <!-- android:gravity="center" > -->
-
-
-        <!-- <requestFocus /> -->
-        <!-- </EditText> -->
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="80.0dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/map_layout" >
-
-        <TextView
-            android:id="@+id/PartyDetails_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="10dp"
-            android:gravity="center_vertical"
-            android:text="TextView"
-            android:textColor="#00aeae"
-            android:textSize="30.0sp" />
-
-        <TextView
-            android:id="@+id/PartyDetails_time"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:gravity="center_vertical"
-            android:text="TextView"
-            android:textSize="25.0sp" />
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/relativeLayout3"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/relativeLayout2"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="46dp" >
-    </RelativeLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_below="@+id/relativeLayout2"
-        android:layout_centerHorizontal="true" >
-
-        <TextView
-            android:id="@+id/PartyDetails_tv_partake_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="参与"
-            android:textSize="18.0sp" />
-
-        <TextView
-            android:id="@+id/PartyDetails_tv_refuse_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="拒绝"
-            android:textSize="18.0sp" />
-
-        <TextView
-            android:id="@+id/PartyDetails_did_not_say_prompt"
-            android:layout_width="wrap_content"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="0.7"
-            android:gravity="center"
-            android:text="未表态"
-            android:textSize="18.0sp" />
-    </LinearLayout>
-
-    <LinearLayout
-        android:id="@+id/linearLayout2"
-        android:layout_width="match_parent"
-        android:layout_height="40.0dp"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/linearLayout1" >
-
-        <TextView
-            android:id="@+id/PartyDetails_tv_partake"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="0"
-            android:textSize="18.0sp" />
-
-        <TextView
-            android:id="@+id/PartyDetails_tv_refuse"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="0"
-            android:textSize="18.0sp" />
-
-        <TextView
-            android:id="@+id/PartyDetails_did_not_say"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_gravity="center_vertical"
-            android:layout_weight="1"
-            android:gravity="center"
-            android:text="0"
-            android:textSize="18.0sp" />
-    </LinearLayout>
-
-    <RelativeLayout
+    <ScrollView
+        android:id="@+id/scrollView1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/linearLayout2"
-        android:layout_marginTop="20dp" >
+        android:layout_below="@+id/PartyDetails_title_layout"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+         >
 
-        <RelativeLayout
-            android:id="@+id/relativeLayout4"
-            android:layout_width="100.0dp"
-            android:layout_height="100.0dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="40dp"
-            android:layout_marginTop="20dp" >
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical" >
 
-            <Button
-                android:id="@+id/PartyDetails_partake"
+            <RelativeLayout
+                android:id="@+id/PartyDetails_map_layout"
+                android:layout_width="match_parent"
+                android:layout_height="250dp" 
+                android:layout_margin="5.0dp"
+                >
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_below="@+id/PartyDetails_map_layout"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/ok_2"
-                android:text="参与" />
-        </RelativeLayout>
+                android:background="#ffffff" >
 
-        <RelativeLayout
-            android:layout_width="100.0dp"
-            android:layout_height="100.0dp"
-            android:layout_alignParentRight="true"
-            android:layout_marginRight="40dp"
-            android:layout_marginTop="20.0dp" >
+                <RelativeLayout
+                    android:id="@+id/PartyDetails_partyaddress_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="40.0dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true" >
 
-            <Button
-                android:id="@+id/PartyDetails_refuse"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:background="@drawable/ok_2"
-                android:text="拒绝" />
-        </RelativeLayout>
-    </RelativeLayout>
+                    <TextView
+                        android:id="@+id/PartyDetails_partyaddress"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="地址"
+                        android:textSize="15.0sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/PartyDetails_partyname_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50.0dp"
+                    android:layout_below="@+id/PartyDetails_partyaddress_layout"
+                    android:layout_centerHorizontal="true" >
+
+                    <TextView
+                        android:id="@+id/PartyDetails_partyname"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="聚会名称"
+                        android:textColor="#00e3e3"
+                        android:textSize="20.0sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/PartyDetails_partytime_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="60.0dp"
+                    android:layout_below="@+id/PartyDetails_partyname_layout"
+                    android:layout_centerHorizontal="true" >
+
+                    <TextView
+                        android:id="@+id/PartyDetails_partytime"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5.0dp"
+                        android:gravity="center"
+                        android:text="聚会时间"
+                        android:textColor="#d3d3d3"
+                        android:textSize="15.0sp" />
+
+                    <RelativeLayout
+                        android:id="@+id/PartyDetails_partypayment_layout"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/PartyDetails_partytime"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="5.0dp"
+                        android:background="@drawable/more_corners" >
+
+                        <TextView
+                            android:id="@+id/PartyDetails_partypayment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_centerHorizontal="true"
+                            android:layout_centerVertical="true"
+                            android:paddingBottom="5.0dp"
+                            android:paddingLeft="15.0dp"
+                            android:paddingRight="15.0dp"
+                            android:paddingTop="5.0dp"
+                            android:text="预付款"
+                            android:textSize="12.0sp" />
+                    </RelativeLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/relativeLayout1"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/PartyDetails_partytime_layout"
+                    android:layout_centerHorizontal="true" >
+
+                    <LinearLayout
+                        android:id="@+id/linearLayout1"
+                        android:layout_width="match_parent"
+                        android:layout_height="30.0dp"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true" >
+
+                        <RelativeLayout
+                            android:id="@+id/PartyDetails_partake_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" >
+
+                            <TextView
+                                android:id="@+id/PartyDetails_partake"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:text="参与"
+                                android:textSize="17.0sp"
+                                android:textColor="#d3d3d3" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/PartyDetails_did_not_say_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="0.9" >
+
+                            <TextView
+                                android:id="@+id/PartyDetails_did_not_say"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:text="未表态"
+                                android:textSize="17.0sp"
+                                android:textColor="#d3d3d3" />
+                        </RelativeLayout>
+                    </LinearLayout>
+
+                    <LinearLayout
+                        android:id="@+id/PartyDetails_numner_layout"
+                        android:layout_width="match_parent"
+                        android:layout_height="40.0dp"
+                        android:layout_below="@+id/linearLayout1"
+                        android:layout_centerHorizontal="true" >
+
+                        <RelativeLayout
+                            android:id="@+id/PartyDetails_partake_number_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" >
+
+                            <TextView
+                                android:id="@+id/PartyDetails_partake_number"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:text="0"
+                                android:textColor="#00e3e3"
+                                android:textSize="30.0sp" />
+                        </RelativeLayout>
+
+                        <RelativeLayout
+                            android:id="@+id/PartyDetails_did_not_say_number_layout"
+                            android:layout_width="wrap_content"
+                            android:layout_height="match_parent"
+                            android:layout_weight="1" >
+
+                            <TextView
+                                android:id="@+id/PartyDetails_did_not_say_number"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_centerHorizontal="true"
+                                android:layout_centerVertical="true"
+                                android:text="0"
+                                android:textColor="#00e3e3"
+                                android:textSize="30.0sp" />
+                        </RelativeLayout>
+                    </LinearLayout>
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/PartyDetails_party_organizer_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="30.0dp"
+                    android:layout_below="@+id/PartyDetails_prompt"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="15.0dp" >
+
+                    <TextView
+                        android:id="@+id/PartyDetails_party_organizer"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="组织者"
+                        android:textColor="#000000"
+                        android:textSize="15.0sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/PartyDetails_apply_layout"
+                    android:layout_width="match_parent"
+                    android:layout_height="50.0dp"
+                    android:layout_below="@+id/PartyDetails_party_organizer_layout"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="30dp"
+                    android:background="#00d3d3" >
+
+                    <TextView
+                        android:id="@+id/PartyDetails_apply"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="报名"
+                        android:textColor="#ffffff"
+                        android:textSize="15.0sp" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/PartyDetails_prompt"
+                    android:layout_width="match_parent"
+                    android:layout_height="30.0dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_below="@+id/relativeLayout1"
+                    android:layout_marginTop="10.0dp" >
+
+                    <TextView
+                        android:id="@+id/textView7"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:text="点击参与人数,查看支付信息"
+                        android:textColor="#d3d3d3"
+                        android:textSize="13.0sp" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </LinearLayout>
+    </ScrollView>
 
 </RelativeLayout>

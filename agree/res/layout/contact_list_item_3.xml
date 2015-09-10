@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- 首字母 -->
+
+    <TextView
+        android:id="@+id/alpha"
+        android:layout_width="fill_parent"
+        android:layout_height="50.0dp"
+        android:background="#efefef"
+        android:paddingLeft="10dip"
+        android:paddingTop="20.0dp"
+        android:textColor="#808080"
+        android:textSize="20.0sp"
+        android:visibility="gone"
+         />
+
+    <RelativeLayout
+        android:id="@+id/Contact_ordinary_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dp"
+        android:layout_below="@+id/alpha"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+         >
+
+        <!-- 联系人信息 -->
+
+        <RelativeLayout
+            android:id="@+id/Contact_ordinary_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" >
+
+            <ImageView
+                android:id="@+id/Contact_ordinary_qcb"
+                android:layout_width="50.0dp"
+                android:layout_height="50.0dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/login_1" 
+                android:scaleType="fitXY"
+                />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/Contact_ordinary_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="5.0dp"
+            android:layout_toLeftOf="@+id/Contact_ordinary_but"
+            android:layout_toRightOf="@+id/Contact_ordinary_layout"
+            android:singleLine="true"
+            android:text="dasda"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="#000000"
+            android:textSize="20.0sp" />
+
+        <RelativeLayout
+            android:id="@+id/Contact_ordinary_but"
+            android:layout_width="100.0dp"
+            android:layout_height="40.0dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10.0dp"
+            android:layout_marginTop="10.0dp"
+            android:layout_marginBottom="10.0dp"
+            android:background="@drawable/contact_selector_1"
+             >
+
+            <TextView
+                android:id="@+id/Contact_ordinary_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+    
+    
+    <RelativeLayout
+        android:id="@+id/Contact_layout"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dp"
+        android:layout_below="@+id/alpha"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+        android:visibility="gone"
+         >
+
+        <RelativeLayout
+            android:id="@+id/Contact_but"
+            android:layout_width="100.0dp"
+            android:layout_height="40.0dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="10.0dp"
+            android:layout_marginTop="10.0dp"
+            android:layout_marginBottom="10.0dp"
+            android:background="@drawable/more_corners"
+             >
+
+            <TextView
+                android:id="@+id/Contact_prompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="TextView" />
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/Contact_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="5.0dp"
+            android:layout_marginTop="5.0dp"
+            android:layout_toLeftOf="@+id/Contact_but"
+            android:layout_toRightOf="@+id/Contact_qcb_layout"
+            android:singleLine="true"
+            android:text="dasda"
+            android:textAppearance="?android:textAppearanceLarge"
+            android:textColor="#000000"
+            android:textSize="20.0sp" />
+
+        <TextView
+            android:id="@+id/Contact_contact_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/Contact_name"
+            android:layout_alignRight="@+id/Contact_name"
+            android:layout_below="@+id/Contact_name"
+            android:layout_marginTop="3.0dp"
+            android:text="TextView"
+            android:singleLine="true"
+            android:textSize="12.0sp" />
+
+        <RelativeLayout
+            android:id="@+id/Contact_qcb_layout"
+            android:layout_width="80.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" >
+
+            <ImageView
+                android:id="@+id/Contact_qcb"
+                android:layout_width="50.0dp"
+                android:layout_height="50.0dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/login_1" 
+                android:scaleType="fitXY"
+                />
+        </RelativeLayout>
+
+    </RelativeLayout>
+    
+
+</RelativeLayout>

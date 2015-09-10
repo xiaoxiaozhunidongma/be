@@ -41,6 +41,7 @@ import com.biju.Interface;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.regNewAccountListenner;
 import com.biju.Interface.updateUserListenner;
+import com.biju.IConstant;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
@@ -86,6 +87,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	private boolean phoneLogin;
 	
 	private String fileName = getSDPath() + "/" + "saveData";
+	private boolean weixinLogin;
 	public String getSDPath() {
 		File sdDir = null;
 		boolean sdCardExist = Environment.getExternalStorageState().equals(
@@ -107,6 +109,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		Intent intent = getIntent();
 		phoneRegistered_phone = intent.getStringExtra("phoneRegistered_phone");
 		phoneLogin = intent.getBooleanExtra("PhoneLogin", false);
+		weixinLogin = intent.getBooleanExtra("weixinLogin", false);
 		get4Sign();
 		initUI();
 //		initUpload();
@@ -169,8 +172,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 					Log.e("RegisteredActivity", "returndata" + returndata);
 					Person person = new Person(returndata);
 					try {
-						ObjectOutputStream oos = new ObjectOutputStream(
-								new FileOutputStream(fileName));
+						ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
 						oos.writeObject(person);
 						oos.close();
 					} catch (FileNotFoundException e) {
@@ -205,7 +207,23 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 				int a = usersetting_updateback.getStatusMsg();
 				if (a == 1) {
 					Log.e("RegisteredActivity", "更新成功" + A);
+					
+					//把当前注册成功的pk_user传给工具类
+					SdPkUser.setsD_pk_user(returndata);
+					SdPkUser.setRegistered_one(true);
+					Person person = new Person(returndata);
+					try {
+						ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
+						oos.writeObject(person);
+						oos.close();
+					} catch (FileNotFoundException e) {
+						e.printStackTrace();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+					
 					Intent intent = new Intent(RegisteredActivity.this,MainActivity.class);
+					intent.putExtra(IConstant.Sdcard, true);
 					startActivity(intent);
 			}
 	}
@@ -224,7 +242,15 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			User usersetting = new User();
 			usersetting.setPk_user(returndata);
 			usersetting.setJpush_id(MyApplication.getRegId());
-			usersetting.setPhone(phoneRegistered_phone);
+			if(phoneLogin)
+			{
+				usersetting.setPhone(phoneRegistered_phone);
+			}
+			if(weixinLogin)
+			{
+				String wechat_id=SdPkUser.getOpenid();
+				usersetting.setWechat_id(wechat_id);
+			}
 			mRegistered_Inter.updateUser(RegisteredActivity.this, usersetting);
 		}
 	
@@ -300,8 +326,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 						});
 						// 上传完成后注册
 						user.setAvatar_path(result.fileId);
-						mRegistered_Inter.regNewAccount(
-								RegisteredActivity.this, user);
+						mRegistered_Inter.regNewAccount(RegisteredActivity.this, user);
 					}
 
 					@Override

@@ -1,12 +1,7 @@
 package com.BJ.utils;
 
-import android.widget.TextView;
-
 import com.BJ.javabean.Group;
 import com.BJ.javabean.User;
-
-
-
 
 public class SdPkUser {
 	//传从登录或者注册来的pk_user
@@ -106,5 +101,25 @@ public class SdPkUser {
 
 	public static void setGetCode(String getCode) {
 		SdPkUser.getCode = getCode;
+	}
+	
+	//微信注册的时候用
+	public static boolean weixinRegistered;
+	public static boolean isWeixinRegistered() {
+		return weixinRegistered;
+	}
+
+	public static void setWeixinRegistered(boolean weixinRegistered) {
+		SdPkUser.weixinRegistered = weixinRegistered;
+	}
+	
+	//微信注册时传openid
+	public static String openid;
+	public static String getOpenid() {
+		return openid;
+	}
+
+	public static void setOpenid(String openid) {
+		SdPkUser.openid = openid;
 	}
 }

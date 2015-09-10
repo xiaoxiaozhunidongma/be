@@ -50,7 +50,8 @@ public class Interface {
 		return Thisinterface;
 	}
 	
-	
+	//微信登录
+	String KWeixinLogin = "1102";
 	//注册用户
 	String kRegAccount =  "11";
 	//检查昵称重复
@@ -242,6 +243,23 @@ public class Interface {
 //			}
 //		});	
 //	}
+	//微信登录
+	private void weixinLoginPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError38(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone38(response);
+			}
+		});	
+	}
+	
 	private void regNewAccountPost(Context context,Map<String, String> params) {
 		
 		MyVolley.post(context, url, params, new VolleyListenner() {
@@ -782,6 +800,10 @@ public class Interface {
 //		volleyPost(context,per); 
 //	}
 	
+	//微信登录
+	public void weixinLogin(Context context,User user) {
+		weixinLoginPost(context,packParams(user, KWeixinLogin));
+	}
 	
 	//注册新用户
 	public void regNewAccount(Context context,User user) {
@@ -914,7 +936,6 @@ public class Interface {
 		try {
 			mateComBookPost(context,packParamsPhone(phonearray, kMateComBook));
 		} catch (JSONException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -949,6 +970,9 @@ public class Interface {
 	}
 	//接口部分
 //	private static UserInterface listener;
+	//微信登录
+	private static weixinLoginListenner weixinloginListenner;
+	
 	private static regNewAccountListenner newAccountListenner;
 	private static checkNicknameListenner nicknameListenner;
 	private static userLoginListenner loginListenner;
@@ -990,6 +1014,12 @@ public class Interface {
 //		void success(String A);
 //		void defail(Object B);
 //	}
+	//微信登录
+	public interface weixinLoginListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	
 	public interface regNewAccountListenner{
 		void success(String A);
 		void defail(Object B);
@@ -1136,6 +1166,12 @@ public class Interface {
 //	public void setPostListener(UserInterface listener){
 //		this.listener=listener;
 //	}
+	//微信登录
+	public void setPostListener(weixinLoginListenner listener){
+		this.weixinloginListenner=listener;
+	}
+	
+	
 	//注册新用户
 	public void setPostListener(regNewAccountListenner listener){
 		this.newAccountListenner=listener;
@@ -1536,4 +1572,13 @@ public class Interface {
 	public static void requestError37(VolleyError error) {
 		newAccountListenner.defail(error);
 	}
+	
+	//微信登录
+	public static void requestDone38(String theObject) {
+		weixinloginListenner.success(theObject);
+	}
+	public static void requestError38(VolleyError error) {
+		weixinloginListenner.defail(error);
+	}
+	
 }

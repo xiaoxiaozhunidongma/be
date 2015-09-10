@@ -240,8 +240,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 			{
 				User user = new User();
 				user.setPhone(pk_user);
-				findfriends_inter_before.findUser(FindFriendsActivity.this,
-						user);
+				findfriends_inter_before.findUser(FindFriendsActivity.this,user);
 			}else
 			{
 				// 检查好友关系

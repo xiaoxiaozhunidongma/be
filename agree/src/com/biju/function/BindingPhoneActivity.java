@@ -35,7 +35,6 @@ import com.github.volley_examples.utils.GsonUtils;
 @SuppressLint("ResourceAsColor")
 public class BindingPhoneActivity extends Activity implements OnClickListener {
 
-	private BindingPhoneActivity BindingPhone;
 	private User user;
 	private EditText mBinding_phone_phone;
 	private RelativeLayout mBinding_phone_before;
@@ -44,9 +43,9 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 	private Integer mBinding_phone_codeback;
 	private String phone;
 	private String binding_phone;
-	private int sum = 60;
+//	private int sum = 60;
 	private boolean isagain;
-	private boolean isOK;
+//	private boolean isOK;
 	private RelativeLayout mBinding_phone_send_layout;
 	private RelativeLayout mBinding_phone_OK_layout;
 
@@ -55,7 +54,6 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_binding_phone);
-		BindingPhone = this;
 		Intent intent = getIntent();
 		user = (User) intent.getSerializableExtra(IConstant.UserData);
 		initUI();

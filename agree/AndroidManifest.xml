@@ -7,14 +7,12 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
-    
-    <uses-permission android:name="android.permission.INTERNET"/>
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE"/> 
-    <uses-permission android:name="android.permission.READ_PHONE_STATE"/> 
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
-    
-    
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -139,10 +137,6 @@
             android:name="com.biju.function.RequestCode2Activity"
             android:label="@string/title_activity_request_code"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
-        </activity>
-        <activity
-            android:name="com.biju.function.AddFriendsActivity"
-            android:label="@string/title_activity_add_buddy" >
         </activity>
         <activity
             android:name="com.biju.function.FindFriendsActivity"
@@ -384,6 +378,15 @@
         <activity
             android:name="com.biju.function.AddNewPartyActivity"
             android:label="@string/title_activity_add_new_party" >
+        </activity>
+        <activity
+            android:name="com.biju.function.AddFriends2Activity"
+            android:label="@string/title_activity_add_friends2" >
+        </activity>
+        <activity
+            android:name="com.biju.function.ContactSearchActivity"
+            android:label="@string/title_activity_contact_search"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
     </application>
 

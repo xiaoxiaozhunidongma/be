@@ -2,6 +2,8 @@ package com.BJ.utils;
 
 import java.util.HashMap;
 
+import com.biju.R;
+
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
@@ -15,8 +17,6 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.TextView;
-
-import com.biju.R;
 
 /**
  * 字母索引条
@@ -53,7 +53,7 @@ public class QuickAlphabeticBar extends ImageButton {
 
 	// 初始化
 	public void init(Activity ctx) {
-//		mDialogText = (TextView) ctx.findViewById(R.id.fast_position);
+		mDialogText = (TextView) ctx.findViewById(R.id.fast_position);
 		mDialogText.setVisibility(View.INVISIBLE);
 		mHandler = new Handler();
 	}
@@ -153,8 +153,8 @@ public class QuickAlphabeticBar extends ImageButton {
 		int width = getWidth();
 		int sigleHeight = height / letters.length; // 单个字母占的高度
 		for (int i = 0; i < letters.length; i++) {
-			paint.setColor(Color.WHITE);
-			paint.setTextSize(20);
+			paint.setColor(R.color.green_1);
+			paint.setTextSize(25);
 			paint.setTypeface(Typeface.DEFAULT_BOLD);
 			paint.setAntiAlias(true);
 			if (i == choose) { 
