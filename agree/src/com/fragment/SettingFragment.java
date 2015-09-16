@@ -21,19 +21,16 @@ import com.BJ.javabean.Loginback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
-import com.BJ.utils.AsynImageLoader;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
-import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.Interface.updateUserListenner;
 import com.biju.R;
-import com.biju.APP.MyApplication;
 import com.biju.function.AboutUsActivity;
 import com.biju.function.BindingPhoneActivity;
 import com.biju.function.FeedbackActivity;
@@ -41,9 +38,9 @@ import com.biju.function.NicknameActivity;
 import com.biju.function.SexActivity;
 import com.biju.login.BeforeLoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
-import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
-import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
 import com.tencent.upload.task.IUploadTaskListener;
@@ -65,7 +62,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private String endStr = "/original";
 	private String mUserAvatar_path;
 	private String completeURL;
-	private String TestcompleteURL = beginStr+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
+	private String TestcompleteURL = beginStr
+			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
@@ -115,6 +113,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private TextView mSetting_Sex;
 	private TextView mSetting_Phone;
 
+	public static IWXAPI api;
+	private TextView mSetting_weixin;
+
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 
 	public SettingFragment() {
@@ -124,8 +125,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		if(mLayout==null){
-			mLayout = inflater.inflate(R.layout.fragment_setting, container, false);
+		if (mLayout == null) {
+			mLayout = inflater.inflate(R.layout.fragment_setting, container,false);
 			Log.e("SettingFragment", "进入了onCreateView()====================");
 		}
 		return mLayout;
@@ -144,25 +145,19 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			returndata();
 		} else {
 			ImageLoaderUtils.getInstance().LoadImage(getActivity(),completeURL, mSetting_head);
-//			AsynImageLoader asynImageLoader = new AsynImageLoader();
-//			asynImageLoader.showRoudImageAsyn(mSetting_head, completeURL, R.drawable.login_1,getActivity());
 		}
 	}
 
 	@Override
 	public void onStart() {
 		super.onStart();
-		Log.e("SettingFragment", "进入了onStart() 时的isShow为什么===================="+ isShow);
 		if (!isShow) {
 			User4head();
 		}
-		Log.e("SettingFragment", "进入了onStart() ====================");
 	}
 
 	@Override
 	public void onResume() {
-		Log.e("SettingFragment", "进入了onResume() ====================");
-		Log.e("SettingFragment", "此时的isShow为什么111111 ===================="+ isShow);
 		if (isShow) {
 			// 初始化图片签名
 			initUpload();
@@ -233,8 +228,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 					PreferenceUtils.saveImageCache(getActivity(), completeURL);// 存SP
 					ImageLoaderUtils.getInstance().LoadImage(getActivity(),
 							completeURL, mSetting_head);
-//					AsynImageLoader asynImageLoader = new AsynImageLoader();
-//					asynImageLoader.showRoudImageAsyn(mSetting_head, completeURL, R.drawable.login_1,getActivity());
+					if(!("".equals(mUserWechat_id)))
+					{
+						mSetting_weixin.setText("已绑定");
+					}
 				}
 			}
 
@@ -250,7 +247,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			@Override
 			public void success(String A) {
 				Log.e("SettingFragment", "新的方法签名字符串：" + A);
-				PicSignBack picSignBack = GsonUtils.parseJson(A,PicSignBack.class);
+				PicSignBack picSignBack = GsonUtils.parseJson(A,
+						PicSignBack.class);
 				Integer status = picSignBack.getStatusMsg();
 				if (status == 1) {
 					String returnData = picSignBack.getReturnData();
@@ -273,7 +271,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						usersetting.setSetup_time(mUserSetup_time);
 						usersetting.setLast_login_time(mUserLast_login_time);
 						upload(usersetting);// 上传
-						Log.e("SettingFragment","进入了更新的方法里 ====================");
 					} else {
 						Toast.makeText(getActivity(), "更换头像失败，请重新更换",Toast.LENGTH_SHORT).show();
 					}
@@ -314,9 +311,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initUI() {
-		mSetting_Phone = (TextView) mLayout.findViewById(R.id.Setting_Phone);//用户的手机号码显示
-		mSetting_Sex = (TextView) mLayout.findViewById(R.id.Setting_Sex);//用户的性别显示
-		mSetting_Nickname = (TextView) mLayout.findViewById(R.id.Setting_Nickname);//用户的昵称显示
+		mSetting_weixin = (TextView) mLayout.findViewById(R.id.Setting_weixin);//显示用户是否已绑定微信
+		mSetting_Phone = (TextView) mLayout.findViewById(R.id.Setting_Phone);// 用户的手机号码显示
+		mSetting_Sex = (TextView) mLayout.findViewById(R.id.Setting_Sex);// 用户的性别显示
+		mSetting_Nickname = (TextView) mLayout.findViewById(R.id.Setting_Nickname);// 用户的昵称显示
 		mSetting_head_1 = (ImageView) mLayout.findViewById(R.id.Setting_head_1);// 上传图片时显示
 		mSetting_head = (ImageView) mLayout.findViewById(R.id.Setting_head);
 		mSetting_progress = (TextView) mLayout.findViewById(R.id.Setting_progress);// 上传图片时 的进度
@@ -340,7 +338,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		mSetting_feedback.setOnClickListener(this);
 		mSetting_about_us.setOnClickListener(this);
 		mSetting_Exit.setOnClickListener(this);
-		
+
 		mLayout.findViewById(R.id.Setting_next_1);
 		mLayout.findViewById(R.id.Setting_next_2);
 		mLayout.findViewById(R.id.Setting_next_3);
@@ -383,23 +381,22 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	//修改性别
+	// 修改性别
 	private void Setting_Sex_change() {
 		SdPkUser.setGetSexUser(Setting_readuser);
-		Intent intent=new Intent(getActivity(), SexActivity.class);
+		Intent intent = new Intent(getActivity(), SexActivity.class);
 		startActivity(intent);
 	}
 
-	//用户的昵称修改
+	// 用户的昵称修改
 	private void Setting_Nickname_change() {
 		SdPkUser.setGetNicknameUser(Setting_readuser);
-		Intent intent=new Intent(getActivity(), NicknameActivity.class);
+		Intent intent = new Intent(getActivity(), NicknameActivity.class);
 		startActivity(intent);
 	}
 
 	private void Setting_head() {
 		isShow = true;
-		Log.e("SettingFragment", "刚点下时的isShow为什么222222222 ===================="+ isShow);
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
@@ -410,13 +407,56 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 	// 绑定微信账号
 	private void Setting_Binding_weixin() {
-		// 跳转微信绑定界面
-		final SendAuth.Req req = new SendAuth.Req();
-		req.scope = "snsapi_userinfo";
-		req.state = "wechat_sdk_demo_test";
-		MyApplication.api.sendReq(req);
-		SdPkUser.setGetUser(Setting_readuser);
-		SdPkUser.setGetweixinBinding(true);
+		if (api == null) {
+			api = WXAPIFactory.createWXAPI(getActivity(), "wx2ffba147560de2ff",false);
+		}
+
+		if (!api.isWXAppInstalled()) {
+			// 提醒用户没有按照微信
+			Toast.makeText(getActivity(), "还没有安装微信,请先安装微信!", Toast.LENGTH_SHORT).show();
+			return;
+		}
+
+		api.registerApp("wx2ffba147560de2ff");
+
+		if (!("".equals(mUserWechat_id))) {
+			WeiXin_NiftyDialogBuilder();
+		} else {
+			// 跳转微信绑定界面
+			final SendAuth.Req req = new SendAuth.Req();
+			req.scope = "snsapi_userinfo";
+			req.state = "agree_weixin_login";
+			api.sendReq(req);
+			SdPkUser.setGetUser(Setting_readuser);
+			SdPkUser.setGetweixinBinding(true);
+		}
+	}
+
+	private void WeiXin_NiftyDialogBuilder() {
+		final SweetAlertDialog sd = new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE);
+		sd.setTitleText("提示");
+		sd.setContentText("您已经绑定了微信账号，是否重新绑定另一个账号？");
+		sd.setCancelText("取消");
+		sd.setConfirmText("确定");
+		sd.showCancelButton(true);
+		sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+			}
+		}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+				// 跳转微信绑定界面
+				final SendAuth.Req req = new SendAuth.Req();
+				req.scope = "snsapi_userinfo";
+				req.state = "agree_weixin_login";
+				api.sendReq(req);
+				SdPkUser.setGetUser(Setting_readuser);
+				SdPkUser.setGetweixinBinding(true);
+			}
+		}).show();
 	}
 
 	// 绑定手机
@@ -449,122 +489,119 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 	// 绑定手机号码
 	private void Phone_NiftyDialogBuilder() {
-//		final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
-//				.getInstance(getActivity());
-//		Effectstype effectstype = Effectstype.Shake;
-//		niftyDialogBuilder.withTitle("提示").withTitleColor("#000000")
-//				// 设置标题字体颜色
-//				.withDividerColor("#ffffff")
-//				// 设置对话框背景颜色
-//				.withMessage("您已经绑定了手机号码，是否重新绑定另一个号码？")
-//				// 对话框提示内容
-//				.withMessageColor("#000000")
-//				// 提示内容字体颜色
-//				.withIcon(getResources().getDrawable(R.drawable.about_us))
-//				// 设置对话框显示图片
-//				.isCancelableOnTouchOutside(true).withDuration(700)
-//				// 设置时间
-//				.withEffect(effectstype).withButton1Text("取消")
-//				.withButton2Text("确定").setButton1Click(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						niftyDialogBuilder.cancel();
-//					}
-//				}).setButton2Click(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						Intent intent = new Intent(getActivity(),
-//								BindingPhoneActivity.class);
-//						intent.putExtra(IConstant.UserData, Setting_readuser);
-//						startActivity(intent);
-//						niftyDialogBuilder.cancel();
-//					}
-//				}).show();
-		
-		final SweetAlertDialog sd =new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE); 
-		sd.setTitleText("提示");  
-        sd.setContentText("您已经绑定了手机号码，是否重新绑定另一个号码？");  
-        sd.setCancelText("取消"); 
-        sd.setConfirmText("确定");  
-        sd.showCancelButton(true);  
-        sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {  
-             @Override  
-             public void onClick(SweetAlertDialog sDialog) { 
-            	 sd.cancel();
-             }  
-         })  
-         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {  
-             @Override  
-             public void onClick(SweetAlertDialog sDialog) { 
-            	sd.cancel();
-            	Intent intent = new Intent(getActivity(),BindingPhoneActivity.class);
+		// final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
+		// .getInstance(getActivity());
+		// Effectstype effectstype = Effectstype.Shake;
+		// niftyDialogBuilder.withTitle("提示").withTitleColor("#000000")
+		// // 设置标题字体颜色
+		// .withDividerColor("#ffffff")
+		// // 设置对话框背景颜色
+		// .withMessage("您已经绑定了手机号码，是否重新绑定另一个号码？")
+		// // 对话框提示内容
+		// .withMessageColor("#000000")
+		// // 提示内容字体颜色
+		// .withIcon(getResources().getDrawable(R.drawable.about_us))
+		// // 设置对话框显示图片
+		// .isCancelableOnTouchOutside(true).withDuration(700)
+		// // 设置时间
+		// .withEffect(effectstype).withButton1Text("取消")
+		// .withButton2Text("确定").setButton1Click(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// niftyDialogBuilder.cancel();
+		// }
+		// }).setButton2Click(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// Intent intent = new Intent(getActivity(),
+		// BindingPhoneActivity.class);
+		// intent.putExtra(IConstant.UserData, Setting_readuser);
+		// startActivity(intent);
+		// niftyDialogBuilder.cancel();
+		// }
+		// }).show();
+
+		final SweetAlertDialog sd = new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE);
+		sd.setTitleText("提示");
+		sd.setContentText("您已经绑定了手机号码，是否重新绑定另一个号码？");
+		sd.setCancelText("取消");
+		sd.setConfirmText("确定");
+		sd.showCancelButton(true);
+		sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+			}
+		}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+				Intent intent = new Intent(getActivity(),BindingPhoneActivity.class);
 				intent.putExtra(IConstant.UserData, Setting_readuser);
 				startActivity(intent);
-             }  
-         })  
-         .show();  
+			}
+		}).show();
 
 	}
 
 	// 退出登录
 	private void NiftyDialogBuilder() {
-//		final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
-//				.getInstance(getActivity());
-//		Effectstype effectstype = Effectstype.Shake;
-//		niftyDialogBuilder.withTitle("警告").withTitleColor("#000000")
-//				// 设置标题字体颜色
-//				.withDividerColor("#ffffff")
-//				// 设置对话框背景颜色
-//				.withMessage("确定要登出账号吗？" + "\n" + "保存的资料将会被清空哦~")
-//				// 对话框提示内容
-//				.withMessageColor("#000000")
-//				// 提示内容字体颜色
-//				.withIcon(getResources().getDrawable(R.drawable.about_us))
-//				// 设置对话框显示图片
-//				.isCancelableOnTouchOutside(true).withDuration(700)
-//				// 设置时间
-//				.withEffect(effectstype).withButton1Text("我再想想")
-//				.withButton2Text("是的").setButton1Click(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						niftyDialogBuilder.cancel();
-//					}
-//				}).setButton2Click(new OnClickListener() {
-//
-//					@Override
-//					public void onClick(View v) {
-//						Intent intent = new Intent(getActivity(),BeforeLoginActivity.class);
-//						startActivity(intent);
-//						getActivity().finish();
-//						niftyDialogBuilder.cancel();
-//					}
-//				}).show();
-		
-		final SweetAlertDialog sd =new SweetAlertDialog(getActivity(), SweetAlertDialog.WARNING_TYPE); 
-		sd.setTitleText("警告");  
-        sd.setContentText("确定要登出账号吗？" + "\n" + "保存的资料将会被清空哦~");  
-        sd.setCancelText("我再想想"); 
-        sd.setConfirmText("是的");  
-        sd.showCancelButton(true);  
-        sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {  
-             @Override  
-             public void onClick(SweetAlertDialog sDialog) { 
-            	 sd.cancel();
-             }  
-         })  
-         .setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {  
-             @Override  
-             public void onClick(SweetAlertDialog sDialog) { 
-            	sd.cancel();
-            	Intent intent = new Intent(getActivity(),BeforeLoginActivity.class);
+		// final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
+		// .getInstance(getActivity());
+		// Effectstype effectstype = Effectstype.Shake;
+		// niftyDialogBuilder.withTitle("警告").withTitleColor("#000000")
+		// // 设置标题字体颜色
+		// .withDividerColor("#ffffff")
+		// // 设置对话框背景颜色
+		// .withMessage("确定要登出账号吗？" + "\n" + "保存的资料将会被清空哦~")
+		// // 对话框提示内容
+		// .withMessageColor("#000000")
+		// // 提示内容字体颜色
+		// .withIcon(getResources().getDrawable(R.drawable.about_us))
+		// // 设置对话框显示图片
+		// .isCancelableOnTouchOutside(true).withDuration(700)
+		// // 设置时间
+		// .withEffect(effectstype).withButton1Text("我再想想")
+		// .withButton2Text("是的").setButton1Click(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// niftyDialogBuilder.cancel();
+		// }
+		// }).setButton2Click(new OnClickListener() {
+		//
+		// @Override
+		// public void onClick(View v) {
+		// Intent intent = new Intent(getActivity(),BeforeLoginActivity.class);
+		// startActivity(intent);
+		// getActivity().finish();
+		// niftyDialogBuilder.cancel();
+		// }
+		// }).show();
+
+		final SweetAlertDialog sd = new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE);
+		sd.setTitleText("警告");
+		sd.setContentText("确定要登出账号吗？" + "\n" + "保存的资料将会被清空哦~");
+		sd.setCancelText("我再想想");
+		sd.setConfirmText("是的");
+		sd.showCancelButton(true);
+		sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+			}
+		}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+				SdPkUser.setExit(true);
+				Intent intent = new Intent(getActivity(),BeforeLoginActivity.class);
 				startActivity(intent);
 				getActivity().finish();
-             }  
-         })  
-         .show();  
+			}
+		}).show();
 
 	}
 
@@ -579,8 +616,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						// 上传完成后注册
 						user.setAvatar_path(result.fileId);
 						Setting_readuserinter.updateUser(getActivity(), user);
-						Log.e("SettingFragment",
-								"进入了图片上传的时候====================");
+						Log.e("SettingFragment","进入了图片上传的时候====================");
 					}
 
 					@Override
@@ -607,8 +643,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 					@Override
 					public void onUploadFailed(final int errorCode,
 							final String errorMsg) {
-						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"
-								+ errorMsg);
+						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"+ errorMsg);
 					}
 				});
 		uploadManager.upload(task); // 开始上传
@@ -622,20 +657,22 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		homeImageLoaderUtils.clearCache();
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
-		
+
 		Drawable(mSetting_head);
 		Drawable(mSetting_head_1);
 	}
 
 	@SuppressWarnings("deprecation")
 	private void Drawable(ImageView mSetting_head_12) {
-		Drawable d = mSetting_head_12.getDrawable();  
-		if (d != null) d.setCallback(null);  
-		mSetting_head_12.setImageDrawable(null);  
-		mSetting_head_12.setBackgroundDrawable(null);
+		Drawable d = mSetting_head_12.getDrawable();
+		if (d != null)
+		{
+			d.setCallback(null);
+			mSetting_head_12.setImageDrawable(null);
+			mSetting_head_12.setBackgroundDrawable(null);
+		}
 	}
-	
+
 }

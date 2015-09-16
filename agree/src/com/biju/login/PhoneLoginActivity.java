@@ -212,7 +212,9 @@ public class PhoneLoginActivity extends Activity implements OnClickListener {
 							Intent intent = new Intent(PhoneLoginActivity.this,MainActivity.class);
 							intent.putExtra(IConstant.Sdcard, true);
 							startActivity(intent);
-
+							//从退出小组后重新登录时要重新赋值为false
+							SdPkUser.setExit(false);
+							
 							//读取用户资料
 							User readuser = new User();
 							readuser.setPk_user(Phone_pk_user);
@@ -404,8 +406,7 @@ public class PhoneLoginActivity extends Activity implements OnClickListener {
 			@Override
 			public void onClick(SweetAlertDialog sDialog) {
 				// 获取图片签名字符串
-				phoneLoginInterface.getPicSign(PhoneLoginActivity.this,
-						new User());
+				phoneLoginInterface.getPicSign(PhoneLoginActivity.this,new User());
 				phoneLoginInterface.setPostListener(new getPicSignListenner() {
 
 					@Override

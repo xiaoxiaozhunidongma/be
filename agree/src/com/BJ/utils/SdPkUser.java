@@ -122,4 +122,35 @@ public class SdPkUser {
 	public static void setOpenid(String openid) {
 		SdPkUser.openid = openid;
 	}
+	
+	//传home中的小组对象
+	public static Group TeamSettinggroup;
+	public static Group getTeamSettinggroup() {
+		return TeamSettinggroup;
+	}
+
+	public static void setTeamSettinggroup(Group teamSettinggroup) {
+		TeamSettinggroup = teamSettinggroup;
+	}
+	
+	//退出登录
+	public static boolean Exit;
+	public static boolean isExit() {
+		return Exit;
+	}
+
+	public static void setExit(boolean exit) {
+		Exit = exit;
+	}
+	
+	//退出小组
+	public static boolean RefreshTeam;
+	public static boolean isRefreshTeam() {
+		return RefreshTeam;
+	}
+
+	public static void setRefreshTeam(boolean refreshTeam) {
+		RefreshTeam = refreshTeam;
+	}
+	
 }

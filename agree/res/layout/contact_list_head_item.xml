@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60.0dp"
+        android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:background="#d3d3d3"
@@ -14,7 +14,7 @@
         <RelativeLayout
             android:id="@+id/Contact_search_layout"
             android:layout_width="match_parent"
-            android:layout_height="50.0dp"
+            android:layout_height="40.0dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10.0dp"

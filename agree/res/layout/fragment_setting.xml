@@ -10,9 +10,10 @@
     <RelativeLayout
         android:id="@+id/Setting_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:background="@drawable/title_background" >
 
         <TextView
             android:id="@+id/tab_setting_title"
@@ -20,8 +21,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="设置"
-            android:textSize="18sp" />
+            android:text="@string/setting_title_text"
+            android:textSize="@dimen/title_size" />
 
         <TextView
             android:id="@+id/textView1"
@@ -42,7 +43,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#efefef" >
+            android:background="@drawable/background" >
 
             <RelativeLayout
                 android:id="@+id/Setting_head_layout"
@@ -291,7 +292,7 @@
                         android:layout_marginRight="5.0dp"
                         android:layout_toLeftOf="@+id/Setting_next_3"
                         android:gravity="right|center"
-                        android:text="手机号"
+                        android:text="未绑定手机号"
                         android:textColor="#808080"
                         android:textSize="12.0sp" />
                 </RelativeLayout>
@@ -331,6 +332,19 @@
                         android:layout_marginRight="15dp"
                         android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
+
+                    <TextView
+                        android:id="@+id/Setting_weixin"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignTop="@+id/Setting_next_4"
+                        android:layout_toLeftOf="@+id/Setting_next_4"
+                        android:text="未绑定微信号"
+                        android:textColor="#808080"
+                        android:textSize="12.0sp"
+                        android:layout_marginRight="5.0dp"
+                         />
+
                 </RelativeLayout>
             </RelativeLayout>
 

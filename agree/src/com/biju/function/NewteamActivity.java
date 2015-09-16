@@ -40,11 +40,9 @@ import com.BJ.javabean.Newteamback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.RequestCodeback;
 import com.BJ.javabean.User;
-import com.BJ.photo.Bimp;
 import com.BJ.utils.MyBimp;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
-import com.BJ.utils.Utils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.IConstant;
 import com.biju.Interface;
@@ -53,7 +51,6 @@ import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
-import com.example.takephoto.ImageUtils;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
 import com.tencent.upload.task.ITask.TaskState;
@@ -139,6 +136,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				int newteamStatusMsg = newteamback.getStatusMsg();
 				if (newteamStatusMsg == 1) {
 					Log.e("NewteamActivity", "小组ID" + A);
+					SdPkUser.setRefreshTeam(true);
 					finish();
 				}
 			}
@@ -203,6 +201,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				Integer status = requestCodeback.getStatusMsg();
 				if (status == 1) {
 					Log.e("NewteamActivity", "读取用户小组信息使用邀请码添加后的===" + A);
+					SdPkUser.setRefreshTeam(true);
 					finish();
 				}
 			}
@@ -350,7 +349,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						CreateGroup creatGroup = new CreateGroup(members, group);
 						Log.e("NewteamActivity", "group:" + group.toString());
 						cregrouInter.createGroup(NewteamActivity.this,creatGroup);// 测试
-						finish();
+//						finish();
 					}
 
 					@Override

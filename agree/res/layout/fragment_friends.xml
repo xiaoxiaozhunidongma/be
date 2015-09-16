@@ -10,7 +10,9 @@
     <RelativeLayout
         android:id="@+id/friends_title"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp" >
+        android:layout_height="@dimen/title_height"
+        android:background="@drawable/title_background"
+         >
 
         <TextView
             android:id="@+id/tab_friends_title"
@@ -18,12 +20,12 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="好友"
-            android:textSize="18sp" />
+            android:text="@string/friends_title_text"
+            android:textSize="@dimen/title_size" />
 
         <RelativeLayout
             android:id="@+id/tab_friends_addbuddy_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_right_width"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true" >
@@ -35,9 +37,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="添加好友"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/friends_title_right_text"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
         </RelativeLayout>
 
         <TextView
@@ -90,7 +92,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:text="你还没有添加任何的好友！" 
+            android:text="@string/friends_prompt" 
             android:textColor="#ff0000"
             />
 

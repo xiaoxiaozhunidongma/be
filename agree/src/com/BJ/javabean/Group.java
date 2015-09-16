@@ -2,16 +2,34 @@ package com.BJ.javabean;
 
 import java.io.Serializable;
 
+import com.activeandroid.annotation.Column;
+import com.activeandroid.annotation.Table;
 
+
+@Table(name="group_team")
 public class Group implements Serializable{
+	
+	/**
+	 * extends Model
+	 */
+//	private static final long serialVersionUID = -938676103940439001L;
+	@Column
 	private Integer pk_group;
+	@Column
 	private String em_id;
+	@Column
 	private String name;
+	@Column
 	private String setup_time;
+	@Column
 	private String last_post_time;
+	@Column
 	private String last_post_message;
+	@Column
 	private String avatar_path;
+	@Column
 	private String remark;
+	@Column
 	private Integer status;
 	
 	public Group(){}
@@ -77,6 +95,21 @@ public class Group implements Serializable{
 				+ last_post_time + ",\"last_post_message\":" + last_post_message
 				+ ",\"avatar_path\":" + avatar_path + ",\"remark\":" + remark
 				+ ",\"status\":" + status + "}";
+	}
+
+	public Group(Integer pk_group, String em_id, String name,
+			String setup_time, String last_post_time, String last_post_message,
+			String avatar_path, String remark, Integer status) {
+		super();
+		this.pk_group = pk_group;
+		this.em_id = em_id;
+		this.name = name;
+		this.setup_time = setup_time;
+		this.last_post_time = last_post_time;
+		this.last_post_message = last_post_message;
+		this.avatar_path = avatar_path;
+		this.remark = remark;
+		this.status = status;
 	}
 
 	

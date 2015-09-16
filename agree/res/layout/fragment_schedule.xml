@@ -58,16 +58,17 @@
             android:layout_marginBottom="50dp"
             android:text="请添加日程"
             android:textColor="#00e3e3"
-            android:textSize="17.0sp"
-            android:visibility="gone" />
+            android:textSize="17.0sp" />
 
-        <TextView
+        <!--
+             <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:background="#aaaaaa" />
+        -->
     </RelativeLayout>
 
 </RelativeLayout>

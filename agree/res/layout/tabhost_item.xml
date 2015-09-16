@@ -5,17 +5,17 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="58.0dp"
+        android:layout_height="55.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
         <ImageView
             android:id="@+id/tab_image"
-            android:layout_width="30.0dp"
-            android:layout_height="30.0dp"
+            android:layout_width="23.0dp"
+            android:layout_height="23.0dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="5.0dp"
+            android:layout_marginTop="10.0dp"
             android:src="@drawable/tab_home_selector" />
 
         <RelativeLayout
@@ -30,10 +30,10 @@
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:gravity="center_horizontal"
-                android:text="小组"
+                android:gravity="bottom"
+                android:text="@string/home_tab_text"
                 android:textColor="@color/tab_textcolor_selector"
-                android:textSize="15.0sp" />
+                android:textSize="11.0sp" />
 
         </RelativeLayout>
     </RelativeLayout>

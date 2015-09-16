@@ -54,7 +54,7 @@ public class AsynImageLoader {
 	public void showImageAsyn(ImageView imageView, String url, int resId,Context context){
 		imageView.setTag(url);
 		Bitmap bitmap = loadImageAsyn(url, getImageCallback(imageView, resId, context));
-		
+//		Log.e("AsynImageLoader", "这时候的url========="+url);
 		if(bitmap == null){
 			Bitmap readBitMap = readBitMap(context, resId);
 			imageView.setImageBitmap(readBitMap);
@@ -66,7 +66,6 @@ public class AsynImageLoader {
 	public void showRoudImageAsyn(ImageView imageView, String url, int resId,Context context){
 		imageView.setTag(url);
 		Bitmap bitmap = loadImageAsyn(url, getRoudImageCallback(imageView, resId, context));
-		
 		if(bitmap == null){
 			Bitmap readBitMap = readBitMap(context, resId);
 			Bitmap initHead = InitHead.initHead(readBitMap);
@@ -82,8 +81,10 @@ public class AsynImageLoader {
 	}
 	
 	public Bitmap loadImageAsyn(String path, ImageCallback callback){
+//		Log.e("AsynImageLoader", "这时候的path========="+path);
 		// 判断缓存中是否已经存在该图片
 		if(caches.containsKey(path)){
+//			Log.e("AsynImageLoader", "进入caches包含该路径的地方=========");
 			// 取出软引用
 			SoftReference<Bitmap> rf = caches.get(path);
 			// 通过软引用，获取图片
@@ -94,9 +95,11 @@ public class AsynImageLoader {
 			}else{
 				// 如果图片未被释放，直接返回该图片
 				Log.i(TAG, "return image in cache" + path);
+//				Log.e("AsynImageLoader", "进入caches不为null的地方=========");
 				return bitmap;
 			}
 		}else{
+//			Log.e("AsynImageLoader", "进入caches不包含该路径的地方=========");
 			// 如果缓存中不常在该图片，则创建图片下载任务
 			Task task = new Task();
 			task.path = path;
@@ -110,6 +113,7 @@ public class AsynImageLoader {
 				}
 			}
 		}
+//		Log.e("AsynImageLoader", "都没进入=========");
 		return null;
 	}
 	/**

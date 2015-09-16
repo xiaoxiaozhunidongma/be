@@ -5,45 +5,10 @@
     android:layout_height="match_parent"
     android:background="#ffffff" >
 
-    <android.support.v4.app.FragmentTabHost
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@android:id/tabhost"
+    <FrameLayout
+        android:id="@+id/container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#ffffff" >
-
-        <include layout="@layout/group_tab_title" />
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="50.0dp"
-            android:orientation="vertical" >
-
-            <TabWidget
-                android:id="@android:id/tabs"
-                android:layout_width="match_parent"
-                android:layout_height="40.0dp"
-                android:layout_weight="0"
-                android:background="#f0f0f0"
-                android:divider="@null"
-                android:orientation="horizontal" >
-            </TabWidget>
-
-            <FrameLayout
-                android:id="@android:id/tabcontent"
-                android:layout_width="0dp"
-                android:layout_height="0dp"
-                android:layout_weight="0" />
-
-            <FrameLayout
-                android:id="@+id/realtabcontent"
-                android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1" />
-
-            <!-- #dcdcdc -->
-        </LinearLayout>
-    </android.support.v4.app.FragmentTabHost>
+        android:layout_height="match_parent" >
+    </FrameLayout>
 
 </RelativeLayout>

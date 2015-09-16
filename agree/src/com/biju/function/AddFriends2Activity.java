@@ -127,9 +127,9 @@ public class AddFriends2Activity extends Activity implements OnClickListener,Swi
 		findViewById(R.id.addbuddy_findfriends_layout).setOnClickListener(this);;
 		findViewById(R.id.addbuddy_findfriends).setOnClickListener(this);
 		//ËÑË÷²¼¾Ö
-//		View mHeadView=View.inflate(AddFriends2Activity.this, R.layout.contact_list_head_item, null);
-//		contactList.addHeaderView(mHeadView);
-//		mHeadView.findViewById(R.id.Contact_search_layout).setOnClickListener(this);
+		View mHeadView=View.inflate(AddFriends2Activity.this, R.layout.contact_list_head_item, null);
+		contactList.addHeaderView(mHeadView);
+		mHeadView.findViewById(R.id.Contact_search_layout).setOnClickListener(this);
 	}
 
 	@Override
@@ -292,17 +292,18 @@ public class AddFriends2Activity extends Activity implements OnClickListener,Swi
 		case R.id.addbuddy_findfriends:
 			addbuddy_findfriends();
 			break;
-//		case R.id.Contact_search_layout:
-//			Contact_search_layout();
-//			break;
+		case R.id.Contact_search_layout:
+			Contact_search_layout();
+			break;
 		default:
 			break;
 		}
 	}
-
-//	private void Contact_search_layout() {
-//		
-//	}
+	//ËÑË÷
+	private void Contact_search_layout() {
+		Intent intent=new Intent(AddFriends2Activity.this, ContactsActivity.class);
+		startActivity(intent);
+	}
 
 	private void addbuddy_findfriends() {
 		Intent intent = new Intent(AddFriends2Activity.this,FindFriendsActivity.class);

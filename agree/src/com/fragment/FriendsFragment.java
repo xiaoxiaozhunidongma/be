@@ -28,16 +28,12 @@ import com.BJ.javabean.ReadUserAllFriendsback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.SdPkUser;
-import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readFriendListenner;
 import com.biju.R;
 import com.biju.function.AddFriends2Activity;
 import com.biju.function.FriendsDataActivity;
-import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMGroupManager;
 import com.example.huanxin.ChatActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -81,8 +77,9 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			Log.e("HomeFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
 			
 			initUI();
-			LoginHuanXin();
+//			LoginHuanXin();
 			initInterface();
+			ReadUserAllFriends();
 			mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.friends_swipe_refresh);
 			mFriends_swipe_refresh.setOnRefreshListener(this);
 			
@@ -98,40 +95,34 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 
 	//需要异步？？？？？？？？？？？？？？？？？？？？？？？？？？？
-	private void LoginHuanXin() {
-		Log.e("FriendsFragment~~~~~", "调用了LoginHuanXin（）");
-		String str_pkuser = String.valueOf(SD_pk_user);
-		
-		Log.e("FriendsFragment~~~~~", "Integer.valueOf(pk_user)"+SD_pk_user);
-		
-		if(!"".equals(str_pkuser)){
-			
-			EMChatManager.getInstance().login(str_pkuser,
-					"paopian",new EMCallBack() {//回调
-				@Override
-				public void onSuccess() {
-					EMGroupManager.getInstance().loadAllGroups();
-					EMChatManager.getInstance().loadAllConversations();
-					Log.e("FriendsFragment~~~~~", "登陆聊天服务器成功！~~~~");		
-				}
-				
-				@Override
-				public void onProgress(int progress, String status) {
-				}
-				
-				@Override
-				public void onError(int code, String message) {
-					Log.d("FriendsFragment~~~~~~", "登陆聊天服务器失败！~~~~");
-				}
-			});
-		}
-	}
-
-	@Override
-	public void onStart() {
-		ReadUserAllFriends();
-		super.onStart();
-	}
+//	private void LoginHuanXin() {
+//		Log.e("FriendsFragment~~~~~", "调用了LoginHuanXin（）");
+//		String str_pkuser = String.valueOf(SD_pk_user);
+//		
+//		Log.e("FriendsFragment~~~~~", "Integer.valueOf(pk_user)"+SD_pk_user);
+//		
+//		if(!"".equals(str_pkuser)){
+//			
+//			EMChatManager.getInstance().login(str_pkuser,
+//					"paopian",new EMCallBack() {//回调
+//				@Override
+//				public void onSuccess() {
+//					EMGroupManager.getInstance().loadAllGroups();
+//					EMChatManager.getInstance().loadAllConversations();
+//					Log.e("FriendsFragment~~~~~", "登陆聊天服务器成功！~~~~");		
+//				}
+//				
+//				@Override
+//				public void onProgress(int progress, String status) {
+//				}
+//				
+//				@Override
+//				public void onError(int code, String message) {
+//					Log.d("FriendsFragment~~~~~~", "登陆聊天服务器失败！~~~~");
+//				}
+//			});
+//		}
+//	}
 
 	private void ReadUserAllFriends() {
 		User user = new User();
@@ -298,7 +289,6 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		homeImageLoaderUtils.clearCache();
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
 	}

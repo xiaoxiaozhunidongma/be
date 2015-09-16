@@ -81,13 +81,6 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 	}
 
 	@Override
-	public void onStart() {
-		initParty();
-		adapter.notifyDataSetChanged();
-		super.onStart();
-	}
-
-	@Override
 	public void onResume() {
 		if (userAllPartieList.size() > 0) {
 			mParty_listView.setAdapter(adapter);
@@ -172,12 +165,15 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 					intent.putExtra(IConstant.UserAllParty, UserAllParty);
 					getActivity().startActivity(intent);
 					
-					SharedPreferences Schedule_sp=getActivity().getSharedPreferences(IConstant.Partyfragmnet, 0);
-					Editor editor=Schedule_sp.edit();
-					editor.putInt(IConstant.Pk_party_user, UserAllParty.getPk_party_user());
-					editor.putString(IConstant.Pk_party, UserAllParty.getPk_party());
-					editor.putInt(IConstant.fk_group, UserAllParty.getFk_group());
+					SharedPreferences PartyFragment_sp=getActivity().getSharedPreferences(IConstant.Partyfragmnet, 0);
+					Editor editor=PartyFragment_sp.edit();
+					editor.putInt(IConstant.Partyfragmnet_Pk_party_user, UserAllParty.getPk_party_user());
+					editor.putString(IConstant.Partyfragmnet_Pk_party, UserAllParty.getPk_party());
+					editor.putInt(IConstant.Partyfragmnet_fk_group, UserAllParty.getFk_group());
 					editor.commit();
+					Log.e("PartyFragment", "所得到的UserAllParty.getPk_party_user()===========" + UserAllParty.getPk_party_user());
+					Log.e("PartyFragment", "所得到的UserAllParty.getPk_party()===========" + UserAllParty.getPk_party());
+					Log.e("PartyFragment", "所得到的UserAllParty.getFk_group()===========" + UserAllParty.getFk_group());
 				}
 			}
 		});
@@ -277,7 +273,6 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 			public void run() {
 				initParty();
 				mTab_party_swipe_refresh.setRefreshing(false);
-				adapter.notifyDataSetChanged();
 			}
 		}, 3000);
 	}
