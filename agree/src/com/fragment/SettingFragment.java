@@ -622,7 +622,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		homeImageLoaderUtils.clearCache();
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
 		

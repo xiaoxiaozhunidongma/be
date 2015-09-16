@@ -152,7 +152,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			InputSdcard();
 			Log.e("HomeFragment", "进入了onStart()中的input里了========"+SD_pk_user);
 			initNewTeam();
-			adapter.notifyDataSetChanged();
+//			adapter.notifyDataSetChanged();
 		}
 		super.onStart();
 	}
@@ -166,7 +166,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			//获取SD卡中的pk_user
 			SD_pk_user = SdPkUser.getsD_pk_user();
 			initNewTeam();
-			adapter.notifyDataSetChanged();
+//			adapter.notifyDataSetChanged();
 			Log.e("HomeFragment", "进入了onResume()的refresh========"+refresh);
 		}
 		super.onResume();
@@ -207,7 +207,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 							
 
 					}
-					adapter.notifyDataSetChanged();
+//					adapter.notifyDataSetChanged();
 				}else
 				{
 					home_gridview.setAdapter(adapter);
@@ -383,11 +383,12 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
-						PreferenceUtils.saveImageCache(getActivity(), completeURL);
-//						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-//								completeURL, home_item_head);
-						AsynImageLoader asynImageLoader = new AsynImageLoader();
-						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
+						Log.e("", "completeURL11~~~~~~~~~~~"+completeURL);
+						PreferenceUtils.saveImageCache(getActivity(), "sdasdgsdfg");
+						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+								completeURL, home_item_head);
+//						AsynImageLoader asynImageLoader = new AsynImageLoader();
+//						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
 					} else if (position == PhoneLoginActivity.list.size()) {
 					} else {
 						
@@ -403,10 +404,11 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
 						PreferenceUtils.saveImageCache(getActivity(), completeURL);
-//						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-//								completeURL, home_item_head);
-						AsynImageLoader asynImageLoader = new AsynImageLoader();
-						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
+						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+								completeURL, home_item_head);
+						Log.e("", "completeURL22~~~~~~~~~~~"+completeURL);
+//						AsynImageLoader asynImageLoader = new AsynImageLoader();
+//						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
 					} else {
 						
 					}
@@ -450,7 +452,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		//清除缓存
 		if(PhoneLoginActivity.list.size()>0)
 		{
-			homeImageLoaderUtils.clearCache();
 			Drawable d = home_item_head.getDrawable();  
 			if (d != null) d.setCallback(null);  
 			home_item_head.setImageDrawable(null);  

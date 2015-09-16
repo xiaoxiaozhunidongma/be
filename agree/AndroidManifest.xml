@@ -85,6 +85,23 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <!-- 环信权限 -->
+<!--     LeanChat权限 -->
+	    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.READ_LOGS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+<!--     LeanChat权限 -->
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
 
     <application
         android:name="com.biju.APP.MyApplication"
@@ -388,6 +405,31 @@
             android:label="@string/title_activity_contact_search"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
+<!--         leanchat -->
+         <service
+            android:name="com.avos.avoscloud.PushService"
+            android:exported="true" />
+
+        <receiver android:name="com.avos.avoscloud.AVBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.USER_PRESENT" />
+            </intent-filter>
+        </receiver>
+
+        <activity
+            android:name="com.example.testleabcloud.SecActivity"
+            >
+        </activity>
+        <activity
+            android:name="com.example.testleabcloud.ChatActivityLean"
+            >
+        </activity>
+        <activity
+            android:name="com.example.testleabcloud.PhotoViewActivity"
+            android:label="@string/title_activity_photo_view" >
+        </activity>
+<!--         leanchat -->
     </application>
 
 </manifest>
