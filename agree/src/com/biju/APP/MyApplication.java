@@ -1,13 +1,21 @@
 package com.biju.APP;
 
+import java.util.List;
 import java.util.Map;
 
+import leanchatlib.controller.ChatManager;
+import leanchatlib.controller.ChatManagerAdapter;
+import leanchatlib.model.UserInfo;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 import com.BJ.photo.Res;
+import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.baidu.mapapi.SDKInitializer;
 import com.easemob.EMCallBack;
 import com.example.takephoto.DemoHXSDKHelper;
@@ -24,7 +32,6 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class MyApplication extends Application {
 
-	private MyApplication myapp;
 	private static String regId;
 
 	public static String getRegId() {
@@ -39,7 +46,32 @@ public class MyApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
-		myapp=this;
+		// leanchat
+		 AVOSCloud.initialize(this,"n5wu1wotc8hhyu6x87hktwzfzd2o3ptvpe6cvhkwnwl50a0f","at9f7qy4fp02ajzzmem1ybnp8lehjb27plh902h76lw562le");
+//		 AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
+		 
+		    ChatManager.setDebugEnabled(true);// tag leanchatlib
+		    AVOSCloud.setDebugLogEnabled(true);  // set false when release
+		    ChatManager.getInstance().init(this);
+		    ChatManager.getInstance().setChatManagerAdapter(new ChatManagerAdapter() {
+		      @Override
+		      public UserInfo getUserInfoById(String userId) {
+		        UserInfo userInfo = new UserInfo();
+		        userInfo.setUsername(userId);
+		        userInfo.setAvatarUrl("http://ac-x3o016bx.clouddn.com/86O7RAPx2BtTW5zgZTPGNwH9RZD5vNDtPm1YbIcu");
+		        return userInfo;
+		      }
+
+		      @Override
+		      public void cacheUserInfoByIdsInBackground(List<String> userIds) throws Exception {
+		      }
+
+		    //鍏充簬杩欎釜鏂规硶璇疯 leanchat 搴旂敤涓殑 ChatManagerAdapterImpl.java
+		      @Override
+		      public void shouldShowNotification(Context context, String selfId, AVIMConversation conversation, AVIMTypedMessage message) {
+		    	  Toast.makeText(context, "收到了一条消息但并未打开相应的对话。可以触发系统通知。", Toast.LENGTH_LONG).show();
+		      }
+		    });
 		
 		// 初始化数据库
 //		ActiveAndroid.initialize(this);
@@ -74,10 +106,9 @@ public class MyApplication extends Application {
 				.diskCacheFileNameGenerator(new HashCodeFileNameGenerator())
 				.defaultDisplayImageOptions(defaultOptions).writeDebugLogs() // Remove
 				.build();
-		// initImageLoader(getApplicationContext());
 		ImageLoader.getInstance().init(config);
 		// 地图初始化
-		SDKInitializer.initialize(this);
+//		SDKInitializer.initialize(this);
 		// 极光推送
 		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush

@@ -43,6 +43,7 @@ import com.BJ.utils.FooterView;
 import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupMsgListenner;
@@ -329,7 +330,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					return footerView;
 				}
 			}
-
+		
 			View inflater = null;
 			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 			if (position < PhoneLoginActivity.list.size()) {
@@ -348,10 +349,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
-						// homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-						// completeURL, home_item_head);
-						AsynImageLoader asynImageLoader = new AsynImageLoader();
-						asynImageLoader.showImageAsyn(home_item_head,completeURL, R.drawable.newteam, getActivity());
+						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),completeURL, home_item_head);
 					} 
 				}
 			} else {
@@ -363,10 +361,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
-						// homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-						// completeURL, home_item_head);
-						AsynImageLoader asynImageLoader = new AsynImageLoader();
-						asynImageLoader.showImageAsyn(home_item_head,completeURL, R.drawable.newteam, getActivity());
+						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),completeURL, home_item_head);
 					} 
 				}
 			}
@@ -412,7 +407,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			if (d != null)
 				d.setCallback(null);
 			home_item_head.setImageDrawable(null);
-			home_item_head.setBackgroundDrawable(null);
 		}
 
 		ViewGroup parent = (ViewGroup) mLayout.getParent();

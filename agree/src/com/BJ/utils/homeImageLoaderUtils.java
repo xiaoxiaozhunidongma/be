@@ -39,7 +39,7 @@ public class homeImageLoaderUtils {
 		.showImageOnLoading(R.drawable.preview_2)
 		.showImageForEmptyUri(R.drawable.preview_2)
 		.showImageOnFail(R.drawable.ic_error)
-		.cacheInMemory(false)//是否缓存在内存中
+		.cacheInMemory(true)//是否缓存在内存中
 //		.displayer(new RoundedBitmapDisplayer(50))//设置圆角
 		.cacheOnDisk(true)//是否缓存在SD卡中
 		.considerExifParams(true)

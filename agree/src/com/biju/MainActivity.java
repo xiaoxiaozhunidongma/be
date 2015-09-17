@@ -161,6 +161,7 @@ public class MainActivity extends FragmentActivity  {
 		mapeditor.commit();
 		//有对小组进行修改过后传false
 		SdPkUser.setRefreshTeam(false);
+		SdPkUser.setExit(false);
 	}
 
 	@Override

@@ -11,6 +11,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -23,10 +24,10 @@ import com.biju.IConstant;
 import com.biju.MainActivity;
 import com.biju.R;
 
-public class BeforeLoginActivity extends Activity implements OnClickListener{
-	
-	
+public class BeforeLoginActivity extends Activity implements OnClickListener {
+
 	private String fileName = getSDPath() + "/" + "saveData";
+	private boolean exit = false;
 
 	public String getSDPath() {
 		File sdDir = null;
@@ -39,37 +40,28 @@ public class BeforeLoginActivity extends Activity implements OnClickListener{
 		return sdDir.toString();
 
 	}
-	
-	
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		boolean exit=SdPkUser.Exit;
-		if(exit)
-		{
-			setContentView(R.layout.activity_before_login);
-			initUI();
-		}else
-		{
-
+		setContentView(R.layout.activity_before_login);
+		initUI();
+		Log.e("BeforeLoginActivity", "获取的路径====" + fileName);
+		exit = SdPkUser.Exit;
+		if (!exit) {
 			FileInputStream fis;
 			try {
 				fis = new FileInputStream(fileName);
 				ObjectInputStream ois = new ObjectInputStream(fis);
 				Person person = (Person) ois.readObject();
 				Integer SD_pk_user = person.pk_user;
-				if(SD_pk_user!=null)
-				{
-					//跳转主界面
+				if (SD_pk_user != null) {
+					// 跳转主界面
 					SdPkUser.setsD_pk_user(SD_pk_user);
-					Intent intent=new Intent(BeforeLoginActivity.this, MainActivity.class);
+					Intent intent = new Intent(BeforeLoginActivity.this,
+							MainActivity.class);
 					intent.putExtra(IConstant.Sdcard, true);
-					startActivity(intent);
-				}else
-				{
-					//跳转手机登录界面
-					Intent intent=new Intent(BeforeLoginActivity.this, PhoneLoginActivity.class);
 					startActivity(intent);
 				}
 				ois.close();
@@ -82,7 +74,6 @@ public class BeforeLoginActivity extends Activity implements OnClickListener{
 			} catch (ClassNotFoundException e) {
 				e.printStackTrace();
 			}
-		
 		}
 		RefreshActivity.activList_3.add(BeforeLoginActivity.this);
 	}
@@ -114,14 +105,14 @@ public class BeforeLoginActivity extends Activity implements OnClickListener{
 	}
 
 	private void BeforeLogin_text_registered() {
-		Intent intent=new Intent(BeforeLoginActivity.this, LoginJumpActivity.class);
+		Intent intent = new Intent(BeforeLoginActivity.this,LoginJumpActivity.class);
 		intent.putExtra("registered", 1);
 		startActivity(intent);
 	}
 
 	private void BeforeLogin_text_login() {
-		Intent intent=new Intent(BeforeLoginActivity.this, LoginJumpActivity.class);
+		Intent intent = new Intent(BeforeLoginActivity.this,LoginJumpActivity.class);
 		startActivity(intent);
-		
+
 	}
 }
