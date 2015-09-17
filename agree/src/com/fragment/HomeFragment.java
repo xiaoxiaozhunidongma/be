@@ -74,7 +74,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private Interface homeInterface;
 	private SwipeRefreshLayout swipeLayout;
 
-	private Integer SD_pk_user=null;
+	private Integer SD_pk_user = null;
 	private int EvenNumber;
 	private int Size;
 	private FooterView footerView;
@@ -87,8 +87,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 	public String getSDPath() {
 		File sdDir = null;
-		boolean sdCardExist = Environment.getExternalStorageState().equals(
-				android.os.Environment.MEDIA_MOUNTED);
+		boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
 		// 判断sd卡是否存在
 		if (sdCardExist) {
 			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
@@ -120,8 +119,14 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					android.R.color.holo_blue_bright,
 					android.R.color.holo_orange_light);
 
+			Log.e("HomeFragment", "进入了onCreateView()=========" + sdcard);
+			if (sdcard) {
+				InputSdcard();
+				Log.e("HomeFragment", "进入了onStart()中的input里了========"+ SD_pk_user);
+				ReadTeamInterface(SD_pk_user);
+			}
+
 		}
-		Log.e("HomeFragment", "进入了onCreateView()========="+sdcard);
 		return mLayout;
 	}
 
@@ -147,41 +152,38 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public void onStart() {
-		if(sdcard)
+		boolean exitteam=SdPkUser.RefreshTeam;
+		Log.e("HomeFragment", "新建小组后的exitteam======="+exitteam);
+		if(exitteam)
 		{
 			InputSdcard();
-			Log.e("HomeFragment", "进入了onStart()中的input里了========"+SD_pk_user);
-			initNewTeam();
-//			adapter.notifyDataSetChanged();
+			ReadTeamInterface(SD_pk_user);
 		}
 		super.onStart();
 	}
-
+	
 	@Override
 	public void onResume() {
 		Log.e("HomeFragment", "进入了onResume()========");
 		SharedPreferences requestcode_sp = getActivity().getSharedPreferences(IConstant.RequestCode, 0);
 		refresh = requestcode_sp.getBoolean(IConstant.Refresh, false);
 		if (refresh) {
-			//获取SD卡中的pk_user
+			// 获取SD卡中的pk_user
 			SD_pk_user = SdPkUser.getsD_pk_user();
-			initNewTeam();
-//			adapter.notifyDataSetChanged();
-			Log.e("HomeFragment", "进入了onResume()的refresh========"+refresh);
+			ReadTeamInterface(SD_pk_user);
+			Log.e("HomeFragment", "进入了onResume()的refresh========" + refresh);
 		}
 		super.onResume();
 	}
 
-	public void initNewTeam() {
-		ReadTeam(SD_pk_user);
-	}
-
-	private void ReadTeam(int pk_user) {
+	private void ReadTeamInterface(int pk_user) {
 		homeInterface = Interface.getInstance();
 		User homeuser = new User();
 		homeuser.setPk_user(pk_user);
 		homeInterface.readUserGroupMsg(getActivity(), homeuser);
 		homeInterface.setPostListener(new readUserGroupMsgListenner() {
+
+			private Group readhomeuser_1;
 
 			@Override
 			public void success(String A) {
@@ -193,10 +195,11 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					users = homeback.getReturnData();
 					if (users.size() > 0) {
 						for (int i = 0; i < users.size(); i++) {
-							Group readhomeuser_1 = users.get(i);
+							readhomeuser_1 = users.get(i);
 							Log.e("HomeFragment", "readhomeuser==="+ readhomeuser_1.getPk_group());
 							PhoneLoginActivity.list.add(readhomeuser_1);
 						}
+
 						// 赋值长度
 						EvenNumber = PhoneLoginActivity.list.size() % 2;
 						Size = PhoneLoginActivity.list.size();
@@ -204,13 +207,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						if (PhoneLoginActivity.list.size() > 0) {
 							home_gridview.setAdapter(adapter);
 						}
-							
-
 					}
-//					adapter.notifyDataSetChanged();
-				}else
-				{
-					home_gridview.setAdapter(adapter);
+					adapter.notifyDataSetChanged();
 				}
 			}
 
@@ -227,52 +225,40 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		home_gridview = (GridView) mLayout.findViewById(R.id.home_gridview);
 		home_gridview.setSelector(new ColorDrawable(Color.TRANSPARENT));// 去除gridview点击后的背景颜色
 
-		//是否滑动时候暂停加载
-		home_gridview.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));   
+		// 是否滑动时候暂停加载
+		home_gridview.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
 		home_gridview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
 				if (EvenNumber == 0) {
-					if (PhoneLoginActivity.list.size() == arg2) {
-						Intent intent = new Intent(getActivity(),NewteamActivity.class);
-						startActivity(intent);
-						Log.e("HomeFragment", "进入了新建小组==========");
-					} else if (PhoneLoginActivity.list.size() + 1 == arg2) {
-						Log.e("HomeFragment", "点击到了最后一个不能点击的==========");
-					} else if (PhoneLoginActivity.list.size() + 2 == arg2) {
-						Log.e("HomeFragment", "点击到了邀请码的这个==========");
-					} else {
+					if (!(PhoneLoginActivity.list.size() == arg2)) {
 						Log.e("HomeFragment", "点击到了小组的==========");
 						Group group = PhoneLoginActivity.list.get(arg2);
 						int pk_group = group.getPk_group();
+						String group_name = group.getName();
+						SdPkUser.setTeamSettinggroup(group);// 传小组对象
 						Intent intent = new Intent(getActivity(),GroupActivity.class);
 						intent.putExtra(IConstant.HomePk_group, pk_group);
+						intent.putExtra(IConstant.HomeGroupName, group_name);
 						startActivity(intent);
 					}
 				} else {
-					if (PhoneLoginActivity.list.size() == arg2) {
-						Intent intent = new Intent(getActivity(),NewteamActivity.class);
-						startActivity(intent);
-					} else {
+					if (!(PhoneLoginActivity.list.size() == arg2)) {
 						Group group = PhoneLoginActivity.list.get(arg2);
 						int pk_group = group.getPk_group();
+						String group_name = group.getName();
+						SdPkUser.setTeamSettinggroup(group);// 传小组对象
 						Intent intent = new Intent(getActivity(),GroupActivity.class);
 						intent.putExtra(IConstant.HomePk_group, pk_group);
+						intent.putExtra(IConstant.HomeGroupName, group_name);
 						startActivity(intent);
 					}
 				}
 
 			}
 		});
-
 		adapter = new MyGridviewAdapter();
-		if(PhoneLoginActivity.list.size() == 0)
-		{
-			Log.e("HomeFragment", "进入到了PhoneLoginActivity.list.size() == 0中========");
-			home_gridview.setAdapter(adapter);
-		}
 	}
 
 	@SuppressWarnings("deprecation")
@@ -287,7 +273,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		@Override
 		public int getCount() {
 			if (EvenNumber == 0) {
-				return (Size + 3);
+				return (Size + 1);
 			} else {
 				return (Size + 2);
 			}
@@ -305,9 +291,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
-			Log.e("HomeFragment", "进入到了getView()中========");
 			if (EvenNumber == 0) {
-				if (position == PhoneLoginActivity.list.size() + 2) {
+				if (position == PhoneLoginActivity.list.size()) {
 					if (footerView == null) {
 						footerView = new FooterView(parent.getContext());
 						GridView.LayoutParams pl = new GridView.LayoutParams(
@@ -347,71 +332,43 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			}
 
 			View inflater = null;
-				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
-				if(PhoneLoginActivity.list.size()==0)
-				{
-					if(position == PhoneLoginActivity.list.size())
-					{
-						inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
-						Log.e("HomeFragment", "进入到了size为0的地方========");
-					}else
-					{
-						inflater = layoutInflater.inflate(R.layout.home_teamadd_item_1, null);
-						Log.e("HomeFragment", "进入到了size为0的但是为空白的地方========");
-					}
-				}else
-				{
-					if (position < PhoneLoginActivity.list.size()) {
-						inflater = layoutInflater.inflate(R.layout.home_gridview_item, null);
-						home_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
-						home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
-						Log.e("HomeFragment", "进入inflater11111111111========");
-					} else if (position == PhoneLoginActivity.list.size()) {
-						inflater = layoutInflater.inflate(R.layout.home_teamadd_item, null);
-						Log.e("HomeFragment", "进入inflater2222222222========");
-					} else {
-						inflater = layoutInflater.inflate(R.layout.home_teamadd_item_1, null);
-						Log.e("HomeFragment", "进入inflater33333333333========");
-					}
-				}
+			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+			if (position < PhoneLoginActivity.list.size()) {
+				inflater = layoutInflater.inflate(R.layout.home_gridview_item,null);
+				home_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
+				home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
+			} else {
+				inflater = layoutInflater.inflate(R.layout.home_teamadd_item_1,null);
+			}
 			if (EvenNumber == 0) {
-				if(PhoneLoginActivity.list.size()>0)
-				{
+				if (PhoneLoginActivity.list.size() > 0) {
 					if (position < PhoneLoginActivity.list.size()) {
 						Group homeuser_gridview = PhoneLoginActivity.list.get(position);
 						String homeAvatar_path = homeuser_gridview.getAvatar_path();
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
-						Log.e("", "completeURL11~~~~~~~~~~~"+completeURL);
-						PreferenceUtils.saveImageCache(getActivity(), "sdasdgsdfg");
-						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-								completeURL, home_item_head);
+						PreferenceUtils.saveImageCache(getActivity(),completeURL);
+						 homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+						 completeURL, home_item_head);
 //						AsynImageLoader asynImageLoader = new AsynImageLoader();
-//						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
-					} else if (position == PhoneLoginActivity.list.size()) {
-					} else {
-						
-					}
+//						asynImageLoader.showImageAsyn(home_item_head,completeURL, R.drawable.newteam, getActivity());
+					} 
 				}
 			} else {
-				if(PhoneLoginActivity.list.size()>0)
-				{
+				if (PhoneLoginActivity.list.size() > 0) {
 					if (position < PhoneLoginActivity.list.size()) {
 						Group homeuser_gridview = PhoneLoginActivity.list.get(position);
 						String homeAvatar_path = homeuser_gridview.getAvatar_path();
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
-						PreferenceUtils.saveImageCache(getActivity(), completeURL);
-						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-								completeURL, home_item_head);
-						Log.e("", "completeURL22~~~~~~~~~~~"+completeURL);
+						PreferenceUtils.saveImageCache(getActivity(),completeURL);
+						 homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
+						 completeURL, home_item_head);
 //						AsynImageLoader asynImageLoader = new AsynImageLoader();
-//						asynImageLoader.showImageAsyn(home_item_head, completeURL, R.drawable.newteam,getActivity());
-					} else {
-						
-					}
+//						asynImageLoader.showImageAsyn(home_item_head,completeURL, R.drawable.newteam, getActivity());
+					} 
 				}
 			}
 
@@ -442,22 +399,23 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
-		sdcard=false;
-		
-		SharedPreferences requestcode_sp=getActivity().getSharedPreferences(IConstant.RequestCode, 0);
-		Editor editor=requestcode_sp.edit();
+		SdPkUser.setRefreshTeam(false);//有对小组进行修改过后传false
+		sdcard = false;
+		Log.e("HomeFragment", "这时候onDestroyView()中的sdcard=========" + sdcard);
+		SharedPreferences requestcode_sp = getActivity().getSharedPreferences(IConstant.RequestCode, 0);
+		Editor editor = requestcode_sp.edit();
 		editor.putBoolean(IConstant.Refresh, false);
 		editor.commit();
-		
-		//清除缓存
-		if(PhoneLoginActivity.list.size()>0)
-		{
-			Drawable d = home_item_head.getDrawable();  
-			if (d != null) d.setCallback(null);  
-			home_item_head.setImageDrawable(null);  
+
+		// 清除缓存
+		if (PhoneLoginActivity.list.size() > 0) {
+			Drawable d = home_item_head.getDrawable();
+			if (d != null)
+				d.setCallback(null);
+			home_item_head.setImageDrawable(null);
 			home_item_head.setBackgroundDrawable(null);
 		}
-		
+
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
 	}
@@ -467,8 +425,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				initNewTeam();
-				adapter.notifyDataSetChanged();
+				ReadTeamInterface(SD_pk_user);
 				swipeLayout.setRefreshing(false);
 			}
 		}, 3000);

@@ -1,9 +1,8 @@
 package com.biju.function;
 
 import java.util.ArrayList;
-
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -19,8 +18,6 @@ import android.view.animation.TranslateAnimation;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
-
-import com.BJ.utils.RefreshActivity;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -189,6 +186,8 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 
 	}
 
+	@SuppressLint("DefaultLocale")
+	@SuppressWarnings("unused")
 	private void updateMapState() {
 
 		String state = "";

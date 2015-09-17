@@ -85,8 +85,8 @@
     <uses-permission android:name="android.permission.MANAGE_ACCOUNTS" />
     <uses-permission android:name="android.permission.AUTHENTICATE_ACCOUNTS" />
     <!-- 环信权限 -->
-<!--     LeanChat权限 -->
-	    <uses-permission android:name="android.permission.INTERNET" />
+    <!-- LeanChat权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
@@ -99,9 +99,9 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
-<!--     LeanChat权限 -->
-    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <!-- LeanChat权限 -->
+    <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
 
     <application
         android:name="com.biju.APP.MyApplication"
@@ -109,6 +109,17 @@
         android:icon="@drawable/about_us"
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
+
+        <!-- 数据库 -->
+        <!--
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="group_team.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="3" />
+        -->
+
 
         <!-- 百度签名 -->
         <meta-data
@@ -170,7 +181,8 @@
         <activity
             android:name="com.biju.function.GroupActivity"
             android:label="@string/title_activity_group"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            android:theme="@style/ActivityTheme_Light" >
         </activity>
         <activity
             android:name="com.biju.function.TeamSettingActivity"
@@ -401,12 +413,12 @@
             android:label="@string/title_activity_add_friends2" >
         </activity>
         <activity
-            android:name="com.biju.function.ContactSearchActivity"
+            android:name="com.biju.function.ContactsActivity"
             android:label="@string/title_activity_contact_search"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-<!--         leanchat -->
-         <service
+        <!-- leanchat -->
+        <service
             android:name="com.avos.avoscloud.PushService"
             android:exported="true" />
 
@@ -417,19 +429,19 @@
             </intent-filter>
         </receiver>
 
-        <activity
-            android:name="com.example.testleabcloud.SecActivity"
-            >
+        <activity android:name="com.example.testleabcloud.SecActivity" >
         </activity>
-        <activity
-            android:name="com.example.testleabcloud.ChatActivityLean"
-            >
+        <activity android:name="com.example.testleabcloud.ChatActivityLean" >
         </activity>
         <activity
             android:name="com.example.testleabcloud.PhotoViewActivity"
             android:label="@string/title_activity_photo_view" >
         </activity>
-<!--         leanchat -->
+        <!-- leanchat -->
+        <activity
+            android:name="com.biju.function.TeamSetting2Activity"
+            android:label="@string/title_activity_team_setting2" >
+        </activity>
     </application>
 
 </manifest>

@@ -57,4 +57,19 @@
     <dimen name="reg_verifycode_character_spacing">25dp</dimen>
     <dimen name="reg_verifycode_textsize">30dp</dimen>
 
+    <dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="shadow_width">100dp</dimen>
+    
+    <!-- 字体设置 -->
+    <dimen name="title_size">15sp</dimen><!-- 界面头部的标题字体大小 -->
+    <dimen name="title_left_size">13sp</dimen><!--界面头部左边的字体大小  -->
+    <dimen name="title_right_size">13sp</dimen><!--界面头部右边的字体大小  -->
+    
+	<!-- 标题布局高度 -->
+    <dimen name="title_height">40dp</dimen><!--标题布局高度  -->
+    <dimen name="title_right_width">80dp</dimen><!--标题右边点击的宽度  -->
+    <dimen name="title_left_width">80dp</dimen><!--标题左边点击的宽度  -->
+	
+	<!-- Group中第二级标题 -->
+	<dimen name="title_second_size">11sp</dimen><!-- Group中第二级标题的标题字体大小 -->
 </resources>

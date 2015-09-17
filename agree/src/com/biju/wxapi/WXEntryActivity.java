@@ -36,7 +36,6 @@ import com.biju.Interface.weixinLoginListenner;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
-import com.biju.login.PhoneLoginActivity;
 import com.biju.login.RegisteredActivity;
 import com.github.volley_examples.app.MyVolley;
 import com.github.volley_examples.app.VolleyListenner;
@@ -44,7 +43,9 @@ import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.IWXAPIEventHandler;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
@@ -68,6 +69,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	private String completeURL = "";
 	private Integer sD_pk_user;
 	private String openid;
+	public static IWXAPI api;
 
 	private String fileName = getSDPath() + "/" + "saveData";
 
@@ -84,7 +86,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	}
 
 	private void handleIntent(Intent paramIntent) {
-		MyApplication.api.handleIntent(paramIntent, this);
+		api.handleIntent(paramIntent, this);
 	}
 
 	@Override
@@ -92,9 +94,13 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_wxentry);
-		sD_pk_user = SdPkUser.getsD_pk_user();
+		api = WXAPIFactory.createWXAPI(this, "wx2ffba147560de2ff", true);
+		api.registerApp("wx2ffba147560de2ff");
+		
 		handleIntent(getIntent());
 		initInterface();
+		sD_pk_user = SdPkUser.getsD_pk_user();
+		Log.e("WXEntryActivity", "进入了onCreate()====" );
 	}
 
 	private void initInterface() {
@@ -159,6 +165,9 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 							// 把pk_user保存进一个工具类中
 							SdPkUser.setsD_pk_user(pk_user);
+							
+							//从退出小组后重新登录时要重新赋值为false
+							SdPkUser.setExit(false);
 
 							Person person = new Person(pk_user);
 							try {
@@ -291,11 +300,17 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 		default:
 			break;
 		}
+		boolean Binding_weixin = SdPkUser.isGetweixinBinding();
+		if(Binding_weixin)
+		{
+			finish();
+			overridePendingTransition(0, 0);
+		}
 		Log.e("WXEntryActivity", "获取的resp.errCode======" + resp.errCode);
 	}
 
 	private void initdata() {
-		String path = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx9be30a70fcb480ae&secret=5afb616b4c62f245508643e078735bfb&code="
+		String path = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx2ffba147560de2ff&secret=fc78e16cf3c7522a2b4b5784fa6c6b40&code="
 				+ code + "&grant_type=authorization_code";
 		Log.e("WXEntryActivity", "路径===============" + path);
 
@@ -324,7 +339,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 					{
 						boolean Binding_weixin = SdPkUser.isGetweixinBinding();
 						if (Binding_weixin) {
-							Log.e("WXEntryActivity", "进入微信注册==============");
+							Log.e("WXEntryActivity", "进入微信绑定==============");
 							User user = SdPkUser.getUser;
 							
 							User usersetting = new User();

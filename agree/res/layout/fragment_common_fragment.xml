@@ -1,0 +1,109 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/RelativeLayout1"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CommonFragment" >
+
+    <RelativeLayout
+        android:id="@+id/Group_title_layout"
+        android:layout_width="match_parent"
+        android:layout_height="43.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="40.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:orientation="horizontal" >
+
+            <RelativeLayout
+                android:id="@+id/tv_1_layout"
+                android:layout_width="match_parent"
+                android:layout_height="40.0dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/tv_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="40.0dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:paddingLeft="30.0dp"
+                    android:paddingRight="30.0dp"
+                    android:text="@string/group_second_text_left"
+                    android:textSize="@dimen/title_second_size" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/tv_2_layout"
+                android:layout_width="match_parent"
+                android:layout_height="40.0dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/tv_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="40.0dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingLeft="30.0dp"
+                    android:paddingRight="30.0dp"
+                    android:text="@string/group_second_text_center"
+                    android:textSize="@dimen/title_second_size" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/tv_3_layout"
+                android:layout_width="match_parent"
+                android:layout_height="40.0dp"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/tv_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="40.0dp"
+                    android:layout_gravity="center"
+                    android:gravity="center"
+                    android:paddingLeft="30.0dp"
+                    android:paddingRight="30.0dp"
+                    android:text="@string/group_second_text_right"
+                    android:textSize="@dimen/title_second_size" />
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/Common_ArticleIndicates"
+            android:layout_width="108.0dp"
+            android:layout_height="3.0dp"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/linearLayout1"
+            android:background="@drawable/green_3"
+             />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Group_title_layout"
+        android:layout_centerHorizontal="true" >
+
+        <android.support.v4.view.ViewPager
+            android:id="@+id/pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" >
+        </android.support.v4.view.ViewPager>
+    </RelativeLayout>
+
+</RelativeLayout>

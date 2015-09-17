@@ -16,29 +16,29 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10.0dp" >
-            
-            <TextView
-            android:id="@+id/years_month"
-            android:layout_width="100.0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:gravity="left|center_vertical"
-            android:text="TextView"
-            android:textColor="#00aeae"
-            android:layout_marginTop="5.0dp"
-            android:textSize="13.0sp" />
 
-        <TextView
-            android:id="@+id/times"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/years_month"
-            android:text="TextView"
-            android:textColor="#00aeae"
-            android:gravity="left|center_vertical"
-            android:textSize="25.0sp"
-            ></TextView>
+            <TextView
+                android:id="@+id/years_month"
+                android:layout_width="100.0dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="5.0dp"
+                android:gravity="left|center_vertical"
+                android:text="TextView"
+                android:textColor="#00aeae"
+                android:textSize="13.0sp" />
+
+            <TextView
+                android:id="@+id/times"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/years_month"
+                android:gravity="left|center_vertical"
+                android:text="TextView"
+                android:textColor="#00aeae"
+                android:textSize="25.0sp" >
+            </TextView>
         </RelativeLayout>
 
         <RelativeLayout
@@ -55,11 +55,11 @@
                 android:layout_height="25.0dp"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:gravity="left|center_vertical"
-                android:text="TextView"
-                android:singleLine="true"
-                android:layout_marginTop="5.0dp"
                 android:layout_marginRight="25.0dp"
+                android:layout_marginTop="5.0dp"
+                android:gravity="left|center_vertical"
+                android:singleLine="true"
+                android:text="TextView"
                 android:textSize="18.0sp" />
 
             <TextView
@@ -68,10 +68,10 @@
                 android:layout_height="25.0dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:gravity="left|center_vertical"
-                android:text="TextView"
-                android:singleLine="true"
                 android:layout_marginTop="5.0dp"
+                android:gravity="left|center_vertical"
+                android:singleLine="true"
+                android:text="TextView"
                 android:textSize="15.0sp" />
 
             <ImageView
@@ -82,9 +82,7 @@
                 android:layout_alignTop="@+id/name"
                 android:layout_marginRight="15dp"
                 android:src="@drawable/red_yuan"
-                android:visibility="gone"
-                 />
-
+                android:visibility="gone" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -120,15 +118,6 @@
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
             android:background="#aaaaaa" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="0.50dp"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="#aaaaaa" />
-
     </RelativeLayout>
 
 </RelativeLayout>

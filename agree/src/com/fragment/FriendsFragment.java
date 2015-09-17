@@ -44,9 +44,6 @@ import com.biju.Interface.readFriendListenner;
 import com.biju.R;
 import com.biju.function.AddFriends2Activity;
 import com.biju.function.FriendsDataActivity;
-import com.easemob.EMCallBack;
-import com.easemob.chat.EMChatManager;
-import com.easemob.chat.EMGroupManager;
 import com.example.huanxin.ChatActivity;
 import com.example.testleabcloud.ChatActivityLean;
 import com.github.volley_examples.utils.GsonUtils;
@@ -99,8 +96,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			initUI();
 //			LoginHuanXin();
 			initInterface();
-			mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout
-					.findViewById(R.id.friends_swipe_refresh);
+			ReadUserAllFriends();
+			mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.friends_swipe_refresh);
 			mFriends_swipe_refresh.setOnRefreshListener(this);
 
 			// 顶部刷新的样式
@@ -149,6 +146,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		ChatManager chatManager = ChatManager.getInstance();
 		chatManager.setupManagerWithUserId(String.valueOf(SD_pk_user));
 		chatManager.openClient(new AVIMClientCallback() {
+
 
 
 			@Override

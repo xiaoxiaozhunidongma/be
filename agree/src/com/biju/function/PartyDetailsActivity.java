@@ -203,17 +203,39 @@ public class PartyDetailsActivity extends Activity implements
 		Log.e("PartyDetailsActivity", "在onCreate()==========");
 	}
 	
+//	@Override
+//	protected void onStart() {
+//		super.onStart();
+//		Log.e("PartyDetailsActivity", "在onStart()==========");
+//		initInterface();
+//		if(userAll)
+//		{
+//			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Partyfragmnet, 0);
+//			pk_party_user=PartyDetails_sp.getInt(IConstant.Partyfragmnet_Pk_party_user, 0);
+//			pk_party=PartyDetails_sp.getString(IConstant.Partyfragmnet_Pk_party, "");
+//			fk_group=PartyDetails_sp.getInt(IConstant.Partyfragmnet_fk_group, 0);
+//			Log.e("PartyDetailsActivity", "进入了所有的=========="+fk_group+"      "+pk_party+"   "+pk_party_user);
+//		}else
+//		{
+//			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Schedule, 0);
+//			pk_party_user=PartyDetails_sp.getInt(IConstant.Pk_party_user, 0);
+//			pk_party=PartyDetails_sp.getString(IConstant.Pk_party, "");
+//			fk_group=PartyDetails_sp.getInt(IConstant.fk_group, 0);
+//		}
+//	}
+	
 	@Override
-	protected void onStart() {
-		super.onStart();
-		Log.e("PartyDetailsActivity", "在onStart()==========");
+	protected void onRestart() {
+		super.onRestart();
+		Log.e("PartyDetailsActivity", "在onRestart()==========");
 		initInterface();
 		if(userAll)
 		{
 			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Partyfragmnet, 0);
-			pk_party_user=PartyDetails_sp.getInt(IConstant.Pk_party_user, 0);
-			pk_party=PartyDetails_sp.getString(IConstant.Pk_party, "");
-			fk_group=PartyDetails_sp.getInt(IConstant.fk_group, 0);
+			pk_party_user=PartyDetails_sp.getInt(IConstant.Partyfragmnet_Pk_party_user, 0);
+			pk_party=PartyDetails_sp.getString(IConstant.Partyfragmnet_Pk_party, "");
+			fk_group=PartyDetails_sp.getInt(IConstant.Partyfragmnet_fk_group, 0);
+			Log.e("PartyDetailsActivity", "进入了所有的=========="+fk_group+"      "+pk_party+"   "+pk_party_user);
 		}else
 		{
 			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Schedule, 0);
@@ -450,6 +472,7 @@ public class PartyDetailsActivity extends Activity implements
 		mPartyDetails_apply = (TextView) findViewById(R.id.PartyDetails_apply);// 报名支付金额
 
 		edit_show = new EditText(this);
+		edit_show.setFocusable(false);
 		findViewById(R.id.PartyDetails_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.PartyDetails_back).setOnClickListener(this);
 		findViewById(R.id.PartyDetails_more_layout).setOnClickListener(this);// 设置
@@ -590,6 +613,7 @@ public class PartyDetailsActivity extends Activity implements
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra(IConstant.CommentsList, 0);
 		intent.putExtra(IConstant.Not_Say, pk_party);
+		intent.putExtra(IConstant.All_fk_group, fk_group);
 		startActivity(intent);
 	}
 
@@ -598,6 +622,7 @@ public class PartyDetailsActivity extends Activity implements
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra(IConstant.CommentsList, 1);
 		intent.putExtra(IConstant.ParTake, pk_party);
+		intent.putExtra(IConstant.All_fk_group, fk_group);
 		startActivity(intent);
 
 	}

@@ -10,20 +10,23 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.R;
-import com.biju.APP.MyApplication;
-import com.biju.wxapi.WXEntryActivity;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class LoginJumpActivity extends Activity implements OnClickListener{
 
 	private TextView mLoginJump_phone;
 	private TextView mLoginJump_weixin;
 	private int registered;
-
+	
+	 public static IWXAPI api;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -80,23 +83,50 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 	private void LoginJump_weixin() {
 		if(1==registered)
 		{
+			if(api==null)
+			{
+				api = WXAPIFactory.createWXAPI(this, "wx2ffba147560de2ff", false);
+			}
+			
+			if (!api.isWXAppInstalled()) {
+	            //提醒用户没有按照微信
+				Toast.makeText(LoginJumpActivity.this, "还没有安装微信,请先安装微信!", Toast.LENGTH_SHORT).show();
+	            return;
+	        }
+			
+			api.registerApp("wx2ffba147560de2ff");
+			
 			//跳转微信注册界面
 			final SendAuth.Req req = new SendAuth.Req();
 			req.scope = "snsapi_userinfo";
-			req.state = "wechat_sdk_demo_test";
-			MyApplication.api.sendReq(req);
+			req.state = "agree_weixin_login";
+			api.sendReq(req);
 			
 			SdPkUser.setWeixinRegistered(true);
 			
 		}else
 		{
 			Log.e("LoginJumpActivity", "有进入点击微信的按钮");
+			if(api==null)
+			{
+				api = WXAPIFactory.createWXAPI(this, "wx2ffba147560de2ff", false);
+				Log.e("LoginJumpActivity", "有进入点击微信的按钮1111111111");
+			}
+			
+			if (!api.isWXAppInstalled()) {
+				Log.e("LoginJumpActivity", "有进入点击微信的按钮2222222222222");
+	            //提醒用户没有按照微信
+				Toast.makeText(LoginJumpActivity.this, "还没有安装微信,请先安装微信!", Toast.LENGTH_SHORT).show();
+	            return;
+	        }
+			
+			api.registerApp("wx2ffba147560de2ff");
 			//跳转微信登录界面
 			final SendAuth.Req req = new SendAuth.Req();
 			req.scope = "snsapi_userinfo";
-			req.state = "wechat_sdk_demo_test";
-			MyApplication.api.sendReq(req);
-			
+			req.state = "agree_weixin_login";
+			api.sendReq(req);
+//			Log.e("LoginJumpActivity", "这时候的返回值sendReq========"+sendReq);
 			SdPkUser.setGetweixinBinding(false);
 		}
 	}

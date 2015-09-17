@@ -12,7 +12,6 @@ import android.util.Log;
 import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
-import com.BJ.javabean.User;
 import com.BJ.photo.Res;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -33,6 +32,7 @@ import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class MyApplication extends Application {
 
+	private MyApplication myapp;
 	private static String regId;
 
 	public static String getRegId() {
@@ -43,11 +43,9 @@ public class MyApplication extends Application {
 		MyApplication.regId = regId;
 	}
 
-	public static IWXAPI api;
 
 	@Override
 	public void onCreate() {
-		// TODO Auto-generated method stub
 		super.onCreate();
 		// leanchat
 		 AVOSCloud.initialize(this,"n5wu1wotc8hhyu6x87hktwzfzd2o3ptvpe6cvhkwnwl50a0f","at9f7qy4fp02ajzzmem1ybnp8lehjb27plh902h76lw562le");
@@ -76,14 +74,12 @@ public class MyApplication extends Application {
 		      }
 		    });
 		
+		// 初始化数据库
+//		ActiveAndroid.initialize(this);
+
 		Res.init(this);// 初始化RES
 
-		// 注册微信
-		api = WXAPIFactory.createWXAPI(this, "wx9be30a70fcb480ae", true);
-		api.registerApp("wx9be30a70fcb480ae");
-
 		// 初始化imageloader
-
 		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
 				.cacheInMemory(false).imageScaleType(ImageScaleType.EXACTLY)
 				.cacheOnDisk(true).build();
@@ -96,8 +92,8 @@ public class MyApplication extends Application {
 				.denyCacheImageMultipleSizesInMemory()
 				// 强制不能存重复的图片
 				// .memoryCache(new WeakMemoryCache()) //设置。。。
-				
-//				.threadPriority(Thread.NORM_PRIORITY - 2)
+
+				// .threadPriority(Thread.NORM_PRIORITY - 2)
 				.diskCacheFileNameGenerator(new Md5FileNameGenerator())
 				.tasksProcessingOrder(QueueProcessingType.LIFO)
 				// .memoryCache(new LruMemoryCache((int) (6 * 1024 * 1024)))
@@ -122,26 +118,26 @@ public class MyApplication extends Application {
 		Log.e("MyApplication", "得到的ID===================" + regId);
 
 		// 环信
-		applicationContext = this;
-		instance = this;
-
-		/**
-		 * this function will initialize the HuanXin SDK
-		 * 
-		 * @return boolean true if caller can continue to call HuanXin related
-		 *         APIs after calling onInit, otherwise false.
-		 * 
-		 *         环信初始化SDK帮助函数
-		 *         返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
-		 * 
-		 *         for example: 例子：
-		 * 
-		 *         public class DemoHXSDKHelper extends HXSDKHelper
-		 * 
-		 *         HXHelper = new DemoHXSDKHelper();
-		 *         if(HXHelper.onInit(context)){ // do HuanXin related work }
-		 */
-		hxSDKHelper.onInit(applicationContext);
+//		applicationContext = this;
+//		instance = this;
+//
+//		/**
+//		 * this function will initialize the HuanXin SDK
+//		 * 
+//		 * @return boolean true if caller can continue to call HuanXin related
+//		 *         APIs after calling onInit, otherwise false.
+//		 * 
+//		 *         环信初始化SDK帮助函数
+//		 *         返回true如果正确初始化，否则false，如果返回为false，请在后续的调用中不要调用任何和环信相关的代码
+//		 * 
+//		 *         for example: 例子：
+//		 * 
+//		 *         public class DemoHXSDKHelper extends HXSDKHelper
+//		 * 
+//		 *         HXHelper = new DemoHXSDKHelper();
+//		 *         if(HXHelper.onInit(context)){ // do HuanXin related work }
+//		 */
+//		hxSDKHelper.onInit(applicationContext);
 
 	}
 

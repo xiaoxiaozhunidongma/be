@@ -180,8 +180,6 @@
     <string name="title_activity_add_new_party">AddNewPartyActivity</string>
     <string name="title_activity_add_friends2">AddFriends2Activity</string>
     <string name="title_activity_contact_search">ContactSearchActivity</string>
-    
-    
     <string name="chat_base_list_view_listEmptyHint">无数据</string>
     <string name="chat_base_list_view_noMore">已无更多</string>
     <string name="chat_utils_tips">提示</string>
@@ -227,5 +225,41 @@
     <string name="text_ack_msg">Read</string>
     <string name="text_delivered_msg">Delivered</string>
     <string name="title_activity_photo_view">PhotoViewActivity</string>
+    <string name="title_activity_team_setting2">TeamSetting2Activity</string>
+
+    <!-- home界面 -->
+    <string name="home_title_text">小组</string>
+    <string name="home_title_right_text">新建</string>
+    <string name="home_tab_text">小组</string>
+
+    <!-- party界面 -->
+    <string name="party_title_text">日程</string>
+    <string name="party_title_right_text">新建</string>
+    <string name="party_prompt">你还没有参与过日程哦！</string>
+    <!-- 好友界面 -->
+    <string name="friends_title_text">好友</string>
+    <string name="friends_title_right_text">添加好友</string>
+    <string name="friends_prompt">你还没有添加任何的好友！</string>
+    <!-- 设置界面 -->
+    <string name="setting_title_text">设置</string>
+    <!-- Group中每个小组界面 -->
+    <string name="group_title_text">我们自己</string>
+    <string name="group_title_left_text">返回</string>
+    <string name="group_title_right_text">成员</string>
+    <!-- Group中第二级标题 -->
+    <string name="group_second_text_left">聊天</string>
+    <string name="group_second_text_center">日程</string>
+    <string name="group_second_text_right">相册</string>
+    <!-- 聚会详情界面 -->
+    <string name="partydetails_title_text">聚会详情</string>
+    <string name="partydetails_title_right">更多</string>
+    <string name="partydetails_title_left">返回</string>
+    <!-- 小组设置界面 -->
+    <string name="setting2_title_text">社团设置</string>
+    <string name="setting2_title_right">保存</string>
+    <string name="setting2_title_left">返回</string>
+    <!-- 名称设置界面 -->
+    <string name="nickname_title_right">完成</string>
+    <string name="nickname_title_left">返回</string>
 
 </resources>

@@ -60,19 +60,18 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private TextView mCommentslist_not_say_number;
 	private TextView mCommentslist_partake_list_prompt;
 	private TextView mCommentslist_not_say_prompt;
-	private Integer pk_group;
 	private ArrayList<Group_ReadAllUser> commentslist = new ArrayList<Group_ReadAllUser>();
 	private int not_sayNum;
 	private ListView mCommentslist_not_say_listview;
 	private boolean isNotsay;
 	private MyNotsayAdapter notsayAdapter;
+	private Integer fk_group;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_comments_list);
-		pk_group = GroupActivity.getPk_group();
 		initUI();
 		initInterface();
 		initData();
@@ -80,7 +79,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 
 	private void returndata() {
 		Group readAllPerRelation_group = new Group();
-		readAllPerRelation_group.setPk_group(pk_group);
+		readAllPerRelation_group.setPk_group(fk_group);
 		mCommentInterface.readAllPerRelation(CommentsListActivity.this,readAllPerRelation_group);
 	}
 
@@ -188,6 +187,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private void initData() {
 		Intent intent = getIntent();
 		commentsList_msg = intent.getIntExtra(IConstant.CommentsList, 0);
+		fk_group = intent.getIntExtra(IConstant.All_fk_group, 0);
 		switch (commentsList_msg) {
 		case 0:
 			isNotsay = true;

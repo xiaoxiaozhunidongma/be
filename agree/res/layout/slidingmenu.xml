@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/menu_frame"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#88000000" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentRight="true"
+        android:layout_centerVertical="true"
+        android:layout_marginLeft="100.0dp" >
+
+        <RelativeLayout
+            android:id="@+id/SlidingMenu_Team_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="#efefef" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginTop="25.0dp"
+                android:text="小组"
+                android:textColor="#808080"
+                android:textSize="15.0dp" />
+
+            <TextView
+                android:id="@+id/textView6"
+                android:layout_width="match_parent"
+                android:layout_height="0.50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="#aaaaaa" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="100.0dp"
+            android:layout_below="@+id/SlidingMenu_Team_title_layout"
+            android:layout_centerHorizontal="true"
+            android:background="#ffffff" >
+
+            <RelativeLayout
+                android:id="@+id/SlidingMenu_Team_Setting"
+                android:layout_width="match_parent"
+                android:layout_height="50.0dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:background="@drawable/setting_click_selector" >
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:text="小组设置"
+                    android:textColor="#000000"
+                    android:textSize="15.0sp" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:background="#aaaaaa" />
+
+                <ImageView
+                    android:id="@+id/Setting_next_1"
+                    android:layout_width="20.0dp"
+                    android:layout_height="20.0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15dp"
+                    android:contentDescription="@string/app_name"
+                    android:src="@drawable/jiantou" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/SlidingMenu_requestcode"
+                android:layout_width="match_parent"
+                android:layout_height="50.0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                 >
+
+                <TextView
+                    android:id="@+id/SlidingMenu_requestcode_code"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:text="生成小组邀请码"
+                    android:textColor="#000000"
+                    android:textSize="15.0sp" />
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_alignParentBottom="true"
+                    android:background="#aaaaaa" />
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/SlidingMenu_member_title_layout"
+            android:layout_width="match_parent"
+            android:layout_height="50.0dp"
+            android:layout_below="@+id/relativeLayout2"
+            android:layout_centerHorizontal="true"
+            android:background="#efefef" >
+
+            <TextView
+                android:id="@+id/textView5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginTop="25.0dp"
+                android:text="成员"
+                android:textColor="#808080"
+                android:textSize="15.0dp" />
+
+            <TextView
+                android:id="@+id/textView8"
+                android:layout_width="match_parent"
+                android:layout_height="0.50dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:background="#aaaaaa" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/SlidingMenu_member_title_layout"
+            android:layout_centerHorizontal="true"
+            android:background="#ffffff" >
+
+            <ListView
+                android:id="@+id/SlidingMenu_member_listView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:divider="@null" >
+            </ListView>
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

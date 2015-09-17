@@ -37,8 +37,9 @@ import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
 import com.fragment.SettingFragment;
 
-public class MainActivity extends FragmentActivity implements OnTouchListener,
-		OnGestureListener {
+public class MainActivity extends FragmentActivity  {
+	
+	//滑动时需要继承的implements OnTouchListener,OnGestureListener
 	private FragmentTabHost mTabhost;
 	private int tab_imagelist[] = new int[] { R.drawable.tab_home_selector,
 			R.drawable.tab_party_selector, R.drawable.tab_friends_selector,
@@ -46,11 +47,11 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 
 	private String mFilePath;
 
-	@SuppressWarnings("unused")
-	private GestureDetector mGestureDetector;
-	private int verticalMinDistance = 180;
-	private int minVelocity = 0;
-	private int currentTab;
+//	@SuppressWarnings("unused")//滑动
+//	private GestureDetector mGestureDetector;
+//	private int verticalMinDistance = 180;
+//	private int minVelocity = 0;
+//	private int currentTab;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +65,7 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 		}
 
 		initUI();// 初始化Tabhost
-		initGesture();
+//		initGesture();//滑动
 	}
 
 	private void initUI() {
@@ -74,8 +75,8 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 		AddTab("2", "聚会", 1, PartyFragment.class);
 		AddTab("3", "好友", 2, FriendsFragment.class);
 		AddTab("4", "我", 3, SettingFragment.class);
-		currentTab = mTabhost.getCurrentTab();
-		Log.e("MainActivity", "当前的currentTab============" + currentTab);
+//		currentTab = mTabhost.getCurrentTab();//滑动
+//		Log.e("MainActivity", "当前的currentTab============" + currentTab);
 	}
 
 	private void AddTab(String tag, final String title, final int i, Class cls) {
@@ -84,35 +85,35 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 		ImageView tab_image = (ImageView) view.findViewById(R.id.tab_image);
 		TextView tab_text = (TextView) view.findViewById(R.id.tab_name);
 		tab_text.setText(title);
-		tab_text.setTextSize(15);
+//		tab_text.setTextSize(15);
 		tab_image.setImageResource(tab_imagelist[i]);
 		mTabhost.addTab(tabSpec.setIndicator(view), cls, null);
-		//tabhost的监听
-		mTabhost.setOnTabChangedListener(new OnTabChangeListener() {
-			
-			@Override
-			public void onTabChanged(String tabId) {
-				Log.e("MainActivity", "当前的tabId============" + tabId);
-				int TabId=Integer.valueOf(tabId);
-				switch (TabId) {
-				case 1:
-					currentTab=0;
-					break;
-				case 2:
-					currentTab=1;
-					break;
-				case 3:
-					currentTab=2;
-					break;
-				case 4:
-					currentTab=3;
-					break;
-
-				default:
-					break;
-				}
-			}
-		});
+		//tabhost的监听滑动的监听
+//		mTabhost.setOnTabChangedListener(new OnTabChangeListener() {
+//			
+//			@Override
+//			public void onTabChanged(String tabId) {
+//				Log.e("MainActivity", "当前的tabId============" + tabId);
+//				int TabId=Integer.valueOf(tabId);
+//				switch (TabId) {
+//				case 1:
+//					currentTab=0;
+//					break;
+//				case 2:
+//					currentTab=1;
+//					break;
+//				case 3:
+//					currentTab=2;
+//					break;
+//				case 4:
+//					currentTab=3;
+//					break;
+//
+//				default:
+//					break;
+//				}
+//			}
+//		});
 	}
 
 	@Override
@@ -158,7 +159,8 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 		Editor mapeditor=map_sp.edit();
 		mapeditor.putBoolean(IConstant.IsMapChoose, false);
 		mapeditor.commit();
-		
+		//有对小组进行修改过后传false
+		SdPkUser.setRefreshTeam(false);
 	}
 
 	@Override
@@ -204,112 +206,112 @@ public class MainActivity extends FragmentActivity implements OnTouchListener,
 	}
 
 	// 滑动过程
-	@SuppressWarnings("deprecation")
-	private void initGesture() {
-		mGestureDetector = new GestureDetector((OnGestureListener) this);
-	}
-
-	@Override
-	public boolean onDown(MotionEvent e) {
-		return false;
-	}
-
-	@Override
-	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
-			float velocityY) {
-		if (e1.getX() - e2.getX() > verticalMinDistance&& Math.abs(velocityX) > minVelocity) {
-			// 切换Activity
-			if(currentTab<3)
-			{
-				currentTab++;
-				int tab = currentTab % 4;
-				Log.e("MainActivity", "当前的currentTab++============" + currentTab);
-				Log.e("MainActivity", "当前的tab++=============" + tab);
-				switch (tab) {
-				case 0:
-					mTabhost.setCurrentTab(0);
-					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
-					break;
-				case 1:
-					mTabhost.setCurrentTab(1);
-					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
-					break;
-				case 2:
-					mTabhost.setCurrentTab(2);
-					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
-					break;
-				case 3:
-					mTabhost.setCurrentTab(3);
-					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
-					break;
-					
-				default:
-					break;
-				}
-			}else
-			{
-				currentTab=3;
-			}
-		} else if (e2.getX() - e1.getX() > verticalMinDistance&& Math.abs(velocityX) > minVelocity) {
-			if(currentTab>0)
-			{
-				currentTab--;
-				int tab = currentTab % 4;
-				Log.e("MainActivity", "当前的currentTab--============" + currentTab);
-				Log.e("MainActivity", "当前的tab--=============" + tab);
-				switch (tab) {
-				case 0:
-					mTabhost.setCurrentTab(0);
-					break;
-				case 1:
-					mTabhost.setCurrentTab(1);
-					break;
-				case 2:
-					mTabhost.setCurrentTab(2);
-					break;
-				case 3:
-					mTabhost.setCurrentTab(3);
-					break;
-					
-				default:
-					break;
-				}
-			}else
-			{
-				currentTab=0;
-			}
-		}
-		return false;
-	}
-
-	@Override
-	public void onLongPress(MotionEvent e) {
-	}
-
-	@Override
-	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
-			float distanceY) {
-		return false;
-	}
-
-	@Override
-	public void onShowPress(MotionEvent e) {
-	}
-
-	@Override
-	public boolean onSingleTapUp(MotionEvent e) {
-		return false;
-	}
-
-	@Override
-	public boolean onTouch(View v, MotionEvent event) {
-		return mGestureDetector.onTouchEvent(event);
-	}
-
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent ev) {
-		mGestureDetector.onTouchEvent(ev);
-		return super.dispatchTouchEvent(ev);
-	}
+//	@SuppressWarnings("deprecation")
+//	private void initGesture() {
+//		mGestureDetector = new GestureDetector((OnGestureListener) this);
+//	}
+//
+//	@Override
+//	public boolean onDown(MotionEvent e) {
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,
+//			float velocityY) {
+//		if (e1.getX() - e2.getX() > verticalMinDistance&& Math.abs(velocityX) > minVelocity) {
+//			// 切换Activity
+//			if(currentTab<3)
+//			{
+//				currentTab++;
+//				int tab = currentTab % 4;
+//				Log.e("MainActivity", "当前的currentTab++============" + currentTab);
+//				Log.e("MainActivity", "当前的tab++=============" + tab);
+//				switch (tab) {
+//				case 0:
+//					mTabhost.setCurrentTab(0);
+//					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
+//					break;
+//				case 1:
+//					mTabhost.setCurrentTab(1);
+//					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
+//					break;
+//				case 2:
+//					mTabhost.setCurrentTab(2);
+//					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
+//					break;
+//				case 3:
+//					mTabhost.setCurrentTab(3);
+//					overridePendingTransition(R.anim.tab_left_in_item, R.anim.tab_left_out_item);
+//					break;
+//					
+//				default:
+//					break;
+//				}
+//			}else
+//			{
+//				currentTab=3;
+//			}
+//		} else if (e2.getX() - e1.getX() > verticalMinDistance&& Math.abs(velocityX) > minVelocity) {
+//			if(currentTab>0)
+//			{
+//				currentTab--;
+//				int tab = currentTab % 4;
+//				Log.e("MainActivity", "当前的currentTab--============" + currentTab);
+//				Log.e("MainActivity", "当前的tab--=============" + tab);
+//				switch (tab) {
+//				case 0:
+//					mTabhost.setCurrentTab(0);
+//					break;
+//				case 1:
+//					mTabhost.setCurrentTab(1);
+//					break;
+//				case 2:
+//					mTabhost.setCurrentTab(2);
+//					break;
+//				case 3:
+//					mTabhost.setCurrentTab(3);
+//					break;
+//					
+//				default:
+//					break;
+//				}
+//			}else
+//			{
+//				currentTab=0;
+//			}
+//		}
+//		return false;
+//	}
+//
+//	@Override
+//	public void onLongPress(MotionEvent e) {
+//	}
+//
+//	@Override
+//	public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX,
+//			float distanceY) {
+//		return false;
+//	}
+//
+//	@Override
+//	public void onShowPress(MotionEvent e) {
+//	}
+//
+//	@Override
+//	public boolean onSingleTapUp(MotionEvent e) {
+//		return false;
+//	}
+//
+//	@Override
+//	public boolean onTouch(View v, MotionEvent event) {
+//		return mGestureDetector.onTouchEvent(event);
+//	}
+//
+//	@Override
+//	public boolean dispatchTouchEvent(MotionEvent ev) {
+//		mGestureDetector.onTouchEvent(ev);
+//		return super.dispatchTouchEvent(ev);
+//	}
 
 }

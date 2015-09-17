@@ -6,14 +6,14 @@
     <RelativeLayout
         android:id="@+id/Group_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="#f0f0f0" >
+        android:background="@drawable/title_background" >
 
         <RelativeLayout
             android:id="@+id/group_back_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
@@ -24,14 +24,14 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="返回"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/group_title_left_text"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/group_setting_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_right_width"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >
@@ -42,20 +42,19 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="设置"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/group_title_right_text"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/group_setting_title"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="我们自己"
-            android:textColor="#000000"
-            android:textSize="18.0sp" />
+            android:text="@string/group_title_text"
+            android:textSize="@dimen/title_size" />
 
         <TextView
             android:id="@+id/textView4"
