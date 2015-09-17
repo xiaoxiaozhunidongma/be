@@ -41,7 +41,7 @@ public class ImageLoaderUtils4Photos {
 				.showImageOnLoading(R.drawable.plugin_camera_no_pictures)
 				.showImageForEmptyUri(R.drawable.plugin_camera_no_pictures)
 				.showImageOnFail(R.drawable.ic_error)
-				.cacheInMemory(false)//是否缓存在内存中
+				.cacheInMemory(true)//是否缓存在内存中
 				.displayer(new RoundedBitmapDisplayer(50))//设置圆角
 				.cacheOnDisk(true)//是否缓存在SD卡中
 				.considerExifParams(true)

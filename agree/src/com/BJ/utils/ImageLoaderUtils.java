@@ -39,7 +39,7 @@ public class ImageLoaderUtils {
 				.showImageOnLoading(R.drawable.login_1)
 				.showImageForEmptyUri(R.drawable.login_1)
 				.showImageOnFail(R.drawable.ic_error)
-				.cacheInMemory(false)
+				.cacheInMemory(true)
 				.displayer(new CircleBitmapDisplayer())//т╡пн
 				.cacheOnDisk(true)
 				.considerExifParams(true)

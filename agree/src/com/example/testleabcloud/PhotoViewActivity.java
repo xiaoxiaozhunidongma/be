@@ -32,7 +32,7 @@ public class PhotoViewActivity extends Activity {
 		}else{
 				//如果SD为空，网络不空
 //				photoView.setImageResource(R.drawable.ic_error);
-		ImageLoaderUtils.getInstance().LoadImage(this, FileUrl, photoView);
+		ImageLoaderUtils.getInstance().LoadImageSquare(this, FileUrl, photoView);
 		}
 	}
 
