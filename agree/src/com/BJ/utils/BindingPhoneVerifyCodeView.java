@@ -23,7 +23,7 @@ import com.biju.function.RequestCode3Activity;
 import com.biju.function.RequestCodeActivity;
 
 @SuppressLint("NewApi")
-public class VerifyCodeView extends View {
+public class BindingPhoneVerifyCodeView extends View {
 
 	StringBuilder verifyCodeBuilder;
 	// 一个字符或横线占用的宽度
@@ -37,7 +37,7 @@ public class VerifyCodeView extends View {
 	float textBaseY;
 	private String code;
 
-	public VerifyCodeView(Context context, AttributeSet attrs) {
+	public BindingPhoneVerifyCodeView(Context context, AttributeSet attrs) {
 		super(context, attrs);
 		// 能获取焦点才能弹出软键盘
 		setFocusableInTouchMode(true);
@@ -198,17 +198,7 @@ public class VerifyCodeView extends View {
 	public String getVerifyCodeStr() {
 		if (verifyCodeBuilder.toString() != null) {
 			code = verifyCodeBuilder.toString();
-			if(code.length()==4)
-			{
-				boolean requestcode=SdPkUser.requestcode;//只有从邀请码过来时才进入
-				Log.e("VerifyCodeView","获取requestcode=========" + requestcode);
-				if(requestcode)
-				{
-					Log.e("VerifyCodeView","获取输入的校验码=========" + verifyCodeBuilder.toString());
-					SdPkUser.setGetCode(code);
-					RequestCodeActivity.interActivity.startActivity();
-				}
-			}
+			SdPkUser.setBindingphonecode(code);
 		}
 		return verifyCodeBuilder.toString();
 	}

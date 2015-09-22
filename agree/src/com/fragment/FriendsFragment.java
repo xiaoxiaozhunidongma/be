@@ -333,7 +333,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			holder.ReadUserAllFriends_name.setText(allFriends.getNickname());
 			String avatar_path = allFriends.getAvatar_path();
 			String completeURL = beginStr + avatar_path + endStr;
-			ImageLoaderUtils.getInstance().LoadImage(getActivity(),
+			ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(),
 					completeURL, holder.ReadUserAllFriends_head);
 
 			holder.ReadUserAllFriends_head

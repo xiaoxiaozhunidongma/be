@@ -7,14 +7,14 @@
     <RelativeLayout
         android:id="@+id/newparty_title"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="#f0f0f0" >
+        android:background="@drawable/title_background" >
 
         <RelativeLayout
             android:id="@+id/newparty_back_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
@@ -25,9 +25,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="返回"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/teampraty_title_left"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
 
         <TextView
@@ -37,10 +37,8 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="80dp"
             android:layout_toRightOf="@+id/newparty_back_layout"
-            android:text="选择一个小组"
-            android:textSize="18.0sp"
-            android:textColor="#000000"
-             />
+            android:text="@string/teampraty_title_text"
+            android:textSize="@dimen/title_size" />
 
         <TextView
             android:id="@+id/textView3"
@@ -48,9 +46,7 @@
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-			android:background="#aaaaaa"            
-            />
-
+            android:background="#aaaaaa" />
     </RelativeLayout>
 
     <GridView

@@ -7,18 +7,17 @@
     <RelativeLayout
         android:id="@+id/Sex_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-         >
+        android:background="@drawable/title_background" >
 
         <RelativeLayout
             android:id="@+id/Set_back_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-             >
+            android:layout_centerVertical="true" >
 
             <TextView
                 android:id="@+id/Set_back"
@@ -26,20 +25,17 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="返回"
-                android:textSize="17.0dp"
-                android:textColor="#d3d3d3"
-                 />
-
+                android:text="@string/sex_title_left"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/Set_OK_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_right_width"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-             >
+            android:layout_centerVertical="true" >
 
             <TextView
                 android:id="@+id/Set_OK"
@@ -47,11 +43,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="完成"
-                android:textSize="17.0sp"
-                android:textColor="#d3d3d3"
-                 />
-
+                android:text="@string/sex_title_right"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
         </RelativeLayout>
 
         <TextView
@@ -60,9 +54,7 @@
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-            android:background="#aaaaaa"
-             />
-
+            android:background="#aaaaaa" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -86,7 +78,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20.0dp"
                 android:layout_marginTop="35.0dp"
-                android:text="请选择你的性别"
+                android:text="@string/sex_prompt"
                 android:textColor="#808080"
                 android:textSize="12.0sp" />
         </RelativeLayout>
@@ -103,8 +95,7 @@
                 android:layout_height="50.0dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:background="#ffffff"
-                 >
+                android:background="#ffffff" >
 
                 <TextView
                     android:id="@+id/textView5"
@@ -113,8 +104,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20.0dp"
-                    android:text="男"
-                    android:textColor="#000000"
+                    android:text="@string/sex_prompt_1"
                     android:textSize="15.0sp" />
 
                 <TextView
@@ -132,8 +122,7 @@
                 android:layout_height="50.0dp"
                 android:layout_below="@+id/Set_man"
                 android:layout_centerHorizontal="true"
-                android:background="#ffffff"
-				>
+                android:background="#ffffff" >
 
                 <TextView
                     android:id="@+id/textView7"
@@ -142,8 +131,7 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20.0dp"
-                    android:text="女"
-                    android:textColor="#000000"
+                    android:text="@string/sex_prompt_2"
                     android:textSize="15.0sp" />
 
                 <TextView
@@ -160,9 +148,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="50.0dp"
                 android:layout_below="@+id/Set_woman"
-                android:layout_centerHorizontal="true" 
-                android:background="#ffffff"
-                >
+                android:layout_centerHorizontal="true"
+                android:background="#ffffff" >
 
                 <TextView
                     android:id="@+id/textView9"
@@ -171,10 +158,8 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20.0dp"
-                    android:text="其他"
-                    android:textSize="15.0sp"
-                    android:textColor="#000000"
-                     />
+                    android:text="@string/sex_prompt_3"
+                    android:textSize="15.0sp" />
 
                 <TextView
                     android:id="@+id/textView10"
@@ -182,12 +167,9 @@
                     android:layout_height="0.50dp"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:background="#aaaaaa"
-                    />
-
+                    android:background="#aaaaaa" />
             </RelativeLayout>
         </RelativeLayout>
-
     </RelativeLayout>
 
 </RelativeLayout>

@@ -20,7 +20,7 @@
             android:background="@drawable/text_field"
             android:drawableLeft="@drawable/search"
             android:drawablePadding="4dp"
-            android:hint="请输入姓名"
+            android:hint="@string/contact_hint"
             android:paddingLeft="4dp"
             android:paddingRight="40dp"
             android:singleLine="true"
@@ -52,31 +52,8 @@
             android:dividerHeight="1.0dp"
             android:fadingEdge="none"
             android:scrollbars="none"
-            android:scrollingCache="false" 
-            android:visibility="gone"
-            />
-
-        <!--
-             <TextView
-            android:id="@+id/dialog"
-            android:layout_width="80.0dip"
-            android:layout_height="80.0dip"
-            android:layout_gravity="center"
-            android:background="@drawable/show_head_toast_bg"
-            android:gravity="center"
-            android:textColor="#ffffffff"
-            android:textSize="30.0dip"
-            android:visibility="invisible" />
-        -->
-
-
-        <!--
-             <com.xbc.utils.activity.SideBar
-            android:id="@+id/sidrbar"
-            android:layout_width="30.0dip"
-            android:layout_height="match_parent"
-            android:layout_gravity="right|center" />
-        -->
+            android:scrollingCache="false"
+            android:visibility="gone" />
     </FrameLayout>
 
 </LinearLayout>

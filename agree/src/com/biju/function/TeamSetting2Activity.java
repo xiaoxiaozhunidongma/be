@@ -113,8 +113,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 						startActivity(intent);
 					}
 				} else {
-					Teamupdateback teamupdateback = GsonUtils.parseJson(A,
-							Teamupdateback.class);
+					Teamupdateback teamupdateback = GsonUtils.parseJson(A,Teamupdateback.class);
 					int statusmsg = teamupdateback.getStatusMsg();
 					if (statusmsg == 1) {
 						Log.e("TeamSettingActivity", "更新完的返回结果" + A);

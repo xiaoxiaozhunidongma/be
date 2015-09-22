@@ -75,8 +75,7 @@
             android:id="@+id/PartyDetails_map_layout"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:layout_margin="5.0dp"
-             >
+            android:layout_margin="5.0dp" >
         </RelativeLayout>
 
         <RelativeLayout
@@ -99,7 +98,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:text="地址"
+                    android:text="@string/partydetails_partyaddress"
                     android:textSize="15.0sp" />
             </RelativeLayout>
 
@@ -116,7 +115,7 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
-                    android:text="聚会名称"
+                    android:text="@string/partydetails_partyname"
                     android:textColor="#00e3e3"
                     android:textSize="20.0sp" />
             </RelativeLayout>
@@ -136,7 +135,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5.0dp"
                     android:gravity="center"
-                    android:text="聚会时间"
+                    android:text="@string/partydetails_partytime"
                     android:textColor="#d3d3d3"
                     android:textSize="15.0sp" />
 
@@ -159,7 +158,7 @@
                         android:paddingLeft="15.0dp"
                         android:paddingRight="15.0dp"
                         android:paddingTop="5.0dp"
-                        android:text="预付款"
+                        android:text="@string/partydetails_partypayment"
                         android:textSize="12.0sp" />
                 </RelativeLayout>
             </RelativeLayout>
@@ -190,7 +189,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:text="参与"
+                            android:text="@string/partydetails_partake"
                             android:textColor="#d3d3d3"
                             android:textSize="17.0sp" />
                     </RelativeLayout>
@@ -207,7 +206,7 @@
                             android:layout_height="wrap_content"
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
-                            android:text="未表态"
+                            android:text="@string/partydetails_did_not_say"
                             android:textColor="#d3d3d3"
                             android:textSize="17.0sp" />
                     </RelativeLayout>
@@ -270,7 +269,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:text="组织者"
+                    android:text="@string/partydetails_party_organizer"
                     android:textColor="#000000"
                     android:textSize="15.0sp" />
             </RelativeLayout>
@@ -289,7 +288,7 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:text="点击参与人数,查看支付信息"
+                    android:text="@string/partydetails_prompt"
                     android:textColor="#d3d3d3"
                     android:textSize="13.0sp" />
             </RelativeLayout>
@@ -308,11 +307,10 @@
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:text="报名"
+                    android:text="@string/partydetails_apply"
                     android:textColor="#ffffff"
                     android:textSize="15.0sp" />
             </RelativeLayout>
-
         </RelativeLayout>
     </RelativeLayout>
 

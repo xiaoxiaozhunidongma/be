@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="50dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true" >
 
@@ -20,7 +20,7 @@
             android:background="#aaaaaa" />
 
         <RelativeLayout
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_right_width"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >
@@ -31,20 +31,17 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="导航"
-                android:textSize="17.0sp"
-                android:textColor="#d3d3d3"
-                 />
-
+                android:text="@string/bigmap_title_right"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/Bigmap_back_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-             >
+            android:layout_centerVertical="true" >
 
             <TextView
                 android:id="@+id/Bigmap_back"
@@ -52,13 +49,10 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="返回"
-                android:textSize="17.0sp"
-                android:textColor="#d3d3d3"
-                 />
-
+                android:text="@string/bigmap_title_left"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
-
     </RelativeLayout>
 
     <com.baidu.mapapi.map.MapView

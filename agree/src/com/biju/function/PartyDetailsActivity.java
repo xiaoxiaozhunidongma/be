@@ -20,6 +20,7 @@ import android.widget.RelativeLayout;
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_ReadAllUser;
@@ -115,6 +116,7 @@ public class PartyDetailsActivity extends Activity implements
 	private String pk_party;
 	private Integer fk_group;
 	private int not_sayNum;
+	private Integer current_relationship;
 
 	/**
 	 * 定位SDK监听函数
@@ -203,27 +205,6 @@ public class PartyDetailsActivity extends Activity implements
 		Log.e("PartyDetailsActivity", "在onCreate()==========");
 	}
 	
-//	@Override
-//	protected void onStart() {
-//		super.onStart();
-//		Log.e("PartyDetailsActivity", "在onStart()==========");
-//		initInterface();
-//		if(userAll)
-//		{
-//			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Partyfragmnet, 0);
-//			pk_party_user=PartyDetails_sp.getInt(IConstant.Partyfragmnet_Pk_party_user, 0);
-//			pk_party=PartyDetails_sp.getString(IConstant.Partyfragmnet_Pk_party, "");
-//			fk_group=PartyDetails_sp.getInt(IConstant.Partyfragmnet_fk_group, 0);
-//			Log.e("PartyDetailsActivity", "进入了所有的=========="+fk_group+"      "+pk_party+"   "+pk_party_user);
-//		}else
-//		{
-//			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Schedule, 0);
-//			pk_party_user=PartyDetails_sp.getInt(IConstant.Pk_party_user, 0);
-//			pk_party=PartyDetails_sp.getString(IConstant.Pk_party, "");
-//			fk_group=PartyDetails_sp.getInt(IConstant.fk_group, 0);
-//		}
-//	}
-	
 	@Override
 	protected void onRestart() {
 		super.onRestart();
@@ -299,6 +280,21 @@ public class PartyDetailsActivity extends Activity implements
 						default:
 							break;
 						}
+						
+						//查找当前用户的参与信息
+						Integer pk_user=relation.getPk_user();
+						if(String.valueOf(pk_user).equals(String.valueOf(sD_pk_user)))
+						{
+							current_relationship = relationList.get(i).getRelationship();
+							if(current_relationship==1)
+							{
+								mPartyDetails_apply.setText("已报名");
+							}else
+							{
+								mPartyDetails_apply.setText("未报名");
+							}
+							Log.e("PartyDetailsActivity","当前current_relationship==========" + current_relationship);
+						}
 					}
 					Log.e("PartyDetailsActivity", "当前partakeNum的数量"+ partakeNumList.size());
 					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"+ not_sayNum);
@@ -324,7 +320,6 @@ public class PartyDetailsActivity extends Activity implements
 						user.setPhone(String.valueOf(pk_user));
 						readpartyInterface.findUser(PartyDetailsActivity.this,user);
 					}
-
 				}
 			}
 
@@ -628,6 +623,34 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	private void PartyDetails_apply_layout() {
+		if(current_relationship==1)
+		{
+			final SweetAlertDialog sd = new SweetAlertDialog(PartyDetailsActivity.this,SweetAlertDialog.WARNING_TYPE);
+			sd.setTitleText("警告");
+			sd.setContentText("你确定要取消报名？");
+			sd.setCancelText("我再想想");
+			sd.setConfirmText("是的");
+			sd.showCancelButton(true);
+			sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+				@Override
+				public void onClick(SweetAlertDialog sDialog) {
+					sd.cancel();
+				}
+			}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+				@Override
+				public void onClick(SweetAlertDialog sDialog) {
+					sd.cancel();
+					Party_User party_user = new Party_User();
+					party_user.setPk_party_user(pk_party_user);
+					party_user.setRelationship(0);
+					party_user.setStatus(1);
+					party_user.setFk_party(pk_party);
+					party_user.setFk_user(sD_pk_user);
+					readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+				}
+			}).show();
+		}else
+		{
 			Party_User party_user = new Party_User();
 			party_user.setPk_party_user(pk_party_user);
 			Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222"+ pk_party_user);
@@ -636,6 +659,7 @@ public class PartyDetailsActivity extends Activity implements
 			party_user.setFk_party(pk_party);
 			party_user.setFk_user(sD_pk_user);
 			readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+		}
 
 //		Toast toast = Toast.makeText(getApplicationContext(), "已报名",Toast.LENGTH_SHORT);
 //		toast.setGravity(Gravity.CENTER, 0, 0);

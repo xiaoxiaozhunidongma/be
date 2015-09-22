@@ -5,15 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -27,29 +23,21 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
-import android.widget.ImageView;
-import android.widget.ProgressBar;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
-import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Newteamback;
 import com.BJ.javabean.PicSignBack;
-import com.BJ.javabean.RequestCodeback;
 import com.BJ.javabean.User;
 import com.BJ.utils.MyBimp;
-import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
-import com.BJ.utils.homeImageLoaderUtils;
-import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.createGroupListenner;
 import com.biju.Interface.getPicSignListenner;
-import com.biju.Interface.readUserGroupMsgListenner;
-import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.upload.UploadManager;
@@ -63,7 +51,7 @@ import com.tencent.upload.task.impl.PhotoUploadTask;
 public class NewteamActivity extends Activity implements OnClickListener {
 
 	private EditText mNewteam_name;
-	private ImageView mNewteam_head;
+	private ImageButton mNewteam_head;
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
@@ -72,23 +60,15 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	protected String mFilePath = null;
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
-	private TextView newteam_tv_head;
-	private ProgressBar newteam_progressBar;
+	private TextView mNewTeam_tv_head;
 	private Interface cregrouInter;
 	private String format1;
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
-	// 完整路径completeURL=beginStr+result.filepath+endStr;
-	private String completeURL = "";
-	private boolean read_requestcode2;
-	private Group readhomeuser;
-	private ArrayList<Group> readuesrlist = new ArrayList<Group>();
 
 	private String tmpFilePath;
 	private String newteam_name;
 	private String sDpath;
 	private Group group;
-	private Integer pk_group;
+	private Integer sD_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -101,29 +81,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 		initUI();
 
-		newteam_tv_head.setVisibility(View.VISIBLE);// 显示小组头像选择
-		mNewteam_head.setVisibility(View.GONE);
 		Interface();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
 		format1 = sdf.format(new Date());
-	}
-	
-	@Override
-	protected void onResume() {
-		SharedPreferences requestcode2_sp=getSharedPreferences(IConstant.IsRefresh, 0);
-		read_requestcode2=requestcode2_sp.getBoolean(IConstant.IsCode2, false);
-		if(read_requestcode2)
-		{
-			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
-			mNewteam_head.setVisibility(View.VISIBLE);
-			readhomeuser = SdPkUser.getgroup;
-			mNewteam_name.setText(readhomeuser.getName());
-			completeURL = beginStr + readhomeuser.getAvatar_path() + endStr;
-			PreferenceUtils.saveImageCache(NewteamActivity.this,completeURL);
-			homeImageLoaderUtils.getInstance().LoadImage(NewteamActivity.this, completeURL, mNewteam_head);
-			readUser();
-		}
-		super.onResume();
 	}
 
 	private void Interface() {
@@ -148,71 +108,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		});
 	}
 
-	private void readUser() {
-		ReadTeam(sD_pk_user);
-	}
-
-	private boolean isreaduser;
-	private Integer sD_pk_user;
-
-	private void ReadTeam(int pk_user) {
-		cregrouInter = Interface.getInstance();
-		User homeuser = new User();
-		homeuser.setPk_user(pk_user);
-		cregrouInter.readUserGroupMsg(NewteamActivity.this, homeuser);
-		cregrouInter.setPostListener(new readUserGroupMsgListenner() {
-
-			@Override
-			public void success(String A) {
-				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
-				int homeStatusMsg = homeback.getStatusMsg();
-				if (homeStatusMsg == 1) {
-					Log.e("NewteamActivity", "读取出的用户小组信息==========" + A);
-					List<Group> users = homeback.getReturnData();
-					if (users.size() > 0) {
-						for (int i = 0; i < users.size(); i++) {
-							Group readhomeuser_1 = users.get(i);
-							readuesrlist.add(readhomeuser_1);
-						}
-					}
-					for (int i = 0; i < readuesrlist.size(); i++) {
-						pk_group = readuesrlist.get(i).getPk_group();
-						if (String.valueOf(pk_group).equals(String.valueOf(readhomeuser.getPk_group()))) {
-							isreaduser = true;
-						}
-					}
-				}
-
-			}
-
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
-
-		// 读取用户小组信息使用邀请码添加后的监听
-		cregrouInter.setPostListener(new userJoin2gourpListenner() {
-
-			@Override
-			public void success(String A) {
-				RequestCodeback requestCodeback = GsonUtils.parseJson(A,
-						RequestCodeback.class);
-				Integer status = requestCodeback.getStatusMsg();
-				if (status == 1) {
-					Log.e("NewteamActivity", "读取用户小组信息使用邀请码添加后的===" + A);
-					SdPkUser.setRefreshTeam(true);
-					finish();
-				}
-			}
-
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
-	}
-
 	private void initUpload() {
 		// 注册签名
 		UploadManager.authorize(APPID, USERID, SIGN);
@@ -221,18 +116,15 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI() {
-		mNewteam_name = (EditText) findViewById(R.id.newteam_name);// 小组名称
-		mNewteam_head = (ImageView) findViewById(R.id.newteam_head);// 显示小组头像
-		newteam_tv_head = (TextView) findViewById(R.id.newteam_tv_head);
-		newteam_tv_head.setOnClickListener(this);// 选择小组头像
-		findViewById(R.id.newteam_requsetcode).setOnClickListener(this);// 小组邀请码
-		findViewById(R.id.newteam_back_layout).setOnClickListener(this);// 返回
-		findViewById(R.id.newteam_back).setOnClickListener(this);// 返回
-		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// 完成
-		findViewById(R.id.newteam_OK_layout).setOnClickListener(this);// 完成
-		newteam_progressBar = (ProgressBar) findViewById(R.id.newteam_progressBar);// 图片上传进度
-		newteam_progressBar.setMax(100);
-		findViewById(R.id.newteam_requsetcode).setOnClickListener(this);// 跳转至邀请码搜索界面
+		mNewteam_name = (EditText) findViewById(R.id.NewTeam_teamname);// 小组名称
+		mNewteam_head = (ImageButton) findViewById(R.id.NewTeam_head);// 显示小组头像
+		mNewteam_head.setOnClickListener(this);
+		mNewTeam_tv_head = (TextView) findViewById(R.id.NewTeam_tv_head);
+		mNewTeam_tv_head.setOnClickListener(this);// 选择小组头像
+		findViewById(R.id.NewTeam_back_layout).setOnClickListener(this);// 返回
+		findViewById(R.id.NewTeam_back).setOnClickListener(this);// 返回
+		findViewById(R.id.NewTeam_OK_layout).setOnClickListener(this);// 完成
+		findViewById(R.id.NewTeam_OK_layout).setOnClickListener(this);// 完成
 	}
 
 	@Override
@@ -245,89 +137,64 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.newteam_back_layout:
-		case R.id.newteam_back:
-			newteam_back();
+		case R.id.NewTeam_back_layout:
+		case R.id.NewTeam_back:
+			NewTeam_back();
 			break;
-		case R.id.newteam_OK_layout:
-		case R.id.newteam_OK:
-			newteam_OK();
+		case R.id.NewTeam_OK_layout:
+		case R.id.NewTeam_OK:
+			NewTeam_OK();
 			break;
-		case R.id.newteam_tv_head:
-			newteam_tv_head();
-			break;
-		case R.id.newteam_requsetcode:
-			newteam_requsetcode();
-			break;
+		case R.id.NewTeam_head:
+		case R.id.NewTeam_tv_head:
+			NewTeam_head();
 		default:
 			break;
 		}
 	}
 
-	private void newteam_requsetcode() {
-		// 跳转至邀请码搜索界面
-		Intent intent = new Intent(NewteamActivity.this,
-				RequestCode2Activity.class);
-		startActivity(intent);
-	}
-
-	private void newteam_tv_head() {
+	private void NewTeam_head() {
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
 		startActivityForResult(getAlbum, IMAGE_CODE);
 	}
 
-	private void newteam_OK() {
-		if (read_requestcode2) {
-			if (!isreaduser) {
-				Integer fk_group = readhomeuser.getPk_group();
-				Group_User group_User = new Group_User();
-				group_User.setFk_group(fk_group);
-				group_User.setFk_user(sD_pk_user);
-				group_User.setRole(2);
-				group_User.setStatus(1);
-				cregrouInter.userJoin2gourp(NewteamActivity.this, group_User);
-			} else {
-				Toast.makeText(NewteamActivity.this, "已经加入过该小组",Toast.LENGTH_SHORT).show();
+	private void NewTeam_OK() {
+		newteam_name = mNewteam_name.getText().toString().trim();
+		group = new Group();
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
+		String format2 = sdf.format(new Date());
+
+		group.setSetup_time(format1);
+		group.setLast_post_message("asdfsd");
+		group.setStatus(1);
+		group.setName(newteam_name);
+		group.setLast_post_time(format2);
+
+		Interface interface1 = Interface.getInstance();
+		interface1.getPicSign(this, new User());
+		interface1.setPostListener(new getPicSignListenner() {
+
+			@Override
+			public void success(String A) {
+				PicSignBack picSignBack = GsonUtils.parseJson(A,PicSignBack.class);
+				String returnData = picSignBack.getReturnData();
+				SIGN = returnData;
+				initUpload();
+				upload(group);
+
 			}
-		} else {
-			newteam_name = mNewteam_name.getText().toString().trim();
-			group = new Group();
-			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
-			String format2 = sdf.format(new Date());
 
-			group.setSetup_time(format1);
-			group.setLast_post_message("asdfsd");
-			group.setStatus(1);
-			group.setName(newteam_name);
-			group.setLast_post_time(format2);
+			@Override
+			public void defail(Object B) {
 
-			Interface interface1 = Interface.getInstance();
-			interface1.getPicSign(this, new User());
-			interface1.setPostListener(new getPicSignListenner() {
-
-				@Override
-				public void success(String A) {
-					PicSignBack picSignBack = GsonUtils.parseJson(A,PicSignBack.class);
-					String returnData = picSignBack.getReturnData();
-					SIGN = returnData;
-					initUpload();
-					upload(group);
-
-				}
-
-				@Override
-				public void defail(Object B) {
-
-				}
-			});
-		}
+			}
+		});
 	}
 
 	private void upload(final Group group) {
-		tmpFilePath = Environment.getExternalStorageDirectory()
-				.getAbsolutePath() + "/compress.tmp";
+		tmpFilePath = Environment.getExternalStorageDirectory().getAbsolutePath() + "/compress.tmp";
 		UploadTask task = new PhotoUploadTask(mFilePath,
 				new IUploadTaskListener() {
 
@@ -337,8 +204,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						Log.e("上传结果", "upload succeed: " + result.fileId);
 						// 上传完成后注册
 						Log.e("图片路径", "result.url" + result.url);
-//						 上传完成后删除SD中图片
-//						deleteMybitmap(sDpath);
+						// 上传完成后删除SD中图片
+						// deleteMybitmap(sDpath);
 						group.setAvatar_path(result.fileId);
 						// 创建CreatGroup
 						Group_User group_User = new Group_User();
@@ -349,7 +216,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						CreateGroup creatGroup = new CreateGroup(members, group);
 						Log.e("NewteamActivity", "group:" + group.toString());
 						cregrouInter.createGroup(NewteamActivity.this,creatGroup);// 测试
-//						finish();
+						// finish();
 					}
 
 					@Override
@@ -360,13 +227,13 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					public void onUploadProgress(long totalSize, long sendSize) {
 						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
 						// Log.e("上传进度", "上传进度: " + p + "%");
-						newteam_progressBar.setProgress((int) p);
 					}
 
 					@Override
 					public void onUploadFailed(final int errorCode,
 							final String errorMsg) {
-						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"+ errorMsg);
+						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"
+								+ errorMsg);
 					}
 				});
 		uploadManager.upload(task); // 开始上传
@@ -382,36 +249,34 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 			Cursor cursor = NewteamActivity.this.getContentResolver().query(
 					selectedImage, filePathColumn, null, null, null);
-			if(cursor!=null){
+			if (cursor != null) {
 				cursor.moveToFirst();
 				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
 				mFilePath = cursor.getString(columnIndex);
 				cursor.close();
 				cursor = null;
-				
-			}else{
+
+			} else {
 				File file = new File(selectedImage.getPath());
-				mFilePath=file.getAbsolutePath();
+				mFilePath = file.getAbsolutePath();
 				if (!file.exists()) {
-					Toast toast = Toast.makeText(this, "找不到图片", Toast.LENGTH_SHORT);
+					Toast toast = Toast.makeText(this, "找不到图片",Toast.LENGTH_SHORT);
 					toast.setGravity(Gravity.CENTER, 0, 0);
 					toast.show();
 					return;
 				}
 			}
-			Log.e("NewteamActivity", "mFilePath======"+mFilePath);
-//			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-//			Bitmap bmp = Bimp.revitionImageSize(mFilePath);
-			//这个mFilePath不可以用缩略图路径
+			Log.e("NewteamActivity", "mFilePath======" + mFilePath);
+			// Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+			// Bitmap bmp = Bimp.revitionImageSize(mFilePath);
+			// 这个mFilePath不可以用缩略图路径
 			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 
-//			saveMyBitmap(bmp, newteam_name);
-//			mFilePath = sDpath;// 图片在SD卡中的路径
+			// saveMyBitmap(bmp, newteam_name);
+			// mFilePath = sDpath;// 图片在SD卡中的路径
 
-			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
-			mNewteam_head.setVisibility(View.VISIBLE);
-			newteam_progressBar.setVisibility(View.VISIBLE);
 			mNewteam_head.setImageBitmap(bmp);
+			mNewTeam_tv_head.setVisibility(View.GONE);// 隐藏小组头像字体
 		} catch (Exception e) {
 			Log.e("Demo", "choose file error!", e);
 		}
@@ -457,27 +322,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		f.delete();
 	}
 
-	private void newteam_back() {
+	private void NewTeam_back() {
 		finish();
-		Finish();
 	}
 
-	private void Finish() {
-		SharedPreferences requestcode2_sp=getSharedPreferences(IConstant.IsRefresh, 0);
-		Editor editor=requestcode2_sp.edit();
-		editor.putBoolean(IConstant.IsCode2, false);
-		editor.commit();
-	}
-	
-	@Override
-	protected void onStop() {
-		super.onStop();
-		Finish();
-	}
-	
-	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		Finish();
-	}
 }

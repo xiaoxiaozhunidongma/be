@@ -79,7 +79,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20.0dp"
                 android:layout_marginTop="35.0dp"
-                android:text="输入你想要更改的姓名"
+                android:text="@string/nickname_prompt"
                 android:textColor="#808080"
                 android:textSize="12.0sp" />
         </RelativeLayout>
@@ -101,7 +101,7 @@
                 android:background="@null"
                 android:ems="10"
                 android:gravity="left|center"
-                android:hint="昵称"
+                android:hint="@string/nickname_hint"
                 android:textSize="17.0sp" >
 
                 <requestFocus />
@@ -130,7 +130,7 @@
                     android:layout_alignBottom="@+id/imageView1"
                     android:layout_marginLeft="5.0dp"
                     android:layout_toRightOf="@+id/imageView1"
-                    android:text="姓名长度不能超过14个字符!"
+                    android:text="@string/nickname_prompt_1"
                     android:textColor="#ff0000"
                     android:textSize="9.0sp" />
             </RelativeLayout>
@@ -150,7 +150,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10.0dp"
-                android:text="用户姓名长度不能小于2个字符,"
+                android:text="@string/nickname_prompt_2"
                 android:textColor="#808080"
                 android:textSize="12.0sp" />
         </RelativeLayout>

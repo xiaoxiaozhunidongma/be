@@ -78,4 +78,11 @@ public interface IConstant {
 	public String Partyfragmnet_Pk_party = "partyfragmnet_pk_party";
 	public String Partyfragmnet_fk_group = "partyfragmnet_fk_group";
 	public String All_fk_group = "all_fk_group";
+	
+	//requestcode
+	public String Requestcode_readhomeuser="requestcode_readhomeuser";
+	
+	//SlidingΩÁ√Ê
+	public String SlidingClick="slidingclick";
+	public String Click="click";
 }

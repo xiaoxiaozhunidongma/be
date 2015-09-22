@@ -15,6 +15,7 @@ public class ImageLoaderUtils {
 	};
 	private static DisplayImageOptions options;
 	private static DisplayImageOptions optionssquare;
+	private static DisplayImageOptions optionsCricular;
 
 	public static ImageLoaderUtils getInstance() {
 		return imageLoaderUtils;
@@ -25,8 +26,9 @@ public class ImageLoaderUtils {
 	}
 
 	private ImageLoaderUtils() {// 私有化构造
-		initUILOptions();
-		initUILOptionsSquare();
+		initUILOptions();//正常
+		initUILOptionsSquare();//方形
+		initUILOptionsCricular();//圆形
 	}
 
 	public void LoadImage(Context context, String url, ImageView imageView) {
@@ -40,7 +42,7 @@ public class ImageLoaderUtils {
 				.showImageForEmptyUri(R.drawable.login_1)
 				.showImageOnFail(R.drawable.ic_error)
 				.cacheInMemory(false)
-				.displayer(new CircleBitmapDisplayer())//圆形
+//				.displayer(new CircleBitmapDisplayer())//圆形
 				.cacheOnDisk(true)
 				.considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)  //格式
@@ -73,4 +75,28 @@ public class ImageLoaderUtils {
 		
 				
 	}
+	
+	//设置圆形图片
+	public void LoadImageCricular(Context context, String url, ImageView imageView) {
+		//图片要设置大小！
+		ImageLoader.getInstance().displayImage(url, imageView, optionsCricular, null);
+	}
+
+	private void initUILOptionsCricular() {
+		optionsCricular = new DisplayImageOptions.Builder()
+				.showImageOnLoading(R.drawable.login_1)
+				.showImageForEmptyUri(R.drawable.login_1)
+				.showImageOnFail(R.drawable.ic_error)
+				.cacheInMemory(false)
+				.displayer(new CircleBitmapDisplayer())//圆形
+				.cacheOnDisk(true)
+				.considerExifParams(true)
+				.bitmapConfig(Bitmap.Config.RGB_565)  //格式
+//				.imageScaleType(ImageScaleType.IN_SAMPLE_INT)//ImageScaleType
+				.imageScaleType(ImageScaleType.EXACTLY)
+				.build();
+		
+				
+	}
+	
 }

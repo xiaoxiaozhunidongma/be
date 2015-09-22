@@ -2,23 +2,12 @@ package com.biju.function;
 
 import java.util.ArrayList;
 
-import com.BJ.javabean.ReadUserAllFriends;
-import com.BJ.javabean.User_User;
-import com.BJ.utils.ImageLoaderUtils;
-import com.biju.IConstant;
-import com.biju.Interface;
-import com.biju.Interface.releaseFriendListenner;
-import com.biju.R;
-import com.example.huanxin.ChatActivity;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.net.Uri;
-import android.os.Bundle;
 import android.app.Activity;
 import android.content.ContentProviderOperation;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.net.Uri;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -27,6 +16,15 @@ import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.BJ.javabean.ReadUserAllFriends;
+import com.BJ.javabean.User_User;
+import com.BJ.utils.ImageLoaderUtils;
+import com.biju.IConstant;
+import com.biju.Interface;
+import com.biju.Interface.releaseFriendListenner;
+import com.biju.R;
+import com.example.huanxin.ChatActivity;
 
 public class FriendsDataActivity extends Activity implements OnClickListener{
 
@@ -79,7 +77,7 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 	private void initFriendsData() {
 		String avatar_path = mAllFriends.getAvatar_path();
 		String completeURL = beginStr + avatar_path + endStr;
-		ImageLoaderUtils.getInstance().LoadImage(
+		ImageLoaderUtils.getInstance().LoadImageCricular(
 				FriendsDataActivity.this, completeURL,
 				mFriendsData_head);
 		mFriendsData_nickname.setText(mAllFriends.getNickname());

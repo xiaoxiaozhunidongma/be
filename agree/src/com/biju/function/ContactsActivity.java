@@ -5,14 +5,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
 
-import com.biju.R;
-import com.biju.search.util.CharacterParser;
-import com.biju.search.util.ContactsSortAdapter;
-import com.biju.search.util.ContactsSortAdapter.ViewHolder;
-import com.biju.search.util.PinyinComparator;
-import com.biju.search.util.SortModel;
-import com.biju.search.util.SortToken;
-
 import android.app.Activity;
 import android.content.ContentResolver;
 import android.database.Cursor;
@@ -33,6 +25,14 @@ import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
+
+import com.biju.R;
+import com.biju.search.util.CharacterParser;
+import com.biju.search.util.ContactsSortAdapter;
+import com.biju.search.util.ContactsSortAdapter.ViewHolder;
+import com.biju.search.util.PinyinComparator;
+import com.biju.search.util.SortModel;
+import com.biju.search.util.SortToken;
 
 
 public class ContactsActivity extends Activity {

@@ -1,8 +1,5 @@
 package com.biju.function;
 
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
@@ -16,8 +13,8 @@ import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
-import com.biju.R;
 import com.biju.Interface.updateUserListenner;
+import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class SexActivity extends Activity implements OnClickListener{

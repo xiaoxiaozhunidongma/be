@@ -4,7 +4,7 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table (name="tre_group_user")
-public class Group_ReadAllUser  {
+public class Group_ReadAllUser{
 	@Column
 	private Integer pk_group_user;
 	@Column

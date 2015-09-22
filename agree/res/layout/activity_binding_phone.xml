@@ -7,9 +7,10 @@
     <RelativeLayout
         android:id="@+id/binding_phone_layout"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/title_background" >
 
         <TextView
             android:id="@+id/textView2"
@@ -20,7 +21,7 @@
 
         <RelativeLayout
             android:id="@+id/binding_phone_back_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true" >
@@ -31,18 +32,18 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="返回"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/bindingphone_title_left"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/binding_phone_OK_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_right_width"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:visibility="gone" >
+             >
 
             <TextView
                 android:id="@+id/binding_phone_OK"
@@ -50,9 +51,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="完成"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/bindingphone_title_right"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -68,9 +69,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="完成"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/bindingphone_title_right"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
         </RelativeLayout>
     </RelativeLayout>
 
@@ -80,7 +81,9 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/binding_phone_layout"
         android:layout_centerHorizontal="true"
-        android:background="#efefef" >
+        android:background="#efefef"
+        android:visibility="gone"
+         >
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"
@@ -95,7 +98,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20.0dp"
                 android:layout_marginTop="35.0dp"
-                android:text="请输入你的手机号码"
+                android:text="@string/bindingphone_prompt"
                 android:textColor="#808080"
                 android:textSize="12.0sp" />
         </RelativeLayout>
@@ -106,7 +109,7 @@
             android:layout_height="50.0dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/relativeLayout1"
-            android:background="#ffffff" >
+            android:background="@drawable/background" >
 
             <EditText
                 android:id="@+id/binding_phone_phone"
@@ -119,7 +122,7 @@
                 android:background="@null"
                 android:ems="10"
                 android:gravity="left|center"
-                android:hint="手机号码"
+                android:hint="@string/bindingphone_hint"
                 android:textSize="17.0sp" >
 
                 <requestFocus />
@@ -140,7 +143,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="10.0dp"
-                android:text="小提示:"
+                android:text="@string/bindingphone_prompt_1"
                 android:textColor="#808080"
                 android:textSize="12.0sp" />
         </RelativeLayout>
@@ -154,17 +157,58 @@
         android:layout_below="@+id/binding_phone_layout"
         android:layout_centerHorizontal="true"
         android:background="#efefef"
-        android:visibility="gone" >
+         >
 
-        <com.BJ.utils.VerifyCodeView
-            android:id="@+id/verifyCodeView1"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="40.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="35.0dp" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:layout_marginLeft="50dp"
+                android:text="请输入" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/textView2"
+                android:layout_alignBottom="@+id/textView2"
+                android:layout_toRightOf="@+id/textView2"
+                android:text="4"
+                android:paddingLeft="5.0dp"
+                android:paddingRight="5.0dp"
+                android:textSize="20.0sp"
+                android:textColor="#00e3e3"
+                 />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/textView3"
+                android:layout_toRightOf="@+id/textView3"
+                android:text="位验证码" />
+
+        </RelativeLayout>
+        
+        <com.BJ.utils.BindingPhoneVerifyCodeView
+            android:id="@+id/bindingPhoneVerifyCodeView1"
             android:layout_width="match_parent"
             android:layout_height="50.0dp"
             android:layout_centerHorizontal="true"
             android:layout_marginLeft="40.0dp"
             android:layout_marginRight="40.0dp"
-            android:background="#efefef"
-            android:layout_marginTop="50.0dp" />
+            android:layout_marginTop="100.0dp"
+            android:background="#efefef"/>
+
     </RelativeLayout>
 
 </RelativeLayout>

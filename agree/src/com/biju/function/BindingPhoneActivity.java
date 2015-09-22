@@ -43,9 +43,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 	private Integer mBinding_phone_codeback;
 	private String phone;
 	private String binding_phone;
-//	private int sum = 60;
 	private boolean isagain;
-//	private boolean isOK;
 	private RelativeLayout mBinding_phone_send_layout;
 	private RelativeLayout mBinding_phone_OK_layout;
 
@@ -73,54 +71,6 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 					Code code = (Code) codeback.getReturnData();
 					mBinding_phone_codeback = code.getCode();
 					Log.e("BindingPhoneActivity","返回验证码是否发送成功======" + code.getCode());
-					// 发送一次后再60s内不能再发送第二次
-					// mBinding_phone_OK.post(new Runnable() {
-					//
-					// @Override
-					// public void run() {
-					// sum--;
-					// if (sum > 0) {
-					// mBinding_phone_OK.setText(sum + "秒后重新发送");
-					// mBinding_phone_OK.postDelayed(this, 1000);
-					// mBinding_phone_OK.setEnabled(false);
-					// mBinding_phone_code.addTextChangedListener(new
-					// TextWatcher() {
-					//
-					// @Override
-					// public void onTextChanged(CharSequence s, int start, int
-					// before, int count) {
-					// String code=s.toString();
-					// if(code!=null)
-					// {
-					// isOK=true;
-					// sum=0;
-					// }
-					// }
-					// @Override
-					// public void beforeTextChanged(CharSequence s, int start,
-					// int count,
-					// int after) {
-					// }
-					// @Override
-					// public void afterTextChanged(Editable s) {
-					// }
-					// });
-					// } else {
-					// if(isOK)
-					// {
-					// mBinding_phone_OK.setText("完成验证");
-					// mBinding_phone_OK.setEnabled(true);
-					// isagain=false;
-					// }else
-					// {
-					// mBinding_phone_OK.setText("发送验证码");
-					// isagain=true;
-					// sum = 60;
-					// mBinding_phone_OK.setEnabled(true);
-					// }
-					// }
-					// }
-					// });
 					mBinding_phone_before.setVisibility(View.GONE);// 输入手机号码界面隐藏
 					mBinding_phone_after.setVisibility(View.VISIBLE);// 输入验证码界面显示
 
@@ -263,7 +213,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 			binding_phone_1.setPhone(binding_phone);
 			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,binding_phone_1);
 		} else {
-			String code_1 = SdPkUser.getCode;
+			String code_1 = SdPkUser.bindingphonecode;
 			Log.e("BindingPhoneActivity", "所得到的验证码1111======" + code_1);
 			Log.e("BindingPhoneActivity", "所得到的验证码222222======"+ mBinding_phone_codeback);
 			if (Integer.valueOf(code_1).equals(mBinding_phone_codeback)) {

@@ -47,14 +47,11 @@ import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.Interface.requestVerCodeListenner;
 import com.biju.Interface.updateUserListenner;
-import com.biju.function.BindingPhoneActivity;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
 import com.fragment.HomeFragment;
 import com.github.volley_examples.utils.GsonUtils;
-import com.gitonway.lee.niftymodaldialogeffects.lib.Effectstype;
-import com.gitonway.lee.niftymodaldialogeffects.lib.NiftyDialogBuilder;
 
 @SuppressLint("ResourceAsColor")
 public class PhoneLoginActivity extends Activity implements OnClickListener {

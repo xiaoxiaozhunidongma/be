@@ -3,110 +3,105 @@ package com.biju.function;
 import java.util.ArrayList;
 import java.util.List;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.EditText;
+import android.view.Window;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_Code;
-import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
-import com.BJ.javabean.RequestCodeback;
 import com.BJ.javabean.User;
 import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.Interface.useRequestCode2JoinListenner;
-import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
-public class RequestCodeActivity extends Activity implements OnClickListener {
+@SuppressLint("NewApi")
+public class RequestCodeActivity extends Activity implements OnClickListener{
 
-	private EditText mRequest_edt_code;
-	private TextView mRequest_tv_code;
-	private TextView mRequest_OK;
+	public static InterActivity interActivity;
+	private boolean isAdd;
 	private Interface requestcode_interface;
 	private Integer sD_pk_user;
-	private ArrayList<Group> readuesrlist = new ArrayList<Group>();
-	private Integer pk_group;
-	private Group readhomeuser;
+	private ArrayList<Group> requestcode_readuesrlist = new ArrayList<Group>();
+	private Group requestcode_readhomeuser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_code);
-		//从SD卡中获取到的Pk_user
-		sD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("RequestCodeActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
-		
-		initUI();
-		initInterface();
+		findViewById(R.id.Requestcode2_back).setOnClickListener(this);
+		findViewById(R.id.Requestcode2_back_layout).setOnClickListener(this);// 返回
+		initActivity();
+		SdPkUser.setRequestcode(true);//说明是从邀请码这么过去的，而不是绑定手机
 	}
 
 	private void initInterface() {
 		requestcode_interface = Interface.getInstance();
 		requestcode_interface.setPostListener(new useRequestCode2JoinListenner() {
 
-			@Override
-			public void success(String A) {
-				Log.e("RequestCodeActivity", "使用邀请码加入的小组" + A);
-				Groupback requestcode = GsonUtils.parseJson(A, Groupback.class);
-				int StatusMsg = requestcode.getStatusMsg();
-				if (StatusMsg == 1) {
-					List<Group> users = requestcode.getReturnData();
-					if(users.size()>0)
-					{
-						readhomeuser = users.get(0);
-						//查找是否已添加过该小组
-						User homeuser = new User();
-						homeuser.setPk_user(sD_pk_user);
-						requestcode_interface.readUserGroupMsg(RequestCodeActivity.this, homeuser);
+					@Override
+					public void success(String A) {
+						Log.e("RequestCodeActivity", "使用邀请码加入的小组" + A);
+						Groupback requestcode = GsonUtils.parseJson(A,Groupback.class);
+						int StatusMsg = requestcode.getStatusMsg();
+						if (StatusMsg == 1) {
+							List<Group> users = requestcode.getReturnData();
+							if (users.size() > 0) {
+								requestcode_readhomeuser = users.get(0);
+								// 查找是否已添加过该小组
+								User homeuser = new User();
+								homeuser.setPk_user(sD_pk_user);
+								requestcode_interface.readUserGroupMsg(RequestCodeActivity.this, homeuser);
+							}
+						}else
+						{
+//							Toast toast = Toast.makeText(getApplicationContext(),"没有查到该小组信息!", Toast.LENGTH_SHORT);
+//							toast.setGravity(Gravity.CENTER, 0, 0);
+//							LinearLayout toastView = (LinearLayout) toast.getView();
+//							ImageView imageCodeProject = new ImageView(getApplicationContext());
+//							imageCodeProject.setColorFilter(Color.RED);
+//							imageCodeProject.setImageResource(R.drawable.checked);
+//							toastView.addView(imageCodeProject, 0);
+//							toast.show();
+							
+							//自定义Toast
+							View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+							Toast toast=new Toast(getApplicationContext());
+							toast.setGravity(Gravity.TOP, 0, 190);
+							toast.setView(toastRoot);
+							toast.setDuration(100);
+							TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+							tv.setText("未找到相关数据");
+							toast.show();
+							
+							
+						}
 					}
-				}
-			}
 
-			@Override
-			public void defail(Object B) {
+					@Override
+					public void defail(Object B) {
 
-			}
-		});
-		
-		//读取用户小组信息使用邀请码添加后的监听
-		requestcode_interface.setPostListener(new userJoin2gourpListenner() {
+					}
+				});
 
-			@Override
-			public void success(String A) {
-				RequestCodeback requestCodeback=GsonUtils.parseJson(A, RequestCodeback.class);
-				Integer status=requestCodeback.getStatusMsg();
-				if(status==1)
-				{
-					Log.e("RequestCodeActivity", "读取用户小组信息使用邀请码添加后的===" + A);
-					SharedPreferences requestcode_sp=getSharedPreferences(IConstant.RequestCode, 0);
-					Editor editor=requestcode_sp.edit();
-					editor.putBoolean(IConstant.Refresh, true);
-					editor.commit();
-					finish();
-				}
-			}
 
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
-		
-		//读取出的用户小组信息然后进行判断是否已添加
+		// 读取出的用户小组信息然后进行判断是否已添加
 		requestcode_interface.setPostListener(new readUserGroupMsgListenner() {
 
 			@Override
@@ -119,23 +114,29 @@ public class RequestCodeActivity extends Activity implements OnClickListener {
 					if (users.size() > 0) {
 						for (int i = 0; i < users.size(); i++) {
 							Group readhomeuser_1 = users.get(i);
-							readuesrlist.add(readhomeuser_1);
+							requestcode_readuesrlist.add(readhomeuser_1);
 						}
 					}
-					for (int i = 0; i < readuesrlist.size(); i++) {
-						pk_group = readuesrlist.get(i).getPk_group();
-						if (String.valueOf(pk_group).equals(String.valueOf(readhomeuser.getPk_group()))) {
-							Toast.makeText(RequestCodeActivity.this, "已经加入过该小组",Toast.LENGTH_SHORT).show();
-						}else
-						{
-							Integer fk_group=readhomeuser.getPk_group();
-							Group_User group_User = new Group_User();
-							group_User.setFk_group(fk_group);
-							group_User.setFk_user(sD_pk_user);
-							group_User.setRole(2);
-							group_User.setStatus(1);
-							requestcode_interface.userJoin2gourp(RequestCodeActivity.this, group_User);
+					for (int i = 0; i < requestcode_readuesrlist.size(); i++) {
+						Integer pk_group = requestcode_readuesrlist.get(i).getPk_group();
+						if (String.valueOf(pk_group).equals(String.valueOf(requestcode_readhomeuser.getPk_group()))) {
+							isAdd = true;
 						}
+					}
+					if (isAdd) {
+						//自定义Toast
+						View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+						Toast toast=new Toast(getApplicationContext());
+						toast.setGravity(Gravity.TOP, 0, 190);
+						toast.setView(toastRoot);
+						toast.setDuration(100);
+						TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+						tv.setText("已经加入过该小组");
+						toast.show();
+					} else {
+						Intent intent=new Intent(RequestCodeActivity.this, RequestCode3Activity.class);
+						intent.putExtra(IConstant.Requestcode_readhomeuser, requestcode_readhomeuser);
+						RequestCodeActivity.this.startActivity(intent);
 					}
 				}
 
@@ -148,10 +149,23 @@ public class RequestCodeActivity extends Activity implements OnClickListener {
 		});
 	}
 
-	private void initUI() {
-		findViewById(R.id.Requestcode2_OK_layout).setOnClickListener(this);
-		findViewById(R.id.Requestcode2_OK).setOnClickListener(this);
-		findViewById(R.id.Requestcode2_verifyCodeView).setOnClickListener(this);
+	@SuppressWarnings("static-access")
+	private void initActivity() {
+		InterActivity interActivity = new InterActivity(){
+
+			@Override
+			public void startActivity() {
+				isAdd=false;
+				sD_pk_user = SdPkUser.getsD_pk_user();
+				initInterface();
+				String code=SdPkUser.getCode;
+				Group_Code group_Code = new Group_Code();
+				group_Code.setPk_group_code(code);
+				requestcode_interface.useRequestCode2Join(RequestCodeActivity.this, group_Code);
+			}
+			
+		};
+		this.interActivity=interActivity;
 	}
 
 	@Override
@@ -164,31 +178,23 @@ public class RequestCodeActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.Requestcode2_OK_layout:
-		case R.id.Requestcode2_OK:
-			Requestcode2_OK();
+		case R.id.Requestcode2_back:
+		case R.id.Requestcode2_back_layout:
+			Requestcode2_back();
 			break;
-		case R.id.Requestcode2_verifyCodeView:
-			Requestcode2_verifyCodeView();
-			break;
+
 		default:
 			break;
 		}
 	}
 
-	private void Requestcode2_verifyCodeView() {
-	}
-
-	private void Requestcode2_OK() {
-		String code = SdPkUser.getCode;
-		Group_Code group_Code = new Group_Code();
-		group_Code.setPk_group_code(code);
-		requestcode_interface.useRequestCode2Join(RequestCodeActivity.this,group_Code);
-	}
-
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
+	private void Requestcode2_back() {
 		finish();
-		return super.onTouchEvent(event);
 	}
+
+	public interface InterActivity
+	{
+		void startActivity();
+	}
+	
 }

@@ -28,7 +28,8 @@
             android:layout_margin="5.0dp"
             android:background="#e3e3e3"
             android:gravity="center"
-            android:text="Cancel"
+            android:text="@string/more_title_cancel"
+            android:textColor="#000000"
             android:textSize="20.0sp" />
     </RelativeLayout>
 
@@ -58,7 +59,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5.0dp"
-                android:text="提示"
+                android:text="@string/more_prompt"
                 android:textColor="#000000"
                 android:textSize="15.0sp" />
 
@@ -68,7 +69,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:text="选择想要对聚会做的操作类型"
+                android:text="@string/more_prompt_1"
                 android:textSize="13.0sp" />
         </RelativeLayout>
 
@@ -90,7 +91,8 @@
                 android:layout_marginTop="5.0dp"
                 android:background="#e3e3e3"
                 android:gravity="center"
-                android:text="取消聚会"
+                android:text="@string/more_creator_cancel"
+                android:textColor="#000000"
                 android:textSize="17.0sp" />
         </RelativeLayout>
 
@@ -112,7 +114,8 @@
                 android:layout_marginTop="5.0dp"
                 android:background="#e3e3e3"
                 android:gravity="center"
-                android:text="分享"
+                android:text="@string/more_member_share"
+                android:textColor="#000000"
                 android:textSize="17.0sp" />
         </RelativeLayout>
 
@@ -130,7 +133,8 @@
                 android:layout_margin="5.0dp"
                 android:background="#e3e3e3"
                 android:gravity="center"
-                android:text="添加到系统日历"
+                android:text="@string/more_creator_add"
+                android:textColor="#000000"
                 android:textSize="17.0sp" />
         </RelativeLayout>
         <!-- android:textColor="#0072e3" -->
@@ -160,7 +164,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:text="选择想要对聚会做的操作类型"
+                android:text="@string/more_prompt_1"
                 android:textSize="13.0sp" />
 
             <TextView
@@ -170,7 +174,7 @@
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="5.0dp"
-                android:text="提示"
+                android:text="@string/more_prompt"
                 android:textColor="#000000"
                 android:textSize="15.0sp" />
         </RelativeLayout>
@@ -191,7 +195,8 @@
                 android:layout_marginTop="5.0dp"
                 android:background="#e3e3e3"
                 android:gravity="center"
-                android:text="分享"
+                android:text="@string/more_member_share"
+                android:textColor="#000000"
                 android:textSize="17.0sp" />
 
             <!-- android:textColor="#0072e3" -->
@@ -212,7 +217,8 @@
                 android:layout_margin="5.0dp"
                 android:background="#e3e3e3"
                 android:gravity="center"
-                android:text="添加到系统日历"
+                android:text="@string/more_creator_add"
+                android:textColor="#000000"
                 android:textSize="17.0sp" />
         </RelativeLayout>
         <!-- android:textColor="#0072e3" -->
