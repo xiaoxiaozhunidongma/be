@@ -5,6 +5,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.lang.ref.SoftReference;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -49,6 +50,7 @@ public class Path2Bitmap {
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				new File(path)));
 		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inPreferredConfig = Bitmap.Config.RGB_565;//颜色模式
 		options.inJustDecodeBounds = true;
 		
 		BitmapFactory.decodeStream(in, null, options);
@@ -59,7 +61,9 @@ public class Path2Bitmap {
 		options.inSampleSize = 1;
 		options.inJustDecodeBounds = false;
 		bitmap = BitmapFactory.decodeStream(in, null, options);
-		return bitmap ;
+		SoftReference<Bitmap> weak = new SoftReference<Bitmap>(bitmap);//软引用会自动释放
+		Bitmap createBitmap = Bitmap.createBitmap(weak.get());
+		return createBitmap ;
 	}
 
 	public static int computeSampleSize(BitmapFactory.Options options,

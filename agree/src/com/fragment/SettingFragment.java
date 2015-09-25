@@ -203,7 +203,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
 					convertToBitmap, 1080);// 最长边限制为1080
 			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-					limitLongScaleBitmap, 600);// 截取中间正方形
+					limitLongScaleBitmap, 180);// 截取中间正方形
 			bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
 			UUID randomUUID = UUID.randomUUID();
 			uUid = randomUUID.toString();
