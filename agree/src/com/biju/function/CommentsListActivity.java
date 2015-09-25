@@ -195,8 +195,8 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			mCommentslist_not_say_listview.setVisibility(View.VISIBLE);
 
 			mCommentslist_partake_list_layout.setBackgroundResource(R.color.white);
-			mCommentslist_partake_list_prompt.setTextColor(mCommentslist_partake_list_prompt.getResources().getColor(R.drawable.lightgray2));
-			mCommentslist_partake_list_number.setTextColor(mCommentslist_partake_list_number.getResources().getColor(R.drawable.green_3));
+			mCommentslist_partake_list_prompt.setTextColor(mCommentslist_partake_list_prompt.getResources().getColor(R.drawable.Common_text_color_gray));
+			mCommentslist_partake_list_number.setTextColor(mCommentslist_partake_list_number.getResources().getColor(R.drawable.Common_text_color_green));
 
 			mCommentslist_not_say_layout.setBackgroundResource(R.color.green_2);
 			mCommentslist_not_say_prompt.setTextColor(Color.WHITE);
@@ -213,8 +213,8 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			mCommentslist_partake_list_number.setTextColor(Color.WHITE);
 
 			mCommentslist_not_say_layout.setBackgroundResource(R.color.white);
-			mCommentslist_not_say_prompt.setTextColor(mCommentslist_partake_list_prompt.getResources().getColor(R.drawable.lightgray2));
-			mCommentslist_not_say_number.setTextColor(mCommentslist_partake_list_number.getResources().getColor(R.drawable.green_3));
+			mCommentslist_not_say_prompt.setTextColor(mCommentslist_partake_list_prompt.getResources().getColor(R.drawable.Common_text_color_gray));
+			mCommentslist_not_say_number.setTextColor(mCommentslist_partake_list_number.getResources().getColor(R.drawable.Common_text_color_green));
 			pk_party = intent.getStringExtra(IConstant.ParTake);
 			break;
 		default:
@@ -373,7 +373,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 							String useravatar_path = allUser.getAvatar_path();
 							completeURL = beginStr + useravatar_path + endStr;
 							PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// ¥ÊSP
-							ImageLoaderUtils.getInstance().LoadImage(
+							ImageLoaderUtils.getInstance().LoadImageCricular(
 									CommentsListActivity.this, completeURL,
 									holder.commentslist_item_head);
 							holder.commentslist_item_nickname.setText(allUser.getNickname());
@@ -434,8 +434,8 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private void Commentslist_not_say_layout() {
 		isNotsay = true;
 		mCommentslist_partake_list_layout.setBackgroundResource(R.color.white);
-		mCommentslist_partake_list_prompt.setTextColor(mCommentslist_partake_list_prompt.getResources().getColor(R.drawable.lightgray2));
-		mCommentslist_partake_list_number.setTextColor(mCommentslist_partake_list_number.getResources().getColor(R.drawable.green_3));
+		mCommentslist_partake_list_prompt.setTextColor(mCommentslist_partake_list_prompt.getResources().getColor(R.drawable.Common_text_color_gray));
+		mCommentslist_partake_list_number.setTextColor(mCommentslist_partake_list_number.getResources().getColor(R.drawable.Common_text_color_green));
 
 		mCommentslist_not_say_layout.setBackgroundResource(R.color.green_2);
 		mCommentslist_not_say_prompt.setTextColor(Color.WHITE);
@@ -452,8 +452,8 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 		mCommentslist_partake_list_number.setTextColor(Color.WHITE);
 
 		mCommentslist_not_say_layout.setBackgroundResource(R.color.white);
-		mCommentslist_not_say_prompt.setTextColor(mCommentslist_partake_list_prompt.getResources().getColor(R.drawable.lightgray2));
-		mCommentslist_not_say_number.setTextColor(mCommentslist_partake_list_number.getResources().getColor(R.drawable.green_3));
+		mCommentslist_not_say_prompt.setTextColor(mCommentslist_partake_list_prompt.getResources().getColor(R.drawable.Common_text_color_gray));
+		mCommentslist_not_say_number.setTextColor(mCommentslist_partake_list_number.getResources().getColor(R.drawable.Common_text_color_green));
 		returndata();
 		partakeadapter.notifyDataSetChanged();
 	}

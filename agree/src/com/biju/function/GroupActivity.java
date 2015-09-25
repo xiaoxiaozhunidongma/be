@@ -208,7 +208,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Sliding_editor.putInt(IConstant.Click, 0);
 		Sliding_editor.commit();
 	}
-
 	public interface GetSliding {
 		void SlidingClick();
 	}

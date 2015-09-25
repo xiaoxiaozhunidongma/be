@@ -21,6 +21,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -82,16 +83,12 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 
 	@Override
 	public void onResume() {
-		if (userAllPartieList.size() > 0) {
-			mParty_listView.setAdapter(adapter);
-			mTab_party_prompt_layout.setVisibility(View.GONE);
-			mTab_party_swipe_refresh.setVisibility(View.VISIBLE);
-			mParty_listView.setVisibility(View.VISIBLE);
+		SharedPreferences refresh_sp=getActivity().getSharedPreferences(IConstant.AddRefresh, 0);
+		boolean isaddrefresh=refresh_sp.getBoolean(IConstant.IsAddRefresh, false);
+		if(isaddrefresh)
+		{
+			initParty();
 			adapter.notifyDataSetChanged();
-		} else {
-			mTab_party_prompt_layout.setVisibility(View.VISIBLE);
-			mTab_party_swipe_refresh.setVisibility(View.GONE);
-			mParty_listView.setVisibility(View.GONE);
 		}
 		super.onResume();
 	}
@@ -121,6 +118,10 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 							mTab_party_swipe_refresh.setVisibility(View.VISIBLE);
 							mParty_listView.setVisibility(View.VISIBLE);
 							adapter.notifyDataSetChanged();
+						} else {
+							mTab_party_prompt_layout.setVisibility(View.VISIBLE);
+							mTab_party_swipe_refresh.setVisibility(View.GONE);
+							mParty_listView.setVisibility(View.GONE);
 						}
 					}
 					Log.e("PartyFragment", "userAllPartieList.size()====="+userAllPartieList.size());
@@ -184,10 +185,13 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 		TextView address;
 		TextView name;
 		TextView times;
-		TextView inNum;
+		RelativeLayout Party_item_background;
+		ImageView Party_item_redprompt;
 	}
 
 	class MyAdapter extends BaseAdapter {
+
+		private String times;
 
 		@Override
 		public int getCount() {
@@ -212,11 +216,12 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				holder = new ViewHolder();
 				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 				inflater = layoutInflater.inflate(R.layout.party_item, null);
-				holder.years_month = (TextView) inflater.findViewById(R.id.years_month);
-				holder.name = (TextView) inflater.findViewById(R.id.name);
-				holder.times = (TextView) inflater.findViewById(R.id.times);
-				holder.address = (TextView) inflater.findViewById(R.id.address);
-				holder.inNum = (TextView) inflater.findViewById(R.id.inNum);
+				holder.years_month = (TextView) inflater.findViewById(R.id.Party_item_years_month);//聚会日期
+				holder.name = (TextView) inflater.findViewById(R.id.Party_item_name);//聚会名称
+				holder.times = (TextView) inflater.findViewById(R.id.Party_item_time);//时间
+				holder.address = (TextView) inflater.findViewById(R.id.Party_item_address);//地址
+				holder.Party_item_background=(RelativeLayout) inflater.findViewById(R.id.Party_item_background);//背景颜色
+				holder.Party_item_redprompt=(ImageView) inflater.findViewById(R.id.Party_item_redprompt);//小红点提示
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -226,20 +231,37 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				UserAllParty party = userAllPartieList.get(position);
 				String time = party.getBegin_time();
 				String yuars_month = time.substring(0, 10);
-				String years = yuars_month.substring(0, 4);
+//				String years = yuars_month.substring(0, 4);
 				String months = yuars_month.substring(5, 7);
+				String months_1=months.substring(0, 1);
+				String months_2=months.substring(1, 2);
 				String days = yuars_month.substring(8, 10);
-				String times = years + "年" + months + "月" + days + "日";
+				switch (Integer.valueOf(months_1)) {
+				case 0:
+					times = months_2 + "月" + days + "日";
+					break;
+				case 1:
+					times = months + "月" + days + "日";
+					break;
+				default:
+					break;
+				}
 				String datetimes = time.substring(11, 16);
+				Integer relationship=party.getRelationship();
+				if(relationship==1)
+				{
+					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
+					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.white));
+					holder.times.setTextColor(holder.times.getResources().getColor(R.color.white));
+				}else
+				{
+					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
+					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
+				}
 				holder.years_month.setText(times);
 				holder.name.setText(party.getName());
 				holder.times.setText(datetimes);
 				holder.address.setText(party.getLocation());
-				if (party.getInNum() != null) {
-					holder.inNum.setText(party.getInNum() + "");
-				} else {
-					holder.inNum.setText("0");
-				}
 			}
 
 			return inflater;

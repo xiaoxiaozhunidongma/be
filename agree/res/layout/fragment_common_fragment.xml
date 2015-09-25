@@ -89,7 +89,6 @@
             android:layout_height="2.0dp"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/linearLayout1"
-            android:background="@drawable/green_3"
              />
     </RelativeLayout>
 

@@ -104,6 +104,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		{
 			initreadUserGroupParty();
 			adapter.notifyDataSetChanged();
+			Log.e("ScheduleFragment", "进入了onResume() 的isaddrefresh========="+isaddrefresh);
 		}
 		
 		SharedPreferences more_sp=getActivity().getSharedPreferences(IConstant.MoreRefresh, 0);
@@ -180,12 +181,13 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		TextView address;
 		TextView name;
 		TextView times;
-		ImageView party_unread_tag;
-		TextView inNum;
+		RelativeLayout Party_item_background;
+		ImageView Party_item_redprompt;
 	}
 
 	class MyAdapter extends BaseAdapter {
 
+		private String times;
 		@Override
 		public int getCount() {
 			return partylist.size();
@@ -209,12 +211,12 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 				holder = new ViewHolder();
 				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 				inflater = layoutInflater.inflate(R.layout.party_item, null);
-				holder.years_month = (TextView) inflater.findViewById(R.id.years_month);
-				holder.name = (TextView) inflater.findViewById(R.id.name);
-				holder.times = (TextView) inflater.findViewById(R.id.times);
-				holder.address = (TextView) inflater.findViewById(R.id.address);
-				holder.party_unread_tag = (ImageView) inflater.findViewById(R.id.party_unread_tag);
-				holder.inNum=(TextView) inflater.findViewById(R.id.inNum);
+				holder.years_month = (TextView) inflater.findViewById(R.id.Party_item_years_month);//聚会日期
+				holder.name = (TextView) inflater.findViewById(R.id.Party_item_name);//聚会名称
+				holder.times = (TextView) inflater.findViewById(R.id.Party_item_time);//时间
+				holder.address = (TextView) inflater.findViewById(R.id.Party_item_address);//地址
+				holder.Party_item_background = (RelativeLayout) inflater.findViewById(R.id.Party_item_background);
+				holder.Party_item_redprompt=(ImageView) inflater.findViewById(R.id.Party_item_redprompt);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -227,26 +229,39 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 				String yuars_month = time.substring(0, 10);
 				String years = yuars_month.substring(0, 4);
 				String months = yuars_month.substring(5, 7);
+				String months_1=months.substring(0, 1);
+				String months_2=months.substring(1, 2);
 				String days = yuars_month.substring(8, 10);
-				String times = years + "年" + months + "月" + days + "日";
+				switch (Integer.valueOf(months_1)) {
+				case 0:
+					times = months_2 + "月" + days + "日";
+					break;
+				case 1:
+					times = months + "月" + days + "日";
+					break;
+				default:
+					break;
+				}
 				String datetimes = time.substring(11, 16);
+				
+				Integer ralationship = party.getRelationship();
+				if (ralationship == null) {
+					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
+					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
+					holder.Party_item_redprompt.setVisibility(View.VISIBLE);
+				} else if(ralationship ==0){
+					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
+					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
+				}else if(ralationship ==1)
+				{
+					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
+					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.white));
+					holder.times.setTextColor(holder.times.getResources().getColor(R.color.white));
+				}
 				holder.years_month.setText(times);
 				holder.name.setText(party.getName());
 				holder.times.setText(datetimes);
 				holder.address.setText(party.getLocation());
-				if(party.getInNum()!=null)
-				{
-					holder.inNum.setText(party.getInNum()+"");
-				}else
-				{
-					holder.inNum.setText("0");
-				}
-				Integer ralationship = party.getRelationship();
-				if (ralationship == null) {
-					holder.party_unread_tag.setVisibility(View.VISIBLE);
-				} else {
-					holder.party_unread_tag.setVisibility(View.GONE);
-				}
 			}
 
 			return inflater;
@@ -307,7 +322,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 						
 						SharedPreferences Schedule_sp=getActivity().getSharedPreferences(IConstant.Schedule, 0);
 						Editor editor=Schedule_sp.edit();
-						editor.putInt(IConstant.Pk_party_user, scheduleparty.getPk_party_user());
+						editor.putInt(IConstant.Pk_party_user, pk_party_user);
 						editor.putString(IConstant.Pk_party, scheduleparty.getPk_party());
 						editor.putInt(IConstant.fk_group, scheduleparty.getFk_group());
 						editor.commit();
@@ -386,6 +401,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private void Schedule_new_party() {
 		Intent intent=new Intent(getActivity(), AddNewPartyActivity.class);
 		intent.putExtra(IConstant.Fk_group, GroupActivity.getPk_group());
+		intent.putExtra(IConstant.IsSchedule, true);
 		startActivity(intent);
 	}
 }

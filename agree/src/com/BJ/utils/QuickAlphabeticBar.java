@@ -153,7 +153,7 @@ public class QuickAlphabeticBar extends ImageButton {
 		int width = getWidth();
 		int sigleHeight = height / letters.length; // 单个字母占的高度
 		for (int i = 0; i < letters.length; i++) {
-			paint.setColor(R.color.green_1);
+			paint.setColor(R.color.party_time_background);
 			paint.setTextSize(25);
 			paint.setTypeface(Typeface.DEFAULT_BOLD);
 			paint.setAntiAlias(true);

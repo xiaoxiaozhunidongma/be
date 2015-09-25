@@ -7,8 +7,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -39,6 +41,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 	private Integer sD_pk_user;
 	private ArrayList<Group> requestcode_readuesrlist = new ArrayList<Group>();
 	private Group requestcode_readhomeuser;
+	private int toastHeight;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +52,15 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 		findViewById(R.id.Requestcode2_back_layout).setOnClickListener(this);// 返回
 		initActivity();
 		SdPkUser.setRequestcode(true);//说明是从邀请码这么过去的，而不是绑定手机
+		DisplayMetrics();//获取屏幕的高度和宽度
+	}
+
+	private void DisplayMetrics() {
+		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+//        int width = metric.widthPixels;     // 屏幕宽度（像素）
+        int height = metric.heightPixels;   // 屏幕高度（像素）
+        toastHeight = height/4;
 	}
 
 	private void initInterface() {
@@ -83,7 +95,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 							//自定义Toast
 							View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
 							Toast toast=new Toast(getApplicationContext());
-							toast.setGravity(Gravity.TOP, 0, 190);
+							toast.setGravity(Gravity.TOP, 0, toastHeight);
 							toast.setView(toastRoot);
 							toast.setDuration(100);
 							TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
@@ -127,7 +139,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 						//自定义Toast
 						View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
 						Toast toast=new Toast(getApplicationContext());
-						toast.setGravity(Gravity.TOP, 0, 190);
+						toast.setGravity(Gravity.TOP, 0, toastHeight);
 						toast.setView(toastRoot);
 						toast.setDuration(100);
 						TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
@@ -137,6 +149,15 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 						Intent intent=new Intent(RequestCodeActivity.this, RequestCode3Activity.class);
 						intent.putExtra(IConstant.Requestcode_readhomeuser, requestcode_readhomeuser);
 						RequestCodeActivity.this.startActivity(intent);
+						//自定义Toast
+						View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+						Toast toast=new Toast(getApplicationContext());
+						toast.setGravity(Gravity.TOP, 0, toastHeight);
+						toast.setView(toastRoot);
+						toast.setDuration(100);
+						TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+						tv.setText("找到小组");
+						toast.show();
 					}
 				}
 
@@ -197,4 +218,21 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 		void startActivity();
 	}
 	
+	@Override
+	protected void onStop() {
+		SdPkUser.setRequestcode(false);//退出界面时传false,防止输入4位邀请码时突然退出该界面也会弹出Toast
+		super.onStop();
+	}
+	//对back键进行监听
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			SdPkUser.setRequestcode(false);//退出界面时传false,防止输入4位邀请码时突然退出该界面也会弹出Toast
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

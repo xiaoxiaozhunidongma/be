@@ -58,6 +58,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 	private Integer pk_group;
 	private Interface sildingInterface;
 	private int isClick=0;
+	private boolean MainClikc;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +75,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 		SharedPreferences Sliding_sp=getSharedPreferences(IConstant.SlidingClick, 0);
 		int Click=Sliding_sp.getInt(IConstant.Click, 0);
 		isClick=Click;
+		Log.e("SlidingActivity", "这时候的Click=========" + Click);
 		switch (Click) {
 		case 0:
 			mSlidingMenu_Team_Setting.setBackgroundResource(R.color.white);
@@ -290,6 +292,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 
 
 	private void Sliding_back_layout() {
+		MainClikc=true;
 		finish();
 		Intent intent = new Intent(SlidingActivity.this, MainActivity.class);
 		startActivity(intent);
@@ -323,11 +326,22 @@ public class SlidingActivity extends Activity implements OnClickListener {
 
 	@Override
 	protected void onStop() {
-		//退出当前小组后，在Sliding中的点击效果也要保存,而且重新读取小组中的所有用户
-		SharedPreferences Sliding_sp=getSharedPreferences(IConstant.SlidingClick, 0);
-		Editor editor=Sliding_sp.edit();
-		editor.putInt(IConstant.Click, isClick);
-		editor.commit();
 		super.onStop();
+		if(MainClikc)
+		{
+			//退出当前小组后，在Sliding中的点击效果也要保存,而且重新读取小组中的所有用户
+			SharedPreferences Sliding_sp=getSharedPreferences(IConstant.SlidingClick, 0);
+			Editor editor=Sliding_sp.edit();
+			editor.putInt(IConstant.Click, 0);
+			editor.commit();
+
+		}else
+		{
+			//退出当前小组后，在Sliding中的点击效果也要保存,而且重新读取小组中的所有用户
+			SharedPreferences Sliding_sp=getSharedPreferences(IConstant.SlidingClick, 0);
+			Editor editor=Sliding_sp.edit();
+			editor.putInt(IConstant.Click, isClick);
+			editor.commit();
+		}
 	}
 }

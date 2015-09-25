@@ -11,12 +11,12 @@
 
         <ImageView
             android:id="@+id/tab_image"
-            android:layout_width="23.0dp"
-            android:layout_height="23.0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="10.0dp"
-            android:src="@drawable/tab_home_selector" />
+            android:src="@drawable/tab_party_selector" />
 
         <RelativeLayout
             android:layout_width="match_parent"
