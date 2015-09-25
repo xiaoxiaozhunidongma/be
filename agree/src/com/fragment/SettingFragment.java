@@ -273,8 +273,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 					mSetting_Phone.setText(mUserPhone);
 					completeURL = beginStr + mUserAvatar_path + endStr;
 					PreferenceUtils.saveImageCache(getActivity(), completeURL);// 存SP
-					ImageLoaderUtils.getInstance().LoadImage(getActivity(),
-							completeURL, mSetting_head);
+					ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(),completeURL, mSetting_head);
 					if(!("".equals(mUserWechat_id)))
 					{
 						mSetting_weixin.setText("已绑定");
@@ -608,39 +607,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 	// 退出登录
 	private void NiftyDialogBuilder() {
-		// final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
-		// .getInstance(getActivity());
-		// Effectstype effectstype = Effectstype.Shake;
-		// niftyDialogBuilder.withTitle("警告").withTitleColor("#000000")
-		// // 设置标题字体颜色
-		// .withDividerColor("#ffffff")
-		// // 设置对话框背景颜色
-		// .withMessage("确定要登出账号吗？" + "\n" + "保存的资料将会被清空哦~")
-		// // 对话框提示内容
-		// .withMessageColor("#000000")
-		// // 提示内容字体颜色
-		// .withIcon(getResources().getDrawable(R.drawable.about_us))
-		// // 设置对话框显示图片
-		// .isCancelableOnTouchOutside(true).withDuration(700)
-		// // 设置时间
-		// .withEffect(effectstype).withButton1Text("我再想想")
-		// .withButton2Text("是的").setButton1Click(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// niftyDialogBuilder.cancel();
-		// }
-		// }).setButton2Click(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// Intent intent = new Intent(getActivity(),BeforeLoginActivity.class);
-		// startActivity(intent);
-		// getActivity().finish();
-		// niftyDialogBuilder.cancel();
-		// }
-		// }).show();
-
 		final SweetAlertDialog sd = new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE);
 		sd.setTitleText("警告");
 		sd.setContentText("确定要登出账号吗？" + "\n" + "保存的资料将会被清空哦~");

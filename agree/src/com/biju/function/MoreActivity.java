@@ -89,7 +89,6 @@ public class MoreActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void defail(Object B) {
-				// TODO Auto-generated method stub
 
 			}
 		});

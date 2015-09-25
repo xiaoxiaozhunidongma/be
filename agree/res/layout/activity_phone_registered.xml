@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/PhoneRegistered_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
@@ -22,7 +22,7 @@
 
         <RelativeLayout
             android:id="@+id/PhoneRegistered_back_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true" >
@@ -34,8 +34,8 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:text="关闭"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
     </RelativeLayout>
 

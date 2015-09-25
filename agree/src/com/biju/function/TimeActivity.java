@@ -4,9 +4,9 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -19,10 +19,9 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
-import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
+
 import com.BJ.utils.KCalendar;
-import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.KCalendar.OnCalendarClickListener;
 import com.BJ.utils.KCalendar.OnCalendarDateChangedListener;
 import com.biju.IConstant;
@@ -61,8 +60,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 		boolean date1 = sp.getBoolean("date", false);
 		if (date1) {
 			String dateFormat = sp.getString("dateFormat", "");
-			calendar.setCalendarDayBgColor(dateFormat,
-					R.drawable.calendar_date_focused);
+			calendar.setCalendarDayBgColor(dateFormat,R.drawable.calendar_date_focused);
 			date = dateFormat;// 最后返回给全局 date
 			Log.e("MainActivity", "进保存后的");
 			if (null != date) {
@@ -312,8 +310,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 		popupwindow_calendar_month = (TextView) findViewById(R.id.popupwindow_calendar_month);
 		calendar = (KCalendar) findViewById(R.id.popupwindow_calendar);
 
-		popupwindow_calendar_month.setText(calendar.getCalendarYear() + "年"
-				+ calendar.getCalendarMonth() + "月");
+		popupwindow_calendar_month.setText(calendar.getCalendarYear() + "年"+ calendar.getCalendarMonth() + "月");
 
 		if (null != date) {
 

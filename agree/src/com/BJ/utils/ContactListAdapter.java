@@ -352,7 +352,7 @@ public class ContactListAdapter extends BaseAdapter {
 
 	private void ImageLoaderUtils(ViewHolder holder) {
 		PreferenceUtils.saveImageCache(ctx, completeURL);
-		ImageLoaderUtils.getInstance().LoadImage(
+		ImageLoaderUtils.getInstance().LoadImageCricular(
 				ctx, completeURL,
 				holder.Contact_quickContactBadge);
 	}

@@ -330,7 +330,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					return footerView;
 				}
 			}
-
+		
 			View inflater = null;
 			LayoutInflater layoutInflater = getActivity().getLayoutInflater();
 			if (position < PhoneLoginActivity.list.size()) {
@@ -348,12 +348,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
-						Log.e("", "completeURL===="+completeURL);
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
-						 homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-						 completeURL, home_item_head);
-//						AsynImageLoader asynImageLoader = new AsynImageLoader();
-//						asynImageLoader.showImageAsyn(home_item_head,completeURL, R.drawable.newteam, getActivity());
+						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),completeURL, home_item_head);
 					} 
 				}
 			} else {
@@ -364,12 +360,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
-						Log.e("", "completeURL===="+completeURL);
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
-						 homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
-						 completeURL, home_item_head);
-//						AsynImageLoader asynImageLoader = new AsynImageLoader();
-//						asynImageLoader.showImageAsyn(home_item_head,completeURL, R.drawable.newteam, getActivity());
+						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),completeURL, home_item_head);
 					} 
 				}
 			}
@@ -415,7 +407,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			if (d != null)
 				d.setCallback(null);
 			home_item_head.setImageDrawable(null);
-			home_item_head.setBackgroundDrawable(null);
 		}
 
 		ViewGroup parent = (ViewGroup) mLayout.getParent();

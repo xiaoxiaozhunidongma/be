@@ -41,7 +41,6 @@ import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
 public class MyApplication extends Application {
 
-	private MyApplication myapp;
 	private static String regId;
 
 	public static String getRegId() {
@@ -139,7 +138,7 @@ public class MyApplication extends Application {
 				.build();
 		ImageLoader.getInstance().init(config);
 		// 地图初始化
-		SDKInitializer.initialize(this);
+//		SDKInitializer.initialize(this);
 		// 极光推送
 		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush

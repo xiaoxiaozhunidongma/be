@@ -5,114 +5,49 @@
     android:background="#ffffff"
     tools:context=".NewteamActivity" >
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="63dp"
-        android:gravity="center"
-        android:text="鼓动加入的文本"
-        android:textColor="#aaaaaa"
-        android:textSize="17.0sp" />
-
-    <EditText
-        android:id="@+id/newteam_name"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/textView1"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="42dp"
-        android:background="#ffffff"
-        android:ems="10"
-        android:gravity="center"
-        android:hint="小组名称"
-        android:textColor="#aaaaaa"
-        android:textSize="30.0sp" >
-
-        <requestFocus />
-    </EditText>
-
-    <ImageView
-        android:id="@+id/newteam_head"
-        android:layout_width="160.0dp"
-        android:layout_height="160.0dp"
-        android:layout_below="@+id/newteam_name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25.0dp"
-        android:background="@drawable/newteam"
-        android:scaleType="fitXY"
-        android:visibility="invisible" />
-
-    <TextView
-        android:id="@+id/newteam_tv_head"
-        android:layout_width="160.0dp"
-        android:layout_height="160.0dp"
-        android:layout_below="@+id/newteam_name"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="25.0dp"
-        android:background="@drawable/newteam"
-        android:gravity="center"
-        android:text="选择小组封面"
-        android:textColor="#55aeae"
-        android:textSize="20.0sp" />
-
-    <TextView
-        android:id="@+id/newteam_requsetcode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="收到小组的邀请码?"
-        android:layout_marginBottom="50.0dp"
-        android:gravity="center"
-        android:textColor="#55aeae"
-        android:textSize="20.0sp"
-         />
-
     <RelativeLayout
+        android:id="@+id/NewTeam_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
         <RelativeLayout
-            android:id="@+id/newteam_back_layout"
-            android:layout_width="60.0dp"
+            android:id="@+id/NewTeam_back_layout"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
 
             <TextView
-                android:id="@+id/newteam_back"
+                android:id="@+id/NewTeam_back"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="返回"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/NewTeam_title_left"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
 
         <RelativeLayout
-            android:id="@+id/newteam_OK_layout"
-            android:layout_width="60.0dp"
+            android:id="@+id/NewTeam_OK_layout"
+            android:layout_width="@dimen/title_right_width"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >
 
             <TextView
-                android:id="@+id/newteam_OK"
+                android:id="@+id/NewTeam_OK"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="完成"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/NewTeam_title_right"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
         </RelativeLayout>
 
         <TextView
@@ -121,20 +56,118 @@
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
-			android:background="#aaaaaa"            
-            />
-
+            android:background="#aaaaaa" />
     </RelativeLayout>
 
-    <ProgressBar
-        android:id="@+id/newteam_progressBar"
-        style="?android:attr/progressBarStyleHorizontal"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/newteam_head"
-        android:layout_alignRight="@+id/newteam_head"
-        android:layout_below="@+id/newteam_head"
-        android:visibility="gone"
-         />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/NewTeam_title_layout"
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/background" >
+
+        <ImageButton
+            android:id="@+id/NewTeam_head"
+            android:layout_width="150.0dp"
+            android:layout_height="150.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="20.0dp"
+            android:background="#ffffff"
+            android:scaleType="fitXY" />
+
+        <TextView
+            android:id="@+id/NewTeam_tv_head"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/NewTeam_head"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="65dp"
+            android:gravity="center"
+            android:text="@string/NewTeam_prompt"
+            android:textColor="#55aeae"
+            android:textSize="20.0sp" />
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="80.0dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:background="#ffffff" >
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="40.0dp"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_alignParentBottom="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:background="#aaaaaa" />
+
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="match_parent"
+                    android:layout_height="0.50dp"
+                    android:layout_alignParentTop="true"
+                    android:background="#aaaaaa" />
+
+                <EditText
+                    android:id="@+id/NewTeam_teamname"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:background="@null"
+                    android:ems="10"
+                    android:gravity="center"
+                    android:hint="@string/NewTeam_hint"
+                    android:layout_margin="5.0dp"
+                    android:textSize="12.0sp"
+                     >
+
+                    <requestFocus />
+                </EditText>
+            </RelativeLayout>
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="0.50dp"
+                android:layout_alignParentBottom="true"
+                android:background="#aaaaaa" />
+
+            <RelativeLayout
+                android:id="@+id/NewTeam_friends"
+                android:layout_width="match_parent"
+                android:layout_height="40.0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true" >
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20dp"
+                    android:text="@string/NewTeam_prompt_1"
+                    android:textSize="12.0sp" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="15.0dp"
+                    android:layout_height="15.0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="15.0dp"
+                    android:src="@drawable/jiantou" />
+            </RelativeLayout>
+        </RelativeLayout>
+    </RelativeLayout>
 
 </RelativeLayout>

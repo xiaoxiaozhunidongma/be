@@ -8,13 +8,15 @@
     <RelativeLayout
         android:id="@+id/findfriends_title"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true" 
+        android:background="@drawable/title_background"
+        >
 
         <RelativeLayout
             android:id="@+id/findfriends_back_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
@@ -25,9 +27,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="返回"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/findfriends_title_left"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
 
         <TextView
@@ -36,8 +38,8 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="查找好友"
-            android:textSize="18.0sp" />
+            android:text="@string/findfriends_title_text"
+            android:textSize="@dimen/title_size" />
 
         <TextView
             android:id="@+id/textView4"
@@ -61,7 +63,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="60.0dp"
             android:gravity="center"
-            android:text="输入好友必聚号或者绑定的手机号"
+            android:text="@string/findfriends_prompt"
             android:textSize="18.0sp" />
 
         <EditText
@@ -74,7 +76,7 @@
             android:background="#ffffff"
             android:ems="10"
             android:gravity="center"
-            android:hint="必聚号或者手机号" >
+            android:hint="@string/findfriends_hint" >
 
             <requestFocus />
         </EditText>
@@ -86,7 +88,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:gravity="center"
-            android:text="查找好友"
+            android:text="@string/findfriends_but"
             android:textSize="18.0sp" />
     </RelativeLayout>
 
@@ -126,7 +128,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="35dp"
             android:gravity="center"
-            android:text="发送好友请求"
+            android:text="@string/findfriends_sendrequest"
             android:textSize="17.0sp" />
 
         <TextView
@@ -137,7 +139,7 @@
             android:layout_centerHorizontal="true"
             android:layout_marginTop="40dp"
             android:gravity="center"
-            android:text="重新查找"
+            android:text="@string/findfriends_againfind"
             android:textSize="17.0sp" />
     </RelativeLayout>
 

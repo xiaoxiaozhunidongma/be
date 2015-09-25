@@ -153,4 +153,23 @@ public class SdPkUser {
 		RefreshTeam = refreshTeam;
 	}
 	
+	//小组邀请码
+	public static boolean requestcode;
+	public static boolean isRequestcode() {
+		return requestcode;
+	}
+
+	public static void setRequestcode(boolean requestcode) {
+		SdPkUser.requestcode = requestcode;
+	}
+	//绑定手机验证码
+	public static String bindingphonecode;
+	public static String getBindingphonecode() {
+		return bindingphonecode;
+	}
+
+	public static void setBindingphonecode(String bindingphonecode) {
+		SdPkUser.bindingphonecode = bindingphonecode;
+	}
+	
 }

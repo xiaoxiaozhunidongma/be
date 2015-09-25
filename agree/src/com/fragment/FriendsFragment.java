@@ -114,6 +114,35 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		Interface instance = Interface.getInstance();
 		instance.setPostListener(new readUserListenner() {
 
+	//需要异步？？？？？？？？？？？？？？？？？？？？？？？？？？？
+//	private void LoginHuanXin() {
+//		Log.e("FriendsFragment~~~~~", "调用了LoginHuanXin（）");
+//		String str_pkuser = String.valueOf(SD_pk_user);
+//		
+//		Log.e("FriendsFragment~~~~~", "Integer.valueOf(pk_user)"+SD_pk_user);
+//		
+//		if(!"".equals(str_pkuser)){
+//			
+//			EMChatManager.getInstance().login(str_pkuser,
+//					"paopian",new EMCallBack() {//回调
+//				@Override
+//				public void onSuccess() {
+//					EMGroupManager.getInstance().loadAllGroups();
+//					EMChatManager.getInstance().loadAllConversations();
+//					Log.e("FriendsFragment~~~~~", "登陆聊天服务器成功！~~~~");		
+//				}
+//				
+//				@Override
+//				public void onProgress(int progress, String status) {
+//				}
+//				
+//				@Override
+//				public void onError(int code, String message) {
+//					Log.d("FriendsFragment~~~~~~", "登陆聊天服务器失败！~~~~");
+//				}
+//			});
+//		}
+//	}
 
 			@Override
 			public void success(String A) {
@@ -305,7 +334,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			holder.ReadUserAllFriends_name.setText(allFriends.getNickname());
 			String avatar_path = allFriends.getAvatar_path();
 			String completeURL = beginStr + avatar_path + endStr;
-			ImageLoaderUtils.getInstance().LoadImage(getActivity(),
+			ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(),
 					completeURL, holder.ReadUserAllFriends_head);
 
 			holder.ReadUserAllFriends_head

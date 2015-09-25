@@ -123,7 +123,11 @@
             android:value="group_team.db" />
         <meta-data
             android:name="AA_DB_VERSION"
+<<<<<<< HEAD
             android:value="3" />
+=======
+            android:value="3" />
+>>>>>>> ZCL
         -->
 
 
@@ -164,13 +168,11 @@
         </activity>
         <activity
             android:name="com.biju.function.RequestCodeActivity"
-            android:label="@string/title_activity_request_code"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:label="@string/title_activity_request_code" >
         </activity>
         <activity
             android:name="com.biju.function.RequestCode2Activity"
-            android:label="@string/title_activity_request_code"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            android:label="@string/title_activity_request_code" >
         </activity>
         <activity
             android:name="com.biju.function.FindFriendsActivity"
@@ -188,7 +190,7 @@
             android:name="com.biju.function.GroupActivity"
             android:label="@string/title_activity_group"
             android:launchMode="singleTask"
-            android:theme="@style/ActivityTheme_Light" >
+            >
         </activity>
         <activity
             android:name="com.biju.function.TeamSettingActivity"
@@ -423,6 +425,10 @@
             android:label="@string/title_activity_contact_search"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
+        <activity
+            android:name="com.biju.function.TeamSetting2Activity"
+            android:label="@string/title_activity_team_setting2" >
+        </activity>
         <!-- leanchat -->
         <service
             android:name="com.avos.avoscloud.PushService"
@@ -444,9 +450,16 @@
             android:label="@string/title_activity_photo_view" >
         </activity>
         <!-- leanchat -->
+
         <activity
-            android:name="com.biju.function.TeamSetting2Activity"
-            android:label="@string/title_activity_team_setting2" >
+            android:name="com.biju.function.RequestCode3Activity"
+            android:label="@string/title_activity_request_code3" >
+        </activity>
+        <activity
+            android:name="com.biju.function.SlidingActivity"
+            android:label="@string/title_activity_sliding"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+             >
         </activity>
     </application>
 

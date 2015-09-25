@@ -5,6 +5,7 @@ import java.lang.reflect.Method;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.text.InputType;
@@ -18,6 +19,8 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
 import com.biju.R;
+import com.biju.function.RequestCode3Activity;
+import com.biju.function.RequestCodeActivity;
 
 @SuppressLint("NewApi")
 public class VerifyCodeView extends View {
@@ -32,6 +35,7 @@ public class VerifyCodeView extends View {
 	private int textSize;
 	Paint textPaint;
 	float textBaseY;
+	private String code;
 
 	public VerifyCodeView(Context context, AttributeSet attrs) {
 		super(context, attrs);
@@ -45,6 +49,7 @@ public class VerifyCodeView extends View {
 		characterSpacing = getResources().getDimensionPixelSize(R.dimen.reg_verifycode_character_spacing);
 		textSize = getResources().getDimensionPixelSize(R.dimen.reg_verifycode_textsize);
 	}
+
 
 	@Override
 	public boolean onTouchEvent(MotionEvent event) {
@@ -177,10 +182,9 @@ public class VerifyCodeView extends View {
 			}
 			invalidate();
 		}
-		// 到了6位自动隐藏软键盘
+		// 到了4位自动隐藏软键盘
 		if (verifyCodeBuilder.length() >= 4) {
-			InputMethodManager imm = (InputMethodManager) getContext()
-					.getSystemService(Context.INPUT_METHOD_SERVICE);
+			InputMethodManager imm = (InputMethodManager) getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
 			imm.hideSoftInputFromWindow(getWindowToken(), 0);
 		}
 		return super.onKeyDown(keyCode, event);
@@ -193,10 +197,18 @@ public class VerifyCodeView extends View {
 	 */
 	public String getVerifyCodeStr() {
 		if (verifyCodeBuilder.toString() != null) {
-			String code = verifyCodeBuilder.toString();
-			Log.e("VerifyCodeView",
-					"获取输入的校验码=========" + verifyCodeBuilder.toString());
-			SdPkUser.setGetCode(code);
+			code = verifyCodeBuilder.toString();
+			if(code.length()==4)
+			{
+				boolean requestcode=SdPkUser.requestcode;//只有从邀请码过来时才进入
+				Log.e("VerifyCodeView","获取requestcode=========" + requestcode);
+				if(requestcode)
+				{
+					Log.e("VerifyCodeView","获取输入的校验码=========" + verifyCodeBuilder.toString());
+					SdPkUser.setGetCode(code);
+					RequestCodeActivity.interActivity.startActivity();
+				}
+			}
 		}
 		return verifyCodeBuilder.toString();
 	}
@@ -252,8 +264,8 @@ public class VerifyCodeView extends View {
 		// 画白线
 		if (verifyCodeBuilder.length() < 4) {
 			for (int i = verifyCodeBuilder.length(); i < 4; i++) {
-				textPaint.setColor(getResources().getColor(R.color.red));
-				textPaint.setStrokeWidth(20);// 改变线的粗细
+				textPaint.setColor(getResources().getColor(R.color.lightgray1));
+				textPaint.setStrokeWidth(10);// 改变线的粗细
 				int x, y = (int) textBaseY;
 				if (i <= 2) {
 					x = (characterWidth + characterSpacing) * i;

@@ -105,7 +105,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageView1"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="27dp"
+                    android:layout_marginTop="25dp"
                     android:gravity="center"
                     android:text="NAME"
                     android:textSize="18.0sp" />
@@ -114,14 +114,14 @@
             <RelativeLayout
                 android:id="@+id/Setting_User_layout"
                 android:layout_width="match_parent"
-                android:layout_height="250.0dp"
+                android:layout_height="200.0dp"
                 android:layout_below="@+id/Setting_head_layout"
                 android:layout_centerHorizontal="true" >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout3"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true" >
 
@@ -138,16 +138,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginTop="25.0dp"
+                        android:layout_marginTop="15.0dp"
                         android:text="账户"
-                        android:textColor="#808080"
-                        android:textSize="15.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_size" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/Setting_Nickname_change"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/relativeLayout3"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -160,8 +160,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="姓名"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView6"
@@ -173,8 +172,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_1"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -191,14 +190,14 @@
                         android:layout_toLeftOf="@+id/Setting_next_1"
                         android:gravity="right|center"
                         android:text="姓名"
-                        android:textColor="#808080"
-                        android:textSize="12.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_prompt_size" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/Setting_Sex_change"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/setting_click_selector" >
@@ -211,8 +210,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="性别"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView8"
@@ -224,8 +222,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_2"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -242,14 +240,14 @@
                         android:layout_toLeftOf="@+id/Setting_next_2"
                         android:gravity="right|center"
                         android:text="性别"
-                        android:textColor="#808080"
-                        android:textSize="12.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_prompt_size" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/Setting_Binding_phone"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/Setting_Sex_change"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -262,8 +260,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="绑定手机"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView10"
@@ -275,8 +272,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_3"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -293,14 +290,14 @@
                         android:layout_toLeftOf="@+id/Setting_next_3"
                         android:gravity="right|center"
                         android:text="未绑定手机号"
-                        android:textColor="#808080"
-                        android:textSize="12.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_prompt_size" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/Setting_Binding_weixin"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/Setting_Binding_phone"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -313,8 +310,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="绑定微信"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView12"
@@ -325,8 +321,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_4"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -338,27 +334,25 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_alignTop="@+id/Setting_next_4"
+                        android:layout_marginRight="5.0dp"
                         android:layout_toLeftOf="@+id/Setting_next_4"
                         android:text="未绑定微信号"
-                        android:textColor="#808080"
-                        android:textSize="12.0sp"
-                        android:layout_marginRight="5.0dp"
-                         />
-
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_prompt_size" />
                 </RelativeLayout>
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/relativeLayout7"
                 android:layout_width="match_parent"
-                android:layout_height="150.0dp"
+                android:layout_height="120.0dp"
                 android:layout_below="@+id/Setting_User_layout"
                 android:layout_centerHorizontal="true" >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout6"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
@@ -368,10 +362,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="20.0dp"
-                        android:layout_marginTop="25.0dp"
+                        android:layout_marginTop="15.0dp"
                         android:text="支付"
-                        android:textColor="#808080"
-                        android:textSize="15.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView14"
@@ -385,7 +379,7 @@
                 <RelativeLayout
                     android:id="@+id/Setting_Binding_weixin_wallet"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/relativeLayout6"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -398,8 +392,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="绑定微信钱包"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView16"
@@ -411,8 +404,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_5"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -423,7 +416,7 @@
                 <RelativeLayout
                     android:id="@+id/Setting_Binding_alipay"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -436,8 +429,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="绑定支付宝"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView18"
@@ -461,14 +453,14 @@
             <RelativeLayout
                 android:id="@+id/relativeLayout9"
                 android:layout_width="match_parent"
-                android:layout_height="150.0dp"
+                android:layout_height="120.0dp"
                 android:layout_below="@+id/relativeLayout7"
                 android:layout_centerHorizontal="true" >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout8"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
@@ -477,10 +469,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20.0dp"
-                        android:layout_marginTop="25.0dp"
+                        android:layout_marginTop="15.0dp"
                         android:text="关于"
-                        android:textColor="#808080"
-                        android:textSize="15.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView20"
@@ -494,7 +486,7 @@
                 <RelativeLayout
                     android:id="@+id/Setting_feedback"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/relativeLayout8"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -507,8 +499,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="反馈"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView22"
@@ -520,8 +511,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_6"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -532,7 +523,7 @@
                 <RelativeLayout
                     android:id="@+id/Setting_about_us"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -545,8 +536,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="关于必聚"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView24"
@@ -557,8 +547,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_7"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -570,14 +560,14 @@
             <RelativeLayout
                 android:id="@+id/relativeLayout11"
                 android:layout_width="match_parent"
-                android:layout_height="100.0dp"
+                android:layout_height="80.0dp"
                 android:layout_below="@+id/relativeLayout9"
                 android:layout_centerHorizontal="true" >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout10"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
@@ -586,10 +576,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20.0dp"
-                        android:layout_marginTop="25.0dp"
+                        android:layout_marginTop="15.0dp"
                         android:text="其他"
-                        android:textColor="#808080"
-                        android:textSize="15.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView26"
@@ -602,7 +592,7 @@
                 <RelativeLayout
                     android:id="@+id/Setting_Exit"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/relativeLayout10"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -615,8 +605,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="退出登录"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView28"
@@ -627,8 +616,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_8"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"

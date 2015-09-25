@@ -5,7 +5,7 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60.0dp"
+        android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
@@ -20,8 +20,8 @@
 
             <ImageView
                 android:id="@+id/Member_head"
-                android:layout_width="50.0dp"
-                android:layout_height="50.0dp"
+                android:layout_width="40.0dp"
+                android:layout_height="40.0dp"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:src="@drawable/login_1" />
@@ -33,11 +33,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="20.0dp"
-            android:layout_marginTop="10.0dp"
+            android:layout_marginTop="5.0dp"
             android:layout_toRightOf="@+id/relativeLayout1"
             android:gravity="left|center"
             android:text="TextView"
-            android:textSize="15.0sp" />
+            android:textSize="14.0sp" />
 
         <TextView
             android:id="@+id/Member_role"
@@ -46,10 +46,11 @@
             android:layout_alignLeft="@+id/Member_name"
             android:layout_alignRight="@+id/Member_name"
             android:layout_below="@+id/Member_name"
+            android:layout_marginTop="5.0dp"
             android:gravity="left|center"
             android:text="TextView"
             android:textColor="#808080"
-            android:textSize="13.0sp" />
+            android:textSize="12.0sp" />
 
         <TextView
             android:id="@+id/Member_line_1"

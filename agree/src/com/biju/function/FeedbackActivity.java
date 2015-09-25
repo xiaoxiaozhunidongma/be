@@ -12,9 +12,8 @@ import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
+
 import com.BJ.javabean.FeedBack;
-import com.BJ.utils.DensityUtil;
 import com.biju.Interface;
 import com.biju.Interface.feedBackListenner;
 import com.biju.R;
@@ -25,8 +24,6 @@ public class FeedbackActivity extends Activity implements OnClickListener {
 	private EditText mFeedback_question;
 	private Interface feedbackinterface;
 	private RelativeLayout mFeedback_question_layout;
-	private float height1;
-	private float height3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {

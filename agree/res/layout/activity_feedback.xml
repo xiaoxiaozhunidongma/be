@@ -8,13 +8,15 @@
     <RelativeLayout
         android:id="@+id/feedback_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:background="@drawable/title_background"
+         >
 
         <RelativeLayout
             android:id="@+id/feedback_back_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
@@ -26,14 +28,14 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="返回"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/feedback_title_left"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/feedback_send_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_right_width"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >
@@ -45,9 +47,9 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:gravity="center"
-                android:text="完成"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/feedback_title_right"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
         </RelativeLayout>
 
         <TextView
@@ -81,7 +83,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20dp"
                 android:layout_marginTop="35.0dp"
-                android:text="输入你的想要反馈的问题以及对我们的建议"
+                android:text="@string/feedback_prompt"
                 android:textColor="#808080"
                 android:textSize="12.0sp" />
         </RelativeLayout>
@@ -123,7 +125,7 @@
                 android:layout_alignParentLeft="true"
                 android:layout_marginLeft="20.0dp"
                 android:layout_marginTop="10.0dp"
-                android:text="小提示:"
+                android:text="@string/feedback_prompt_1"
                 android:textSize="12.0sp"
                 android:textColor="#808080"
                  />
@@ -134,7 +136,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="30.0dp"
                 android:layout_marginLeft="20.0dp"
-                android:text="我们将十分重视你的意见!"
+                android:text="@string/feedback_prompt_2"
                 android:textSize="12.0sp"
                 android:textColor="#808080"
                  />

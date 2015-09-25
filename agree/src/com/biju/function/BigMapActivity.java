@@ -1,12 +1,16 @@
 package com.biju.function;
 
-import com.biju.R;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.view.Menu;
-
 import java.util.ArrayList;
+
+import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
+import android.content.DialogInterface.OnClickListener;
+import android.content.Intent;
+import android.os.Bundle;
+import android.view.Menu;
+import android.view.View;
+import android.view.Window;
 
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
@@ -28,17 +32,6 @@ import com.baidu.mapapi.navi.BaiduMapAppNotSupportNaviException;
 import com.baidu.mapapi.navi.BaiduMapNavigation;
 import com.baidu.mapapi.navi.NaviPara;
 import com.biju.R;
-import com.biju.function.PartyDetailsActivity.MyLocationListenner;
-
-import android.os.Bundle;
-import android.app.Activity;
-import android.app.AlertDialog;
-import android.content.DialogInterface;
-import android.content.Intent;
-import android.content.DialogInterface.OnClickListener;
-import android.view.Menu;
-import android.view.View;
-import android.view.Window;
 
 public class BigMapActivity extends Activity implements android.view.View.OnClickListener {
 

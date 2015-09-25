@@ -77,7 +77,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#efefef" >
+            android:background="@drawable/background"
+             >
 
             <RelativeLayout
                 android:id="@+id/TeamSetting2_head_layout"
@@ -103,23 +104,23 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/TeamSetting2_head"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="27dp"
+                    android:layout_marginTop="25dp"
                     android:gravity="center"
                     android:text="NAME"
-                    android:textSize="18.0sp" />
+                    android:textSize="15.0sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/Setting_User_layout"
                 android:layout_width="match_parent"
-                android:layout_height="200.0dp"
+                android:layout_height="160.0dp"
                 android:layout_below="@+id/TeamSetting2_head_layout"
                 android:layout_centerHorizontal="true" >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout3"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true" >
 
@@ -136,16 +137,16 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginTop="25.0dp"
+                        android:layout_marginTop="15.0dp"
                         android:text="小组"
-                        android:textColor="#808080"
-                        android:textSize="15.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_size" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/TeamSetting2_Tean_name_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/relativeLayout3"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -158,8 +159,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="小组名称"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView6"
@@ -171,8 +171,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_1"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -189,14 +189,14 @@
                         android:layout_toLeftOf="@+id/Setting_next_1"
                         android:gravity="right|center"
                         android:text="名称"
-                        android:textColor="#808080"
-                        android:textSize="12.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_prompt_size" />
                 </RelativeLayout>
 
                 <RelativeLayout
                     android:id="@+id/TeamSetting2_invite_friends_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentBottom="true"
                     android:layout_alignParentLeft="true"
                     android:background="@drawable/setting_click_selector" >
@@ -209,8 +209,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="邀请好友加入"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView10"
@@ -221,8 +220,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_3"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -233,7 +232,7 @@
                 <RelativeLayout
                     android:id="@+id/TeamSetting2_History_party_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentLeft="true"
                     android:layout_below="@+id/TeamSetting2_Tean_name_layout"
                     android:background="@drawable/setting_click_selector" >
@@ -246,8 +245,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="历史聚会"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView8"
@@ -259,8 +257,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_2"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"
@@ -272,14 +270,14 @@
             <RelativeLayout
                 android:id="@+id/relativeLayout7"
                 android:layout_width="match_parent"
-                android:layout_height="200.0dp"
+                android:layout_height="160.0dp"
                 android:layout_below="@+id/Setting_User_layout"
                 android:layout_centerHorizontal="true" >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout6"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
@@ -289,10 +287,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="20.0dp"
-                        android:layout_marginTop="25.0dp"
+                        android:layout_marginTop="15.0dp"
                         android:text="提示"
-                        android:textColor="#808080"
-                        android:textSize="15.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView14"
@@ -306,7 +304,7 @@
                 <RelativeLayout
                     android:id="@+id/TeamSetting2_Message_prompt"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/relativeLayout6"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -319,8 +317,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="聚会信息提示"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView16"
@@ -350,7 +347,7 @@
                 <RelativeLayout
                     android:id="@+id/TeamSetting2_chat_prompt"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentLeft="true"
                     android:layout_below="@+id/TeamSetting2_Message_prompt"
                     android:background="@drawable/setting_click_selector" >
@@ -363,8 +360,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="聊天信息提示"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView18"
@@ -394,7 +390,7 @@
                 <RelativeLayout
                     android:id="@+id/TeamSetting2_phone_prompt"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/TeamSetting2_chat_prompt"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -407,8 +403,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="公开手机号码"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView11"
@@ -445,7 +440,7 @@
                 <RelativeLayout
                     android:id="@+id/relativeLayout10"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
@@ -454,10 +449,10 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20.0dp"
-                        android:layout_marginTop="25.0dp"
+                        android:layout_marginTop="15.0dp"
                         android:text="其他"
-                        android:textColor="#808080"
-                        android:textSize="15.0sp" />
+                        android:textColor="@drawable/setting_prompt_color"
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView26"
@@ -470,7 +465,7 @@
                 <RelativeLayout
                     android:id="@+id/TeamSetting2_Exit_layout"
                     android:layout_width="match_parent"
-                    android:layout_height="50.0dp"
+                    android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/relativeLayout10"
                     android:layout_centerHorizontal="true"
                     android:background="@drawable/setting_click_selector" >
@@ -483,8 +478,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="退出小组"
-                        android:textColor="#000000"
-                        android:textSize="15.0sp" />
+                        android:textSize="@dimen/setting_size" />
 
                     <TextView
                         android:id="@+id/textView28"
@@ -495,8 +489,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_8"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"

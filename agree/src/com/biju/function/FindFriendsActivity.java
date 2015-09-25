@@ -92,8 +92,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 						User user = Users.get(0);
 						mFindfriends_nickname.setText(user.getNickname());
 						userAvatar_path = user.getAvatar_path();
-						Log.e("FindFriendsActivity",
-								"图片路径" + user.getAvatar_path());
+						Log.e("FindFriendsActivity","图片路径" + user.getAvatar_path());
 
 					}
 					String completeURL = beginStr + userAvatar_path + endStr;
@@ -101,8 +100,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 							FindFriendsActivity.this, completeURL,
 							mFindfriends_head);
 				} else {
-					Toast.makeText(FindFriendsActivity.this, "查找好友失败，请重新查找!",
-							Toast.LENGTH_SHORT).show();
+					Toast.makeText(FindFriendsActivity.this, "查找好友失败，请重新查找!",Toast.LENGTH_SHORT).show();
 				}
 
 			}
@@ -145,12 +143,9 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 					if (friendsbacks.size() > 0) {
 						for (int i = 0; i < friendsbacks.size(); i++) {
 							CheckFriends checkFriends = friendsbacks.get(i);
-							Log.e("FindFriendsActivity", "pk_user======="
-									+ pk_user);
-							if (Integer.valueOf(pk_user) == checkFriends
-									.getPk_user()) {
-								Toast.makeText(FindFriendsActivity.this,
-										"您已添加过该好友！", Toast.LENGTH_SHORT).show();
+							Log.e("FindFriendsActivity", "pk_user======="+ pk_user);
+							if (Integer.valueOf(pk_user) == checkFriends.getPk_user()) {
+								Toast.makeText(FindFriendsActivity.this,"您已添加过该好友！", Toast.LENGTH_SHORT).show();
 								mFindfriends_before.setVisibility(View.VISIBLE);
 								mFindfriends_after.setVisibility(View.GONE);
 							}
@@ -162,8 +157,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 					// 查找好友信息
 					User user = new User();
 					user.setPhone(pk_user);
-					findfriends_inter_before.findUser(FindFriendsActivity.this,
-							user);
+					findfriends_inter_before.findUser(FindFriendsActivity.this,user);
 				}
 			}
 
@@ -247,13 +241,11 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 				User_User user_User = new User_User();
 				user_User.setFk_user_from(SD_pk_user);
 				user_User.setFk_user_to(Integer.valueOf(pk_user));
-				findfriends_inter_before.checkFriend(FindFriendsActivity.this,
-						user_User);
+				findfriends_inter_before.checkFriend(FindFriendsActivity.this,user_User);
 			}
 
 		} else {
-			Toast.makeText(FindFriendsActivity.this, "网络异常，请检查网络!",
-					Toast.LENGTH_SHORT).show();
+			Toast.makeText(FindFriendsActivity.this, "网络异常，请检查网络!",Toast.LENGTH_SHORT).show();
 		}
 	}
 

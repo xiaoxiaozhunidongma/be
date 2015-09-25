@@ -180,6 +180,7 @@
     <string name="title_activity_add_new_party">AddNewPartyActivity</string>
     <string name="title_activity_add_friends2">AddFriends2Activity</string>
     <string name="title_activity_contact_search">ContactSearchActivity</string>
+    <string name="title_activity_team_setting2">TeamSetting2Activity</string>
     <string name="chat_base_list_view_listEmptyHint">无数据</string>
     <string name="chat_base_list_view_noMore">已无更多</string>
     <string name="chat_utils_tips">提示</string>
@@ -254,6 +255,15 @@
     <string name="partydetails_title_text">聚会详情</string>
     <string name="partydetails_title_right">更多</string>
     <string name="partydetails_title_left">返回</string>
+    <string name="partydetails_partyaddress">地址</string>
+    <string name="partydetails_partyname">聚会名称</string>
+    <string name="partydetails_partytime">聚会时间</string>
+    <string name="partydetails_partypayment">预付款</string>
+    <string name="partydetails_partake">参与</string>
+    <string name="partydetails_did_not_say">未表态</string>
+    <string name="partydetails_party_organizer">组织者</string>
+    <string name="partydetails_prompt">点击参与人数,查看支付信息</string>
+    <string name="partydetails_apply">报名</string>
     <!-- 小组设置界面 -->
     <string name="setting2_title_text">社团设置</string>
     <string name="setting2_title_right">保存</string>
@@ -261,5 +271,98 @@
     <!-- 名称设置界面 -->
     <string name="nickname_title_right">完成</string>
     <string name="nickname_title_left">返回</string>
-
+    <string name="nickname_prompt">输入你想要更改的姓名</string>
+    <string name="nickname_prompt_1">姓名长度不能超过14个字符!</string>
+    <string name="nickname_prompt_2">用户姓名长度不能小于2个字符,</string>
+    <string name="nickname_hint">昵称</string>
+    <!-- 关于我们界面 -->
+    <string name="aboutus_title_left">返回</string>
+    <string name="aboutus_software_name">必聚</string>
+    <string name="aboutus_company_name">厦门必聚科技有限公司</string>
+    <string name="aboutus_ver">ver: 1.0 beta</string>
+    <!-- 好友界面 -->
+    <string name="friends_title_text">通讯录</string>
+    <string name="friends_title_right">查找好友</string>
+    <string name="friends_title_left">返回</string>
+    <!-- 新建聚会界面 -->
+    <string name="newparty_title_text">新建聚会</string>
+    <string name="newparty_title_right">完成</string>
+    <string name="newparty_title_left">返回</string>
+    <!-- 大地图导航界面 -->
+    <string name="bigmap_title_right">导航</string>
+    <string name="bigmap_title_left">返回</string>
+    <!-- 绑定手机 -->
+    <string name="bindingphone_title_right">完成</string>
+    <string name="bindingphone_title_left">返回</string>
+    <string name="bindingphone_prompt">请输入你的手机号码</string>
+    <string name="bindingphone_prompt_1">小提示:</string>
+    <string name="bindingphone_hint">手机号码</string>
+    <!-- 通讯录搜索界面 -->
+    <string name="contact_hint">请输入姓名</string>
+    <!-- 反馈界面 -->
+    <string name="feedback_title_right">完成</string>
+    <string name="feedback_title_left">返回</string>
+    <string name="feedback_prompt">输入你的想要反馈的问题以及对我们的建议</string>
+    <string name="feedback_prompt_1">小提示:</string>
+    <string name="feedback_prompt_2">我们将十分重视你的意见!</string>
+    <!-- 查找好友界面 -->
+    <string name="findfriends_title_text">查找好友</string>
+    <string name="findfriends_title_left">返回</string>
+    <string name="findfriends_prompt">输入好友必聚号或者绑定的手机号</string>
+    <string name="findfriends_hint">必聚号或者手机号</string>
+    <string name="findfriends_but">查找好友</string>
+    <string name="findfriends_sendrequest">发送好友请求</string>
+    <string name="findfriends_againfind">重新查找</string>
+    <!-- 好友资料界面 -->
+    <string name="friendsData_callphone">拨电话</string>
+    <string name="friendsData_sendMessages">发信息</string>
+    <string name="friendsData_savecontact">保存到通讯录</string>
+    <string name="friendsData_deleteFriends">删除好友</string>
+    <string name="friendsData_privateChat">私聊</string>
+    <!-- 地图界面 -->
+    <string name="map_title_text">选择地点</string>
+    <string name="map_title_right">完成</string>
+    <string name="map_title_left">返回</string>
+    <string name="map_hint">使用文本输入地址</string>
+    <!-- 小组更多界面 -->
+    <string name="more_prompt">提示</string>
+    <string name="more_prompt_1">选择想要对聚会做的操作类型</string>
+    <string name="more_member_share">分享</string>
+    <string name="more_creator_add">添加到系统日历</string>
+    <string name="more_title_cancel">取消</string>
+    <string name="more_creator_cancel">取消聚会</string>
+    <!-- 选择新建日程小组界面 -->
+    <string name="teampraty_title_text">选择一个小组</string>
+    <string name="teampraty_title_left">返回</string>
+    <!-- 性别设置界面 -->
+    <string name="sex_title_right">完成</string>
+    <string name="sex_title_left">返回</string>
+    <string name="sex_prompt">请选择你的性别</string>
+    <string name="sex_prompt_1">男</string>
+    <string name="sex_prompt_2">女</string>
+    <string name="sex_prompt_3">其他</string>
+    <!-- 聚会时间选择界面 -->
+    <string name="time_title_text">选择时间</string>
+    <string name="time_title_right">完成</string>
+    <string name="time_title_left">返回</string>
+    <string name="time_prompt">设置聚会开始时间</string>
+    <!-- 小组邀请码界面 -->
+    <string name="request_code_title_left">小组邀请</string>
+    <string name="requestcode2_User_nickname">NAME</string>
+    <string name="requestcode2_team_data">小组资料</string>
+    <string name="requestcode2_number">人数</string>
+    <string name="requestcode2_number_1">小组人员数量</string>
+    <string name="requestcode2_introduce">介绍</string>
+    <string name="requestcode2_personal">个人信息</string>
+    <string name="requestcode2_public_phone">是否公开手机</string>
+    <string name="requestcode2_operation">操作</string>
+    <string name="requestcode2_add_team">加入小组</string>
+    <string name="title_activity_request_code3">RequestCode3Activity</string>
+    <string name="title_activity_sliding">SlidingActivity</string>
+	<!--新建小组界面  -->
+	 <string name="NewTeam_title_right">完成</string>
+    <string name="NewTeam_title_left">返回</string>
+    <string name="NewTeam_prompt">小组封面</string>
+    <string name="NewTeam_hint">小组名称</string>
+    <string name="NewTeam_prompt_1">邀请好友加入小组</string>
 </resources>

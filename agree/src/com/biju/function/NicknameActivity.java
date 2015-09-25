@@ -26,9 +26,6 @@ public class NicknameActivity extends Activity implements OnClickListener{
 
 	private EditText mNickname_nickname;
 	public static RelativeLayout mNickname_warn_layout;
-//	private int TotalCount1=0;
-//	private int TotalCount2=0;
-//	private int TotalCount3=0;
 	private Integer sD_pk_user;
     private Interface nicknameInterface;
 
@@ -58,8 +55,7 @@ public class NicknameActivity extends Activity implements OnClickListener{
 			@Override
 			public void success(String A) {
 				// 更新用户资料成功
-				updateback usersetting_updateback = GsonUtils.parseJson(A,
-						updateback.class);
+				updateback usersetting_updateback = GsonUtils.parseJson(A,updateback.class);
 				int a = usersetting_updateback.getStatusMsg();
 				if (a == 1) {
 					Log.e("NicknameActivity", "更新成功" + A);
@@ -135,63 +131,4 @@ public class NicknameActivity extends Activity implements OnClickListener{
 	private void Nickname_back() {
 		finish();
 	}
-
-//	private void Nickname_OK() {
-//		String ems=mNickname_nickname.getText().toString().trim();
-//		if("".equals(ems))
-//		{
-//			Toast.makeText(NicknameActivity.this, "姓名不能为空!", Toast.LENGTH_SHORT).show();
-//		}else
-//		{
-//			TotalCount1=0;
-//			TotalCount2=0;
-//			TotalCount3=0;
-//			for (int i = 0; i < ems.length(); i++) {
-//				String Ems=String.valueOf(ems.charAt(i));
-//				TotalCount(Ems);
-//				Log.e("NicknameActivity", "获取到的Ems==========="+i+"=========="+Ems);
-//			}
-//		}
-//		int TotalCount=TotalCount1+TotalCount2+TotalCount3;
-//		Log.e("NicknameActivity", "所获取的TotalCount的长度==========="+TotalCount);
-//		if(TotalCount<2)
-//		{
-//			Toast.makeText(NicknameActivity.this, "姓名长度不能小于2个字符!", Toast.LENGTH_SHORT).show();
-//			Log.e("NicknameActivity", "姓名长度不能小于2个字符!==========="+TotalCount);
-//		}else if(TotalCount>14)
-//		{
-//			Log.e("NicknameActivity", "姓名长度不能大于14个字符!==========="+TotalCount);
-//			Toast.makeText(NicknameActivity.this, "姓名长度不能大于14个字符!", Toast.LENGTH_SHORT).show();
-//		}
-//	}
-
-//	private void TotalCount(String substring) {
-//		Pattern p1 = Pattern.compile("[0-9]*"); 
-//		Matcher m1 = p1.matcher(substring);
-//		if(m1.matches())
-//		{
-//			Log.e("NicknameActivity", "输入的是数字===========");
-//			TotalCount1=TotalCount1+1;
-//		}else
-//		{
-//			Pattern p2=Pattern.compile("[a-zA-Z]");
-//			Matcher m2=p2.matcher(substring);
-//			if(m2.matches())
-//			{
-//				Log.e("NicknameActivity", "输入的是字母===========");
-//				TotalCount2=TotalCount2+1;
-//			}else
-//			{
-//				Pattern p3=Pattern.compile("[\u4e00-\u9fa5]");
-//				Matcher m3=p3.matcher(substring);
-//				if(m3.matches())
-//				{
-//					Log.e("NicknameActivity", "输入的是汉字===========");
-//					TotalCount3=TotalCount3+2;
-//				}
-//			}
-//		}
-//	}
-	
-	
 }

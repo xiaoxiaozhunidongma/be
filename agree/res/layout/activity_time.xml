@@ -7,13 +7,15 @@
     <RelativeLayout
         android:id="@+id/Time_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true" 
+        android:background="@drawable/title_background"
+        >
 
         <RelativeLayout
             android:id="@+id/Time_back_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_left_width"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
@@ -24,9 +26,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="返回"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/time_title_left"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
 
         <TextView
@@ -35,13 +37,12 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="选择时间"
-            android:textColor="#000000"
-            android:textSize="18.0sp" />
+            android:text="@string/time_title_text"
+            android:textSize="@dimen/title_size" />
 
         <RelativeLayout
             android:id="@+id/Time_OK_layout"
-            android:layout_width="80.0dp"
+            android:layout_width="@dimen/title_right_width"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >
@@ -52,9 +53,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
-                android:text="完成"
-                android:textColor="#d3d3d3"
-                android:textSize="17.0sp" />
+                android:text="@string/time_title_right"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
         </RelativeLayout>
 
         <TextView
@@ -146,8 +147,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/ datePicker_layout"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50.0dp"
-         >
+        android:layout_marginTop="50.0dp" >
 
         <TimePicker
             android:id="@+id/timePicker"
@@ -161,8 +161,7 @@
         android:layout_height="50.0dp"
         android:layout_below="@+id/ datePicker_layout"
         android:layout_centerHorizontal="true"
-        android:background="#00e3e3"
-         >
+        android:background="#00e3e3" >
 
         <TextView
             android:id="@+id/textView3"
@@ -170,11 +169,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="设置聚会开始时间" 
-            android:textSize="17.0sp"
+            android:text="@string/time_prompt"
             android:textColor="#ffffff"
-            />
-
+            android:textSize="17.0sp" />
     </RelativeLayout>
 
 </RelativeLayout>
