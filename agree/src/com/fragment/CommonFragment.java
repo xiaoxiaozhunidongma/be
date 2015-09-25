@@ -5,6 +5,7 @@ import java.util.Arrays;
 import android.animation.ObjectAnimator;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
@@ -13,6 +14,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -197,6 +199,11 @@ public class CommonFragment extends Fragment implements OnClickListener {
 		int position = Arrays.binarySearch(mTextviewResIds, id);
 		// 点击显示页面时不显示滑动效果
 		mPager.setCurrentItem(position, false);
+	}
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.e("CommonFragment", "调用了这个onActivityResult");
 	}
 
 }

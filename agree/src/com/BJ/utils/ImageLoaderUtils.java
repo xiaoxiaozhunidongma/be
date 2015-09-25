@@ -22,6 +22,7 @@ public class ImageLoaderUtils {
 
 	public static void clearCache() {
 		ImageLoader.getInstance().clearDiskCache();
+		ImageLoader.getInstance().clearMemoryCache();
 	}
 
 	private ImageLoaderUtils() {// 私有化构造

@@ -47,8 +47,8 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private ArrayList<Relation> partackList = new ArrayList<Relation>();
 	private ArrayList<Relation> not_sayList = new ArrayList<Relation>();
 
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	private String completeURL;
 	private String TestcompleteURL = beginStr+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private int commentsList_msg = -1;

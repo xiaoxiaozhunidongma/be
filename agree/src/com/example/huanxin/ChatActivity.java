@@ -191,8 +191,8 @@ public class ChatActivity extends Activity implements OnClickListener, EMEventLi
 	private WakeLock wakeLock;
 	private EMGroup group;
 	private ImageView micImage;
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	private Handler micImageHandler = new Handler() {
 
 		@Override

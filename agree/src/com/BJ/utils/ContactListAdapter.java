@@ -62,8 +62,8 @@ public class ContactListAdapter extends BaseAdapter {
 	private Integer contactFriends_Fk_user=-1;
 	
 	
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	// ÍêÕûÂ·¾¶completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private Integer fk_user_from;

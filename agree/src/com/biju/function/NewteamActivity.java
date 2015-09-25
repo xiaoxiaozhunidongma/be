@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -37,27 +38,29 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Newteamback;
-import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.RequestCodeback;
 import com.BJ.javabean.User;
+import com.BJ.utils.ByteOrBitmap;
+import com.BJ.utils.LimitLong;
 import com.BJ.utils.MyBimp;
+import com.BJ.utils.Path2Bitmap;
+import com.BJ.utils.PicCutter;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
+import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
+import com.alibaba.sdk.android.oss.storage.OSSData;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.createGroupListenner;
-import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
+import com.biju.APP.MyApplication;
 import com.github.volley_examples.utils.GsonUtils;
-import com.tencent.upload.UploadManager;
-import com.tencent.upload.task.ITask.TaskState;
-import com.tencent.upload.task.IUploadTaskListener;
-import com.tencent.upload.task.UploadTask;
-import com.tencent.upload.task.data.FileInfo;
-import com.tencent.upload.task.impl.PhotoUploadTask;
 
 @SuppressLint("SimpleDateFormat")
 public class NewteamActivity extends Activity implements OnClickListener {
@@ -68,7 +71,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	public static String APPID = "201139";
 	public static String USERID = "";
 	public static String SIGN;
-	private UploadManager uploadManager;
+//	private UploadManager uploadManager;
 	protected String mFilePath = null;
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
@@ -76,8 +79,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private ProgressBar newteam_progressBar;
 	private Interface cregrouInter;
 	private String format1;
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private boolean read_requestcode2;
@@ -89,6 +92,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private String sDpath;
 	private Group group;
 	private Integer pk_group;
+	private OSSData ossData;
+	private OSSService ossService;
+	private OSSBucket sampleBucket;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,6 +106,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		Log.e("NewteamActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 
 		initUI();
+		//获取ossService和sampleBucket
+		ossService = MyApplication.getOssService();
+		sampleBucket = MyApplication.getSampleBucket();
 
 		newteam_tv_head.setVisibility(View.VISIBLE);// 显示小组头像选择
 		mNewteam_head.setVisibility(View.GONE);
@@ -154,6 +163,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	private boolean isreaduser;
 	private Integer sD_pk_user;
+	private byte[] bitmap2Bytes;
+	private String uUid;
 
 	private void ReadTeam(int pk_user) {
 		cregrouInter = Interface.getInstance();
@@ -213,12 +224,12 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		});
 	}
 
-	private void initUpload() {
-		// 注册签名
-		UploadManager.authorize(APPID, USERID, SIGN);
-		uploadManager = new UploadManager(NewteamActivity.this, "persistenceId");
-
-	}
+//	private void initUpload() {
+//		// 注册签名
+//		UploadManager.authorize(APPID, USERID, SIGN);
+//		uploadManager = new UploadManager(NewteamActivity.this, "persistenceId");
+//
+//	}
 
 	private void initUI() {
 		mNewteam_name = (EditText) findViewById(R.id.newteam_name);// 小组名称
@@ -302,76 +313,79 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			group.setStatus(1);
 			group.setName(newteam_name);
 			group.setLast_post_time(format2);
-
-			Interface interface1 = Interface.getInstance();
-			interface1.getPicSign(this, new User());
-			interface1.setPostListener(new getPicSignListenner() {
-
-				@Override
-				public void success(String A) {
-					PicSignBack picSignBack = GsonUtils.parseJson(A,PicSignBack.class);
-					String returnData = picSignBack.getReturnData();
-					SIGN = returnData;
-					initUpload();
-					upload(group);
-
-				}
-
-				@Override
-				public void defail(Object B) {
-
-				}
-			});
+			
+			//上传OSS
+			OSSupload(ossData, bitmap2Bytes,uUid);
+			
+//			Interface interface1 = Interface.getInstance();
+//			interface1.getPicSign(this, new User());
+//			interface1.setPostListener(new getPicSignListenner() {
+//
+//				@Override
+//				public void success(String A) {
+//					PicSignBack picSignBack = GsonUtils.parseJson(A,PicSignBack.class);
+//					String returnData = picSignBack.getReturnData();
+//					SIGN = returnData;
+//					initUpload();
+//					upload(group);
+//
+//				}
+//
+//				@Override
+//				public void defail(Object B) {
+//
+//				}
+//			});
 		}
 	}
 
-	private void upload(final Group group) {
-		tmpFilePath = Environment.getExternalStorageDirectory()
-				.getAbsolutePath() + "/compress.tmp";
-		UploadTask task = new PhotoUploadTask(mFilePath,
-				new IUploadTaskListener() {
-
-					@SuppressLint("NewApi")
-					@Override
-					public void onUploadSucceed(final FileInfo result) {
-						Log.e("上传结果", "upload succeed: " + result.fileId);
-						// 上传完成后注册
-						Log.e("图片路径", "result.url" + result.url);
-//						 上传完成后删除SD中图片
-//						deleteMybitmap(sDpath);
-						group.setAvatar_path(result.fileId);
-						// 创建CreatGroup
-						Group_User group_User = new Group_User();
-						group_User.setFk_user(sD_pk_user);
-						group_User.setRole(1);
-						group.setStatus(1);
-						Group_User[] members = { group_User };
-						CreateGroup creatGroup = new CreateGroup(members, group);
-						Log.e("NewteamActivity", "group:" + group.toString());
-						cregrouInter.createGroup(NewteamActivity.this,creatGroup);// 测试
-//						finish();
-					}
-
-					@Override
-					public void onUploadStateChange(TaskState state) {
-					}
-
-					@Override
-					public void onUploadProgress(long totalSize, long sendSize) {
-						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
-						// Log.e("上传进度", "上传进度: " + p + "%");
-						newteam_progressBar.setProgress((int) p);
-					}
-
-					@Override
-					public void onUploadFailed(final int errorCode,
-							final String errorMsg) {
-						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"+ errorMsg);
-					}
-				});
-		uploadManager.upload(task); // 开始上传
-
-	}
+//	private void upload(final Group group) {
+//		tmpFilePath = Environment.getExternalStorageDirectory()
+//				.getAbsolutePath() + "/compress.tmp";
+//		UploadTask task = new PhotoUploadTask(mFilePath,
+//				new IUploadTaskListener() {
+//
+//					@SuppressLint("NewApi")
+//					@Override
+//					public void onUploadSucceed(final FileInfo result) {
+//						Log.e("上传结果", "upload succeed: " + result.fileId);
+//						// 上传完成后注册
+//						Log.e("图片路径", "result.url" + result.url);
+////						 上传完成后删除SD中图片
+////						deleteMybitmap(sDpath);
+//						group.setAvatar_path(result.fileId);
+//						// 创建CreatGroup
+//						Group_User group_User = new Group_User();
+//						group_User.setFk_user(sD_pk_user);
+//						group_User.setRole(1);
+//						group.setStatus(1);
+//						Group_User[] members = { group_User };
+//						CreateGroup creatGroup = new CreateGroup(members, group);
+//						Log.e("NewteamActivity", "group:" + group.toString());
+//						cregrouInter.createGroup(NewteamActivity.this,creatGroup);// 测试
+////						finish();
+//					}
+//
+//					@Override
+//					public void onUploadStateChange(TaskState state) {
+//					}
+//
+//					@Override
+//					public void onUploadProgress(long totalSize, long sendSize) {
+//						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
+//						// Log.e("上传进度", "上传进度: " + p + "%");
+//						newteam_progressBar.setProgress((int) p);
+//					}
+//
+//					@Override
+//					public void onUploadFailed(final int errorCode,
+//							final String errorMsg) {
+//						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"+ errorMsg);
+//					}
+//				});
+//		uploadManager.upload(task); // 开始上传
+//
+//	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
@@ -400,21 +414,64 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				}
 			}
 			Log.e("NewteamActivity", "mFilePath======"+mFilePath);
-//			Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-//			Bitmap bmp = Bimp.revitionImageSize(mFilePath);
-			//这个mFilePath不可以用缩略图路径
-			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
-
-//			saveMyBitmap(bmp, newteam_name);
-//			mFilePath = sDpath;// 图片在SD卡中的路径
+			//OSS上传~
+//			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
+			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
+			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1080);//最长边限制为1080
+			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 600);//截取中间正方形
+			bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
+			UUID randomUUID = UUID.randomUUID();
+			uUid = randomUUID.toString();
 
 			newteam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
 			mNewteam_head.setVisibility(View.VISIBLE);
 			newteam_progressBar.setVisibility(View.VISIBLE);
-			mNewteam_head.setImageBitmap(bmp);
+			mNewteam_head.setImageBitmap(centerSquareScaleBitmap);
 		} catch (Exception e) {
 			Log.e("Demo", "choose file error!", e);
 		}
+	}
+
+	private void OSSupload(OSSData ossData, byte[] data, String UUid) {
+		ossData = ossService.getOssData(sampleBucket, UUid);
+		ossData.setData(data, "jpg"); // 指定需要上传的数据和它的类型
+		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
+		ossData.uploadInBackground(new SaveCallback() {
+		    @Override
+		    public void onSuccess(String objectKey) {
+		    	Log.e("", "图片上传成功");
+		    	Log.e("Main", "objectKey=="+objectKey);
+//		    	list.add("http://picstyle.beagree.com/"+objectKey);
+		    	runOnUiThread( new Runnable() {
+					public void run() {
+//						myAdapter.notifyDataSetChanged();
+					}
+				});
+		    	
+		    	group.setAvatar_path(objectKey);
+				// 创建CreatGroup
+				Group_User group_User = new Group_User();
+				group_User.setFk_user(sD_pk_user);
+				group_User.setRole(1);
+				group.setStatus(1);
+				Group_User[] members = { group_User };
+				CreateGroup creatGroup = new CreateGroup(members, group);
+				Log.e("NewteamActivity", "group:" + group.toString());
+				cregrouInter.createGroup(NewteamActivity.this,creatGroup);// 测试
+		    }
+
+		    @Override
+		    public void onProgress(String objectKey, int byteCount, int totalSize) {
+				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
+				// Log.e("上传进度", "上传进度: " + p + "%");
+				newteam_progressBar.setProgress((int) p);
+		    }
+
+		    @Override
+		    public void onFailure(String objectKey, OSSException ossException) {
+		    	Log.e("", "图片上传失败"+ossException.toString());
+		    }
+		});
 	}
 
 	public String getSDPath() {

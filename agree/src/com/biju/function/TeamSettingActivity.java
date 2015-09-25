@@ -55,8 +55,8 @@ import com.google.gson.reflect.TypeToken;
 public class TeamSettingActivity extends Activity implements OnClickListener,
 		SwipeRefreshLayout.OnRefreshListener {
 
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	private String useravatar_path;
 	private String completeURL;
 	private String TestcompleteURL = beginStr

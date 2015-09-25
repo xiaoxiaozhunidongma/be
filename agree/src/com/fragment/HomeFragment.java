@@ -64,8 +64,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		SwipeRefreshLayout.OnRefreshListener {
 
 	private View mLayout;
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	// ÍêÕûÂ·¾¶completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private GridView home_gridview;
@@ -348,6 +348,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
+						Log.e("", "completeURL===="+completeURL);
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
 						 homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
 						 completeURL, home_item_head);
@@ -363,6 +364,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr;
+						Log.e("", "completeURL===="+completeURL);
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
 						 homeImageLoaderUtils.getInstance().LoadImage(getActivity(),
 						 completeURL, home_item_head);

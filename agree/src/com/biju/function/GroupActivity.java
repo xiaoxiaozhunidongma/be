@@ -48,6 +48,7 @@ import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
 import com.fragment.CommonFragment;
+import com.fragment.PhotoFragment2;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
@@ -95,8 +96,8 @@ public class GroupActivity extends SlidingFragmentActivity implements
 	private ArrayList<Group_ReadAllUser> Group_Readalluser_List = new ArrayList<Group_ReadAllUser>();
 	private MyMemBerAdapter adapter;
 
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	private String completeURL;
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
@@ -473,6 +474,15 @@ public class GroupActivity extends SlidingFragmentActivity implements
 		editor2.putBoolean(IConstant.IsAddRefresh, false);
 		editor2.commit();
 		super.onStop();
+	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.e("GroupActivity", "调用了这个onActivityResult");
+		Log.e("GroupActivity", "调用了这个requestCode=="+requestCode);
+		Log.e("GroupActivity", "调用了这个data=="+data);
+		PhotoFragment2.onActivityResultInterface.onActivityResult(requestCode, resultCode, data);
 	}
 
 }

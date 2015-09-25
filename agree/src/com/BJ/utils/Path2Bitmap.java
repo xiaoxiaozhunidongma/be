@@ -1,61 +1,65 @@
 package com.BJ.utils;
 
-import java.io.ByteArrayOutputStream;
-import java.lang.ref.SoftReference;
-import java.lang.ref.WeakReference;
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.util.Log;
 
 public class Path2Bitmap {
-	public static Bitmap convertToBitmap(String path, int w, int h) {
-		BitmapFactory.Options opts = null;
-		if (w > 0 && h > 0) {
-			opts = new BitmapFactory.Options();
-			opts.inJustDecodeBounds = true;
-			BitmapFactory.decodeFile(path, opts);
-			// 计算图片缩放比例
-			final int minSideLength = Math.min(w, h);
-			opts.inSampleSize = computeSampleSize(opts, minSideLength, w * h);
-			Log.e("Path2Bitmap", "computeSampleSize=="+computeSampleSize(opts, minSideLength, w * h));
-			opts.inJustDecodeBounds = false;
-			opts.inInputShareable = true;
-			opts.inPreferredConfig = Bitmap.Config.RGB_565;
-			opts.inPurgeable = true;
-		}
-
-		// BitmapFactory.Options opts = new BitmapFactory.Options();
-		// // 设置为ture只获取图片大小
-		// opts.inJustDecodeBounds = true;
-		// // opts.inPreferredConfig = Bitmap.Config.ARGB_8888;
-		// opts.inPreferredConfig = Bitmap.Config.RGB_565;
-		// // 返回为空
-		// BitmapFactory.decodeFile(path, opts);
-		// int width = opts.outWidth;
-		// int height = opts.outHeight;
-		// float scaleWidth = 0.f, scaleHeight = 0.f;
-		// if (width > w || height > h) {
-		// // 缩放
-		// scaleWidth = ((float) width) / w;
-		// scaleHeight = ((float) height) / h;
-		// }
-		// opts.inJustDecodeBounds = false;
-		// float scale = Math.max(scaleWidth, scaleHeight);
-		// // opts.inSampleSize = (int)scale;
-		// opts.inSampleSize = 2;//缩放倍数
-		// opts.inTempStorage = new byte[16*1024];
-		// //设置16MB的临时存储空间（不过作用还没看出来，待验证）
-
-		Bitmap decodeFile = BitmapFactory.decodeFile(path, opts);
-		// WeakReference<Bitmap> weak = new WeakReference<Bitmap>(decodeFile);
-		SoftReference<Bitmap> weak = new SoftReference<Bitmap>(decodeFile);
-		// return BitmapFactory.decodeFile(path, opts);
-		Bitmap createBitmap = Bitmap.createBitmap(weak.get());
-		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-		createBitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
-		return createBitmap;
+	public static Bitmap convertToBitmap(String path) throws IOException {
+//		BitmapFactory.Options opts = null;
+////		if (w > 0 && h > 0) {
+//			opts = new BitmapFactory.Options();
+//			opts.inJustDecodeBounds = true;
+//			BitmapFactory.decodeFile(path, opts);
+//			opts.inSampleSize = 1;
+////			final int minSideLength = Math.max(w, h);
+////			opts.inSampleSize = computeSampleSize(opts, minSideLength, w * h);
+////			Log.e("Path2Bitmap", "computeSampleSize=="+computeSampleSize(opts, minSideLength, w * h));
+//			opts.inJustDecodeBounds = false;
+//			opts.inInputShareable = true;
+//			opts.inPreferredConfig = Bitmap.Config.RGB_565;
+//			opts.inPurgeable = true;
+////		}
+//
+//
+//		Bitmap decodeFile = BitmapFactory.decodeFile(path, opts);
+//		WeakReference<Bitmap> weak=null;
+//		if(decodeFile!=null){
+//			 weak = new WeakReference<Bitmap>(decodeFile);
+//			 decodeFile.recycle();
+//		}
+////		SoftReference<Bitmap> weak = new SoftReference<Bitmap>(decodeFile);
+////		// return BitmapFactory.decodeFile(path, opts);
+//			 
+//		 Bitmap createBitmap = null;
+//		 if(weak!=null){
+//			  createBitmap = Bitmap.createBitmap(weak.get());
+//		 }
+//		//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
+////		createBitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
+////		return decodeFile;
+//		return createBitmap;
 		// return Bitmap.createScaledBitmap(weak.get(), w, h, true);
+		
+		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
+				new File(path)));
+		BitmapFactory.Options options = new BitmapFactory.Options();
+		options.inJustDecodeBounds = true;
+		
+		BitmapFactory.decodeStream(in, null, options);
+		in.close();
+		Bitmap bitmap = null;
+		
+		in = new BufferedInputStream(new FileInputStream(new File(path)));
+		options.inSampleSize = 1;
+		options.inJustDecodeBounds = false;
+		bitmap = BitmapFactory.decodeStream(in, null, options);
+		return bitmap ;
 	}
 
 	public static int computeSampleSize(BitmapFactory.Options options,

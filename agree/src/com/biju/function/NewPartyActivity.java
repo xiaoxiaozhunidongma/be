@@ -43,8 +43,8 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 	private GridView newparty_gridview;
 	private List<Group> users;
 	private ArrayList<Group> list = new ArrayList<Group>();
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	// ÍêÕûÂ·¾¶completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private MyGridviewAdapter adapter;
