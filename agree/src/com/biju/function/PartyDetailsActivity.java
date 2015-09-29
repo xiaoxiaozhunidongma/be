@@ -442,7 +442,6 @@ public class PartyDetailsActivity extends Activity implements
 			Double latitude = oneParty.getLatitude();
 			Double longitude = oneParty.getLongitude();
 			String location = oneParty.getLocation();
-			mLat = latitude;
 			mLng = longitude;
 			edit_show.setText(location);
 		}
@@ -678,7 +677,7 @@ public class PartyDetailsActivity extends Activity implements
 			intent.putExtra(IConstant.UserAll, true);
 		} else {
 			intent.putExtra(IConstant.MoreParty, oneParty);
-		}
+		}                                                                                                                                                              
 		startActivity(intent);
 	}
 

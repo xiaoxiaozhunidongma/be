@@ -56,28 +56,13 @@
 
         <ImageView
             android:id="@+id/iv_userhead"
-            android:layout_width="@dimen/size_avatar"
-            android:layout_height="@dimen/size_avatar"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_alignBottom="@id/tv_chatcontent"
             android:layout_alignParentRight="true"
             android:layout_marginRight="@dimen/margin_chat_activity"
             android:scaleType="fitXY"
-            android:src="@drawable/mini_avatar_shadow" />
-
-        <TextView
-            android:id="@+id/tv_chatcontent"
-            style="@style/chat_content_date_style"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="@dimen/margin_chat_activity"
-            android:layout_toLeftOf="@id/iv_userhead"
-            android:autoLink="web"
-            android:background="@drawable/rightchat"
-            android:gravity="left|center"
-            android:lineSpacingExtra="2dp"
-            android:maxWidth="225.0dip"
-            android:paddingLeft="8dip"
-            android:textSize="15sp" 
+            android:src="@drawable/mini_avatar_shadow" 
             />
 
         <ImageView
@@ -143,6 +128,23 @@
             android:textSize="12sp"
             android:layout_marginRight="10dp"
             android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/tv_chatcontent"
+            style="@style/chat_content_date_style"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@+id/iv_userhead"
+            android:autoLink="web"
+            android:background="@drawable/rightchat"
+            android:gravity="left|center"
+            android:lineSpacingExtra="2dp"
+            android:maxWidth="225.0dip"
+            android:minHeight="30dp"
+            android:paddingLeft="8dip"
+            android:textColor="#ffffffff"
+            android:textSize="13sp" 
+            android:layout_marginTop="20dp"/>
 
     </RelativeLayout>
 

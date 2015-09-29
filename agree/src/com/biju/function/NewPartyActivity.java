@@ -42,7 +42,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 	private List<Group> users;
 	private ArrayList<Group> list = new ArrayList<Group>();
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	// ÍêÕûÂ·¾¶completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private MyGridviewAdapter adapter;
@@ -165,7 +165,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 			String newpartyAvatar_path = newparty_gridview.getAvatar_path();
 			String homenickname = newparty_gridview.getName();
 			mNewParty_item_name.setText(homenickname);
-			completeURL = beginStr + newpartyAvatar_path + endStr;
+			completeURL = beginStr + newpartyAvatar_path + endStr+"group-front-cover";
 			PreferenceUtils.saveImageCache(NewPartyActivity.this,completeURL);
 			homeImageLoaderUtils.getInstance().LoadImage(NewPartyActivity.this, completeURL, mNewParty_item_head);
 //			AsynImageLoader asynImageLoader = new AsynImageLoader();

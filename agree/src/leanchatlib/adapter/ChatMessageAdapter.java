@@ -41,8 +41,8 @@ public class ChatMessageAdapter extends BaseAdapter {
   private List<AVIMTypedMessage> datas = new ArrayList<AVIMTypedMessage>();
   private ReadUserAllFriends mAllFriends;
   private String CurrUserUrl;
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "@!";
 
   public ChatMessageAdapter(Context context, ConversationType conversationType, ReadUserAllFriends mAllFriends, String CurrUserUrl) {
     this.context = context;
@@ -210,7 +210,7 @@ public class ChatMessageAdapter extends BaseAdapter {
     		Log.e("", "completeURL==="+CurrUserUrl);
     	}else{
     		String avatar_path = mAllFriends.getAvatar_path();
-    		String FriendUrl = beginStr+avatar_path+endStr;
+    		String FriendUrl = beginStr+avatar_path+endStr+"mini-avatar";
 			ImageLoader.getInstance().displayImage(FriendUrl, avatarView, PhotoUtils.avatarImageOptions);
     		Log.e("", "avatar_path==="+avatar_path);
     	}

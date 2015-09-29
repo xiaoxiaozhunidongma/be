@@ -46,7 +46,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private Group teamsetting_group;
 	
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	private String completeURL;
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
@@ -276,7 +276,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		mTeamSetting2_User_nickname.setText(teamsetting_group.getName());
 		mTeamSetting2_Tean_name.setText(teamsetting_group.getName());
 		String useravatar_path = teamsetting_group.getAvatar_path();
-		completeURL = beginStr + useravatar_path + endStr;
+		completeURL = beginStr + useravatar_path + endStr+"avatar";
 		PreferenceUtils.saveImageCache(TeamSetting2Activity.this, completeURL);// ¥ÊSP
 		ImageLoaderUtils.getInstance().LoadImageSquare(TeamSetting2Activity.this,completeURL, mTeamSetting2_head);
 	}

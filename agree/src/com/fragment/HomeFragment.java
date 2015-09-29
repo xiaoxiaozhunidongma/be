@@ -65,7 +65,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 	private View mLayout;
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	// ÍêÕûÂ·¾¶completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private GridView home_gridview;
@@ -347,7 +347,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						String homeAvatar_path = homeuser_gridview.getAvatar_path();
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
-						completeURL = beginStr + homeAvatar_path + endStr;
+						completeURL = beginStr + homeAvatar_path + endStr+"group-front-cover";
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
 						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),completeURL, home_item_head);
 					} 
@@ -359,7 +359,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						String homeAvatar_path = homeuser_gridview.getAvatar_path();
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
-						completeURL = beginStr + homeAvatar_path + endStr;
+						completeURL = beginStr + homeAvatar_path + endStr+"group-front-cover";
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
 						homeImageLoaderUtils.getInstance().LoadImage(getActivity(),completeURL, home_item_head);
 					} 

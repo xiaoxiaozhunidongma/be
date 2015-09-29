@@ -549,6 +549,7 @@ protected void initActionBar(String title) {
           GALLERY_REQUEST);
 		} else {
 			intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			intent.setType("image/*");
 			startActivityForResult(intent, GALLERY_REQUEST);
 			Log.e("", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
 		}

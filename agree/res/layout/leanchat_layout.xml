@@ -38,7 +38,7 @@
             android:id="@+id/rl_bottom"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#000000"
+            android:background="#ffffff"
             android:gravity="center_vertical"
             android:orientation="horizontal" 
                     android:layout_alignParentBottom="true"
@@ -86,7 +86,9 @@
                 android:id="@+id/rela_more"
                 android:layout_width="45dp"
                 android:layout_height="match_parent"
-                android:background="@drawable/selector_back_gray_black" >
+                android:background="@drawable/selector_back_gray_white"
+                 >
+<!--                 android:background="@drawable/selector_back_gray_black" -->
 
                 <ImageView
                     android:id="@+id/iv_more"

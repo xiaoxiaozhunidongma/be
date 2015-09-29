@@ -95,7 +95,7 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL;
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	private Integer SD_pk_user;
 	private RelativeLayout mPhoto_upload_layout;
 	private final String IMAGE_TYPE = "image/*";
@@ -551,7 +551,7 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 			}
 			
 			if(listphotos!=null){
-					String url=beginStr+listphotos.get(position).getPk_photo()+endStr;//完整路径
+					String url=beginStr+listphotos.get(position).getPk_photo()+endStr+"album-thumbnail";//完整路径
 					ImageLoaderUtils4Photos.getInstance().LoadImage(getActivity(), url, holder.image);
 //					AsynImageLoader asynImageLoader = new AsynImageLoader();
 //					asynImageLoader.showImageAsyn(holder.image, url, R.drawable.preview_2,getActivity());
