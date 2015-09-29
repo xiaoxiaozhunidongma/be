@@ -21,8 +21,6 @@ import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Loginback;
-import com.BJ.javabean.Photo;
-import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
 import com.BJ.utils.ByteOrBitmap;
@@ -40,15 +38,13 @@ import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSData;
 import com.biju.IConstant;
 import com.biju.Interface;
-import com.biju.APP.MyApplication;
-import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.Interface.updateUserListenner;
 import com.biju.R;
+import com.biju.APP.MyApplication;
 import com.biju.function.AboutUsActivity;
 import com.biju.function.BindingPhoneActivity;
 import com.biju.function.FeedbackActivity;
-import com.biju.function.GroupActivity;
 import com.biju.function.NicknameActivity;
 import com.biju.function.SexActivity;
 import com.biju.login.BeforeLoginActivity;
@@ -197,7 +193,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			try {
 				convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
 				e.printStackTrace();
 			}
 			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
@@ -254,7 +249,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 								+ mUserWechat_id);
 
 					}
-					mSetting_User_ID.setText("" + SD_pk_user);
+//					mSetting_User_ID.setText("" + SD_pk_user);
+					mSetting_User_ID.setText(mUserNickname);
 					mSetting_Nickname.setText(mUserNickname);
 					switch (mUserSex) {
 					case 0:
@@ -548,40 +544,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 	// 绑定手机号码
 	private void Phone_NiftyDialogBuilder() {
-		// final NiftyDialogBuilder niftyDialogBuilder = NiftyDialogBuilder
-		// .getInstance(getActivity());
-		// Effectstype effectstype = Effectstype.Shake;
-		// niftyDialogBuilder.withTitle("提示").withTitleColor("#000000")
-		// // 设置标题字体颜色
-		// .withDividerColor("#ffffff")
-		// // 设置对话框背景颜色
-		// .withMessage("您已经绑定了手机号码，是否重新绑定另一个号码？")
-		// // 对话框提示内容
-		// .withMessageColor("#000000")
-		// // 提示内容字体颜色
-		// .withIcon(getResources().getDrawable(R.drawable.about_us))
-		// // 设置对话框显示图片
-		// .isCancelableOnTouchOutside(true).withDuration(700)
-		// // 设置时间
-		// .withEffect(effectstype).withButton1Text("取消")
-		// .withButton2Text("确定").setButton1Click(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// niftyDialogBuilder.cancel();
-		// }
-		// }).setButton2Click(new OnClickListener() {
-		//
-		// @Override
-		// public void onClick(View v) {
-		// Intent intent = new Intent(getActivity(),
-		// BindingPhoneActivity.class);
-		// intent.putExtra(IConstant.UserData, Setting_readuser);
-		// startActivity(intent);
-		// niftyDialogBuilder.cancel();
-		// }
-		// }).show();
-
 		final SweetAlertDialog sd = new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE);
 		sd.setTitleText("提示");
 		sd.setContentText("您已经绑定了手机号码，是否重新绑定另一个号码？");

@@ -3,12 +3,13 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#efefef"
     tools:context=".HomeFragment" >
 
     <!-- TODO: Update blank fragment layout -->
 
     <RelativeLayout
-        android:id="@+id/home_title"
+        android:id="@+id/Home_title_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_height"
         android:layout_alignParentTop="true"
@@ -32,7 +33,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/home_title_text"
-            android:textSize="@dimen/title_size" />
+            android:textSize="@dimen/title_size" 
+            android:textColor="@drawable/title_text_color"
+            />
 
         <RelativeLayout
             android:id="@+id/tab_home_new_layout"
@@ -58,23 +61,42 @@
         android:id="@+id/swipe_refresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/home_title" >
+        android:layout_below="@+id/Home_title_layout" >
 
         <GridView
             android:id="@+id/home_gridview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
             android:cacheColorHint="#00000000"
-            android:columnWidth="90dp"
             android:listSelector="#00000000"
             android:numColumns="2"
             android:scrollbars="none"
             android:stretchMode="columnWidth"
-            android:transcriptMode="alwaysScroll"
-             >
+            android:transcriptMode="alwaysScroll" >
         </GridView>
     </android.support.v4.widget.SwipeRefreshLayout>
+    <!--
+        android:columnWidth="90dp" 
+		android:stretchMode="columnWidth"
+		android:transcriptMode="alwaysScroll"
+    -->
+
+    <RelativeLayout
+        android:id="@+id/Home_NoTeam_prompt_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Home_title_layout"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="185dp"
+            android:src="@drawable/chat_default_user_avatar" />
+    </RelativeLayout>
 
 </RelativeLayout>

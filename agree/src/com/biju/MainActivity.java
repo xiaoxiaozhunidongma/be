@@ -62,6 +62,10 @@ public class MainActivity extends FragmentActivity  {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_tabs);
 
+		homeImageLoaderUtils.clearCache();
+		ImageLoaderUtils4Photos.clearCache();
+		ImageLoaderUtils.clearCache();
+		
 		// 关闭之前的界面
 		for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
 			RefreshActivity.activList_3.get(i).finish();
@@ -165,6 +169,11 @@ public class MainActivity extends FragmentActivity  {
 		//有对小组进行修改过后传false
 		SdPkUser.setRefreshTeam(false);
 		SdPkUser.setExit(false);
+		//新建完日程后的
+		SharedPreferences refresh_sp=getSharedPreferences(IConstant.AddRefresh, 0);
+		Editor editor2=refresh_sp.edit();
+		editor2.putBoolean(IConstant.IsAddRefresh,false);
+		editor2.commit();
 	}
 
 	@Override

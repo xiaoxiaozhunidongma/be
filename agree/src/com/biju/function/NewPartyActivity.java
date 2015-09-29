@@ -15,6 +15,7 @@ import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -22,11 +23,13 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
+import com.BJ.utils.DensityUtil;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
@@ -47,6 +50,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 	private String completeURL = "";
 	private MyGridviewAdapter adapter;
 	private Integer sD_pk_user;
+	private int columnWidth;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -56,11 +60,21 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 		//获取sd卡中的pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		Log.e("NewPartyActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
-		
+		DisplayMetrics();
 		initUI();
 		initNewTeam();
 	}
 
+	private void DisplayMetrics() {
+		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
+        NewPartyActivity.this.getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int width = metric.widthPixels;     // 屏幕宽度（像素）
+        columnWidth = (width-30)/2;
+        int height = metric.heightPixels;   // 屏幕高度（像素）
+        Log.e("HomeFragment", "屏幕宽度（像素）width======="+width);
+        Log.e("HomeFragment", "屏幕高度（像素）height======="+height);
+	}
+	
 	@Override
 	protected void onStart() {
 		initdate();
@@ -161,6 +175,33 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 			inflater=layoutInflater.inflate(R.layout.home_gridview_item, null);
 			mNewParty_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
 			mNewParty_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
+			
+			int px2dip_left_1 = DensityUtil.dip2px(NewPartyActivity.this, 10);
+	        int px2dip_left_2 = DensityUtil.dip2px(NewPartyActivity.this, 5);
+	        int px2dip_top_1 = DensityUtil.dip2px(NewPartyActivity.this, 10);
+	        int px2dip_top_2 = DensityUtil.dip2px(NewPartyActivity.this, 10);
+	        int px2dip_right_1 = DensityUtil.dip2px(NewPartyActivity.this, 5);
+	        int px2dip_right_2 = DensityUtil.dip2px(NewPartyActivity.this, 10);
+	        
+			//设置图片的位置
+	        MarginLayoutParams margin9 = new MarginLayoutParams(mNewParty_item_head.getLayoutParams());
+	        int item_number=position%2;
+	        switch (item_number) {
+			case 0:
+				margin9.setMargins(px2dip_left_1, px2dip_top_1, px2dip_right_1, 0);
+				break;
+			case 1:
+				margin9.setMargins(px2dip_left_2, px2dip_top_2, px2dip_right_2, 0);
+				break;
+
+			default:
+				break;
+			}
+	        RelativeLayout.LayoutParams layoutParams9 = new RelativeLayout.LayoutParams(margin9);
+		    layoutParams9.height = columnWidth;//设置图片的高度
+		    layoutParams9.width = columnWidth; //设置图片的宽度
+		    mNewParty_item_head.setLayoutParams(layoutParams9);
+			
 			Group newparty_gridview = list.get(position);
 			String newpartyAvatar_path = newparty_gridview.getAvatar_path();
 			String homenickname = newparty_gridview.getName();
@@ -168,8 +209,6 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 			completeURL = beginStr + newpartyAvatar_path + endStr;
 			PreferenceUtils.saveImageCache(NewPartyActivity.this,completeURL);
 			homeImageLoaderUtils.getInstance().LoadImage(NewPartyActivity.this, completeURL, mNewParty_item_head);
-//			AsynImageLoader asynImageLoader = new AsynImageLoader();
-//			asynImageLoader.showImageAsyn(mNewParty_item_head, completeURL, R.drawable.newteam,NewPartyActivity.this);
 			return inflater;
 		}
 		

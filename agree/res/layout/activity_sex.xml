@@ -80,19 +80,19 @@
                 android:layout_marginTop="35.0dp"
                 android:text="@string/sex_prompt"
                 android:textColor="#808080"
-                android:textSize="12.0sp" />
+                android:textSize="13.0sp" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="120.0dp"
+            android:layout_height="132.0dp"
             android:layout_below="@+id/relativeLayout1"
             android:layout_centerHorizontal="true" >
 
             <RelativeLayout
-                android:id="@+id/Set_man"
+                android:id="@+id/Set_other"
                 android:layout_width="match_parent"
-                android:layout_height="40.0dp"
+                android:layout_height="44.0dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:background="#ffffff" >
@@ -114,14 +114,24 @@
                     android:layout_alignParentBottom="true"
                     android:layout_marginLeft="20.0dp"
                     android:background="#aaaaaa" />
+
+                <ImageView
+                    android:id="@+id/Set_choose_other"
+                    android:layout_width="13.0dp"
+                    android:layout_height="13.0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/gou_3"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/Set_woman"
                 android:layout_width="match_parent"
-                android:layout_height="40.0dp"
-                android:layout_below="@+id/Set_man"
-                android:layout_centerHorizontal="true"
+                android:layout_height="44.0dp"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true"
                 android:background="#ffffff" >
 
                 <TextView
@@ -139,16 +149,25 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.50dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_marginLeft="20.0dp"
                     android:background="#aaaaaa" />
+
+                <ImageView
+                    android:id="@+id/Set_choose_woman"
+                    android:layout_width="13.0dp"
+                    android:layout_height="13.0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/gou_3"
+                    android:visibility="gone" />
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/Set_other"
+                android:id="@+id/Set_man"
                 android:layout_width="match_parent"
-                android:layout_height="40.0dp"
-                android:layout_below="@+id/Set_woman"
-                android:layout_centerHorizontal="true"
+                android:layout_height="44.0dp"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:background="#ffffff" >
 
                 <TextView
@@ -166,8 +185,18 @@
                     android:layout_width="match_parent"
                     android:layout_height="0.50dp"
                     android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
+                    android:layout_marginLeft="20.0dp"
                     android:background="#aaaaaa" />
+
+                <ImageView
+                    android:id="@+id/Set_choose_man"
+                    android:layout_width="13.0dp"
+                    android:layout_height="13.0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20dp"
+                    android:src="@drawable/gou_3"
+                    android:visibility="gone" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

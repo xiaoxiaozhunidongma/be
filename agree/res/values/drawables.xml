@@ -13,24 +13,39 @@
     <drawable name="title_background">#ffffff</drawable>
 
     <!-- 头部标题字体颜色 -->
-    <drawable name="title_left_color">#959595</drawable>
- <!-- 头部左边字体颜色 -->
-    <drawable name="title_right_color">#88d4cc</drawable>
- <!-- 头部右边字体颜色 -->
+    <drawable name="title_text_color">#535353</drawable><!-- 头部左边字体颜色 -->
+    <drawable name="title_left_color">#959595</drawable><!-- 头部左边字体颜色 -->
+    <drawable name="title_right_color">#88d4cc</drawable><!-- 头部右边字体颜色 -->
 
 
     <!-- 界面背景颜色 -->
     <drawable name="background">#efefef</drawable>
- <!-- 界面背景颜色 -->
+    <drawable name="listview_background">#ffffff</drawable>
 
 
     <!-- 设置选项的字体颜色 -->
     <drawable name="setting_prompt_color">#959595</drawable>
- <!-- 头部左边字体颜色 -->
+    <drawable name="setting_content_color">#535353</drawable>
 
 
     <!-- CommonFragmnet -->
     <drawable name="Common_text_color_green">#88d4cc</drawable>
     <drawable name="Common_text_color_gray">#959595</drawable>
 
+    <!-- PartyFragment --><!--535353  -->
+    <drawable name="Party_partake_address_color">#737373</drawable><!--参与后地址颜色深灰  -->
+    <drawable name="Party_notpartake_address_color">#c9c9c9</drawable><!--未参与后地址颜色浅灰  -->
+    <drawable name="Party_notpartake_nickname_color">#737373</drawable><!--未参与后名称颜色深灰  -->
+    <drawable name="Party_partake_nickname_color">#000000</drawable><!--参与后名称颜色深灰  -->
+    <drawable name="Party_partake_pay_color">#88d4cc</drawable><!--参与后付款方式颜色绿色  -->
+    
+    <!-- PartyDetails -->
+    <drawable name="PartyDetails_apply_layout_color">#88d4cc</drawable><!--已报名  -->
+    <drawable name="PartyDetails_noapply_layout_color">#f0f0f0</drawable><!--已报名  -->
+    <drawable name="PartyDetails_name_color">#88d4cc</drawable>
+    <drawable name="PartyDetails_number_color">#88d4cc</drawable>
+    
+    <!--修改界面  -->
+    <drawable name="sex_choose_color">#d9d9d9</drawable>
+    
 </resources>

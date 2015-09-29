@@ -15,7 +15,7 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="20.0dp"
+            android:layout_marginLeft="10.0dp"
             android:layout_marginTop="5.0dp" >
 
             <ImageView
@@ -32,13 +32,13 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="20.0dp"
-            android:layout_marginTop="5.0dp"
+            android:layout_marginLeft="10.0dp"
+            android:layout_marginTop="10.0dp"
             android:layout_toRightOf="@+id/relativeLayout1"
             android:gravity="left|center"
             android:text="TextView"
             android:textColor="#000000"
-            android:textSize="14.0sp" />
+            android:textSize="13.0sp" />
 
         <TextView
             android:id="@+id/Member_role"
@@ -47,11 +47,10 @@
             android:layout_alignLeft="@+id/Member_name"
             android:layout_alignRight="@+id/Member_name"
             android:layout_below="@+id/Member_name"
-            android:layout_marginTop="5.0dp"
             android:gravity="left|center"
             android:text="TextView"
             android:textColor="#808080"
-            android:textSize="12.0sp" />
+            android:textSize="10.0sp" />
 
         <TextView
             android:id="@+id/Member_line_1"
@@ -67,7 +66,7 @@
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
-            android:layout_marginLeft="20.0dp"
+            android:layout_marginLeft="10.0dp"
             android:background="#aaaaaa" />
     </RelativeLayout>
 

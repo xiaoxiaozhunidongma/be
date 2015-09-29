@@ -3,6 +3,7 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#efefef"
     tools:context=".FriendsFragment" >
 
     <!-- TODO: Update blank fragment layout -->
@@ -11,8 +12,7 @@
         android:id="@+id/friends_title"
         android:layout_width="match_parent"
         android:layout_height="@dimen/title_height"
-        android:background="@drawable/title_background"
-         >
+        android:background="@drawable/title_background" >
 
         <TextView
             android:id="@+id/tab_friends_title"
@@ -21,6 +21,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/friends_title_text"
+            android:textColor="@drawable/title_text_color"
             android:textSize="@dimen/title_size" />
 
         <RelativeLayout
@@ -56,24 +57,22 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/friends_title"
-        android:layout_centerHorizontal="true"
-         >
-        
-        <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/friends_swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent" >
+        android:layout_centerHorizontal="true" >
 
-        <ListView
-            android:id="@+id/friends_listview"
+        <android.support.v4.widget.SwipeRefreshLayout
+            android:id="@+id/friends_swipe_refresh"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            >
-        </ListView>
-    </android.support.v4.widget.SwipeRefreshLayout>
+            android:background="#efefef" >
 
+            <ListView
+                android:id="@+id/friends_listview"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true" >
+            </ListView>
+        </android.support.v4.widget.SwipeRefreshLayout>
     </RelativeLayout>
 
     <RelativeLayout
@@ -82,8 +81,7 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/friends_title"
         android:layout_centerHorizontal="true"
-        android:visibility="gone"
-         >
+        android:visibility="gone" >
 
         <TextView
             android:id="@+id/textView2"
@@ -92,10 +90,8 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="50dp"
-            android:text="@string/friends_prompt" 
-            android:textColor="#ff0000"
-            />
-
+            android:text="@string/friends_prompt"
+            android:textColor="#ff0000" />
     </RelativeLayout>
 
 </RelativeLayout>

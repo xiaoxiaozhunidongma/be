@@ -1,5 +1,8 @@
 package com.biju.function;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -9,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.inputmethod.InputMethodManager;
 import android.view.Window;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
@@ -56,6 +60,19 @@ public class FeedbackActivity extends Activity implements OnClickListener {
 		findViewById(R.id.feedback_send_layout).setOnClickListener(this);// ∑¢ÀÕ
 		findViewById(R.id.feedback_send).setOnClickListener(this);
 		mFeedback_question = (EditText) findViewById(R.id.feedback_question);// Œ Ã‚
+		
+		mFeedback_question.setFocusable(true);
+		mFeedback_question.setFocusableInTouchMode(true);
+		mFeedback_question.requestFocus();
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			public void run() {
+				InputMethodManager inputManager = (InputMethodManager) mFeedback_question
+						.getContext().getSystemService(NewteamActivity.INPUT_METHOD_SERVICE);
+				inputManager.showSoftInput(mFeedback_question, 0);
+			}
+		}, 998);
+		
 		mFeedback_question_layout = (RelativeLayout) findViewById(R.id.feedback_question_layout);
 		mFeedback_question.addTextChangedListener(new TextWatcher() {
 			

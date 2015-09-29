@@ -69,7 +69,7 @@
     <RelativeLayout
         android:id="@+id/ datePicker_layout"
         android:layout_width="match_parent"
-        android:layout_height="300.0dp"
+        android:layout_height="260.0dp"
         android:layout_below="@+id/Time_title_layout"
         android:layout_centerHorizontal="true" >
 
@@ -145,23 +145,26 @@
         android:id="@+id/TimePicker_layout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/ datePicker_layout"
+        android:layout_below="@+id/TimePicker_Time_text"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50.0dp" >
+         >
 
         <TimePicker
             android:id="@+id/timePicker"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true" />
+
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/TimePicker_Time_text"
         android:layout_width="match_parent"
-        android:layout_height="50.0dp"
+        android:layout_height="40.0dp"
         android:layout_below="@+id/ datePicker_layout"
         android:layout_centerHorizontal="true"
-        android:background="#00e3e3" >
+        android:background="#88d4cc" >
 
         <TextView
             android:id="@+id/textView3"
@@ -170,8 +173,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/time_prompt"
-            android:textColor="#ffffff"
-            android:textSize="17.0sp" />
+            android:textColor="#535353"
+            android:textSize="13.0sp" />
     </RelativeLayout>
 
 </RelativeLayout>

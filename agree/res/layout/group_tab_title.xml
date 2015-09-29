@@ -54,7 +54,9 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/group_title_text"
-            android:textSize="@dimen/title_size" />
+            android:textSize="@dimen/title_size" 
+            android:textColor="@drawable/title_text_color"
+            />
 
         <TextView
             android:id="@+id/textView4"

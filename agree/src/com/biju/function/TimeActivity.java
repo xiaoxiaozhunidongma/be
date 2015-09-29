@@ -60,7 +60,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 		boolean date1 = sp.getBoolean("date", false);
 		if (date1) {
 			String dateFormat = sp.getString("dateFormat", "");
-			calendar.setCalendarDayBgColor(dateFormat,R.drawable.calendar_date_focused);
+			calendar.setCalendarDayBgColor(dateFormat,R.drawable.yuanquan_2);//设置背景红色圆圈
 			date = dateFormat;// 最后返回给全局 date
 			Log.e("MainActivity", "进保存后的");
 			if (null != date) {
@@ -70,7 +70,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 				popupwindow_calendar_month.setText(years + "年" + month + "月");
 
 				calendar.showCalendar(years, month);
-				calendar.setCalendarDayBgColor(date,R.drawable.calendar_date_focused);
+				calendar.setCalendarDayBgColor(date,R.drawable.yuanquan_2);//设置背景红色圆圈
 			}
 		}
 	}
@@ -319,7 +319,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 			popupwindow_calendar_month.setText(years + "年" + month + "月");
 
 			calendar.showCalendar(years, month);
-			calendar.setCalendarDayBgColor(date,R.drawable.calendar_date_focused);
+			calendar.setCalendarDayBgColor(date,R.drawable.yuanquan_2);
 		}
 
 		List<String> list = new ArrayList<String>(); // 设置标记列表
@@ -346,7 +346,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 				} else {
 					calendar.removeAllBgColor();
 					calendar.setCalendarDayBgColor(dateFormat,
-							R.drawable.calendar_date_focused);
+							R.drawable.yuanquan_2);
 					date = dateFormat;// 最后返回给全局 date
 					// Log.e("date", "date=========" + date);
 					Log.e("date", "date=========" + date);

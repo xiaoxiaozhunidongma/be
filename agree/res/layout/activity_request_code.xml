@@ -27,7 +27,6 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
 
-
             <TextView
                 android:id="@+id/Requestcode2_back"
                 android:layout_width="wrap_content"
@@ -37,7 +36,6 @@
                 android:text="返回"
                 android:textColor="@drawable/title_left_color"
                 android:textSize="@dimen/title_left_size" />
-
         </RelativeLayout>
 
         <TextView
@@ -47,9 +45,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="小组邀请"
-            android:textSize="@dimen/title_size"
-             />
-
+            android:textSize="@dimen/title_size" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -57,60 +53,64 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
-        android:layout_below="@+id/Requestcode2_title_layout"
-         >
+        android:layout_below="@+id/Requestcode2_title_layout" >
 
         <com.BJ.utils.VerifyCodeView
             android:id="@+id/Requestcode2_verifyCodeView"
             android:layout_width="match_parent"
             android:layout_height="50.0dp"
             android:layout_centerHorizontal="true"
-            android:layout_marginLeft="40.0dp"
-            android:layout_marginRight="40.0dp"
-            android:layout_marginTop="100.0dp" />
+            android:layout_marginLeft="70.0dp"
+            android:layout_marginRight="70.0dp"
+            android:layout_marginTop="130.0dp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="40.0dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="35.0dp" >
+            android:layout_marginTop="50.0dp" >
 
-            <TextView
-                android:id="@+id/textView2"
+            <RelativeLayout
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:layout_marginLeft="50dp"
-                android:text="请输入" />
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true" >
 
-            <TextView
-                android:id="@+id/textView3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/textView2"
-                android:layout_alignBottom="@+id/textView2"
-                android:layout_toRightOf="@+id/textView2"
-                android:text="4"
-                android:paddingLeft="5.0dp"
-                android:paddingRight="5.0dp"
-                android:textSize="20.0sp"
-                android:textColor="#00e3e3"
-                 />
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:text="请输入"
+                    android:textColor="#535353"
+                    android:textSize="18.0sp" />
 
-            <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBottom="@+id/textView3"
-                android:layout_toRightOf="@+id/textView3"
-                android:text="位小组邀请码" />
+                <TextView
+                    android:id="@+id/textView3"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBaseline="@+id/textView2"
+                    android:layout_alignBottom="@+id/textView2"
+                    android:layout_toRightOf="@+id/textView2"
+                    android:paddingLeft="5.0dp"
+                    android:paddingRight="5.0dp"
+                    android:text="4"
+                    android:textColor="#00e3e3"
+                    android:textSize="25.0sp" />
 
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignBottom="@+id/textView3"
+                    android:layout_toRightOf="@+id/textView3"
+                    android:text="位小组邀请码"
+                    android:textColor="#535353"
+                    android:textSize="18.0sp" />
+            </RelativeLayout>
         </RelativeLayout>
-
     </RelativeLayout>
-
-    
 
 </RelativeLayout>

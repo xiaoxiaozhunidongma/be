@@ -2,6 +2,8 @@ package com.BJ.utils;
 
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Timer;
+import java.util.TimerTask;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,6 +21,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
 import com.biju.R;
+import com.biju.function.NewteamActivity;
 import com.biju.function.RequestCode3Activity;
 import com.biju.function.RequestCodeActivity;
 
@@ -41,8 +44,9 @@ public class VerifyCodeView extends View {
 		super(context, attrs);
 		// 能获取焦点才能弹出软键盘
 		setFocusableInTouchMode(true);
+		setFocusable(true);
+		requestFocus();
 		verifyCodeBuilder = new StringBuilder(6);
-		
 		
 		textPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 		centerSpacing = getResources().getDimensionPixelSize(R.dimen.reg_verifycode_center_spacing);

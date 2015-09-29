@@ -121,12 +121,6 @@ public class MoreActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		finish();
-		return super.onTouchEvent(event);
-	}
-
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.More_creator_cancel_layout:
