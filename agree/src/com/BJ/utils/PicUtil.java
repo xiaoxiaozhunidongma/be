@@ -153,7 +153,7 @@ public class PicUtil {
 			bitmapOptions.inPreferredConfig = Bitmap.Config.RGB_565; 
 			bitmapOptions.inPurgeable = true;   //及时回收内存？
 			bitmapOptions.inInputShareable = true;  //及时回收内存？
-			bitmapOptions.inSampleSize = 4;
+			bitmapOptions.inSampleSize = 1;
 			
 			bitmap = BitmapFactory.decodeStream((is), null , bitmapOptions);
 //			if(!bitmap.isRecycled()){

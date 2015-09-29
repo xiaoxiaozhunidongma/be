@@ -180,7 +180,6 @@
     <string name="title_activity_add_new_party">AddNewPartyActivity</string>
     <string name="title_activity_add_friends2">AddFriends2Activity</string>
     <string name="title_activity_contact_search">ContactSearchActivity</string>
-    <string name="title_activity_team_setting2">TeamSetting2Activity</string>
     <string name="chat_base_list_view_listEmptyHint">无数据</string>
     <string name="chat_base_list_view_noMore">已无更多</string>
     <string name="chat_utils_tips">提示</string>
@@ -226,6 +225,7 @@
     <string name="text_ack_msg">Read</string>
     <string name="text_delivered_msg">Delivered</string>
     <string name="title_activity_photo_view">PhotoViewActivity</string>
+    <string name="title_activity_team_setting2">TeamSetting2Activity</string>
 
     <!-- home界面 -->
     <string name="home_title_text">小组</string>
@@ -241,7 +241,7 @@
     <string name="friends_title_right_text">添加好友</string>
     <string name="friends_prompt">你还没有添加任何的好友！</string>
     <!-- 设置界面 -->
-    <string name="setting_title_text">设置</string>
+    <string name="setting_title_text">账户</string>
     <!-- Group中每个小组界面 -->
     <string name="group_title_text">我们自己</string>
     <string name="group_title_left_text">返回</string>
@@ -278,7 +278,7 @@
     <string name="aboutus_title_left">返回</string>
     <string name="aboutus_software_name">必聚</string>
     <string name="aboutus_company_name">厦门必聚科技有限公司</string>
-    <string name="aboutus_ver">ver: 1.0 beta</string>
+    <string name="aboutus_ver">ver: 1.0</string>
     <!-- 好友界面 -->
     <string name="friends_title_text">通讯录</string>
     <string name="friends_title_right">查找好友</string>
@@ -303,7 +303,7 @@
     <string name="feedback_title_left">返回</string>
     <string name="feedback_prompt">输入你的想要反馈的问题以及对我们的建议</string>
     <string name="feedback_prompt_1">小提示:</string>
-    <string name="feedback_prompt_2">我们将十分重视你的意见!</string>
+    <string name="feedback_prompt_2">我们将十分重视你的意见.</string>
     <!-- 查找好友界面 -->
     <string name="findfriends_title_text">查找好友</string>
     <string name="findfriends_title_left">返回</string>
@@ -337,9 +337,9 @@
     <string name="sex_title_right">完成</string>
     <string name="sex_title_left">返回</string>
     <string name="sex_prompt">请选择你的性别</string>
-    <string name="sex_prompt_1">男</string>
+    <string name="sex_prompt_3">男</string>
     <string name="sex_prompt_2">女</string>
-    <string name="sex_prompt_3">其他</string>
+    <string name="sex_prompt_1">其他</string>
     <!-- 聚会时间选择界面 -->
     <string name="time_title_text">选择时间</string>
     <string name="time_title_right">完成</string>

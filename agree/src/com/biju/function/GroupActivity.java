@@ -1,5 +1,6 @@
 package com.biju.function;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -17,8 +18,11 @@ import android.view.GestureDetector;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
 import com.BJ.utils.SdPkUser;
@@ -26,7 +30,9 @@ import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
+import com.biju.function.SlidingActivity.MyMemBerAdapter;
 import com.fragment.CommonFragment;
+import com.fragment.PhotoFragment2;
 import com.github.volley_examples.utils.GsonUtils;
 
 @SuppressWarnings("unused")
@@ -68,6 +74,20 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	public static GetSliding getSliding;
 
 	private String name;
+	private ListView mSlidingMenu_member_listView;
+	private ArrayList<Group_ReadAllUser> Group_Readalluser_List = new ArrayList<Group_ReadAllUser>();
+	private MyMemBerAdapter adapter;
+
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
+	private String completeURL;
+	private String TestcompleteURL = beginStr
+			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
+	private TextView mSlidingMenu_requestcode_code;
+	private RelativeLayout mSlidingMenu_requestcode;
+	private RelativeLayout mSlidingMenu_Team_Setting;
+	
+	private boolean isCode;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -211,4 +231,14 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	public interface GetSliding {
 		void SlidingClick();
 	}
+	
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		Log.e("GroupActivity", "调用了这个onActivityResult");
+		Log.e("GroupActivity", "调用了这个requestCode=="+requestCode);
+		Log.e("GroupActivity", "调用了这个data=="+data);
+		PhotoFragment2.onActivityResultInterface.onActivityResult(requestCode, resultCode, data);
+	}
+
 }

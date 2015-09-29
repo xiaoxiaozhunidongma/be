@@ -1,9 +1,8 @@
 package com.fragment;
 
-import java.lang.reflect.Type;
+import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
+import java.util.UUID;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -15,23 +14,21 @@ import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
-import android.media.ThumbnailUtils;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images.Thumbnails;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.animation.AnimationUtils;
-import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.GridView;
@@ -39,7 +36,6 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
-import android.widget.AdapterView.OnItemClickListener;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
@@ -50,30 +46,30 @@ import com.BJ.javabean.User;
 import com.BJ.photo.AlbumActivity;
 import com.BJ.photo.Bimp;
 import com.BJ.photo.BitmapCache;
+import com.BJ.photo.BitmapCache.ImageCallback;
 import com.BJ.photo.FileUtils;
 import com.BJ.photo.GalleryActivity;
 import com.BJ.photo.ImageItem;
-import com.BJ.photo.PublicWay;
-import com.BJ.photo.BitmapCache.ImageCallback;
-import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
+import com.BJ.utils.PicCutter;
 import com.BJ.utils.SdPkUser;
-import com.BJ.utils.Utils;
+import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
+import com.alibaba.sdk.android.oss.storage.OSSData;
 import com.biju.Interface;
-import com.biju.Interface.uploadingPhotoListenner;
-import com.biju.Interface.readPartyPhotosListenner;
+import com.biju.APP.MyApplication;
 import com.biju.Interface.getPicSignListenner;
+import com.biju.Interface.readPartyPhotosListenner;
+import com.biju.Interface.uploadingPhotoListenner;
 import com.biju.R;
 import com.biju.function.GroupActivity;
+import com.biju.login.RegisteredActivity;
 import com.github.volley_examples.utils.GsonUtils;
-import com.tencent.upload.UploadManager;
-import com.tencent.upload.task.IUploadTaskListener;
-import com.tencent.upload.task.UploadTask;
-import com.tencent.upload.task.ITask.TaskState;
-import com.tencent.upload.task.data.FileInfo;
-import com.tencent.upload.task.impl.PhotoUploadTask;
-import com.biju.Interface.uploadingPhotoListenner;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -92,7 +88,7 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 	public static String APPID = "201139";
 	public static String USERID = "";
 	public static String SIGN;
-	private UploadManager uploadManager;
+//	private UploadManager uploadManager;
 	String fileId = "";
 //	HashMap<Integer, UploadTask> hashMap = new HashMap<Integer, UploadTask>();
 	private static final int TAKE_PICTURE = 0x000001;
@@ -102,8 +98,8 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 	public static ArrayList<Bitmap> bitmaps=new ArrayList<Bitmap>();
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL;
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	BitmapCache cache=new BitmapCache();
 	ImageCallback callback = new ImageCallback() {
 		@Override
@@ -134,6 +130,12 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 //	public interface BeginUpload {
 //		void begin();
 //	}
+	
+	private OSSData ossData;
+	private OSSService ossService;
+	private OSSBucket sampleBucket;
+	private byte[] bitmap2Bytes;
+	private String uUid;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -153,10 +155,13 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 			// mLayout =inflater.inflate(R.layout.activity_selectimg, null);
 			// setContentView(mLayout);
 			Init(inflater);
-			get4PicSign();
+//			get4PicSign();
 //			initBeginUplistener();
 			initPhotoUplisten();
 			initGroupPhotoListen();
+			// 获取ossService和sampleBucket
+			ossService = MyApplication.getOssService();
+			sampleBucket = MyApplication.getSampleBucket();
 		}
 		return mLayout;
 	}
@@ -187,7 +192,14 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 					String path = listphotos.get(i).getPath();
 					if(!"".equals(path)){
 						//??????????????????
-						Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(path, 400, 400);
+//						Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(path, 400, 400);
+						Bitmap convertToBitmap = null;
+						try {
+							convertToBitmap = Path2Bitmap.convertToBitmap(path);
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
 						bitmaps.add(convertToBitmap);
 					}
 					
@@ -289,91 +301,91 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 //		};
 //	}
 
-	private void upload(final String imagePath) {
-		 UploadTask task = new PhotoUploadTask(imagePath, new IUploadTaskListener() {
-			@Override
-			public void onUploadSucceed(final FileInfo result) {
-				Log.e("上传结果", "upload succeed: " + result.fileId);
-				
-				Photo photo = new Photo();
-				photo.setFk_group(GroupActivity.getPk_group());
-				photo.setFk_user(SD_pk_user);
-//				photo.setPath(result.fileId);
-				photo.setPk_photo(result.fileId);
-				photo.setStatus(1);
-				photo.setPath(imagePath);//设置内存路径
-				instance.uploadingPhoto(getActivity(), photo);
-				
-				new Thread(new Runnable() {
-					
-					@Override
-					public void run() {
-						adapter.notifyDataSetChanged();
-					}
-				});
-			}
-
-			@Override
-			public void onUploadStateChange(TaskState state) {
-			}
-
-			@Override
-			public void onUploadProgress(long totalSize, long sendSize) {
-				final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
-				// Log.e("上传进度", "上传进度: " + p + "%");
-			}
-
-			@Override
-			public void onUploadFailed(final int errorCode,
-					final String errorMsg) {
-				Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
-//				textView.post(new Runnable() {
-//
+//	private void upload(final String imagePath) {
+//		 UploadTask task = new PhotoUploadTask(imagePath, new IUploadTaskListener() {
+//			@Override
+//			public void onUploadSucceed(final FileInfo result) {
+//				Log.e("上传结果", "upload succeed: " + result.fileId);
+//				
+//				Photo photo = new Photo();
+//				photo.setFk_group(GroupActivity.getPk_group());
+//				photo.setFk_user(SD_pk_user);
+////				photo.setPath(result.fileId);
+//				photo.setPk_photo(result.fileId);
+//				photo.setStatus(1);
+//				photo.setPath(imagePath);//设置内存路径
+//				instance.uploadingPhoto(getActivity(), photo);
+//				
+//				new Thread(new Runnable() {
+//					
 //					@Override
 //					public void run() {
-//						textView.setVisibility(View.VISIBLE);
-//						textView.setText("上传失败");
-//						//上传失败就删除那个任务重新上传
-//						UploadTask uploadTask = hashMap.get(position);
-//						hashMap.remove(uploadTask);
+//						adapter.notifyDataSetChanged();
 //					}
 //				});
-			}
-		});
-//		 //存入容器
-//		hashMap.put(position, task);
-		 
-		uploadManager.upload(task); // 开始上传
+//			}
+//
+//			@Override
+//			public void onUploadStateChange(TaskState state) {
+//			}
+//
+//			@Override
+//			public void onUploadProgress(long totalSize, long sendSize) {
+//				final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
+//				// Log.e("上传进度", "上传进度: " + p + "%");
+//			}
+//
+//			@Override
+//			public void onUploadFailed(final int errorCode,
+//					final String errorMsg) {
+//				Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:" + errorMsg);
+////				textView.post(new Runnable() {
+////
+////					@Override
+////					public void run() {
+////						textView.setVisibility(View.VISIBLE);
+////						textView.setText("上传失败");
+////						//上传失败就删除那个任务重新上传
+////						UploadTask uploadTask = hashMap.get(position);
+////						hashMap.remove(uploadTask);
+////					}
+////				});
+//			}
+//		});
+////		 //存入容器
+////		hashMap.put(position, task);
+//		 
+//		uploadManager.upload(task); // 开始上传
+//
+//	}
 
-	}
+//	private void get4PicSign() {
+//		Interface interface1 = Interface.getInstance();
+//		interface1.setPostListener(new getPicSignListenner() {
+//
+//			@Override
+//			public void success(String A) {
+//				PicSignBack picSignBack = GsonUtils.parseJson(A,
+//						PicSignBack.class);
+//				String returnData = picSignBack.getReturnData();
+//				SIGN = returnData;
+//				initUpload();
+//			}
+//
+//			@Override
+//			public void defail(Object B) {
+//
+//			}
+//		});
+//		interface1.getPicSign(getActivity(), new User());
+//	}
 
-	private void get4PicSign() {
-		Interface interface1 = Interface.getInstance();
-		interface1.setPostListener(new getPicSignListenner() {
-
-			@Override
-			public void success(String A) {
-				PicSignBack picSignBack = GsonUtils.parseJson(A,
-						PicSignBack.class);
-				String returnData = picSignBack.getReturnData();
-				SIGN = returnData;
-				initUpload();
-			}
-
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
-		interface1.getPicSign(getActivity(), new User());
-	}
-
-	private void initUpload() {
-		// 注册签名
-		UploadManager.authorize(APPID, USERID, SIGN);
-		uploadManager = new UploadManager(getActivity(), "persistenceId");
-
-	}
+//	private void initUpload() {
+//		// 注册签名
+//		UploadManager.authorize(APPID, USERID, SIGN);
+//		uploadManager = new UploadManager(getActivity(), "persistenceId");
+//
+//	}
 
 	public void Init(LayoutInflater inflater) {
 		mPhoto_upload_layout = (RelativeLayout) mLayout.findViewById(R.id.photo_upload_layout);
@@ -665,25 +677,71 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 				//解决重复上传
 				if(!isload){
 					//开始上传
-					upload(imagePath);
+//					upload(imagePath);
+					//开始Oss上传
+					Bitmap convertToBitmap = null;
+					try {
+						convertToBitmap = Path2Bitmap.convertToBitmap(imagePath);
+					} catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					}
+					Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
+							convertToBitmap, 1080);// 最长边限制为1080
+					Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
+							limitLongScaleBitmap, 600);// 截取中间正方形
+					bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
+					UUID randomUUID = UUID.randomUUID();
+					uUid = randomUUID.toString();
+					OSSupload(ossData, bitmap2Bytes, uUid,imagePath);
 				}
 			}
 		
 			break;
 		}
 	}
-//??????????????????????????????????????????????????????????????
-//	public boolean onKeyDown(int keyCode, KeyEvent event) {
-//		if (keyCode == KeyEvent.KEYCODE_BACK) {
-//			for (int i = 0; i < PublicWay.activityList.size(); i++) {
-//				if (null != PublicWay.activityList.get(i)) {
-//					PublicWay.activityList.get(i).finish();
-//				}
-//			}
-//			System.exit(0);
-//		}
-//		return true;
-//	}
+
+	private void OSSupload(OSSData ossData, byte[] data, String UUid, final String imagePath) {
+		ossData = ossService.getOssData(sampleBucket, UUid);
+		ossData.setData(data, "jpg"); // 指定需要上传的数据和它的类型
+		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
+		ossData.uploadInBackground(new SaveCallback() {
+			@Override
+			public void onSuccess(String objectKey) {
+				Log.e("", "图片上传成功");
+				Log.e("Main", "objectKey==" + objectKey);
+				
+				Photo photo = new Photo();
+				photo.setFk_group(GroupActivity.getPk_group());
+				photo.setFk_user(SD_pk_user);
+//				photo.setPath(result.fileId);
+				photo.setPk_photo(objectKey);
+				photo.setStatus(1);
+				photo.setPath(imagePath);//设置内存路径
+				instance.uploadingPhoto(getActivity(), photo);
+				
+				new Thread(new Runnable() {
+					
+					@Override
+					public void run() {
+						adapter.notifyDataSetChanged();
+					}
+				});
+
+			}
+
+			@Override
+			public void onProgress(String objectKey, int byteCount,
+					int totalSize) {
+			}
+
+			@Override
+			public void onFailure(String objectKey, OSSException ossException) {
+				Log.e("", "图片上传失败" + ossException.toString());
+			}
+		});
+	}
+
 
 	@Override
 	public void onClick(View v) {

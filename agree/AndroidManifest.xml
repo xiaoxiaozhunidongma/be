@@ -102,6 +102,17 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- LeanChat权限 -->
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <!-- OSS -->
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" >
+    </uses-permission>
 
     <application
         android:name="com.biju.APP.MyApplication"
@@ -117,8 +128,7 @@
             android:value="group_team.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="3" />
-        -->
+            android:value="3" />        -->
 
 
         <!-- 百度签名 -->
@@ -153,15 +163,7 @@
             android:label="@string/title_activity_newteam" >
         </activity>
         <activity
-            android:name="com.biju.NewteamActivitys"
-            android:label="@string/title_activity_newteam_activitys" >
-        </activity>
-        <activity
             android:name="com.biju.function.RequestCodeActivity"
-            android:label="@string/title_activity_request_code" >
-        </activity>
-        <activity
-            android:name="com.biju.function.RequestCode2Activity"
             android:label="@string/title_activity_request_code" >
         </activity>
         <activity
@@ -179,8 +181,7 @@
         <activity
             android:name="com.biju.function.GroupActivity"
             android:label="@string/title_activity_group"
-            android:launchMode="singleTask"
-            >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.biju.function.NewPartyActivity"
@@ -411,10 +412,6 @@
             android:label="@string/title_activity_contact_search"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        <activity
-            android:name="com.biju.function.TeamSetting2Activity"
-            android:label="@string/title_activity_team_setting2" >
-        </activity>
         <!-- leanchat -->
         <service
             android:name="com.avos.avoscloud.PushService"
@@ -444,8 +441,11 @@
         <activity
             android:name="com.biju.function.SlidingActivity"
             android:label="@string/title_activity_sliding"
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-             >
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.biju.function.TeamSetting2Activity"
+            android:label="@string/title_activity_team_setting2" >
         </activity>
     </application>
 

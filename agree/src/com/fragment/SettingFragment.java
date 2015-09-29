@@ -1,8 +1,11 @@
 package com.fragment;
 
+import java.io.IOException;
 import java.util.List;
+import java.util.UUID;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -18,15 +21,26 @@ import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Loginback;
+import com.BJ.javabean.Photo;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.LimitLong;
+import com.BJ.utils.Path2Bitmap;
+import com.BJ.utils.PicCutter;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
+import com.alibaba.sdk.android.oss.storage.OSSData;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.APP.MyApplication;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.Interface.updateUserListenner;
@@ -34,6 +48,7 @@ import com.biju.R;
 import com.biju.function.AboutUsActivity;
 import com.biju.function.BindingPhoneActivity;
 import com.biju.function.FeedbackActivity;
+import com.biju.function.GroupActivity;
 import com.biju.function.NicknameActivity;
 import com.biju.function.SexActivity;
 import com.biju.login.BeforeLoginActivity;
@@ -41,12 +56,6 @@ import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
 import com.tencent.mm.sdk.openapi.WXAPIFactory;
-import com.tencent.upload.UploadManager;
-import com.tencent.upload.task.ITask.TaskState;
-import com.tencent.upload.task.IUploadTaskListener;
-import com.tencent.upload.task.UploadTask;
-import com.tencent.upload.task.data.FileInfo;
-import com.tencent.upload.task.impl.PhotoUploadTask;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -58,8 +67,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public ImageView mSetting_head;
 	public static ImageView mSetting_head_1;
 
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	private String mUserAvatar_path;
 	private String completeURL;
 	private String TestcompleteURL = beginStr
@@ -80,7 +89,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		SIGN = sIGN;
 	}
 
-	private UploadManager uploadManager;
+//	private UploadManager uploadManager;
 
 	private Integer SD_pk_user;
 	private TextView mSetting_User_ID;
@@ -115,6 +124,11 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 	public static IWXAPI api;
 	private TextView mSetting_weixin;
+	private OSSData ossData;
+	private OSSService ossService;
+	private OSSBucket sampleBucket;
+	private byte[] bitmap2Bytes;
+	private String uUid;
 
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 
@@ -129,6 +143,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			mLayout = inflater.inflate(R.layout.fragment_setting, container,false);
 			Log.e("SettingFragment", "进入了onCreateView()====================");
 		}
+		// 获取ossService和sampleBucket
+		ossService = MyApplication.getOssService();
+		sampleBucket = MyApplication.getSampleBucket();
 		return mLayout;
 	}
 
@@ -159,8 +176,38 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		if (isShow) {
-			// 初始化图片签名
-			initUpload();
+//			// 初始化图片签名
+//			initUpload();
+			
+			User usersetting = new User();
+			usersetting.setPk_user(SD_pk_user);
+			usersetting.setJpush_id(mUserJpush_id);
+			usersetting.setNickname(mUserNickname);
+			usersetting.setPassword(mUserPassword);
+			usersetting.setSex(mUserSex);
+			usersetting.setStatus(1);
+			usersetting.setPhone(mUserPhone);
+			usersetting.setWechat_id(mUserWechat_id);
+			usersetting.setSetup_time(mUserSetup_time);
+			usersetting.setLast_login_time(mUserLast_login_time);
+//			upload(usersetting);// 上传
+			//上传
+			String mFilePath = SdPkUser.getFilePath;//回调SD卡路径
+			Bitmap convertToBitmap = null;
+			try {
+				convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
+					convertToBitmap, 1080);// 最长边限制为1080
+			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
+					limitLongScaleBitmap, 600);// 截取中间正方形
+			bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
+			UUID randomUUID = UUID.randomUUID();
+			uUid = randomUUID.toString();
+			OSSupload(ossData, bitmap2Bytes, uUid,usersetting);
 		}
 		super.onResume();
 	}
@@ -241,46 +288,59 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		});
 
 		// 图像签名初始化
-		Setting_readuserinter.setPostListener(new getPicSignListenner() {
-
-			@Override
-			public void success(String A) {
-				Log.e("SettingFragment", "新的方法签名字符串：" + A);
-				PicSignBack picSignBack = GsonUtils.parseJson(A,
-						PicSignBack.class);
-				Integer status = picSignBack.getStatusMsg();
-				if (status == 1) {
-					String returnData = picSignBack.getReturnData();
-					SettingFragment.setSIGN(returnData);
-
-					UploadManager.authorize(APPID, USERID, SIGN);
-					uploadManager = new UploadManager(getActivity(),"persistenceId");
-					Log.e("SettingFragment","新的方法签名字符串returnData=================="+ returnData);
-					if (!("".equals(returnData))) {
-						// 获取到图片后直接进行上传
-						User usersetting = new User();
-						usersetting.setPk_user(SD_pk_user);
-						usersetting.setJpush_id(mUserJpush_id);
-						usersetting.setNickname(mUserNickname);
-						usersetting.setPassword(mUserPassword);
-						usersetting.setSex(mUserSex);
-						usersetting.setStatus(1);
-						usersetting.setPhone(mUserPhone);
-						usersetting.setWechat_id(mUserWechat_id);
-						usersetting.setSetup_time(mUserSetup_time);
-						usersetting.setLast_login_time(mUserLast_login_time);
-						upload(usersetting);// 上传
-					} else {
-						Toast.makeText(getActivity(), "更换头像失败，请重新更换",Toast.LENGTH_SHORT).show();
-					}
-				}
-			}
-
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
+//		Setting_readuserinter.setPostListener(new getPicSignListenner() {
+//
+//			@Override
+//			public void success(String A) {
+//				Log.e("SettingFragment", "新的方法签名字符串：" + A);
+//				PicSignBack picSignBack = GsonUtils.parseJson(A,
+//						PicSignBack.class);
+//				Integer status = picSignBack.getStatusMsg();
+//				if (status == 1) {
+//					String returnData = picSignBack.getReturnData();
+//					SettingFragment.setSIGN(returnData);
+//
+////					UploadManager.authorize(APPID, USERID, SIGN);
+////					uploadManager = new UploadManager(getActivity(),"persistenceId");
+//					Log.e("SettingFragment","新的方法签名字符串returnData=================="+ returnData);
+//					if (!("".equals(returnData))) {
+//						// 获取到图片后直接进行上传
+//						User usersetting = new User();
+//						usersetting.setPk_user(SD_pk_user);
+//						usersetting.setJpush_id(mUserJpush_id);
+//						usersetting.setNickname(mUserNickname);
+//						usersetting.setPassword(mUserPassword);
+//						usersetting.setSex(mUserSex);
+//						usersetting.setStatus(1);
+//						usersetting.setPhone(mUserPhone);
+//						usersetting.setWechat_id(mUserWechat_id);
+//						usersetting.setSetup_time(mUserSetup_time);
+//						usersetting.setLast_login_time(mUserLast_login_time);
+////						upload(usersetting);// 上传
+//						//上传
+//						String mFilePath = SdPkUser.getFilePath;
+//						Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
+//						Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
+//								convertToBitmap, 1080);// 最长边限制为1080
+//						Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
+//								limitLongScaleBitmap, 600);// 截取中间正方形
+//						bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
+//						UUID randomUUID = UUID.randomUUID();
+//						uUid = randomUUID.toString();
+//						OSSupload(ossData, bitmap2Bytes, uUid,usersetting);
+//					} else {
+//						Toast.makeText(getActivity(), "更换头像失败，请重新更换",Toast.LENGTH_SHORT).show();
+//					}
+//				}
+//			}
+//
+//
+//
+//			@Override
+//			public void defail(Object B) {
+//
+//			}
+//		});
 
 		// 更新的监听
 		Setting_readuserinter.setPostListener(new updateUserListenner() {
@@ -572,53 +632,53 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	// 上传图片
-	private void upload(final User user) {
-		String mFilePath = SdPkUser.getFilePath;
-		UploadTask task = new PhotoUploadTask(mFilePath,
-				new IUploadTaskListener() {
-					@Override
-					public void onUploadSucceed(final FileInfo result) {
-						Log.e("上传结果", "upload succeed: " + result.fileId);
-						// 上传完成后注册
-						user.setAvatar_path(result.fileId);
-						Setting_readuserinter.updateUser(getActivity(), user);
-						Log.e("SettingFragment","进入了图片上传的时候====================");
-					}
+//	private void upload(final User user) {
+//		String mFilePath = SdPkUser.getFilePath;
+//		UploadTask task = new PhotoUploadTask(mFilePath,
+//				new IUploadTaskListener() {
+//					@Override
+//					public void onUploadSucceed(final FileInfo result) {
+//						Log.e("上传结果", "upload succeed: " + result.fileId);
+//						// 上传完成后注册
+//						user.setAvatar_path(result.fileId);
+//						Setting_readuserinter.updateUser(getActivity(), user);
+//						Log.e("SettingFragment","进入了图片上传的时候====================");
+//					}
+//
+//					@Override
+//					public void onUploadStateChange(TaskState state) {
+//					}
+//
+//					@Override
+//					public void onUploadProgress(long totalSize, long sendSize) {
+//						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
+//						// Log.e("上传进度", "上传进度: " + p + "%");
+//						mSetting_progress.post(new Runnable() {
+//
+//							@Override
+//							public void run() {
+//								mSetting_progress.setVisibility(View.VISIBLE);
+//								mSetting_progress.setText(p + "%");
+//								if (p == 100) {
+//									mSetting_progress.setVisibility(View.GONE);
+//								}
+//							}
+//						});
+//					}
+//
+//					@Override
+//					public void onUploadFailed(final int errorCode,
+//							final String errorMsg) {
+//						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"+ errorMsg);
+//					}
+//				});
+//		uploadManager.upload(task); // 开始上传
+//
+//	}
 
-					@Override
-					public void onUploadStateChange(TaskState state) {
-					}
-
-					@Override
-					public void onUploadProgress(long totalSize, long sendSize) {
-						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
-						// Log.e("上传进度", "上传进度: " + p + "%");
-						mSetting_progress.post(new Runnable() {
-
-							@Override
-							public void run() {
-								mSetting_progress.setVisibility(View.VISIBLE);
-								mSetting_progress.setText(p + "%");
-								if (p == 100) {
-									mSetting_progress.setVisibility(View.GONE);
-								}
-							}
-						});
-					}
-
-					@Override
-					public void onUploadFailed(final int errorCode,
-							final String errorMsg) {
-						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"+ errorMsg);
-					}
-				});
-		uploadManager.upload(task); // 开始上传
-
-	}
-
-	private void initUpload() {
-		Setting_readuserinter.getPicSign(getActivity(), new User());
-	}
+//	private void initUpload() {
+//		Setting_readuserinter.getPicSign(getActivity(), new User());
+//	}
 
 	@Override
 	public void onDestroyView() {
@@ -639,6 +699,48 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			mSetting_head_12.setImageDrawable(null);
 			mSetting_head_12.setBackgroundDrawable(null);
 		}
+	}
+	
+	public void OSSupload(OSSData ossData, byte[] data, String UUid, final User user) {
+		ossData = ossService.getOssData(sampleBucket, UUid);
+		ossData.setData(data, "jpg"); // 指定需要上传的数据和它的类型
+		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
+		ossData.uploadInBackground(new SaveCallback() {
+			@Override
+			public void onSuccess(String objectKey) {
+				Log.e("", "图片上传成功");
+				Log.e("Main", "objectKey==" + objectKey);
+				//上传完成后注册
+				user.setAvatar_path(objectKey);
+				Setting_readuserinter.updateUser(getActivity(), user);
+				Log.e("SettingFragment","进入了图片上传的时候====================");
+				
+				
+			}
+			
+			@Override
+			public void onProgress(String objectKey, int byteCount,
+					int totalSize) {
+				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
+				// Log.e("上传进度", "上传进度: " + p + "%");
+				mSetting_progress.post(new Runnable() {
+					
+					@Override
+					public void run() {
+						mSetting_progress.setVisibility(View.VISIBLE);
+						mSetting_progress.setText(p + "%");
+						if (p == 100) {
+							mSetting_progress.setVisibility(View.GONE);
+						}
+					}
+				});
+			}
+			
+			@Override
+			public void onFailure(String objectKey, OSSException ossException) {
+				Log.e("", "图片上传失败" + ossException.toString());
+			}
+		});
 	}
 
 }

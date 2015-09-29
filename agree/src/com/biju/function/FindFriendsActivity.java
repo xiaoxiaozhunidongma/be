@@ -41,8 +41,8 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 	private TextView mFindfriends_nickname;
 	private Interface findfriends_inter_before;
 	private int i = 1;
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "";
 	private String pk_user;
 	private ArrayList<CheckFriends> checkfriendslist = new ArrayList<CheckFriends>();
 	private TextView mFindfriends_sendrequest;

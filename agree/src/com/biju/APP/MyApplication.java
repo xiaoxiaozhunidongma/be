@@ -13,6 +13,17 @@ import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 import com.BJ.photo.Res;
+import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.BJ.utils.homeImageLoaderUtils;
+import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.OSSServiceProvider;
+import com.alibaba.sdk.android.oss.model.AccessControlList;
+import com.alibaba.sdk.android.oss.model.AuthenticationType;
+import com.alibaba.sdk.android.oss.model.ClientConfiguration;
+import com.alibaba.sdk.android.oss.model.TokenGenerator;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
+import com.alibaba.sdk.android.oss.util.OSSToolKit;
 import com.avos.avoscloud.AVOSCloud;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
@@ -27,8 +38,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class MyApplication extends Application {
 
@@ -41,11 +50,32 @@ public class MyApplication extends Application {
 	public static void setRegId(String regId) {
 		MyApplication.regId = regId;
 	}
+	
+	private static OSSService ossService;
+	private static OSSBucket sampleBucket;
+
+	public static  OSSService getOssService() {
+		return ossService;
+	}
+
+	public  void setOssService(OSSService ossService) {
+		this.ossService = ossService;
+	}
+
+	public static OSSBucket getSampleBucket() {
+		return sampleBucket;
+	}
+	
+	public void setSampleBucket(OSSBucket sampleBucket) {
+		this.sampleBucket = sampleBucket;
+	}
 
 
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		//初始化OSS
+		initOSS();
 		// leanchat
 		 AVOSCloud.initialize(this,"n5wu1wotc8hhyu6x87hktwzfzd2o3ptvpe6cvhkwnwl50a0f","at9f7qy4fp02ajzzmem1ybnp8lehjb27plh902h76lw562le");
 //		 AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
@@ -108,7 +138,7 @@ public class MyApplication extends Application {
 				.build();
 		ImageLoader.getInstance().init(config);
 		// 地图初始化
-//		SDKInitializer.initialize(this);
+		SDKInitializer.initialize(this);
 		// 极光推送
 		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush
@@ -138,6 +168,43 @@ public class MyApplication extends Application {
 //		 */
 //		hxSDKHelper.onInit(applicationContext);
 
+	}
+
+	private void initOSS() {
+		ossService = OSSServiceProvider.getService();
+
+		ossService.setApplicationContext(getApplicationContext());
+		ossService.setGlobalDefaultHostId("oss-cn-hangzhou.aliyuncs.com");
+//		ossService.setAuthenticationType(AuthenticationType.FEDERATION_TOKEN); // 设置加签方式为STS Token鉴权方式
+		ossService.setAuthenticationType(AuthenticationType.ORIGIN_AKSK);
+//		ossService.setCustomStandardTimeWithEpochSec(100); // epoch时间，从1970年1月1日00:00:00 UTC经过的秒数??????????????????
+		ClientConfiguration conf = new ClientConfiguration();
+		conf.setConnectTimeout(15 * 1000); // 设置建连超时时间，默认为30s
+		conf.setSocketTimeout(15 * 1000); // 设置socket超时时间，默认为30s
+		conf.setMaxConnections(50); // 设置全局最大并发连接数，默认为50个
+//		conf.setMaxConcurrentTaskNum(10); // 设置全局最大并发任务数，默认10个
+		ossService.setClientConfiguration(conf);
+		
+		final String accessKey = "HyDprHu2BQHp7edn"; // 实际使用中，AK/SK不应明文保存在代码中
+		final String secretKey = "loWKqemVvcWH7u2RSn4EncVCkRuQcJ";
+		ossService.setGlobalDefaultTokenGenerator(new TokenGenerator() {
+		    @Override
+		    public String generateToken(String httpMethod, String md5, String type, String date, String ossHeaders,
+		            String resource) {
+		        String content = httpMethod + "\n" + md5 + "\n" + type + "\n" + date
+		                + "\n" + ossHeaders + resource;
+		        Log.e("MyAPP", "content==="+content);
+		        String generateToken = OSSToolKit.generateToken(accessKey, secretKey, content);
+		        Log.e("MyAPP", "generateToken==="+generateToken);
+				return generateToken;
+		    }
+		});
+		
+		
+		sampleBucket = ossService.getOssBucket("agree");
+		sampleBucket.setBucketACL(AccessControlList.PRIVATE); // 指明该Bucket的访问权限
+		sampleBucket.setBucketHostId("image.beagree.com"); // 指明该Bucket所在数据中心的域名或已经绑定Bucket的CNAME域名
+		sampleBucket.setCdnAccelerateHostId("imagecdn.beagree.com"); // 设置指向CDN加速域名的CNAME域名
 	}
 
 	public static void initImageLoader(Context context) {

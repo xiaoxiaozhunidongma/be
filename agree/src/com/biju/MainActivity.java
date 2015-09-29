@@ -1,6 +1,7 @@
 package com.biju;
 
 import java.io.File;
+import java.util.UUID;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,10 +24,17 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.utils.ByteOrBitmap;
+import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.InitHead;
+import com.BJ.utils.LimitLong;
 import com.BJ.utils.MyBimp;
+import com.BJ.utils.Path2Bitmap;
+import com.BJ.utils.PicCutter;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.homeImageLoaderUtils;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
@@ -192,8 +200,15 @@ public class MainActivity extends FragmentActivity  {
 			// Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
 			// Bitmap bmp = Bimp.revitionImageSize(mFilePath);
 			// 这个mFilePath不可以用缩略图路径
-			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
-			InitHead.initHead(bmp);
+			
+			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
+			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
+					convertToBitmap, 1080);// 最长边限制为1080
+			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
+					limitLongScaleBitmap, 600);// 截取中间正方形
+			
+//			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
+			InitHead.initHead(centerSquareScaleBitmap);
 			Log.e("MainActivity", "获取的图片路径=======" + mFilePath);
 			SdPkUser.setGetFilePath(mFilePath);
 		} catch (Exception e) {

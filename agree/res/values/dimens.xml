@@ -45,14 +45,14 @@
 
 
     <!-- Group中第二级标题 -->
-    <dimen name="title_second_size">11sp</dimen>
- <!-- Group中第二级标题的标题字体大小 -->
+    <dimen name="title_second_size">12sp</dimen><!-- Group中第二级标题的标题字体大小 -->
  
  	<!-- 设置选项的字体大小 -->
  	<dimen name="setting_size">14sp</dimen>
  	<dimen name="setting_prompt_size">12sp</dimen>
 	<!-- 设置选项的布局高度 -->
- 	<dimen name="setting_layout_height">40sp</dimen>
+ 	<dimen name="setting_layout_height">44sp</dimen>
+ 	<dimen name="setting_prompt_layout_height">50sp</dimen>
  	
  	
  	
@@ -91,4 +91,7 @@
     <dimen name="reg_verifycode_character_spacing">25dp</dimen>
     <dimen name="reg_verifycode_textsize">30dp</dimen>
 
+    <dimen name="slidingmenu_offset">60dp</dimen>
+    <dimen name="shadow_width">100dp</dimen>
+    
 </resources>

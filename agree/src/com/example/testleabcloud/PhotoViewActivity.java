@@ -1,8 +1,9 @@
 package com.example.testleabcloud;
 
-import uk.co.senab.photoview.PhotoView;
+import java.io.IOException;
+
 import leanchatlib.utils.DensityUtil;
-import leanchatlib.utils.Path2Bitmap;
+import uk.co.senab.photoview.PhotoView;
 import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -11,6 +12,7 @@ import android.view.Menu;
 import android.view.Window;
 
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.Path2Bitmap;
 import com.biju.R;
 
 public class PhotoViewActivity extends Activity {
@@ -24,7 +26,13 @@ public class PhotoViewActivity extends Activity {
 		String FileUrl = intent.getStringExtra("FileUrl");
 		String localImagePath = intent.getStringExtra("localImagePath");
 		
-		Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(localImagePath, DensityUtil.dip2px(this, 480),  DensityUtil.dip2px(this, 800));
+		Bitmap convertToBitmap = null;
+		try {
+			convertToBitmap = Path2Bitmap.convertToBitmap(localImagePath);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		
 		PhotoView photoView = (PhotoView) findViewById(R.id.image);
 		if(convertToBitmap!=null){
@@ -32,7 +40,7 @@ public class PhotoViewActivity extends Activity {
 		}else{
 				//如果SD为空，网络不空
 //				photoView.setImageResource(R.drawable.ic_error);
-		ImageLoaderUtils.getInstance().LoadImage(this, FileUrl, photoView);
+		ImageLoaderUtils.getInstance().LoadImageSquare(this, FileUrl, photoView);
 		}
 	}
 
