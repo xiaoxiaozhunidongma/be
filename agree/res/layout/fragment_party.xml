@@ -4,6 +4,7 @@
     android:id="@+id/RelativeLayout1"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#efefef"
     tools:context=".PartyFragment" >
 
     <!-- TODO: Update blank fragment layout -->
@@ -21,6 +22,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/party_title_text"
+            android:textColor="@drawable/title_text_color"
             android:textSize="@dimen/title_size" />
 
         <RelativeLayout
@@ -50,22 +52,6 @@
             android:background="#aaaaaa" />
     </RelativeLayout>
 
-    <android.support.v4.widget.SwipeRefreshLayout
-        android:id="@+id/tab_party_swipe_refresh"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="@dimen/title_height"
-        android:visibility="gone" >
-
-        <ListView
-            android:id="@+id/tab_party_listview"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" >
-        </ListView>
-    </android.support.v4.widget.SwipeRefreshLayout>
-
     <RelativeLayout
         android:id="@+id/tab_party_prompt_layout"
         android:layout_width="match_parent"
@@ -90,5 +76,21 @@
             android:layout_height="0.50dp"
             android:background="#aaaaaa" />
     </RelativeLayout>
+
+    <android.support.v4.widget.SwipeRefreshLayout
+        android:id="@+id/tab_party_swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/title_height"
+        android:background="#efefef" >
+
+        <ListView
+            android:id="@+id/tab_party_listview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" >
+        </ListView>
+    </android.support.v4.widget.SwipeRefreshLayout>
 
 </RelativeLayout>

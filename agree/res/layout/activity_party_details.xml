@@ -55,6 +55,7 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="@string/party_title_text"
+            android:textColor="@drawable/title_text_color"
             android:textSize="@dimen/title_size" />
 
         <TextView
@@ -107,7 +108,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="30.0dp"
                 android:layout_below="@+id/PartyDetails_partyaddress_layout"
-                android:layout_centerHorizontal="true" >
+                android:layout_centerHorizontal="true" 
+                android:layout_marginTop="15.0dp"
+                >
 
                 <TextView
                     android:id="@+id/PartyDetails_partyname"
@@ -116,8 +119,9 @@
                     android:layout_alignParentBottom="true"
                     android:layout_centerHorizontal="true"
                     android:text="@string/partydetails_partyname"
-                    android:textColor="#00e3e3"
-                    android:textSize="20.0sp" />
+                    android:textColor="@drawable/PartyDetails_name_color"
+                    android:textSize="22.0sp"
+                     />
             </RelativeLayout>
 
             <RelativeLayout
@@ -136,7 +140,7 @@
                     android:layout_marginTop="5.0dp"
                     android:gravity="center"
                     android:text="@string/partydetails_partytime"
-                    android:textColor="#d3d3d3"
+                    android:textColor="#959595"
                     android:textSize="15.0sp" />
 
                 <RelativeLayout
@@ -146,7 +150,7 @@
                     android:layout_below="@+id/PartyDetails_partytime"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5.0dp"
-                    android:background="@drawable/more_corners" >
+                    android:background="@drawable/payprompt_corners" >
 
                     <TextView
                         android:id="@+id/PartyDetails_partypayment"
@@ -154,10 +158,10 @@
                         android:layout_height="wrap_content"
                         android:layout_centerHorizontal="true"
                         android:layout_centerVertical="true"
-                        android:paddingBottom="5.0dp"
-                        android:paddingLeft="15.0dp"
-                        android:paddingRight="15.0dp"
-                        android:paddingTop="5.0dp"
+                        android:paddingBottom="2.0dp"
+                        android:paddingLeft="20.0dp"
+                        android:paddingRight="20.0dp"
+                        android:paddingTop="2.0dp"
                         android:text="@string/partydetails_partypayment"
                         android:textSize="12.0sp" />
                 </RelativeLayout>
@@ -190,7 +194,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:text="@string/partydetails_partake"
-                            android:textColor="#d3d3d3"
+                            android:textColor="#959595"
                             android:textSize="17.0sp" />
                     </RelativeLayout>
 
@@ -207,7 +211,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:text="@string/partydetails_did_not_say"
-                            android:textColor="#d3d3d3"
+                            android:textColor="#959595"
                             android:textSize="17.0sp" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -232,7 +236,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:text="0"
-                            android:textColor="#00e3e3"
+                            android:textColor="@drawable/PartyDetails_number_color"
                             android:textSize="30.0sp" />
                     </RelativeLayout>
 
@@ -249,7 +253,7 @@
                             android:layout_centerHorizontal="true"
                             android:layout_centerVertical="true"
                             android:text="0"
-                            android:textColor="#00e3e3"
+                            android:textColor="@drawable/PartyDetails_number_color"
                             android:textSize="30.0sp" />
                     </RelativeLayout>
                 </LinearLayout>
@@ -260,8 +264,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="30.0dp"
                 android:layout_below="@+id/PartyDetails_prompt"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="15.0dp" >
+                android:layout_centerHorizontal="true" >
 
                 <TextView
                     android:id="@+id/PartyDetails_party_organizer"
@@ -270,19 +273,20 @@
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
                     android:text="@string/partydetails_party_organizer"
-                    android:textColor="#000000"
-                    android:textSize="15.0sp" />
+                    android:textSize="13.0sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/PartyDetails_prompt"
                 android:layout_width="match_parent"
-                android:layout_height="30.0dp"
+                android:layout_height="10.0dp"
                 android:layout_alignParentLeft="true"
                 android:layout_below="@+id/relativeLayout1"
                 android:layout_marginTop="10.0dp" >
 
-                <TextView
+                <!-- 30.0dp -->
+                <!--
+                     <TextView
                     android:id="@+id/textView7"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -291,15 +295,16 @@
                     android:text="@string/partydetails_prompt"
                     android:textColor="#d3d3d3"
                     android:textSize="13.0sp" />
+                -->
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/PartyDetails_apply_layout"
                 android:layout_width="match_parent"
-                android:layout_height="40.0dp"
+                android:layout_height="50.0dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:background="#00d3d3" >
+                android:background="#f0f0f0" >
 
                 <TextView
                     android:id="@+id/PartyDetails_apply"

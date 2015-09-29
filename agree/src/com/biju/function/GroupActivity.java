@@ -70,6 +70,10 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private Integer sD_pk_user;
 	private TextView mGroup_setting;
 	private TextView mGroup_setting_title;
+
+	public static GetSliding getSliding;
+
+	private String name;
 	private ListView mSlidingMenu_member_listView;
 	private ArrayList<Group_ReadAllUser> Group_Readalluser_List = new ArrayList<Group_ReadAllUser>();
 	private MyMemBerAdapter adapter;
@@ -84,10 +88,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private RelativeLayout mSlidingMenu_Team_Setting;
 	
 	private boolean isCode;
-
-	public static GetSliding getSliding;
-
-	private String name;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -228,6 +228,9 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Sliding_editor.putInt(IConstant.Click, 0);
 		Sliding_editor.commit();
 	}
+	public interface GetSliding {
+		void SlidingClick();
+	}
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -238,7 +241,4 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		PhotoFragment2.onActivityResultInterface.onActivityResult(requestCode, resultCode, data);
 	}
 
-	public interface GetSliding {
-		void SlidingClick();
-	}
 }

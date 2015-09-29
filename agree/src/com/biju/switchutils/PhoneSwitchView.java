@@ -33,7 +33,7 @@ public class PhoneSwitchView extends FrameLayout {
 			@Override
 			public void onChanged(View view, boolean checked) {
 				isChecked = checked;
-				Log.e("SwitchView", "这时候的选择情况333333========" + isChecked);
+				Log.e("PhoneSwitchView", "这时候的选择情况333333========" + isChecked);
 				float targetX = 0;
 				if (getWidth() != 0) {
 					targetX = getWidth() - circleView.getWidth();
@@ -46,7 +46,7 @@ public class PhoneSwitchView extends FrameLayout {
 					onBgView.bringToFront();
 					onBgView.setVisibility(View.VISIBLE);
 					offBgView.setVisibility(View.VISIBLE);
-					Log.e("SwitchView", "这时候的选择情况1111111========" + isChecked);
+					Log.e("PhoneSwitchView", "这时候的选择情况1111111========" + isChecked);
 					TranslateAnimation an1 = new TranslateAnimation(0, targetX,0, 0);
 					an1.setFillAfter(true);
 					an1.setDuration(100);

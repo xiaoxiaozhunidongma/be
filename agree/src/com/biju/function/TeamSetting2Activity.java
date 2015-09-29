@@ -56,9 +56,9 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private boolean Chat_checked;
 	private boolean Phone_checked;
 	
-	private int Message_ischecked;
-	private int Chat_ischecked;
-	private int Phone_ischecked;
+	private int Message_ischecked=-1;
+	private int Chat_ischecked=-1;
+	private int Phone_ischecked=-1;
 
 	public static GetPhone getPhone;
 	public static GetChat getChat;
@@ -71,9 +71,9 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private boolean Clickchat;
 	private boolean Clickphone;
 	
-	private Integer ischat;
-	private Integer ismessage;
-	private Integer isphone;
+	private Integer ischat=-1;
+	private Integer ismessage=-1;
+	private Integer isphone=-1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -150,13 +150,16 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 						Groupuserback.class);
 				Integer statusMsg = groupuserback.getStatusMsg();
 				if (statusMsg == 1) {
-					Log.e("GroupActivity", "返回小组关系ID====" + A);
+					Log.e("TeamSetting2Activity", "返回小组关系ID====" + A);
 					List<Group_User> groupuser_returnData = groupuserback.getReturnData();
 					if (groupuser_returnData.size() > 0) {
 						Group_User group_user = groupuser_returnData.get(0);
 						ischat = group_user.getMessage_warn();
 						ismessage = group_user.getParty_warn();
 						isphone = group_user.getPublic_phone();
+						Log.e("TeamSetting2Activity", "返回的ischat=========" + ischat);
+						Log.e("TeamSetting2Activity", "返回的ismessage=========" + ismessage);
+						Log.e("TeamSetting2Activity", "返回的isphone=========" + isphone);
 						switch (ischat) {
 						case 0:
 							Chat_checked=false;
@@ -193,6 +196,9 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 							break;
 						}
 					}
+					Log.e("TeamSetting2Activity", "返回的Chat_checked=========" + Chat_checked);
+					Log.e("TeamSetting2Activity", "返回的Message_checked=========" + Message_checked);
+					Log.e("TeamSetting2Activity", "返回的Phone_checked=========" + Phone_checked);
 					MessageSwitchView.changedListener.onChanged(message_SwitchView1, Message_checked);
 					ChatSwitchView.changedListener.onChanged(chat_SwitchView1, Chat_checked);
 					PhoneSwitchView.changedListener.onChanged(phone_SwitchView1, Phone_checked);

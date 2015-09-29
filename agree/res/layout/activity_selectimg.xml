@@ -41,9 +41,9 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="开始上传图片"
-            android:textSize="17.0sp"
-            android:textColor="#ffffff"
+            android:text="+ 开始上传图片"
+            android:textSize="15.0sp"
+            android:textColor="#88d4cc"
              />
 
     </RelativeLayout>

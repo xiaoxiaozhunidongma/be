@@ -7,14 +7,26 @@
         android:layout_width="match_parent"
         android:layout_height="80.0dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+         >
 
         <TextView
-            android:id="@+id/textView1"
+            android:id="@+id/Party_item_prompt_1"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
-            android:background="#aaaaaa" />
+            android:background="#aaaaaa"
+            android:layout_marginLeft="20.0dp"
+             />
+        <TextView
+            android:id="@+id/Party_item_prompt_2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            android:visibility="gone"
+             />
 
         <RelativeLayout
             android:id="@+id/relativeLayout1"
@@ -27,13 +39,12 @@
                 android:id="@+id/Party_item_background"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
+                android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:layout_marginBottom="10.0dp"
                 android:layout_marginLeft="20.0dp"
-                android:layout_marginTop="10.0dp"
+                
                  >
-<!-- android:background="@drawable/party_green_corners" --><!--绿色背景  -->
+<!--android:background="@drawable/party_green_corners"  -->
                 <TextView
                     android:id="@+id/Party_item_years_month"
                     android:layout_width="wrap_content"
@@ -41,11 +52,11 @@
                     android:layout_alignParentRight="true"
                     android:layout_alignParentTop="true"
                     android:layout_marginRight="5.0dp"
-                    android:gravity="right|center"
-                    android:paddingTop="5.0dp"
+                    android:gravity="right|bottom"
+                    android:paddingTop="3.0dp"
                     android:text="9月10号"
                     android:textColor="#ffffff"
-                    android:textSize="17.0sp" />
+                    android:textSize="16.0sp" />
 
                 <TextView
                     android:id="@+id/Party_item_time"
@@ -53,8 +64,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignRight="@+id/Party_item_years_month"
                     android:layout_below="@+id/Party_item_years_month"
-                    android:gravity="right|center"
-                    android:paddingBottom="5.0dp"
+                    android:layout_marginBottom="3.0dp"
+                    android:gravity="right|top"
                     android:text="20:00"
                     android:textColor="#ffffff"
                     android:textSize="18.0sp" />
@@ -75,6 +86,7 @@
                         android:visibility="gone" />
                 </RelativeLayout>
             </RelativeLayout>
+
         </RelativeLayout>
 
         <RelativeLayout
@@ -82,7 +94,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_centerVertical="true"
-            android:layout_marginRight="50.0dp"
+            android:layout_marginRight="70.0dp"
             android:layout_toRightOf="@+id/relativeLayout1" >
 
             <TextView
@@ -95,7 +107,8 @@
                 android:gravity="left|center"
                 android:singleLine="true"
                 android:text="聚会名称"
-                android:textSize="25.0sp" />
+                android:paddingLeft="5.0dp"
+                android:textSize="23.0sp" />
 
             <TextView
                 android:id="@+id/Party_item_address"
@@ -105,6 +118,7 @@
                 android:layout_below="@+id/Party_item_name"
                 android:singleLine="true"
                 android:text="聚会地点"
+                android:paddingLeft="5.0dp"
                 android:textSize="10.0sp" />
         </RelativeLayout>
 
@@ -112,10 +126,12 @@
             android:layout_width="50.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" >
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20.0dp"
+             >
 
             <TextView
-                android:id="@+id/textView2"
+                android:id="@+id/Party_item_payment"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
@@ -123,17 +139,16 @@
                 android:layout_marginTop="20.0dp"
                 android:text="预付款"
                 android:textColor="#808080"
-                android:textSize="13.0sp" />
+                android:textSize="12.0sp" />
 
             <TextView
-                android:id="@+id/textView3"
+                android:id="@+id/Party_item_inNum"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_below="@+id/textView2"
+                android:layout_below="@+id/Party_item_payment"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="10.0dp"
                 android:text="1"
-                android:textSize="15.0sp" />
+                android:textSize="16.0sp" />
         </RelativeLayout>
     </RelativeLayout>
 

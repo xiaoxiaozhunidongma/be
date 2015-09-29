@@ -31,22 +31,24 @@
         </RelativeLayout>
 
         <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="80dp"
-            android:layout_toRightOf="@+id/newparty_back_layout"
-            android:text="@string/teampraty_title_text"
-            android:textSize="@dimen/title_size" />
-
-        <TextView
             android:id="@+id/textView3"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:background="#aaaaaa" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="@string/teampraty_title_text"
+            android:textSize="@dimen/title_size"
+            android:textColor="@drawable/title_text_color"
+             />
+
     </RelativeLayout>
 
     <GridView

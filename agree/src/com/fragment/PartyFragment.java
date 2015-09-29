@@ -67,7 +67,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 			initUI();
 			initInterface();
 			initParty();
-			
+			Log.e("PartyFragment", "进入了onCreateView========");
 			mTab_party_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.tab_party_swipe_refresh);
 			mTab_party_swipe_refresh.setOnRefreshListener(this);
 			
@@ -85,6 +85,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 	public void onResume() {
 		SharedPreferences refresh_sp=getActivity().getSharedPreferences(IConstant.AddRefresh, 0);
 		boolean isaddrefresh=refresh_sp.getBoolean(IConstant.IsAddRefresh, false);
+		Log.e("PartyFragment", "进入了onCreateView========"+isaddrefresh);
 		if(isaddrefresh)
 		{
 			initParty();
@@ -187,6 +188,10 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 		TextView times;
 		RelativeLayout Party_item_background;
 		ImageView Party_item_redprompt;
+		TextView Party_item_inNum;
+		TextView Party_item_payment;
+		TextView Party_item_prompt_1;
+		TextView Party_item_prompt_2;
 	}
 
 	class MyAdapter extends BaseAdapter {
@@ -222,6 +227,10 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				holder.address = (TextView) inflater.findViewById(R.id.Party_item_address);//地址
 				holder.Party_item_background=(RelativeLayout) inflater.findViewById(R.id.Party_item_background);//背景颜色
 				holder.Party_item_redprompt=(ImageView) inflater.findViewById(R.id.Party_item_redprompt);//小红点提示
+				holder.Party_item_inNum=(TextView) inflater.findViewById(R.id.Party_item_inNum);//参与人数
+				holder.Party_item_payment=(TextView) inflater.findViewById(R.id.Party_item_payment);//付款方式
+				holder.Party_item_prompt_1=(TextView) inflater.findViewById(R.id.Party_item_prompt_1);//下滑提示线
+				holder.Party_item_prompt_2=(TextView) inflater.findViewById(R.id.Party_item_prompt_2);//下滑提示线
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -248,13 +257,26 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				}
 				String datetimes = time.substring(11, 16);
 				Integer relationship=party.getRelationship();
+				Integer inNum=party.getInNum();
+				if(inNum==null)
+				{
+					holder.Party_item_inNum.setText("0");
+				}else
+				{
+					holder.Party_item_inNum.setText(""+inNum);
+				}
 				if(relationship==1)
 				{
+					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_partake_nickname_color));//参与后名称颜色黑色
 					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.white));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.white));
+					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_partake_address_color));//参与后地址颜色深灰
+					holder.Party_item_payment.setTextColor(holder.Party_item_payment.getResources().getColor(R.drawable.Party_partake_pay_color));//参与后付款方式变绿色
 				}else
 				{
+					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
+					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
 				}
@@ -262,6 +284,16 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				holder.name.setText(party.getName());
 				holder.times.setText(datetimes);
 				holder.address.setText(party.getLocation());
+				if(position==userAllPartieList.size()-1)
+				{
+					holder.Party_item_prompt_1.setVisibility(View.GONE);
+					holder.Party_item_prompt_2.setVisibility(View.VISIBLE);
+				}else
+				{
+					holder.Party_item_prompt_1.setVisibility(View.VISIBLE);
+					holder.Party_item_prompt_2.setVisibility(View.GONE);
+				}
+					
 			}
 
 			return inflater;

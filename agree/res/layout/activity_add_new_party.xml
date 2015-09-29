@@ -85,7 +85,7 @@
         <RelativeLayout
             android:id="@+id/relativeLayout1"
             android:layout_width="match_parent"
-            android:layout_height="60.0dp"
+            android:layout_height="50.0dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true" >
 
@@ -94,7 +94,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="20.0dp"
-                android:layout_marginTop="35.0dp"
+                android:layout_marginTop="25.0dp"
                 android:text="主要"
                 android:textColor="#808080"
                 android:textSize="12.0sp" />
@@ -109,7 +109,7 @@
             <RelativeLayout
                 android:id="@+id/relativeLayout2"
                 android:layout_width="match_parent"
-                android:layout_height="50.0dp"
+                android:layout_height="44.0dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
                 android:background="#ffffff" >
@@ -117,7 +117,7 @@
                 <EditText
                     android:id="@+id/Add_New_Party_name"
                     android:layout_width="match_parent"
-                    android:layout_height="40.0dp"
+                    android:layout_height="35.0dp"
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20.0dp"
@@ -126,7 +126,10 @@
                     android:ems="10"
                     android:gravity="left|center"
                     android:hint="聚会名称"
-                    android:textSize="15.0sp" >
+                    android:textSize="13.0sp"
+                    android:textColorHint="#c9c9c9"
+                    android:textColor="#000000"
+                     >
 
                     <requestFocus />
                 </EditText>
@@ -143,7 +146,7 @@
             <RelativeLayout
                 android:id="@+id/Add_New_Party_time"
                 android:layout_width="match_parent"
-                android:layout_height="50.0dp"
+                android:layout_height="44.0dp"
                 android:layout_below="@+id/relativeLayout2"
                 android:layout_centerHorizontal="true"
                 android:background="#ffffff" >
@@ -155,9 +158,9 @@
                     android:layout_alignParentLeft="true"
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20.0dp"
-                    android:text="活动时间"
+                    android:text="活动开始时间"
                     android:textColor="#000000"
-                    android:textSize="15.0sp" />
+                    android:textSize="13.0sp" />
 
                 <TextView
                     android:id="@+id/textView8"
@@ -169,8 +172,8 @@
 
                 <ImageView
                     android:id="@+id/imageView1"
-                    android:layout_width="20.0dp"
-                    android:layout_height="20.0dp"
+                    android:layout_width="17.0dp"
+                    android:layout_height="17.0dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20dp"
@@ -186,18 +189,18 @@
                     android:layout_toLeftOf="@+id/imageView1"
                     android:layout_toRightOf="@+id/textView7"
                     android:gravity="right|center"
-                    android:text="时间详情"
+                    android:text="开始时间"
                     android:singleLine="true"
                     android:layout_marginLeft="5.0dp"
-                    android:textColor="#d3d3d3"
-                    android:textSize="12.0sp" />
+                    android:textColor="#c9c9c9"
+                    android:textSize="13.0sp" />
 
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/Add_New_Party_address"
                 android:layout_width="match_parent"
-                android:layout_height="50.0dp"
+                android:layout_height="44.0dp"
                 android:layout_below="@+id/Add_New_Party_time"
                 android:layout_centerHorizontal="true"
                 android:background="#ffffff"
@@ -211,7 +214,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20.0dp"
                     android:text="活动地点"
-                    android:textSize="15.0dp"
+                    android:textSize="13.0dp"
                     android:textColor="#000000"
                      />
 
@@ -226,8 +229,8 @@
 
                 <ImageView
                     android:id="@+id/imageView2"
-                    android:layout_width="20.0dp"
-                    android:layout_height="20.0dp"
+                    android:layout_width="17.0dp"
+                    android:layout_height="17.0dp"
                     android:layout_alignParentRight="true"
                     android:layout_centerVertical="true"
                     android:layout_marginRight="20.0dp"
@@ -246,8 +249,8 @@
                     android:text="地址详情"
                     android:singleLine="true"
                     android:layout_marginLeft="5.0dp"
-                    android:textColor="#d3d3d3"
-                    android:textSize="12.0sp" />
+                    android:textColor="#c9c9c9"
+                    android:textSize="13.0sp" />
 
             </RelativeLayout>
         </RelativeLayout>

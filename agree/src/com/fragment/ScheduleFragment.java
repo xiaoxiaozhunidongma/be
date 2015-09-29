@@ -57,9 +57,10 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private Integer sD_pk_user;
 	private SwipeRefreshLayout mSchedule_swipe_refresh;
 	private int num=0;
-	private TextView mSchedule_prompt_new_party;
 	private RelativeLayout mSchedule_new_party_layout;
 	private TextView mSchedule_new_party;
+	private RelativeLayout mSchedule_swipe_refresh_layout;
+	private RelativeLayout mSchedule_prompt_layout;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -118,7 +119,8 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		super.onResume();
 	}
 	private void initUI() {
-		mSchedule_prompt_new_party = (TextView) mLayout.findViewById(R.id.Schedule_prompt_new_party);//提示
+		mSchedule_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_prompt_layout);//没有聚会时候进行提示
+		mSchedule_swipe_refresh_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_swipe_refresh_layout);//有聚会时候显示
 		mSchedule_new_party_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_new_party_layout);//添加新的聚会
 		mSchedule_new_party = (TextView) mLayout.findViewById(R.id.Schedule_new_party);
 		mSchedule_new_party_layout.setOnClickListener(this);
@@ -126,6 +128,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		
 		
 		mSchedule_listView=(ListView) mLayout.findViewById(R.id.schedule_listview);
+		mSchedule_listView.setDividerHeight(0);//设置listview的item直接的间隙为0
 		adapter = new MyAdapter();
 		mSchedule_listView.setAdapter(adapter);
 		mSchedule_listView.setOnItemClickListener(new OnItemClickListener() {
@@ -183,6 +186,10 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		TextView times;
 		RelativeLayout Party_item_background;
 		ImageView Party_item_redprompt;
+		TextView Party_item_inNum;
+		TextView Party_item_payment;
+		TextView Party_item_prompt_1;
+		TextView Party_item_prompt_2;
 	}
 
 	class MyAdapter extends BaseAdapter {
@@ -217,6 +224,10 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 				holder.address = (TextView) inflater.findViewById(R.id.Party_item_address);//地址
 				holder.Party_item_background = (RelativeLayout) inflater.findViewById(R.id.Party_item_background);
 				holder.Party_item_redprompt=(ImageView) inflater.findViewById(R.id.Party_item_redprompt);
+				holder.Party_item_inNum=(TextView) inflater.findViewById(R.id.Party_item_inNum);//参与人数
+				holder.Party_item_payment=(TextView) inflater.findViewById(R.id.Party_item_payment);//付款方式
+				holder.Party_item_prompt_1=(TextView) inflater.findViewById(R.id.Party_item_prompt_1);//下滑提示线
+				holder.Party_item_prompt_2=(TextView) inflater.findViewById(R.id.Party_item_prompt_2);//下滑提示线
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -243,17 +254,31 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					break;
 				}
 				String datetimes = time.substring(11, 16);
-				
 				Integer ralationship = party.getRelationship();
+				Integer inNum=party.getInNum();
+				if(inNum==null)
+				{
+					holder.Party_item_inNum.setText("0");
+				}else
+				{
+					holder.Party_item_inNum.setText(""+inNum);
+				}
 				if (ralationship == null) {
+					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
+					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
 					holder.Party_item_redprompt.setVisibility(View.VISIBLE);
 				} else if(ralationship ==0){
+					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
+					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
 				}else if(ralationship ==1)
 				{
+					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_partake_address_color));//参与后地址颜色深灰
+					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_partake_nickname_color));//参与后名称颜色黑色
+					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
 					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.white));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.white));
@@ -262,6 +287,15 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 				holder.name.setText(party.getName());
 				holder.times.setText(datetimes);
 				holder.address.setText(party.getLocation());
+				if(position==partylist.size()-1)
+				{
+					holder.Party_item_prompt_1.setVisibility(View.GONE);
+					holder.Party_item_prompt_2.setVisibility(View.VISIBLE);
+				}else
+				{
+					holder.Party_item_prompt_1.setVisibility(View.VISIBLE);
+					holder.Party_item_prompt_2.setVisibility(View.GONE);
+				}
 			}
 
 			return inflater;
@@ -288,9 +322,11 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					}
 				}
 				if (partylist.size() > 0) {
-					mSchedule_prompt_new_party.setVisibility(View.GONE);
+					mSchedule_prompt_layout.setVisibility(View.GONE);
+					mSchedule_swipe_refresh_layout.setVisibility(View.VISIBLE);
 				} else {
-					mSchedule_prompt_new_party.setVisibility(View.VISIBLE);
+					mSchedule_prompt_layout.setVisibility(View.VISIBLE);
+					mSchedule_swipe_refresh_layout.setVisibility(View.GONE);
 					Log.e("ScheduleFragment", "进入了没有聚会时候的提醒中==========");
 				}
 				adapter.notifyDataSetChanged();

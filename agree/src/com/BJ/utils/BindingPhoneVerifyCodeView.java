@@ -19,6 +19,7 @@ import android.view.inputmethod.InputConnection;
 import android.view.inputmethod.InputMethodManager;
 
 import com.biju.R;
+import com.biju.function.BindingPhoneActivity;
 import com.biju.function.RequestCode3Activity;
 import com.biju.function.RequestCodeActivity;
 
@@ -198,7 +199,11 @@ public class BindingPhoneVerifyCodeView extends View {
 	public String getVerifyCodeStr() {
 		if (verifyCodeBuilder.toString() != null) {
 			code = verifyCodeBuilder.toString();
-			SdPkUser.setBindingphonecode(code);
+			if(code.length()==4)
+			{
+				SdPkUser.setBindingphonecode(code);
+				BindingPhoneActivity.bindingPhone.BindingPhone();
+			}
 		}
 		return verifyCodeBuilder.toString();
 	}

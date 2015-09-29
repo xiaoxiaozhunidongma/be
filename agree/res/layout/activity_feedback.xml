@@ -85,13 +85,13 @@
                 android:layout_marginTop="35.0dp"
                 android:text="@string/feedback_prompt"
                 android:textColor="#808080"
-                android:textSize="12.0sp" />
+                android:textSize="13.0sp" />
         </RelativeLayout>
 
         <RelativeLayout
             android:id="@+id/feedback_question_layout"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="105.0dp"
             android:layout_below="@+id/feedback_prompt_layout"
             android:layout_marginTop="5.0dp"
             android:background="#ffffff" >
@@ -104,8 +104,13 @@
                 android:ems="10"
                 android:background="@null"
                 android:hint=""
-                android:lines="4"
+                android:lines="5"
                 android:gravity="top"
+                android:layout_marginTop="5.0dp"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginRight="20.0dp"
+                android:layout_marginBottom="5.0dp"
+                android:textSize="15.0sp"
                  >
 
                 <requestFocus />
@@ -126,7 +131,7 @@
                 android:layout_marginLeft="20.0dp"
                 android:layout_marginTop="10.0dp"
                 android:text="@string/feedback_prompt_1"
-                android:textSize="12.0sp"
+                android:textSize="13.0sp"
                 android:textColor="#808080"
                  />
 
@@ -137,7 +142,7 @@
                 android:layout_marginTop="30.0dp"
                 android:layout_marginLeft="20.0dp"
                 android:text="@string/feedback_prompt_2"
-                android:textSize="12.0sp"
+                android:textSize="13.0sp"
                 android:textColor="#808080"
                  />
 

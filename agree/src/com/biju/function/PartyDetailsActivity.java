@@ -117,6 +117,7 @@ public class PartyDetailsActivity extends Activity implements
 	private Integer fk_group;
 	private int not_sayNum;
 	private Integer current_relationship;
+	private RelativeLayout mPartyDetails_apply_layout;
 
 	/**
 	 * 定位SDK监听函数
@@ -182,11 +183,12 @@ public class PartyDetailsActivity extends Activity implements
 		bd_mapView_container.addView(mMapView, params_map);
 		// addview edittext
 		RelativeLayout.LayoutParams params_show = new LayoutParams(
-				LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 50));
+				LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 40));
 		edit_show.setGravity(Gravity.CENTER);
-		params_show.setMargins(0, DensityUtil.dip2px(this, 200), 0, 0);
+		params_show.setMargins(0, DensityUtil.dip2px(this, 210), 0, 0);
 		edit_show.setBackgroundColor(android.graphics.Color.parseColor("#aaffffff"));
-		edit_show.setTextColor(android.graphics.Color.parseColor("#cdcdcd"));
+		edit_show.setTextColor(android.graphics.Color.parseColor("#535353"));
+		edit_show.setTextSize(15);
 		bd_mapView_container.addView(edit_show, params_show);
 
 		mBaiduMap = mMapView.getMap();
@@ -288,9 +290,11 @@ public class PartyDetailsActivity extends Activity implements
 							if(current_relationship==1)
 							{
 								mPartyDetails_apply.setText("已报名");
+								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_apply_layout_color);//已报名背景为绿色
 							}else
 							{
 								mPartyDetails_apply.setText("未报名");
+								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_noapply_layout_color);//已报名背景为淡灰色
 							}
 							Log.e("PartyDetailsActivity","当前current_relationship==========" + current_relationship);
 						}
@@ -461,7 +465,8 @@ public class PartyDetailsActivity extends Activity implements
 		findViewById(R.id.PartyDetails_did_not_say_number_layout).setOnClickListener(this);// 未表态数量
 		mPartyDetails_did_not_say_number = (TextView) findViewById(R.id.PartyDetails_did_not_say_number);
 		mPartyDetails_party_organizer = (TextView) findViewById(R.id.PartyDetails_party_organizer);// 组织者
-		findViewById(R.id.PartyDetails_apply_layout).setOnClickListener(this);// 报名
+		mPartyDetails_apply_layout = (RelativeLayout) findViewById(R.id.PartyDetails_apply_layout);
+		mPartyDetails_apply_layout.setOnClickListener(this);// 报名
 		mPartyDetails_apply = (TextView) findViewById(R.id.PartyDetails_apply);// 报名支付金额
 
 		edit_show = new EditText(this);

@@ -8,6 +8,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import android.annotation.SuppressLint;
@@ -25,6 +27,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -43,15 +46,12 @@ import com.BJ.utils.LimitLong;
 import com.BJ.utils.MyBimp;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.PicCutter;
-import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
-import com.BJ.utils.homeImageLoaderUtils;
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSData;
-import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.createGroupListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
@@ -69,7 +69,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	public static String APPID = "201139";
 	public static String USERID = "";
 	public static String SIGN;
-//	private UploadManager uploadManager;
+	// private UploadManager uploadManager;
 	protected String mFilePath = null;
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
@@ -84,11 +84,11 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private Group readhomeuser;
 	private ArrayList<Group> readuesrlist = new ArrayList<Group>();
 
-	private String tmpFilePath;
 	private String newteam_name;
 	private String sDpath;
 	private Group group;
 	private Integer pk_group;
+	private Integer sD_pk_user;
 	private OSSData ossData;
 	private OSSService ossService;
 	private OSSBucket sampleBucket;
@@ -103,7 +103,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		Log.e("NewteamActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 
 		initUI();
-		//获取ossService和sampleBucket
+		// 获取ossService和sampleBucket
 		ossService = MyApplication.getOssService();
 		sampleBucket = MyApplication.getSampleBucket();
 
@@ -139,7 +139,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private boolean isreaduser;
-	private Integer sD_pk_user;
 	private byte[] bitmap2Bytes;
 	private String uUid;
 
@@ -218,6 +217,17 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		findViewById(R.id.NewTeam_back).setOnClickListener(this);// 返回
 		findViewById(R.id.NewTeam_OK_layout).setOnClickListener(this);// 完成
 		findViewById(R.id.NewTeam_OK_layout).setOnClickListener(this);// 完成
+		mNewteam_name.setFocusable(true);
+		mNewteam_name.setFocusableInTouchMode(true);
+		mNewteam_name.requestFocus();
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			public void run() {
+				InputMethodManager inputManager = (InputMethodManager) mNewteam_name
+						.getContext().getSystemService(NewteamActivity.INPUT_METHOD_SERVICE);
+				inputManager.showSoftInput(mNewteam_name, 0);
+			}
+		}, 998);
 	}
 
 	@Override
@@ -301,8 +311,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			//OSS上传~
 //			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
-			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1080);//最长边限制为1080
-			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 600);//截取中间正方形
+			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1080);// 最长边限制为1080
+			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 600);// 截取中间正方形
 			bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
 			UUID randomUUID = UUID.randomUUID();
 			uUid = randomUUID.toString();
@@ -321,18 +331,18 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		ossData.setData(data, "jpg"); // 指定需要上传的数据和它的类型
 		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
 		ossData.uploadInBackground(new SaveCallback() {
-		    @Override
-		    public void onSuccess(String objectKey) {
-		    	Log.e("", "图片上传成功");
-		    	Log.e("Main", "objectKey=="+objectKey);
-//		    	list.add("http://picstyle.beagree.com/"+objectKey);
-		    	runOnUiThread( new Runnable() {
+			@Override
+			public void onSuccess(String objectKey) {
+				Log.e("", "图片上传成功");
+				Log.e("Main", "objectKey==" + objectKey);
+				// list.add("http://picstyle.beagree.com/"+objectKey);
+				runOnUiThread(new Runnable() {
 					public void run() {
-//						myAdapter.notifyDataSetChanged();
+						// myAdapter.notifyDataSetChanged();
 					}
 				});
-		    	
-		    	group.setAvatar_path(objectKey);
+
+				group.setAvatar_path(objectKey);
 				// 创建CreatGroup
 				Group_User group_User = new Group_User();
 				group_User.setFk_user(sD_pk_user);
@@ -341,19 +351,20 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				Group_User[] members = { group_User };
 				CreateGroup creatGroup = new CreateGroup(members, group);
 				Log.e("NewteamActivity", "group:" + group.toString());
-				cregrouInter.createGroup(NewteamActivity.this,creatGroup);// 测试
-		    }
+				cregrouInter.createGroup(NewteamActivity.this, creatGroup);// 测试
+			}
 
-		    @Override
-		    public void onProgress(String objectKey, int byteCount, int totalSize) {
+			@Override
+			public void onProgress(String objectKey, int byteCount,
+					int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
 				// Log.e("上传进度", "上传进度: " + p + "%");
-		    }
+			}
 
-		    @Override
-		    public void onFailure(String objectKey, OSSException ossException) {
-		    	Log.e("", "图片上传失败"+ossException.toString());
-		    }
+			@Override
+			public void onFailure(String objectKey, OSSException ossException) {
+				Log.e("", "图片上传失败" + ossException.toString());
+			}
 		});
 	}
 

@@ -9,6 +9,7 @@ import com.biju.R;
 import com.nostra13.universalimageloader.core.DisplayImageOptions;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
+import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
 
 public class homeImageLoaderUtils {
 	private static homeImageLoaderUtils imageLoaderUtils = new homeImageLoaderUtils() {
@@ -40,7 +41,7 @@ public class homeImageLoaderUtils {
 		.showImageForEmptyUri(R.drawable.preview_2)
 		.showImageOnFail(R.drawable.ic_error)
 		.cacheInMemory(true)//是否缓存在内存中
-//		.displayer(new RoundedBitmapDisplayer(50))//设置圆角
+		.displayer(new RoundedBitmapDisplayer(10))//设置圆角
 		.cacheOnDisk(true)//是否缓存在SD卡中
 		.considerExifParams(true)
 		.bitmapConfig(Bitmap.Config.RGB_565)  //格式

@@ -108,7 +108,10 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 	}
 
 	private void initUI() {
-		findViewById(R.id.btn_navi).setOnClickListener(this);
+		findViewById(R.id.Bigmap__navi).setOnClickListener(this);
+		findViewById(R.id.Bigmap__navi_layout).setOnClickListener(this);
+		findViewById(R.id.Bigmap_navigation_layout).setOnClickListener(this);
+		findViewById(R.id.Bigmap_navigation).setOnClickListener(this);
 		findViewById(R.id.Bigmap_back_layout).setOnClickListener(this);
 		findViewById(R.id.Bigmap_back).setOnClickListener(this);
 	}
@@ -205,7 +208,10 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.btn_navi:
+		case R.id.Bigmap__navi:
+		case R.id.Bigmap__navi_layout:
+		case R.id.Bigmap_navigation:
+		case R.id.Bigmap_navigation_layout:
 			startNavi(v);
 			break;
 		case R.id.Bigmap_back_layout:

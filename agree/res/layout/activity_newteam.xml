@@ -73,7 +73,7 @@
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
             android:layout_marginTop="20.0dp"
-            android:background="#ffffff"
+            android:background="@drawable/newteam_corners"
             android:scaleType="fitXY" />
 
         <TextView
@@ -85,21 +85,22 @@
             android:layout_marginBottom="65dp"
             android:gravity="center"
             android:text="@string/NewTeam_prompt"
-            android:textColor="#55aeae"
-            android:textSize="20.0sp" />
+            android:textColor="#959595"
+            android:textSize="15.0sp" />
 
         <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="80.0dp"
+            android:layout_height="88.0dp"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:background="#ffffff" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
-                android:layout_height="40.0dp"
+                android:layout_height="44.0dp"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" >
+                android:layout_centerHorizontal="true"
+                 >
 
                 <TextView
                     android:id="@+id/textView1"
@@ -127,7 +128,7 @@
                     android:gravity="center"
                     android:hint="@string/NewTeam_hint"
                     android:layout_margin="5.0dp"
-                    android:textSize="12.0sp"
+                    android:textSize="13.0sp"
                      >
 
                     <requestFocus />
@@ -144,7 +145,7 @@
             <RelativeLayout
                 android:id="@+id/NewTeam_friends"
                 android:layout_width="match_parent"
-                android:layout_height="40.0dp"
+                android:layout_height="44.0dp"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true" >
 
@@ -156,7 +157,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginLeft="20dp"
                     android:text="@string/NewTeam_prompt_1"
-                    android:textSize="12.0sp" />
+                    android:textSize="13.0sp" />
 
                 <ImageView
                     android:id="@+id/imageView1"

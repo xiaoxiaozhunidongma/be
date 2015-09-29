@@ -82,7 +82,7 @@
             <RelativeLayout
                 android:id="@+id/TeamSetting2_head_layout"
                 android:layout_width="match_parent"
-                android:layout_height="200.0dp"
+                android:layout_height="180.0dp"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" >
 
@@ -103,23 +103,24 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/TeamSetting2_head"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="25dp"
+                    android:layout_marginTop="15dp"
                     android:gravity="center"
                     android:text="NAME"
+                    android:textColor="#535353"
                     android:textSize="15.0sp" />
             </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/Setting_User_layout"
                 android:layout_width="match_parent"
-                android:layout_height="160.0dp"
+                android:layout_height="182.0dp"
                 android:layout_below="@+id/TeamSetting2_head_layout"
                 android:layout_centerHorizontal="true" >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout3"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_layout_height"
+                    android:layout_height="@dimen/setting_prompt_layout_height"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true" >
 
@@ -136,7 +137,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="20dp"
-                        android:layout_marginTop="15.0dp"
+                        android:layout_marginTop="25.0dp"
                         android:text="小组"
                         android:textColor="@drawable/setting_prompt_color"
                         android:textSize="@dimen/setting_size" />
@@ -188,7 +189,7 @@
                         android:layout_toLeftOf="@+id/Setting_next_1"
                         android:gravity="right|center"
                         android:text="名称"
-                        android:textColor="@drawable/setting_prompt_color"
+                        android:textColor="@drawable/setting_content_color"
                         android:textSize="@dimen/setting_prompt_size" />
                 </RelativeLayout>
 
@@ -269,14 +270,14 @@
             <RelativeLayout
                 android:id="@+id/relativeLayout7"
                 android:layout_width="match_parent"
-                android:layout_height="160.0dp"
+                android:layout_height="182.0dp"
                 android:layout_below="@+id/Setting_User_layout"
                 android:layout_centerHorizontal="true" >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout6"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_layout_height"
+                    android:layout_height="@dimen/setting_prompt_layout_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
@@ -286,7 +287,7 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="20.0dp"
-                        android:layout_marginTop="15.0dp"
+                        android:layout_marginTop="25.0dp"
                         android:text="提示"
                         android:textColor="@drawable/setting_prompt_color"
                         android:textSize="@dimen/setting_size" />
@@ -435,14 +436,14 @@
             <RelativeLayout
                 android:id="@+id/relativeLayout11"
                 android:layout_width="match_parent"
-                android:layout_height="100.0dp"
+                android:layout_height="94.0dp"
                 android:layout_below="@+id/relativeLayout7"
                 android:layout_centerHorizontal="true" >
 
                 <RelativeLayout
                     android:id="@+id/relativeLayout10"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_layout_height"
+                    android:layout_height="@dimen/setting_prompt_layout_height"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true" >
 
@@ -451,7 +452,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginLeft="20.0dp"
-                        android:layout_marginTop="15.0dp"
+                        android:layout_marginTop="25.0dp"
                         android:text="其他"
                         android:textColor="@drawable/setting_prompt_color"
                         android:textSize="@dimen/setting_size" />

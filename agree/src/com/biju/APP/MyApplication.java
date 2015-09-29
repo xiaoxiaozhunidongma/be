@@ -113,9 +113,9 @@ public class MyApplication extends Application {
 				.cacheInMemory(false).imageScaleType(ImageScaleType.EXACTLY)
 				.cacheOnDisk(true).build();
 
-		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder( 
-				
-				getApplicationContext())
+		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
+
+		getApplicationContext())
 				.threadPoolSize(5)
 				// .threadPriority(Thread.MIN_PRIORITY + 3)
 				.denyCacheImageMultipleSizesInMemory()

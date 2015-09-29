@@ -1,13 +1,16 @@
 package com.biju.function;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,17 +48,42 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 	private String binding_phone;
 	private boolean isagain;
 	private RelativeLayout mBinding_phone_send_layout;
-	private RelativeLayout mBinding_phone_OK_layout;
+//	private RelativeLayout mBinding_phone_OK_layout;
+	private int toastHeight;
+	public static GetBindingPhone bindingPhone;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_binding_phone);
+		DisplayMetrics();
 		Intent intent = getIntent();
 		user = (User) intent.getSerializableExtra(IConstant.UserData);
 		initUI();
 		initInterface();
+		OKBindingPhone();//回调
+	}
+	
+	@SuppressWarnings("static-access")
+	private void OKBindingPhone() {
+		GetBindingPhone bindingPhone=new GetBindingPhone(){
+
+			@Override
+			public void BindingPhone() {
+				binding_phone_OK();
+			}
+			
+		};
+		this.bindingPhone=bindingPhone;
+	}
+
+	private void DisplayMetrics() {
+		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+//        int width = metric.widthPixels;     // 屏幕宽度（像素）
+        int height = metric.heightPixels;   // 屏幕高度（像素）
+        toastHeight = height/4;
 	}
 
 	private void initInterface() {
@@ -75,11 +103,11 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 					mBinding_phone_after.setVisibility(View.VISIBLE);// 输入验证码界面显示
 
 					mBinding_phone_send_layout.setVisibility(View.GONE);// 发送手机号码按钮隐藏
-					mBinding_phone_OK_layout.setVisibility(View.VISIBLE);// 发送验证码按钮显示
+//					mBinding_phone_OK_layout.setVisibility(View.VISIBLE);// 发送验证码按钮显示
 					// 隐藏输入法
-					InputMethodManager imm = (InputMethodManager) mBinding_phone_send_layout
-							.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
-					imm.hideSoftInputFromWindow(mBinding_phone_send_layout.getWindowToken(), 0);
+//					InputMethodManager imm = (InputMethodManager) mBinding_phone_send_layout
+//							.getContext().getSystemService(Context.INPUT_METHOD_SERVICE);
+//					imm.hideSoftInputFromWindow(mBinding_phone_send_layout.getWindowToken(), 0);
 				}
 			}
 
@@ -114,16 +142,33 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 	private void initUI() {
 		findViewById(R.id.binding_phone_back_layout).setOnClickListener(this);
 		findViewById(R.id.binding_phone_back).setOnClickListener(this);// 返回
+		
 		mBinding_phone_phone = (EditText) findViewById(R.id.binding_phone_phone);// 输入手机号
 		mBinding_phone_phone.setInputType(EditorInfo.TYPE_CLASS_PHONE);// 点击电话号码时直接弹出数字键盘
+		mBinding_phone_phone.setFocusable(true);
+		mBinding_phone_phone.setFocusableInTouchMode(true);
+		mBinding_phone_phone.requestFocus();
+		Timer timer = new Timer();
+		timer.schedule(new TimerTask() {
+			public void run() {
+				InputMethodManager inputManager = (InputMethodManager) mBinding_phone_phone
+						.getContext().getSystemService(NewteamActivity.INPUT_METHOD_SERVICE);
+				inputManager.showSoftInput(mBinding_phone_phone, 0);
+			}
+		}, 998);
+		
+		
 		findViewById(R.id.binding_phone_send).setOnClickListener(this);// 发送手机号码
 		mBinding_phone_send_layout = (RelativeLayout) findViewById(R.id.binding_phone_send_layout);
 		mBinding_phone_send_layout.setOnClickListener(this);
+		
 		mBinding_phone_before = (RelativeLayout) findViewById(R.id.binding_phone_before);// 发送前
 		mBinding_phone_after = (RelativeLayout) findViewById(R.id.binding_phone_after);// 发送后
-		findViewById(R.id.binding_phone_OK).setOnClickListener(this);
-		mBinding_phone_OK_layout = (RelativeLayout) findViewById(R.id.binding_phone_OK_layout);
-		mBinding_phone_OK_layout.setOnClickListener(this);// 完成验证码验证
+		
+//		findViewById(R.id.binding_phone_OK).setOnClickListener(this);
+//		mBinding_phone_OK_layout = (RelativeLayout) findViewById(R.id.binding_phone_OK_layout);
+//		mBinding_phone_OK_layout.setOnClickListener(this);// 完成验证码验证
+		
 		TextView mBinding_phone_prompt = (TextView) findViewById(R.id.binding_phone_prompt);
 		mBinding_phone_prompt.setText("小提示:" + "\n" + "手机号码为11位纯数字," + "\n"+ "不需要在号码前加上0或者+86");
 		mBinding_phone_phone_listener();
@@ -190,10 +235,10 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 		case R.id.binding_phone_send_layout:
 			binding_phone_send();
 			break;
-		case R.id.binding_phone_OK:
-		case R.id.binding_phone_OK_layout:
-			binding_phone_OK();
-			break;
+//		case R.id.binding_phone_OK:
+//		case R.id.binding_phone_OK_layout:
+//			binding_phone_OK();
+//			break;
 		case R.id.binding_phone_back_layout:
 		case R.id.binding_phone_back:
 			binding_phone_back();
@@ -207,6 +252,11 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 		finish();
 	}
 
+	public interface GetBindingPhone
+	{
+		void BindingPhone();
+	}
+	
 	private void binding_phone_OK() {
 		if (isagain) {
 			Phone binding_phone_1 = new Phone();
@@ -232,14 +282,30 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 				mBinding_phone_interface.updateUser(BindingPhoneActivity.this,usersetting);
 
 			} else {
-				Toast.makeText(BindingPhoneActivity.this, "验证码错误！",Toast.LENGTH_SHORT).show();
+				//自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast, null);
+				Toast toast=new Toast(getApplicationContext());
+				toast.setGravity(Gravity.TOP, 0, toastHeight);
+				toast.setView(toastRoot);
+				toast.setDuration(100);
+				TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+				tv.setText("验证码错误,请重新输入");
+				toast.show();
 			}
 		}
 	}
 
 	private void binding_phone_send() {
 		if (phone == null) {
-			Toast.makeText(BindingPhoneActivity.this, "请先输入电话号码",Toast.LENGTH_SHORT).show();
+			//自定义Toast
+			View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+			Toast toast=new Toast(getApplicationContext());
+			toast.setGravity(Gravity.TOP, 0, toastHeight);
+			toast.setView(toastRoot);
+			toast.setDuration(50);
+			TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+			tv.setText("请先输入电话号码！");
+			toast.show();
 		} else {
 			String phone1 = phone.substring(0, 3);
 			String phone2 = phone.substring(4, 8);
@@ -249,7 +315,16 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 			Phone binding_phone_1 = new Phone();
 			binding_phone_1.setPhone(binding_phone);
 			mBinding_phone_interface.requestVerCode(BindingPhoneActivity.this,binding_phone_1);
-
+			
+			//自定义Toast
+			View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+			Toast toast=new Toast(getApplicationContext());
+			toast.setGravity(Gravity.TOP, 0, toastHeight);
+			toast.setView(toastRoot);
+			toast.setDuration(50);
+			TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+			tv.setText("验证码发送成功！");
+			toast.show();
 		}
 	}
 

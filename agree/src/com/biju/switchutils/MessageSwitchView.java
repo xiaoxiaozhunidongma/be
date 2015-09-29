@@ -46,7 +46,7 @@ public class MessageSwitchView extends FrameLayout {
 					onBgView.bringToFront();
 					onBgView.setVisibility(View.VISIBLE);
 					offBgView.setVisibility(View.VISIBLE);
-					Log.e("SwitchView", "这时候的选择情况1111111========" + isChecked);
+					Log.e("MessageSwitchView", "这时候的选择情况1111111========" + isChecked);
 					TranslateAnimation an1 = new TranslateAnimation(0, targetX,0, 0);
 					an1.setFillAfter(true);
 					an1.setDuration(100);
@@ -60,7 +60,7 @@ public class MessageSwitchView extends FrameLayout {
 					offBgView.bringToFront();
 					onBgView.setVisibility(View.VISIBLE);
 					offBgView.setVisibility(View.VISIBLE);
-					Log.e("SwitchView", "这时候的选择情况222222222========" + isChecked);
+					Log.e("MessageSwitchView", "这时候的选择情况222222222========" + isChecked);
 					TranslateAnimation an1 = new TranslateAnimation(targetX, 0,0, 0);
 					an1.setFillAfter(true);
 					an1.setDuration(100);

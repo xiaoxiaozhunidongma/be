@@ -38,7 +38,7 @@ public class AboutUsActivity extends Activity implements OnClickListener {
 		mAbout_us_biju = (ImageView) findViewById(R.id.about_us_biju);
 		Bitmap photo = BitmapFactory.decodeResource(getResources(),
 				R.drawable.about_us);
-		mAbout_us_biju.setImageBitmap(createFramedPhoto(500, 400, photo, 50));
+		mAbout_us_biju.setImageBitmap(createFramedPhoto(500, 400, photo, 10));
 	}
 	
 	/**
