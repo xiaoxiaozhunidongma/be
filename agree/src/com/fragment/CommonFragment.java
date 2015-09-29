@@ -71,9 +71,9 @@ public class CommonFragment extends Fragment implements OnClickListener {
 		TextView tv_1 = (TextView) mLayout.findViewById(R.id.tv_1);
 		TextView tv_2 = (TextView) mLayout.findViewById(R.id.tv_2);
 		TextView tv_3 = (TextView) mLayout.findViewById(R.id.tv_3);
-		tv_1.setTextColor(tv_1.getResources().getColor(R.drawable.green_3));// 给字设置绿颜色
-		tv_2.setTextColor(tv_2.getResources().getColor(R.drawable.lightgray2));// 给字设置灰颜色
-		tv_3.setTextColor(tv_3.getResources().getColor(R.drawable.lightgray2));// 给字设置灰颜色
+		tv_1.setTextColor(tv_1.getResources().getColor(R.drawable.Common_text_color_green));// 给字设置绿颜色
+		tv_2.setTextColor(tv_2.getResources().getColor(R.drawable.Common_text_color_gray));// 给字设置灰颜色
+		tv_3.setTextColor(tv_3.getResources().getColor(R.drawable.Common_text_color_gray));// 给字设置灰颜色
 		Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
 		/** 这一步必须要做,否则不会显示. */
 		drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
@@ -90,7 +90,7 @@ public class CommonFragment extends Fragment implements OnClickListener {
 			for (int i = 0; i < mTextviewResIds.length; i++) {
 				TextView textView = (TextView) mLayout.findViewById(mTextviewResIds[i]);
 				if (position == i) { // 当position==i时显示红色
-					textView.setTextColor(textView.getResources().getColor(R.drawable.green_3));
+					textView.setTextColor(textView.getResources().getColor(R.drawable.Common_text_color_green));
 					Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
 					/** 这一步必须要做,否则不会显示. */
 					drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
@@ -102,7 +102,7 @@ public class CommonFragment extends Fragment implements OnClickListener {
 					animation.setDuration(200);
 					mCommon_ArticleIndicates.startAnimation(animation);
 				} else {
-					textView.setTextColor(textView.getResources().getColor(R.drawable.lightgray2));
+					textView.setTextColor(textView.getResources().getColor(R.drawable.Common_text_color_gray));
 					Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
 					/** 这一步必须要做,否则不会显示. */
 					drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩

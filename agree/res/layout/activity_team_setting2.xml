@@ -77,8 +77,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/background"
-             >
+            android:background="@drawable/background" >
 
             <RelativeLayout
                 android:id="@+id/TeamSetting2_head_layout"
@@ -335,12 +334,13 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10.0dp" >
 
-                        <com.biju.switchutils.SwitchView
-                            android:id="@+id/switchView1"
-                            android:layout_width="match_parent"
+                        <com.biju.switchutils.MessageSwitchView
+                            android:id="@+id/Message_SwitchView1"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right|center_vertical" >
-                        </com.biju.switchutils.SwitchView>
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true" >
+                        </com.biju.switchutils.MessageSwitchView>
                     </RelativeLayout>
                 </RelativeLayout>
 
@@ -378,12 +378,13 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10.0dp" >
 
-                        <com.biju.switchutils.SwitchView
-                            android:id="@+id/switchView2"
-                            android:layout_width="match_parent"
+                        <com.biju.switchutils.ChatSwitchView
+                            android:id="@+id/Chat_SwitchView1"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right|center_vertical" >
-                        </com.biju.switchutils.SwitchView>
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true" >
+                        </com.biju.switchutils.ChatSwitchView>
                     </RelativeLayout>
                 </RelativeLayout>
 
@@ -420,12 +421,13 @@
                         android:layout_marginRight="20dp"
                         android:layout_marginTop="10.0dp" >
 
-                        <com.biju.switchutils.SwitchView
-                            android:id="@+id/switchView3"
-                            android:layout_width="match_parent"
+                        <com.biju.switchutils.PhoneSwitchView
+                            android:id="@+id/Phone_SwitchView1"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_gravity="right|center_vertical" >
-                        </com.biju.switchutils.SwitchView>
+                            android:layout_alignParentLeft="true"
+                            android:layout_alignParentTop="true" >
+                        </com.biju.switchutils.PhoneSwitchView>
                     </RelativeLayout>
                 </RelativeLayout>
             </RelativeLayout>
@@ -478,6 +480,7 @@
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="退出小组"
+                        android:textColor="#ff0000"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView

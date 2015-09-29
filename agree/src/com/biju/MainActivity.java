@@ -17,16 +17,11 @@ import android.provider.MediaStore.Images;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.GestureDetector.OnGestureListener;
 import android.view.Gravity;
 import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.widget.ImageView;
-import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -128,11 +123,11 @@ public class MainActivity extends FragmentActivity  {
 
 	@Override
 	protected void onStart() {
+		super.onStart();
 		// 关闭之前的界面
 		for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
 			RefreshActivity.activList_3.get(i).finish();
 		}
-		super.onStart();
 	}
 
 	@Override

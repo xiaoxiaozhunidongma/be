@@ -126,6 +126,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 				int fk_group=group.getPk_group();
 				Intent intent=new Intent(NewPartyActivity.this, AddNewPartyActivity.class);
 				intent.putExtra(IConstant.Fk_group, fk_group);
+				intent.putExtra(IConstant.IsSchedule, false);
 				startActivity(intent);
 			}
 		});

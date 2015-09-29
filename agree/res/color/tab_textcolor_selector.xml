@@ -4,9 +4,9 @@
         android:color="@color/red"
         ></item>
 	<item android:state_selected="true" android:state_pressed="false"
-	    android:color="@color/green_1"
+	    android:color="@color/tab_text_color_green"
 	    ></item>
 	<item 
-	    android:color="@color/lightgray"
+	    android:color="@color/tab_text_color_gray"
 	    ></item>
 </selector>

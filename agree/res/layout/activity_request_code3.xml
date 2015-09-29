@@ -258,22 +258,6 @@
                     android:layout_height="0.50dp"
                     android:layout_alignParentBottom="true"
                     android:background="#aaaaaa" />
-
-                <RelativeLayout
-                    android:layout_width="50.0dp"
-                    android:layout_height="30.0dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_marginRight="20dp"
-                    android:layout_marginTop="10.0dp" >
-
-                    <com.biju.switchutils.SwitchView
-                        android:id="@+id/switchView1"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_gravity="right|center_vertical" >
-                    </com.biju.switchutils.SwitchView>
-                </RelativeLayout>
             </RelativeLayout>
         </RelativeLayout>
 

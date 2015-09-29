@@ -16,8 +16,8 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:text="收到了邀请码?"
-            android:textColor="#d3d3d3"
-            android:textSize="18.0sp" />
+            android:textColor="#959595"
+            android:textSize="15.0sp" />
     </RelativeLayout>
 
 </RelativeLayout>

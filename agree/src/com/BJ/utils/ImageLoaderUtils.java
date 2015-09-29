@@ -66,7 +66,7 @@ public class ImageLoaderUtils {
 				.showImageForEmptyUri(R.drawable.preview_2)
 				.showImageOnFail(R.drawable.ic_error)
 				.cacheInMemory(true)
-				.displayer(new RoundedBitmapDisplayer(15))//‘≤Ω«
+				.displayer(new RoundedBitmapDisplayer(10))//‘≤Ω«
 				.cacheOnDisk(true)
 				.considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)  //∏Ò Ω

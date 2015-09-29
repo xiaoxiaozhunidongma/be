@@ -440,8 +440,8 @@
 
                     <ImageView
                         android:id="@+id/Setting_next_5"
-                        android:layout_width="20.0dp"
-                        android:layout_height="20.0dp"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="15dp"

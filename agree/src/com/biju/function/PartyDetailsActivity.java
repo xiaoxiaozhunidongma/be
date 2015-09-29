@@ -227,7 +227,6 @@ public class PartyDetailsActivity extends Activity implements
 	}
 	
 	private void returndata() {
-		Log.e("PartyDetailsActivity", "开始再读一次1111111=========="+fk_group);
 		Group readAllPerRelation_group = new Group();
 		readAllPerRelation_group.setPk_group(fk_group);
 		readpartyInterface.readAllPerRelation(PartyDetailsActivity.this,readAllPerRelation_group);
@@ -235,7 +234,6 @@ public class PartyDetailsActivity extends Activity implements
 	
 	// 读取聚会详情
 	private void initReadParty() {
-		Log.e("PartyDetailsActivity", "也开始再读一次2222222=========="+pk_party);
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
 		readpartyInterface.readPartyJoinMsg(PartyDetailsActivity.this,readparty);
@@ -261,6 +259,7 @@ public class PartyDetailsActivity extends Activity implements
 
 			@Override
 			public void success(String A) {
+				partakeNumList.clear();
 				Log.e("PartyDetailsActivity", "返回的用户参与信息" + A);
 				java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
 				}.getType();
@@ -659,20 +658,21 @@ public class PartyDetailsActivity extends Activity implements
 			party_user.setFk_party(pk_party);
 			party_user.setFk_user(sD_pk_user);
 			readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+			
+			//自定义Toast
+			View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+			Toast toast=new Toast(getApplicationContext());
+			toast.setGravity(Gravity.CENTER, 0, 100);
+			toast.setView(toastRoot);
+			toast.setDuration(100);
+			TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+			tv.setText("报名成功");
+			toast.show();
 		}
-
-//		Toast toast = Toast.makeText(getApplicationContext(), "已报名",Toast.LENGTH_SHORT);
-//		toast.setGravity(Gravity.CENTER, 0, 0);
-//		LinearLayout toastView = (LinearLayout) toast.getView();
-//		ImageView imageCodeProject = new ImageView(getApplicationContext());
-//		imageCodeProject.setImageResource(R.drawable.checked);
-//		toastView.addView(imageCodeProject, 0);
-//		toast.show();
 	}
 
 	private void PartyDetails_more() {
-		Intent intent = new Intent(PartyDetailsActivity.this,
-				MoreActivity.class);
+		Intent intent = new Intent(PartyDetailsActivity.this,MoreActivity.class);
 		if (userAll) {
 			intent.putExtra(IConstant.UserAllUoreParty, allParty);
 			intent.putExtra(IConstant.UserAll, true);

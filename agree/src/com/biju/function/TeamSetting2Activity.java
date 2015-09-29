@@ -31,6 +31,9 @@ import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.Interface.updateGroupSetListenner;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.biju.switchutils.ChatSwitchView;
+import com.biju.switchutils.MessageSwitchView;
+import com.biju.switchutils.PhoneSwitchView;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class TeamSetting2Activity extends Activity implements OnClickListener{
@@ -49,7 +52,29 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private Integer pk_group;
 	private boolean isExit;
+	private boolean Message_checked;
+	private boolean Chat_checked;
+	private boolean Phone_checked;
+	
+	private int Message_ischecked;
+	private int Chat_ischecked;
+	private int Phone_ischecked;
 
+	public static GetPhone getPhone;
+	public static GetChat getChat;
+	public static GetMessage getMessage;
+	private View message_SwitchView1;
+	private View chat_SwitchView1;
+	private View phone_SwitchView1;
+	
+	private boolean Clickmessage;
+	private boolean Clickchat;
+	private boolean Clickphone;
+	
+	private Integer ischat;
+	private Integer ismessage;
+	private Integer isphone;
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -67,12 +92,58 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra(IConstant.Group, 0);
 		initreadUserGroupRelation(pk_group);
+		initMessage();
+		initChat();
+		initPhone();
+	}
+
+	@SuppressWarnings("static-access")
+	private void initPhone() {
+		GetPhone getPhone=new GetPhone(){
+
+			@Override
+			public void Phone(int phone, boolean clickphone) {
+				Phone_ischecked=phone;
+				Clickphone=clickphone;
+			}
+
+		};
+		this.getPhone=getPhone;
+	}
+
+	@SuppressWarnings("static-access")
+	private void initChat() {
+		GetChat getChat=new GetChat(){
+
+			@Override
+			public void Chat(int chat, boolean clickchat) {
+				Chat_ischecked=chat;
+				Clickchat=clickchat;
+			}
+		};
+		this.getChat=getChat;
+	}
+
+	@SuppressWarnings("static-access")
+	private void initMessage() {
+		GetMessage getMessage=new GetMessage(){
+
+			@Override
+			public void Message(int message, boolean clickmessage) {
+				Message_ischecked=message;
+				Clickmessage=clickmessage;
+			}
+
+			
+		};
+		this.getMessage=getMessage;
 	}
 
 	private void initInterFace() {
 		teamSetting2_interface = Interface.getInstance();
 		//读取用户小组关系
 		teamSetting2_interface.setPostListener(new readUserGroupRelationListenner() {
+
 			@Override
 			public void success(String A) {
 				Groupuserback groupuserback = GsonUtils.parseJson(A,
@@ -83,13 +154,48 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 					List<Group_User> groupuser_returnData = groupuserback.getReturnData();
 					if (groupuser_returnData.size() > 0) {
 						Group_User group_user = groupuser_returnData.get(0);
-//						ischat = group_user.getMessage_warn();
-//						ismessage = group_user.getParty_warn();
-//						isphone = group_user.getPublic_phone();
-//						Log.e("GroupActivity", "小组的聚会信息的提醒--------" + ismessage);
-//						Log.e("GroupActivity", "小组的聊天信息的提醒--------" + ischat);
-//						Log.e("GroupActivity", "小组的公开手机号码--------" + isphone);
+						ischat = group_user.getMessage_warn();
+						ismessage = group_user.getParty_warn();
+						isphone = group_user.getPublic_phone();
+						switch (ischat) {
+						case 0:
+							Chat_checked=false;
+							break;
+						case 1:
+							Chat_checked=true;
+							break;
+
+						default:
+							break;
+						}
+						
+						switch (ismessage) {
+						case 0:
+							Message_checked=false;
+							break;
+						case 1:
+							Message_checked=true;
+							break;
+						default:
+							break;
+						}
+						
+						
+						switch (isphone) {
+						case 0:
+							Phone_checked=false;
+							break;
+						case 1:
+							Phone_checked=true;
+							break;
+
+						default:
+							break;
+						}
 					}
+					MessageSwitchView.changedListener.onChanged(message_SwitchView1, Message_checked);
+					ChatSwitchView.changedListener.onChanged(chat_SwitchView1, Chat_checked);
+					PhoneSwitchView.changedListener.onChanged(phone_SwitchView1, Phone_checked);
 				}
 			}
 
@@ -117,11 +223,11 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 					int statusmsg = teamupdateback.getStatusMsg();
 					if (statusmsg == 1) {
 						Log.e("TeamSettingActivity", "更新完的返回结果" + A);
-						SharedPreferences teamsetting_sp = getSharedPreferences("Setting", 0);
-						Editor editor = teamsetting_sp.edit();
-						editor.putBoolean("setting", true);
-						editor.commit();
-						finish();
+//						SharedPreferences teamsetting_sp = getSharedPreferences("Setting", 0);
+//						Editor editor = teamsetting_sp.edit();
+//						editor.putBoolean("setting", true);
+//						editor.commit();
+//						finish();
 					} else {
 						Toast.makeText(TeamSetting2Activity.this,"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
 					}
@@ -145,6 +251,10 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	}
 
 	private void initUI() {
+		message_SwitchView1 = findViewById(R.id.Message_SwitchView1);
+		chat_SwitchView1 = findViewById(R.id.Chat_SwitchView1);
+		phone_SwitchView1 = findViewById(R.id.Phone_SwitchView1);
+		
 		findViewById(R.id.TeamSetting2_back_layout).setOnClickListener(this);//返回
 		findViewById(R.id.TeamSetting2_back).setOnClickListener(this);
 		findViewById(R.id.TeamSetting2_save_layout).setOnClickListener(this);//保存
@@ -188,9 +298,53 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		case R.id.TeamSetting2_Exit_layout:
 			TeamSetting2_Exit_layout();
 			break;
+		case R.id.TeamSetting2_save_layout:
+		case R.id.TeamSetting2_save:
+			TeamSetting2_save();
+			break;
 		default:
 			break;
 		}
+	}
+	//修改小组资料
+	private void TeamSetting2_save() {
+		Group_User group_user = new Group_User();
+		group_user.setPk_group_user(GroupActivity.pk_group_user);
+		group_user.setFk_user(sD_pk_user);
+		group_user.setFk_group(pk_group);
+		if(Clickmessage)
+		{
+			group_user.setParty_warn(Message_ischecked);// 聚会信息
+			Log.e("TeamSettingActivity", "需要传入的聚会信息ID--------" + Message_ischecked);
+		}else
+		{
+			group_user.setParty_warn(ismessage);// 聚会信息
+			Log.e("TeamSettingActivity", "需要传入的聚会信息ID--------" + ismessage);
+		}
+		if(Clickphone)
+		{
+			group_user.setPublic_phone(Phone_ischecked);
+			Log.e("TeamSettingActivity", "需要传入的电话ID--------" + Phone_ischecked);
+		}else
+		{
+			group_user.setPublic_phone(isphone);
+			Log.e("TeamSettingActivity", "需要传入的电话ID--------" + isphone);
+		}
+		if(Clickchat)
+		{
+			group_user.setMessage_warn(Chat_ischecked);// 聊天信息
+			Log.e("TeamSettingActivity", "需要传入的聊天信息ID--------" + Chat_ischecked);
+		}else
+		{
+			group_user.setMessage_warn(ischat);// 聊天信息
+			Log.e("TeamSettingActivity", "需要传入的聊天信息ID--------" + ischat);
+		}
+//		group_user.setParty_update(1);
+//		group_user.setPhoto_update(1);
+//		group_user.setChat_update(1);
+//		group_user.setRole(1);
+		group_user.setStatus(1);
+		teamSetting2_interface.updateGroupSet(TeamSetting2Activity.this, group_user);
 	}
 
 	//退出小组
@@ -231,4 +385,21 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		finish();
 	}
 
+	//回去回调的修改状态(聚会信息)
+	public interface GetMessage
+	{
+		void Message(int message,boolean clickmessage);
+	}
+	//回去回调的修改状态(聊天信息)
+	public interface GetChat
+	{
+		void Chat(int chat,boolean clickchat);
+	}
+	//回去回调的修改状态(电话信息)
+	public interface GetPhone
+	{
+		void Phone(int phone,boolean clickphone);
+	}
+	
+	
 }

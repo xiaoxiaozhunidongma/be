@@ -61,6 +61,7 @@ public interface IConstant {
 	public String Fk_group = "fk_group";
 	public String AddRefresh = "addrefresh";
 	public String IsAddRefresh = "isaddrefresh";
+	public String IsSchedule = "isSchedule";
 
 	// ScheduleµΩpartydetailes÷–
 	public String Schedule = "Schedule";

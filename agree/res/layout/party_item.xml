@@ -5,112 +5,9 @@
 
     <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="60.0dp"
+        android:layout_height="80.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout1"
-            android:layout_width="100.0dp"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10.0dp" >
-
-            <TextView
-                android:id="@+id/years_month"
-                android:layout_width="100.0dp"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_marginTop="5.0dp"
-                android:gravity="left|center_vertical"
-                android:text="TextView"
-                android:textColor="#00aeae"
-                android:textSize="13.0sp" />
-
-            <TextView
-                android:id="@+id/times"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/years_month"
-                android:gravity="left|center_vertical"
-                android:text="TextView"
-                android:textColor="#00aeae"
-                android:textSize="25.0sp" >
-            </TextView>
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/relativeLayout2"
-            android:layout_width="180.0dp"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="10.0dp"
-            android:layout_toRightOf="@+id/relativeLayout1" >
-
-            <TextView
-                android:id="@+id/name"
-                android:layout_width="match_parent"
-                android:layout_height="25.0dp"
-                android:layout_alignParentLeft="true"
-                android:layout_alignParentTop="true"
-                android:layout_marginRight="25.0dp"
-                android:layout_marginTop="5.0dp"
-                android:gravity="left|center_vertical"
-                android:singleLine="true"
-                android:text="TextView"
-                android:textSize="18.0sp" />
-
-            <TextView
-                android:id="@+id/address"
-                android:layout_width="match_parent"
-                android:layout_height="25.0dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:layout_marginTop="5.0dp"
-                android:gravity="left|center_vertical"
-                android:singleLine="true"
-                android:text="TextView"
-                android:textSize="15.0sp" />
-
-            <ImageView
-                android:id="@+id/party_unread_tag"
-                android:layout_width="15.0dp"
-                android:layout_height="15.0dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignTop="@+id/name"
-                android:layout_marginRight="15dp"
-                android:src="@drawable/red_yuan"
-                android:visibility="gone" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:layout_width="50.0dp"
-            android:layout_height="60.0dp"
-            android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/relativeLayout2" >
-
-            <TextView
-                android:id="@+id/textView5"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="5.0dp"
-                android:text="IN"
-                android:textSize="17.0sp" />
-
-            <TextView
-                android:id="@+id/inNum"
-                android:layout_width="match_parent"
-                android:layout_height="25.0dp"
-                android:layout_alignParentBottom="true"
-                android:layout_alignParentLeft="true"
-                android:gravity="center"
-                android:text="0"
-                android:textSize="15.0sp" />
-        </RelativeLayout>
 
         <TextView
             android:id="@+id/textView1"
@@ -118,6 +15,126 @@
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
             android:background="#aaaaaa" />
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="100.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <RelativeLayout
+                android:id="@+id/Party_item_background"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:layout_marginBottom="10.0dp"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginTop="10.0dp"
+                 >
+<!-- android:background="@drawable/party_green_corners" --><!--绿色背景  -->
+                <TextView
+                    android:id="@+id/Party_item_years_month"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginRight="5.0dp"
+                    android:gravity="right|center"
+                    android:paddingTop="5.0dp"
+                    android:text="9月10号"
+                    android:textColor="#ffffff"
+                    android:textSize="17.0sp" />
+
+                <TextView
+                    android:id="@+id/Party_item_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignRight="@+id/Party_item_years_month"
+                    android:layout_below="@+id/Party_item_years_month"
+                    android:gravity="right|center"
+                    android:paddingBottom="5.0dp"
+                    android:text="20:00"
+                    android:textColor="#ffffff"
+                    android:textSize="18.0sp" />
+
+                <RelativeLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentRight="true"
+                    android:layout_alignParentTop="true" >
+
+                    <ImageView
+                        android:id="@+id/Party_item_redprompt"
+                        android:layout_width="10.0dp"
+                        android:layout_height="10.0dp"
+                        android:layout_centerHorizontal="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/red_yuan"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </RelativeLayout>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/Party_item_message_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="50.0dp"
+            android:layout_toRightOf="@+id/relativeLayout1" >
+
+            <TextView
+                android:id="@+id/Party_item_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="15.0dp"
+                android:gravity="left|center"
+                android:singleLine="true"
+                android:text="聚会名称"
+                android:textSize="25.0sp" />
+
+            <TextView
+                android:id="@+id/Party_item_address"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/Party_item_name"
+                android:singleLine="true"
+                android:text="聚会地点"
+                android:textSize="10.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="50.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="20.0dp"
+                android:text="预付款"
+                android:textColor="#808080"
+                android:textSize="13.0sp" />
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/textView2"
+                android:layout_centerHorizontal="true"
+                android:layout_marginTop="10.0dp"
+                android:text="1"
+                android:textSize="15.0sp" />
+        </RelativeLayout>
     </RelativeLayout>
 
 </RelativeLayout>

@@ -26,6 +26,7 @@ import com.BJ.utils.Weeks;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.addPartyListenner;
+import com.biju.MainActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -57,6 +58,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private int TotalCount1=0;
 	private int TotalCount2=0;
 	private int TotalCount3=0;
+	private boolean source;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +69,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		Intent intent = getIntent();
 		fk_group = intent.getIntExtra(IConstant.Fk_group, 0);
+		source = intent.getBooleanExtra(IConstant.IsSchedule, false);
 		initUI();
 		initInterface();
 	}
@@ -103,6 +106,11 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 					editor2.putBoolean(IConstant.IsAddRefresh, true);
 					editor2.commit();
 					finish();
+					if(!source)
+					{
+						Intent intent=new Intent(AddNewPartyActivity.this, MainActivity.class);
+						startActivity(intent);
+					}
 				}
 			}
 

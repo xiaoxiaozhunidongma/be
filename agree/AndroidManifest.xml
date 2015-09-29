@@ -193,10 +193,6 @@
             >
         </activity>
         <activity
-            android:name="com.biju.function.TeamSettingActivity"
-            android:label="@string/title_activity_team_setting" >
-        </activity>
-        <activity
             android:name="com.biju.function.NewPartyActivity"
             android:label="@string/title_activity_new_party" >
         </activity>

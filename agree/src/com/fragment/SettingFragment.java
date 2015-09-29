@@ -622,10 +622,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			@Override
 			public void onClick(SweetAlertDialog sDialog) {
 				sd.cancel();
+				getActivity().finish();
 				SdPkUser.setExit(true);
 				Intent intent = new Intent(getActivity(),BeforeLoginActivity.class);
 				startActivity(intent);
-				getActivity().finish();
 			}
 		}).show();
 
