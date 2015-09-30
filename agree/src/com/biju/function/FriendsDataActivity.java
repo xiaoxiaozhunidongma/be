@@ -38,7 +38,7 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 	private ImageView mFriendsData_PrivateChat;
 	private ReadUserAllFriends mAllFriends;
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private Interface mFriendsDataInterface;
@@ -76,7 +76,7 @@ public class FriendsDataActivity extends Activity implements OnClickListener{
 
 	private void initFriendsData() {
 		String avatar_path = mAllFriends.getAvatar_path();
-		String completeURL = beginStr + avatar_path + endStr;
+		String completeURL = beginStr + avatar_path + endStr+"avatar";
 		ImageLoaderUtils.getInstance().LoadImageCricular(
 				FriendsDataActivity.this, completeURL,
 				mFriendsData_head);

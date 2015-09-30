@@ -166,7 +166,6 @@ public class PartyDetailsActivity extends Activity implements
 		initInterface();
 		initOneParty();
 		returndata();
-//		initReadParty();// 读取聚会详情
 			
 		// addview 百度地图
 		BaiduMapOptions options = new BaiduMapOptions();
@@ -275,7 +274,7 @@ public class PartyDetailsActivity extends Activity implements
 						// 判断参与、拒绝数
 						Integer relationship = relation.getRelationship();
 						switch (relationship) {
-						case 1:
+						case 4:
 							partakeNumList.add(relation);
 							break;
 						default:
@@ -287,7 +286,7 @@ public class PartyDetailsActivity extends Activity implements
 						if(String.valueOf(pk_user).equals(String.valueOf(sD_pk_user)))
 						{
 							current_relationship = relationList.get(i).getRelationship();
-							if(current_relationship==1)
+							if(current_relationship==4)
 							{
 								mPartyDetails_apply.setText("已报名");
 								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_apply_layout_color);//已报名背景为绿色
@@ -414,9 +413,16 @@ public class PartyDetailsActivity extends Activity implements
 			Double latitude = allParty.getLatitude();
 			Double longitude = allParty.getLongitude();
 			String location = allParty.getLocation();
-			mLat = latitude;
-			mLng = longitude;
-			edit_show.setText(location);
+			if(latitude!=null&longitude!=null)
+			{
+				mLat = latitude;
+				mLng = longitude;
+				edit_show.setText(location);
+			}else
+			{
+				mLat = 24.497572;
+				mLng = 118.17276;
+			}
 		} else {
 			oneParty = (Party2) intent.getSerializableExtra(IConstant.OneParty);
 //			isRelationship = intent.getBooleanExtra(IConstant.IsRelationship, false);
@@ -446,8 +452,13 @@ public class PartyDetailsActivity extends Activity implements
 			Double latitude = oneParty.getLatitude();
 			Double longitude = oneParty.getLongitude();
 			String location = oneParty.getLocation();
-			mLat = latitude;
-			mLng = longitude;
+			if(longitude!=null)
+			{
+				mLng = longitude;
+			}else
+			{
+				mLng=118.17276;
+			}
 			edit_show.setText(location);
 		}
 	}
@@ -610,7 +621,7 @@ public class PartyDetailsActivity extends Activity implements
 	// 未表态
 	private void PartyDetails_did_not_say_number() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
-		intent.putExtra(IConstant.CommentsList, 0);
+		intent.putExtra(IConstant.CommentsList, 3);
 		intent.putExtra(IConstant.Not_Say, pk_party);
 		intent.putExtra(IConstant.All_fk_group, fk_group);
 		startActivity(intent);
@@ -619,7 +630,7 @@ public class PartyDetailsActivity extends Activity implements
 	// 参与
 	private void PartyDetails_partake_number() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
-		intent.putExtra(IConstant.CommentsList, 1);
+		intent.putExtra(IConstant.CommentsList, 4);
 		intent.putExtra(IConstant.ParTake, pk_party);
 		intent.putExtra(IConstant.All_fk_group, fk_group);
 		startActivity(intent);
@@ -627,7 +638,7 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	private void PartyDetails_apply_layout() {
-		if(current_relationship==1)
+		if(current_relationship==4)
 		{
 			final SweetAlertDialog sd = new SweetAlertDialog(PartyDetailsActivity.this,SweetAlertDialog.WARNING_TYPE);
 			sd.setTitleText("警告");
@@ -658,7 +669,7 @@ public class PartyDetailsActivity extends Activity implements
 			Party_User party_user = new Party_User();
 			party_user.setPk_party_user(pk_party_user);
 			Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222"+ pk_party_user);
-			party_user.setRelationship(1);
+			party_user.setRelationship(4);
 			party_user.setStatus(1);
 			party_user.setFk_party(pk_party);
 			party_user.setFk_user(sD_pk_user);
@@ -683,7 +694,7 @@ public class PartyDetailsActivity extends Activity implements
 			intent.putExtra(IConstant.UserAll, true);
 		} else {
 			intent.putExtra(IConstant.MoreParty, oneParty);
-		}
+		}                                                                                                                                                              
 		startActivity(intent);
 	}
 

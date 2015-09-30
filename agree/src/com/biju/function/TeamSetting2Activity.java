@@ -46,7 +46,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private Group teamsetting_group;
 	
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	private String completeURL;
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
@@ -223,6 +223,11 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 						SdPkUser.setRefreshTeam(true);//有对小组进行修改过后传true
 						Intent intent=new Intent(TeamSetting2Activity.this, MainActivity.class);
 						startActivity(intent);
+						//退出当前小组后，在Sliding中的点击效果也要保存,而且重新读取小组中的所有用户
+						SharedPreferences Sliding_sp=getSharedPreferences(IConstant.SlidingClick, 0);
+						Editor editor=Sliding_sp.edit();
+						editor.putInt(IConstant.Click, 0);
+						editor.commit();
 					}
 				} else {
 					Teamupdateback teamupdateback = GsonUtils.parseJson(A,Teamupdateback.class);
@@ -282,7 +287,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		mTeamSetting2_User_nickname.setText(teamsetting_group.getName());
 		mTeamSetting2_Tean_name.setText(teamsetting_group.getName());
 		String useravatar_path = teamsetting_group.getAvatar_path();
-		completeURL = beginStr + useravatar_path + endStr;
+		completeURL = beginStr + useravatar_path + endStr+"avatar";
 		PreferenceUtils.saveImageCache(TeamSetting2Activity.this, completeURL);// 存SP
 		ImageLoaderUtils.getInstance().LoadImageSquare(TeamSetting2Activity.this,completeURL, mTeamSetting2_head);
 	}

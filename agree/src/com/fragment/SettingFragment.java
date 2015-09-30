@@ -64,7 +64,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public static ImageView mSetting_head_1;
 
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	private String mUserAvatar_path;
 	private String completeURL;
 	private String TestcompleteURL = beginStr
@@ -198,7 +198,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
 					convertToBitmap, 1080);// 最长边限制为1080
 			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-					limitLongScaleBitmap, 600);// 截取中间正方形
+					limitLongScaleBitmap, 180);// 截取中间正方形
 			bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
 			UUID randomUUID = UUID.randomUUID();
 			uUid = randomUUID.toString();
@@ -267,7 +267,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						break;
 					}
 					mSetting_Phone.setText(mUserPhone);
-					completeURL = beginStr + mUserAvatar_path + endStr;
+					completeURL = beginStr + mUserAvatar_path + endStr+"avatar";
 					PreferenceUtils.saveImageCache(getActivity(), completeURL);// 存SP
 					ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(),completeURL, mSetting_head);
 					if(!("".equals(mUserWechat_id)))

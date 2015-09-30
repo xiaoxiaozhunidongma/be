@@ -47,5 +47,6 @@
     
     <!--修改界面  -->
     <drawable name="sex_choose_color">#d9d9d9</drawable>
-    
+    <!-- 侧滑界面 -->
+     <drawable name="Sliding_choose_color">#d9d9d9</drawable>
 </resources>

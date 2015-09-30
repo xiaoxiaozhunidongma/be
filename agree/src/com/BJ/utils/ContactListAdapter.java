@@ -63,7 +63,7 @@ public class ContactListAdapter extends BaseAdapter {
 	
 	
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private Integer fk_user_from;
@@ -236,7 +236,7 @@ public class ContactListAdapter extends BaseAdapter {
 					holder.Contact_name.setText(AddThe_name);
 					holder.Contact_contact_name.setText("通讯录名称:"+name);
 					holder.Contact_prompt.setText("已发出邀请");
-					completeURL = beginStr + AddThe_path + endStr;
+					completeURL = beginStr + AddThe_path + endStr+"mini-avatar";
 					ImageLoaderUtils(holder);
 					holder.Contact_but.setOnClickListener(new OnClickListener() {
 						
@@ -253,7 +253,7 @@ public class ContactListAdapter extends BaseAdapter {
 					holder.Contact_name.setText(ByAdd_name);
 					holder.Contact_contact_name.setText("通讯录名称:"+name);
 					holder.Contact_prompt.setText("同意添加");
-					completeURL = beginStr + ByAdd_path + endStr;
+					completeURL = beginStr + ByAdd_path + endStr+"mini-avatar";
 					ImageLoaderUtils(holder);
 					holder.Contact_but.setOnClickListener(new OnClickListener() {
 						
@@ -274,7 +274,7 @@ public class ContactListAdapter extends BaseAdapter {
 					holder.Contact_name.setText(AlreadyFriends_name);
 					holder.Contact_contact_name.setText("通讯录名称:"+name);
 					holder.Contact_prompt.setText("已为好友");
-					completeURL = beginStr + AlreadyFriends_path + endStr;
+					completeURL = beginStr + AlreadyFriends_path + endStr+"mini-avatar";
 					ImageLoaderUtils(holder);
 				}else if(position==contactFriends_phone)
 				{
@@ -284,7 +284,7 @@ public class ContactListAdapter extends BaseAdapter {
 					holder.Contact_name.setText(contactFriends_name);
 					holder.Contact_contact_name.setText("通讯录名称:"+name);
 					holder.Contact_prompt.setText("成为好友");
-					completeURL = beginStr + contactFriends_path + endStr;
+					completeURL = beginStr + contactFriends_path + endStr+"mini-avatar";
 					ImageLoaderUtils(holder);
 					holder.Contact_but.setOnClickListener(new OnClickListener() {
 						

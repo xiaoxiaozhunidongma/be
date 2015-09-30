@@ -81,12 +81,12 @@ public class VerifyCodeView extends View {
 		return super.onTouchEvent(event);
 	}
 
-	@Override
-	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
-		// 定义软键盘样式为数字键盘
-		outAttrs.inputType = InputType.TYPE_CLASS_NUMBER;
-		return super.onCreateInputConnection(outAttrs);
-	}
+//	@Override
+//	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
+//		// 定义软键盘样式为数字键盘
+//		outAttrs.inputType = InputType.TYPE_CLASS_NUMBER;
+//		return super.onCreateInputConnection(outAttrs);
+//	}
 
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {

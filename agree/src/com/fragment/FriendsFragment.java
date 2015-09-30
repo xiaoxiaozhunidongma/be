@@ -67,7 +67,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	private Interface addFriends_interface;
 	private ArrayList<ReadUserAllFriends> AllFriends_List = new ArrayList<ReadUserAllFriends>();
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private MyAdapter adapter;
@@ -155,7 +155,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 					if (Users.size() >= 1) {
 						User readuser = Users.get(0);
 						String mAvatar_path = readuser.getAvatar_path();
-						CurrUserUrl = beginStr + mAvatar_path + endStr;
+						CurrUserUrl = beginStr + mAvatar_path + endStr+"mini-avatar";
 						chatUserlogin();
 					}
 				}
@@ -333,7 +333,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			final ReadUserAllFriends allFriends = AllFriends_List.get(position);
 			holder.ReadUserAllFriends_name.setText(allFriends.getNickname());
 			String avatar_path = allFriends.getAvatar_path();
-			String completeURL = beginStr + avatar_path + endStr;
+			String completeURL = beginStr + avatar_path + endStr+"mini-avatar";
 			ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(),
 					completeURL, holder.ReadUserAllFriends_head);
 

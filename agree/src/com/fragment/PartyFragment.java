@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.BJ.javabean.Party_User;
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.UserAllPartyback;
@@ -33,6 +34,7 @@ import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserAllPartyListenner;
+import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
 import com.biju.function.NewPartyActivity;
 import com.biju.function.PartyDetailsActivity;
@@ -134,6 +136,19 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 
 			}
 		});
+		//更新
+		tab_party_interface.setPostListener(new updateUserJoinMsgListenner() {
+
+			@Override
+			public void success(String A) {
+				Log.e("PartyFragment", "返回的是否更新成功" + A);
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
 	}
 
 	private void initParty() {
@@ -162,6 +177,17 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				int pos = arg2 - mParty_listView.getHeaderViewsCount();
 				if (pos >= 0) {
 					UserAllParty UserAllParty = userAllPartieList.get(pos);
+					Integer relationship=UserAllParty.getRelationship();
+					Log.e("PartyFragment", "所得到的relationship===========" + relationship+"          "+pos);
+					if(relationship==0)
+					{
+						Party_User party_user = new Party_User();
+						party_user.setPk_party_user(UserAllParty.getPk_party_user());
+						party_user.setRelationship(3);
+						party_user.setType(1);
+						tab_party_interface.updateUserJoinMsg(getActivity(),party_user);
+					}
+					
 					Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
 					intent.putExtra(IConstant.UserAll, true);
 					intent.putExtra(IConstant.UserAllParty, UserAllParty);
@@ -265,7 +291,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				{
 					holder.Party_item_inNum.setText(""+inNum);
 				}
-				if(relationship==1)
+				if(relationship==4)
 				{
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_partake_nickname_color));//参与后名称颜色黑色
 					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色

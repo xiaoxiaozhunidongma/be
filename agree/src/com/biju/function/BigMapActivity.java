@@ -8,6 +8,7 @@ import android.content.DialogInterface;
 import android.content.DialogInterface.OnClickListener;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -91,6 +92,8 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 		Intent intent = getIntent();
 		mLat = intent.getFloatExtra("mLat", (float) mLat);
 		mLng = intent.getFloatExtra("mLng", (float) mLng);
+		Log.e("BigMapActivity", "mLat=="+mLat);
+		Log.e("BigMapActivity", "mLng=="+mLng);
 
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.UUID;
 
 import android.app.Activity;
+import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -12,6 +13,7 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.provider.MediaStore.Images;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
@@ -184,6 +186,7 @@ public class MainActivity extends FragmentActivity  {
 			return;
 		try {
 			Uri selectedImage = data.getData();
+//			long parseId = ContentUris.parseId(selectedImage);
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
 			Cursor cursor = MainActivity.this.getContentResolver().query(
 					selectedImage, filePathColumn, null, null, null);
@@ -205,12 +208,18 @@ public class MainActivity extends FragmentActivity  {
 					return;
 				}
 			}
+//			//缩略图路径
+//			        Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(MainActivity.this.getContentResolver(), parseId, Images.Thumbnails.MICRO_KIND,  
+//					                null); 
+			        
 			Log.e("MainActivity", "mFilePath======" + mFilePath);
 			// Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
 			// Bitmap bmp = Bimp.revitionImageSize(mFilePath);
 			// 这个mFilePath不可以用缩略图路径
 			
 			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
+//			Log.e("bitmap"+bitmap.getWidth()+"和"+bitmap.getHeight(), "convertToBitmap"+convertToBitmap.getWidth()+"和"+convertToBitmap.getHeight());
+			
 			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
 					convertToBitmap, 1080);// 最长边限制为1080
 			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(

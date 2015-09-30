@@ -49,8 +49,8 @@ public class SlidingActivity extends Activity implements OnClickListener {
 	private MyMemBerAdapter adapter;
 	private ArrayList<Group_ReadAllUser> Group_Readalluser_List = new ArrayList<Group_ReadAllUser>();
 
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "@!";
 	private String completeURL;
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
@@ -82,12 +82,12 @@ public class SlidingActivity extends Activity implements OnClickListener {
 			mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
 			break;
 		case 1:
-			mSlidingMenu_Team_Setting.setBackgroundResource(R.color.lightgray1);
+			mSlidingMenu_Team_Setting.setBackgroundResource(R.drawable.Sliding_choose_color);
 			mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
 			break;
 		case 2:
 			mSlidingMenu_Team_Setting.setBackgroundResource(R.color.white);
-			mSlidingMenu_requestcode.setBackgroundResource(R.color.lightgray1);
+			mSlidingMenu_requestcode.setBackgroundResource(R.drawable.Sliding_choose_color);
 			break;
 		default:
 			break;
@@ -307,7 +307,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 	private void SlidingMenu_requestcode() {
 		isClick=2;
 		mSlidingMenu_Team_Setting.setBackgroundResource(R.color.white);
-		mSlidingMenu_requestcode.setBackgroundResource(R.color.lightgray1);
+		mSlidingMenu_requestcode.setBackgroundResource(R.drawable.Sliding_choose_color);
 		if (!isCode) {
 			Group Group_teamsetting = new Group();
 			Group_teamsetting.setPk_group(pk_group);
@@ -317,7 +317,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 
 	private void SlidingMenu_Team_Setting() {
 		isClick=1;
-		mSlidingMenu_Team_Setting.setBackgroundResource(R.color.lightgray1);
+		mSlidingMenu_Team_Setting.setBackgroundResource(R.drawable.Sliding_choose_color);
 		mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
 		Intent intent = new Intent(SlidingActivity.this,TeamSetting2Activity.class);
 		intent.putExtra(IConstant.Group, pk_group);

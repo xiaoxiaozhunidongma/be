@@ -26,7 +26,7 @@
                 android:layout_centerVertical="true"
                 android:scaleType="fitXY"
                 android:layout_margin="5.0dp"
-                android:src="@drawable/yuan_gray" />
+                android:src="@drawable/yuan_green" />
 
             <ImageView
                 android:id="@+id/commentslist_item_head"

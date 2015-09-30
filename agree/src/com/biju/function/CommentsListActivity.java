@@ -107,7 +107,10 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 						case 0:
 							not_sayList.add(relationList.get(i));
 							break;
-						case 1:
+						case 3:
+							not_sayList.add(relationList.get(i));
+							break;
+						case 4:
 							partakeNum++;
 							Log.e("CommentsListActivity", "当前partakeNum的数量"+ partakeNum + "=======" + i);
 							partackList.add(relationList.get(i));
@@ -189,7 +192,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 		commentsList_msg = intent.getIntExtra(IConstant.CommentsList, 0);
 		fk_group = intent.getIntExtra(IConstant.All_fk_group, 0);
 		switch (commentsList_msg) {
-		case 0:
+		case 3:
 			isNotsay = true;
 			mComments_list_listview.setVisibility(View.GONE);
 			mCommentslist_not_say_listview.setVisibility(View.VISIBLE);
@@ -203,7 +206,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			mCommentslist_not_say_number.setTextColor(Color.WHITE);
 			pk_party = intent.getStringExtra(IConstant.Not_Say);
 			break;
-		case 1:
+		case 4:
 			isNotsay = false;
 			mComments_list_listview.setVisibility(View.VISIBLE);
 			mCommentslist_not_say_listview.setVisibility(View.GONE);
@@ -356,9 +359,20 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 						if (Integer.valueOf(allUser_pk_user).equals(Integer.valueOf(relation_pk_user))) {
 							Log.e("CommentsListActivity", "进入已看的============");
 							Integer relationship = relation.getRelationship();
-							if(relationship==0)
+							Log.e("CommentsListActivity", "进入已看的relationship============"+relationship);
+							if(relationship==3)
 							{
 								holder.commentslist_item_status.setText("未表态 - 已看");
+								String useravatar_path = allUser.getAvatar_path();
+								completeURL = beginStr + useravatar_path + endStr;
+								PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
+								ImageLoaderUtils.getInstance().LoadImageCricular(
+										CommentsListActivity.this, completeURL,
+										holder.commentslist_item_head);
+								holder.commentslist_item_nickname.setText(allUser.getNickname());
+							}else
+							{
+								holder.commentslist_item_status.setText("未表态 - 未看");
 								String useravatar_path = allUser.getAvatar_path();
 								completeURL = beginStr + useravatar_path + endStr;
 								PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
