@@ -114,7 +114,6 @@ public class MyApplication extends Application {
 				.cacheOnDisk(true).build();
 
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(
-
 		getApplicationContext())
 				.threadPoolSize(5)
 				// .threadPriority(Thread.MIN_PRIORITY + 3)

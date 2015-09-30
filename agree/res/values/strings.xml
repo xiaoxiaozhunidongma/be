@@ -180,6 +180,7 @@
     <string name="title_activity_add_new_party">AddNewPartyActivity</string>
     <string name="title_activity_add_friends2">AddFriends2Activity</string>
     <string name="title_activity_contact_search">ContactSearchActivity</string>
+    <string name="title_activity_team_setting2">TeamSetting2Activity</string>
     <string name="chat_base_list_view_listEmptyHint">无数据</string>
     <string name="chat_base_list_view_noMore">已无更多</string>
     <string name="chat_utils_tips">提示</string>

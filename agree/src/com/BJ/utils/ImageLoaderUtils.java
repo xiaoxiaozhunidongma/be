@@ -42,8 +42,8 @@ public class ImageLoaderUtils {
 				.showImageOnLoading(R.drawable.login_1)
 				.showImageForEmptyUri(R.drawable.login_1)
 				.showImageOnFail(R.drawable.ic_error)
-				.cacheInMemory(false)
-//				.displayer(new CircleBitmapDisplayer())//圆形
+				.cacheInMemory(true)
+				.displayer(new CircleBitmapDisplayer())//圆形
 				.cacheOnDisk(true)
 				.considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)  //格式
@@ -88,7 +88,7 @@ public class ImageLoaderUtils {
 				.showImageOnLoading(R.drawable.login_1)
 				.showImageForEmptyUri(R.drawable.login_1)
 				.showImageOnFail(R.drawable.ic_error)
-				.cacheInMemory(false)
+				.cacheInMemory(true)
 				.displayer(new CircleBitmapDisplayer())//圆形
 				.cacheOnDisk(true)
 				.considerExifParams(true)

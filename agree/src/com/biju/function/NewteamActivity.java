@@ -5,9 +5,11 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.List;
 import java.util.UUID;
 
 import android.annotation.SuppressLint;
@@ -34,9 +36,16 @@ import android.widget.Toast;
 import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
+import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Newteamback;
 import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.LimitLong;
+import com.BJ.javabean.PicSignBack;
+import com.BJ.javabean.RequestCodeback;
+import com.BJ.javabean.User;
+import com.BJ.utils.ByteOrBitmap;
+import com.BJ.utils.LimitLong;
+import com.BJ.utils.MyBimp;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.PicCutter;
 import com.BJ.utils.SdPkUser;
@@ -47,6 +56,8 @@ import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSData;
 import com.biju.Interface;
 import com.biju.Interface.createGroupListenner;
+import com.biju.Interface.readUserGroupMsgListenner;
+import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
 import com.biju.APP.MyApplication;
 import com.github.volley_examples.utils.GsonUtils;
@@ -71,14 +82,21 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private String endStr = "";
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
+	private boolean read_requestcode2;
+	private Group readhomeuser;
+	private ArrayList<Group> readuesrlist = new ArrayList<Group>();
 
 	private String newteam_name;
 	private String sDpath;
 	private Group group;
 	private Integer sD_pk_user;
+	private Integer pk_group;
 	private OSSData ossData;
 	private OSSService ossService;
 	private OSSBucket sampleBucket;
+	private byte[] bitmap2Bytes;
+	private String uUid;
+	private boolean isreaduser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,8 +139,75 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		});
 	}
 
-	private byte[] bitmap2Bytes;
-	private String uUid;
+	private void readUser() {
+		ReadTeam(sD_pk_user);
+	}
+
+
+	private void ReadTeam(int pk_user) {
+		cregrouInter = Interface.getInstance();
+		User homeuser = new User();
+		homeuser.setPk_user(pk_user);
+		cregrouInter.readUserGroupMsg(NewteamActivity.this, homeuser);
+		cregrouInter.setPostListener(new readUserGroupMsgListenner() {
+
+			@Override
+			public void success(String A) {
+				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
+				int homeStatusMsg = homeback.getStatusMsg();
+				if (homeStatusMsg == 1) {
+					Log.e("NewteamActivity", "读取出的用户小组信息==========" + A);
+					List<Group> users = homeback.getReturnData();
+					if (users.size() > 0) {
+						for (int i = 0; i < users.size(); i++) {
+							Group readhomeuser_1 = users.get(i);
+							readuesrlist.add(readhomeuser_1);
+						}
+					}
+					for (int i = 0; i < readuesrlist.size(); i++) {
+						pk_group = readuesrlist.get(i).getPk_group();
+						if (String.valueOf(pk_group).equals(String.valueOf(readhomeuser.getPk_group()))) {
+							isreaduser = true;
+						}
+					}
+				}
+
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+
+		// 读取用户小组信息使用邀请码添加后的监听
+		cregrouInter.setPostListener(new userJoin2gourpListenner() {
+
+			@Override
+			public void success(String A) {
+				RequestCodeback requestCodeback = GsonUtils.parseJson(A,
+						RequestCodeback.class);
+				Integer status = requestCodeback.getStatusMsg();
+				if (status == 1) {
+					Log.e("NewteamActivity", "读取用户小组信息使用邀请码添加后的===" + A);
+					SdPkUser.setRefreshTeam(true);
+					finish();
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+	}
+
+//	private void initUpload() {
+//		// 注册签名
+//		UploadManager.authorize(APPID, USERID, SIGN);
+//		uploadManager = new UploadManager(NewteamActivity.this, "persistenceId");
+//
+//	}
 
 	private void initUI() {
 		mNewteam_name = (EditText) findViewById(R.id.NewTeam_teamname);// 小组名称
@@ -191,12 +276,11 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		group.setStatus(1);
 		group.setName(newteam_name);
 		group.setLast_post_time(format2);
-
-		// 上传OSS
-		OSSupload(ossData, bitmap2Bytes, uUid);
+		
+		//上传OSS
+		OSSupload(ossData, bitmap2Bytes,uUid);
 
 	}
-
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != Activity.RESULT_OK || data == null)
@@ -223,9 +307,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					return;
 				}
 			}
-			Log.e("NewteamActivity", "mFilePath======" + mFilePath);
-			// OSS上传~
-			// Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
+			Log.e("NewteamActivity", "mFilePath======"+mFilePath);
+			//OSS上传~
+//			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
 			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1080);// 最长边限制为1080
 			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 600);// 截取中间正方形
@@ -274,7 +358,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
 				// Log.e("上传进度", "上传进度: " + p + "%");
-			}
+		    }
 
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {

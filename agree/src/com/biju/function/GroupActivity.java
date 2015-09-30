@@ -228,9 +228,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Sliding_editor.putInt(IConstant.Click, 0);
 		Sliding_editor.commit();
 	}
-	public interface GetSliding {
-		void SlidingClick();
-	}
 	
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -241,4 +238,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		PhotoFragment2.onActivityResultInterface.onActivityResult(requestCode, resultCode, data);
 	}
 
+	public interface GetSliding {
+		void SlidingClick();
+	}
 }
