@@ -243,7 +243,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 				}
 
 				String useravatar_path = group_ReadAllUser.getAvatar_path();
-				completeURL = beginStr + useravatar_path + endStr;
+				completeURL = beginStr + useravatar_path + endStr+"mini-avatar";
 				PreferenceUtils.saveImageCache(SlidingActivity.this,completeURL);// ¥ÊSP
 				ImageLoaderUtils.getInstance().LoadImageCricular(SlidingActivity.this, completeURL, holder.Member_head);
 				if (position < Group_Readalluser_List.size() - 1) {

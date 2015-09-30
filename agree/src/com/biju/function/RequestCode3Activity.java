@@ -41,8 +41,8 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 	private RelativeLayout mRequestcode2_public_phone;
 	private RelativeLayout mRequestcode2_add_team;
 	public static findTeamInterface findTeamInterface;
-	private String beginStr = "http://201139.image.myqcloud.com/201139/0/";
-	private String endStr = "/original";
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "@!";
 	// ÍêÕûÂ·¾¶completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	
@@ -64,7 +64,7 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 
 	private void initData() {
 		String Avatar_path=readhomeuser.getAvatar_path();
-		completeURL = beginStr + Avatar_path + endStr;
+		completeURL = beginStr + Avatar_path + endStr+"avatar";
 		PreferenceUtils.saveImageCache(RequestCode3Activity.this,completeURL);
 		homeImageLoaderUtils.getInstance().LoadImage(RequestCode3Activity.this,completeURL, mRequestcode2_head);
 		mRequestcode2_User_nickname.setText(readhomeuser.getName());

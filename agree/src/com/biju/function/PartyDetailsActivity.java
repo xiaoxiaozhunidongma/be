@@ -446,6 +446,7 @@ public class PartyDetailsActivity extends Activity implements
 			Double latitude = oneParty.getLatitude();
 			Double longitude = oneParty.getLongitude();
 			String location = oneParty.getLocation();
+			mLat = latitude;
 			mLng = longitude;
 			edit_show.setText(location);
 		}
@@ -490,8 +491,13 @@ public class PartyDetailsActivity extends Activity implements
 		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
 
 			public void onMapClick(LatLng point) {
-				startActivity(new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class));
+				Intent intent = new Intent(PartyDetailsActivity.this,
+						BigMapActivity.class);
+				intent.putExtra("mLat", mLat);
+				intent.putExtra("mLng", mLng);
+				Log.e("111", "mLat=="+mLat);
+				Log.e("111", "mLng=="+mLng);
+				startActivity(intent);
 			}
 
 			public boolean onMapPoiClick(MapPoi poi) {
@@ -500,14 +506,24 @@ public class PartyDetailsActivity extends Activity implements
 		});
 		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
 			public void onMapLongClick(LatLng point) {
-				startActivity(new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class));
+				Intent intent = new Intent(PartyDetailsActivity.this,
+						BigMapActivity.class);
+				intent.putExtra("mLat", mLat);
+				intent.putExtra("mLng", mLng);
+				Log.e("222", "mLat=="+mLat);
+				Log.e("222", "mLng=="+mLng);
+				startActivity(intent);
 			}
 		});
 		mBaiduMap.setOnMapDoubleClickListener(new OnMapDoubleClickListener() {
 			public void onMapDoubleClick(LatLng point) {
-				startActivity(new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class));
+				Intent intent = new Intent(PartyDetailsActivity.this,
+						BigMapActivity.class);
+				intent.putExtra("mLat", mLat);
+				intent.putExtra("mLng", mLng);
+				Log.e("333", "mLat=="+mLat);
+				Log.e("333", "mLng=="+mLng);
+				startActivity(intent);
 
 			}
 		});

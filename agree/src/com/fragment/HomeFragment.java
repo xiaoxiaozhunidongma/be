@@ -283,6 +283,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			}
 		});
 		adapter = new MyGridviewAdapter();
+		home_gridview.setAdapter(adapter);
 	}
 
 	@SuppressWarnings("deprecation")
@@ -423,7 +424,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					} 
 				}
 			}
-			adapter.notifyDataSetChanged();
 			return inflater;
 		}
 
