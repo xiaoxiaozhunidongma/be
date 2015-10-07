@@ -416,6 +416,8 @@ public class PartyDetailsActivity extends Activity implements
 			String location = allParty.getLocation();
 			mLat = latitude;
 			mLng = longitude;
+			Log.e("444", "mLat=="+mLat);
+			Log.e("444", "mLng=="+mLng);
 			edit_show.setText(location);
 		} else {
 			oneParty = (Party2) intent.getSerializableExtra(IConstant.OneParty);
@@ -448,6 +450,8 @@ public class PartyDetailsActivity extends Activity implements
 			String location = oneParty.getLocation();
 			mLat = latitude;
 			mLng = longitude;
+			Log.e("555", "mLat=="+mLat);
+			Log.e("555", "mLng=="+mLng);
 			edit_show.setText(location);
 		}
 	}
@@ -543,9 +547,9 @@ public class PartyDetailsActivity extends Activity implements
 	private void initMap() {
 		// 添加地图标点
 		addOverlay(mLat, mLng, R.drawable.iconfont2);
+		Log.e("PartyDetailsActivity", "地图标点mLat="+mLat+"mLng="+mLng);
 		// 开启定位图层
-		mBaiduMap.setMyLocationEnabled(true);
-		mBaiduMap.setMyLocationEnabled(false);
+		mBaiduMap.setMyLocationEnabled(false);//是否显示当前位置默认图标
 		mLocClient = new LocationClient(this);
 		mLocClient.registerLocationListener(myListener);
 		LocationClientOption option = new LocationClientOption();

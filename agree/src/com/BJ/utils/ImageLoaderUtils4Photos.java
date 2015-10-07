@@ -42,7 +42,7 @@ public class ImageLoaderUtils4Photos {
 				.showImageForEmptyUri(R.drawable.plugin_camera_no_pictures)
 				.showImageOnFail(R.drawable.ic_error)
 				.cacheInMemory(true)//是否缓存在内存中
-				.displayer(new RoundedBitmapDisplayer(10))//设置圆角
+//				.displayer(new RoundedBitmapDisplayer(10))//设置圆角
 				.cacheOnDisk(true)//是否缓存在SD卡中
 				.considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)  //格式

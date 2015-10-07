@@ -90,8 +90,8 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 		setContentView(R.layout.activity_big_map);
 		
 		Intent intent = getIntent();
-		mLat = intent.getFloatExtra("mLat", (float) mLat);
-		mLng = intent.getFloatExtra("mLng", (float) mLng);
+		mLat = intent.getDoubleExtra("mLat", (float) mLat);
+		mLng = intent.getDoubleExtra("mLng", (float) mLng);
 		Log.e("BigMapActivity", "mLat=="+mLat);
 		Log.e("BigMapActivity", "mLng=="+mLng);
 
@@ -120,7 +120,7 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 		// 添加地图标点
 		addOverlay(mLat, mLng, R.drawable.iconfont2);
 		// 开启定位图层
-		mBaiduMap.setMyLocationEnabled(false);
+		mBaiduMap.setMyLocationEnabled(true);//是否显示当前位置默认图标
 		mLocClient = new LocationClient(this);
 		mLocClient.registerLocationListener(myListener);
 		LocationClientOption option = new LocationClientOption();

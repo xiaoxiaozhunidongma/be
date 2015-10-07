@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import com.BJ.javabean.MapAddParty;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.PartyOkback;
 import com.BJ.utils.SdPkUser;
@@ -327,7 +328,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			Log.e("AddNewPartyActivity", "新建日程的mLng=====" + mLng);
 			Log.e("AddNewPartyActivity", "新建日程的mLat=====" + mLat);
 			Log.e("AddNewPartyActivity", "新建日程的地址=====" + address);
-			addNewParty_Interface.addParty(AddNewPartyActivity.this, party);
+			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(null, party));
 			mAdd_New_Party_OK.setEnabled(false);
 		}
 
