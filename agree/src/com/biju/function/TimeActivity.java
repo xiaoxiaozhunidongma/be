@@ -21,7 +21,9 @@ import android.widget.TimePicker;
 import android.widget.TimePicker.OnTimeChangedListener;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import com.BJ.utils.DensityUtil;
 import com.BJ.utils.KCalendar;
+import com.BJ.utils.Weeks;
 import com.BJ.utils.KCalendar.OnCalendarClickListener;
 import com.BJ.utils.KCalendar.OnCalendarDateChangedListener;
 import com.biju.IConstant;
@@ -35,14 +37,17 @@ public class TimeActivity extends Activity implements OnClickListener {
 	private TextView popupwindow_calendar_month;
 	private TimePicker mTimePicker;
 	private TextView mTime_next;
-	private int mHour;
-	private int mMinute;
+//	private int mHour;
+//	private int mMinute;
 	private int h;
 	private int m;
 	private Integer currentMonth_2;
 	private Integer oldMonth_2;
 	private Integer currentDay_2;
 	private Integer oldDay_2;
+	private TextView mTimePicker_Time_show;
+	private Integer chooseCurrentHour;
+	private Integer chooseCurrentMinute;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -52,6 +57,8 @@ public class TimeActivity extends Activity implements OnClickListener {
 		//加入List中
 		initUI();
 		initDate();
+		int px2dip = DensityUtil.px2dip(TimeActivity.this, 90);
+		Log.e("TimeActivity", "px2dip============="+px2dip);
 	}
 
 	private void initDate() {
@@ -60,9 +67,9 @@ public class TimeActivity extends Activity implements OnClickListener {
 		boolean date1 = sp.getBoolean("date", false);
 		if (date1) {
 			String dateFormat = sp.getString("dateFormat", "");
-			calendar.setCalendarDayBgColor(dateFormat,R.drawable.yuanquan_2);//设置背景红色圆圈
+			calendar.setCalendarDayBgColor(dateFormat,R.drawable.yuan_6);//设置背景红色圆圈
 			date = dateFormat;// 最后返回给全局 date
-			Log.e("MainActivity", "进保存后的");
+			Log.e("TimeActivity", "进保存后的");
 			if (null != date) {
 
 				int years = Integer.parseInt(date.substring(0,date.indexOf("-")));
@@ -70,18 +77,27 @@ public class TimeActivity extends Activity implements OnClickListener {
 				popupwindow_calendar_month.setText(years + "年" + month + "月");
 
 				calendar.showCalendar(years, month);
-				calendar.setCalendarDayBgColor(date,R.drawable.yuanquan_2);//设置背景红色圆圈
+				calendar.setCalendarDayBgColor(date,R.drawable.yuan_6);//设置背景红色圆圈
 			}
 		}
 	}
 
 	private void initUI() {
+		mTimePicker_Time_show = (TextView) findViewById(R.id.TimePicker_Time_show);
+		mTimePicker_Time_show.setText("聚会开始时间");
 		findViewById(R.id.Time_back_layout).setOnClickListener(this);
 		findViewById(R.id.Time_back).setOnClickListener(this);// 返回
 		findViewById(R.id.Time_back_layout).setOnClickListener(this);// 下一步
 		mTime_next = (TextView) findViewById(R.id.Time_OK);
 		mTime_next.setOnClickListener(this);
 		mTimePicker = (TimePicker) findViewById(R.id.timePicker);
+		Integer currentHour = mTimePicker.getCurrentHour();
+		Integer currentMinute = mTimePicker.getCurrentMinute();
+		mTimePicker.setIs24HourView(false);
+		mTimePicker.setCurrentHour(currentHour+3);
+		mTimePicker.setCurrentMinute(currentMinute);
+		chooseCurrentHour = mTimePicker.getCurrentHour();
+		chooseCurrentMinute = mTimePicker.getCurrentMinute();
 		// OnChangeListener buc = new OnChangeListener();
 		// mTime_next.setOnClickListener(buc);
 		// 是否使用24小时制
@@ -118,8 +134,24 @@ public class TimeActivity extends Activity implements OnClickListener {
 		@Override
 		public void onTimeChanged(TimePicker view, int hourOfDay, int minute) {
 			Log.e("TimeActivity", "最后选定的h:" + hourOfDay + "最后选定的m:" + minute);
-			mHour = hourOfDay;
-			mMinute = minute;
+			chooseCurrentHour = hourOfDay;
+			chooseCurrentMinute = minute;
+			if(date!=null)
+			{
+				String OldYears=date.substring(0, 4);
+				String OldMonth=date.substring(5, 7);
+				String OldDay=date.substring(8, 10);
+				Integer y = Integer.valueOf(OldYears);
+				Integer m = Integer.valueOf(OldMonth);
+				Integer d = Integer.valueOf(OldDay);
+				// 调用计算星期几的方法
+				Weeks.CaculateWeekDay(y, m, d);
+				String week = Weeks.getweek();
+				mTimePicker_Time_show.setText("开始时间:"+OldYears+"年"+OldMonth+"月"+OldDay+"日"+" "+week+" "+chooseCurrentHour+":"+chooseCurrentMinute);
+			}else
+			{
+				mTimePicker_Time_show.setText("开始时间:(null)");
+			}
 		}
 
 	}
@@ -154,7 +186,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 			sd.setContentText("活动日期不能为空哦~");
 			sd.show();
 		} else {
-			if(mHour==0)
+			if(chooseCurrentHour==0)
 			{
 				SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
 				sd.setTitleText("提示");
@@ -208,7 +240,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 						}else if(oldDay_2==currentDay_2)
 						{
 							Log.e("TimeActivity", "判断日的时候的=========进入了选择的等于当前的");
-							if(mHour<(Integer.valueOf(CurrentHour)+3))
+							if(chooseCurrentHour<(Integer.valueOf(CurrentHour)+3))
 							{
 								Log.e("TimeActivity", "判断时的时候的=========进入了选择的小于当前的");
 								SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
@@ -266,8 +298,8 @@ public class TimeActivity extends Activity implements OnClickListener {
 		SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
 		Editor editor = time_sp.edit();
 		editor.putBoolean(IConstant.IsTimeChoose, true);
-		editor.putInt(IConstant.Hour, mHour);
-		editor.putInt(IConstant.Minute, mMinute);
+		editor.putInt(IConstant.Hour, chooseCurrentHour);
+		editor.putInt(IConstant.Minute, chooseCurrentMinute);
 		editor.putString(IConstant.IsCalendar, date);
 		Log.e("TimeActivity", "date=========" + date);
 		editor.commit();
@@ -319,7 +351,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 			popupwindow_calendar_month.setText(years + "年" + month + "月");
 
 			calendar.showCalendar(years, month);
-			calendar.setCalendarDayBgColor(date,R.drawable.yuanquan_2);
+			calendar.setCalendarDayBgColor(date,R.drawable.yuan_6);
 		}
 
 		List<String> list = new ArrayList<String>(); // 设置标记列表
@@ -345,11 +377,22 @@ public class TimeActivity extends Activity implements OnClickListener {
 
 				} else {
 					calendar.removeAllBgColor();
-					calendar.setCalendarDayBgColor(dateFormat,
-							R.drawable.yuanquan_2);
+					calendar.setCalendarDayBgColor(dateFormat,R.drawable.yuan_6);
 					date = dateFormat;// 最后返回给全局 date
 					// Log.e("date", "date=========" + date);
 					Log.e("date", "date=========" + date);
+					
+					String OldYears=date.substring(0, 4);
+					String OldMonth=date.substring(5, 7);
+					String OldDay=date.substring(8, 10);
+					Integer y = Integer.valueOf(OldYears);
+					Integer m = Integer.valueOf(OldMonth);
+					Integer d = Integer.valueOf(OldDay);
+					// 调用计算星期几的方法
+					Weeks.CaculateWeekDay(y, m, d);
+					String week = Weeks.getweek();
+					mTimePicker_Time_show.setText("开始时间:"+OldYears+"年"+OldMonth+"月"+OldDay+"日"+" "+week+" "+chooseCurrentHour+":"+chooseCurrentMinute);
+					
 					SharedPreferences sp = getSharedPreferences("isdate", 0);
 					Editor editor = sp.edit();
 					editor.putString("dateFormat", dateFormat);

@@ -49,6 +49,7 @@
  
  	<!-- 设置选项的字体大小 -->
  	<dimen name="setting_size">14sp</dimen>
+ 	<dimen name="setting_prompt_size_1">13sp</dimen>
  	<dimen name="setting_prompt_size">12sp</dimen>
 	<!-- 设置选项的布局高度 -->
  	<dimen name="setting_layout_height">44sp</dimen>

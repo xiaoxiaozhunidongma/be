@@ -72,8 +72,8 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_comments_list);
-		initUI();
 		initInterface();
+		initUI();
 		initData();
 	}
 
@@ -129,6 +129,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 									Integer all_fk_user = allUser.getFk_user();
 									if (String.valueOf(partake_fk_user).equals(String.valueOf(all_fk_user))) {
 										Log.e("CommentsListActivity","进入循环的次数i==== " + i+ "    j=====" + j);
+										Log.e("CommentsListActivity","所删除的all_fk_user" + all_fk_user);
 										commentslist.remove(allUser);
 									}
 								}
@@ -205,6 +206,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			mCommentslist_not_say_prompt.setTextColor(Color.WHITE);
 			mCommentslist_not_say_number.setTextColor(Color.WHITE);
 			pk_party = intent.getStringExtra(IConstant.Not_Say);
+			Log.e("CommentsListActivity", "读取出小组中的pk_party11111111========" + pk_party);
 			break;
 		case 4:
 			isNotsay = false;
@@ -219,6 +221,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			mCommentslist_not_say_prompt.setTextColor(mCommentslist_partake_list_prompt.getResources().getColor(R.drawable.Common_text_color_gray));
 			mCommentslist_not_say_number.setTextColor(mCommentslist_partake_list_number.getResources().getColor(R.drawable.Common_text_color_green));
 			pk_party = intent.getStringExtra(IConstant.ParTake);
+			Log.e("CommentsListActivity", "读取出小组中的pk_party222222========" + pk_party);
 			break;
 		default:
 			break;

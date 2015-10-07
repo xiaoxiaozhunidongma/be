@@ -42,7 +42,7 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20.0dp"
-                
+                android:background="@drawable/party_green_corners"
                  >
 <!--android:background="@drawable/party_green_corners"  -->
                 <TextView
@@ -53,8 +53,8 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginRight="5.0dp"
                     android:gravity="right|bottom"
-                    android:paddingTop="3.0dp"
                     android:text="9月10号"
+                    android:layout_marginTop="3.0dp"
                     android:textColor="#ffffff"
                     android:textSize="16.0sp" />
 
@@ -103,8 +103,8 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="15.0dp"
-                android:gravity="left|center"
+                android:layout_marginTop="20.0dp"
+                android:gravity="left|bottom"
                 android:singleLine="true"
                 android:text="聚会名称"
                 android:paddingLeft="5.0dp"
@@ -118,6 +118,7 @@
                 android:layout_below="@+id/Party_item_name"
                 android:singleLine="true"
                 android:text="聚会地点"
+                android:gravity="left|top"
                 android:paddingLeft="5.0dp"
                 android:textSize="10.0sp" />
         </RelativeLayout>

@@ -15,6 +15,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -22,6 +23,7 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
+import android.text.TextPaint;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -90,6 +92,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private TextView home_item_name;
 	private RelativeLayout mHome_NoTeam_prompt_layout;
 	private int columnWidth;
+	private Typeface tf;
 
 	public String getSDPath() {
 		File sdDir = null;
@@ -111,7 +114,10 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			Bundle savedInstanceState) {
 		if (mLayout == null) {
 			mLayout = inflater.inflate(R.layout.fragment_home, container, false);
+			
 			DisplayMetrics();// 获取屏幕的高度和宽度
+			tf = Typeface.createFromAsset(getActivity().getAssets(), "font/weiruanyahei.ttf");
+			
 			Intent intent = getActivity().getIntent();
 			sdcard = intent.getBooleanExtra(IConstant.Sdcard, false);
 			initUI(inflater);
@@ -357,6 +363,9 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			inflater = layoutInflater.inflate(R.layout.home_gridview_item, null);
 			home_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
 			home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
+			home_item_name.setTypeface(tf);//修改字体
+//			TextPaint tp = home_item_name.getPaint(); 
+//			tp.setFakeBoldText(true);
 			home_item_name_layout = (RelativeLayout) inflater.findViewById(R.id.home_item_name_layout);
 			if (position == PhoneLoginActivity.list.size()) {
 				home_item_head.setVisibility(View.INVISIBLE);

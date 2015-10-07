@@ -69,22 +69,23 @@
     <RelativeLayout
         android:id="@+id/ datePicker_layout"
         android:layout_width="match_parent"
-        android:layout_height="260.0dp"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/Time_title_layout"
         android:layout_centerHorizontal="true" >
 
         <LinearLayout
             android:id="@+id/ll_popup"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="300.0dp"
             android:background="#ffeeeeee"
             android:orientation="vertical" >
 
             <RelativeLayout
+                android:id="@+id/popupwindow_calendar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="40dp"
-                android:layout_marginBottom="5dp"
-                android:layout_marginTop="5dp" >
+                android:layout_marginTop="5dp"
+                 >
 
                 <RelativeLayout
                     android:id="@+id/popupwindow_calendar_last_month"
@@ -94,8 +95,8 @@
                     android:layout_toLeftOf="@+id/popupwindow_calendar_month" >
 
                     <TextView
-                        android:layout_width="9dp"
-                        android:layout_height="14dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentRight="true"
                         android:layout_centerVertical="true"
                         android:layout_marginRight="20dp"
@@ -119,8 +120,8 @@
                     android:layout_toRightOf="@+id/popupwindow_calendar_month" >
 
                     <TextView
-                        android:layout_width="9dp"
-                        android:layout_height="14dp"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
@@ -131,7 +132,9 @@
             <com.BJ.utils.KCalendar
                 android:id="@+id/popupwindow_calendar"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent" >
+                android:layout_height="match_parent"
+                 android:layout_below="@+id/popupwindow_calendar_layout"
+                 >
             </com.BJ.utils.KCalendar>
 
             <TextView
@@ -164,10 +167,10 @@
         android:layout_height="40.0dp"
         android:layout_below="@+id/ datePicker_layout"
         android:layout_centerHorizontal="true"
-        android:background="#88d4cc" >
+        android:background="#c9c9c9" >
 
         <TextView
-            android:id="@+id/textView3"
+            android:id="@+id/TimePicker_Time_show"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
