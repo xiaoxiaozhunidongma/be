@@ -10,6 +10,9 @@ import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
 import java.util.List;
+import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.UUID;
 
 import android.annotation.SuppressLint;
@@ -357,7 +360,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			public void onProgress(String objectKey, int byteCount,
 					int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
-				// Log.e("上传进度", "上传进度: " + p + "%");
 		    }
 
 			@Override

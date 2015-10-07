@@ -52,8 +52,16 @@ public class Path2Bitmap {
 		BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inPreferredConfig = Bitmap.Config.RGB_565;//颜色模式
 		options.inJustDecodeBounds = true;
+		options.inPurgeable = true;  
+		options.inDither=false;   
+		options.inTempStorage=new byte[32 * 1024]; 
+
+
+
 		
-		BitmapFactory.decodeStream(in, null, options);
+		Bitmap decodeStream = BitmapFactory.decodeStream(in, null, options);
+		//decodeStream这个为空！
+		
 		in.close();
 		Bitmap bitmap = null;
 		
@@ -63,6 +71,7 @@ public class Path2Bitmap {
 		bitmap = BitmapFactory.decodeStream(in, null, options);
 		SoftReference<Bitmap> weak = new SoftReference<Bitmap>(bitmap);//软引用会自动释放
 		Bitmap createBitmap = Bitmap.createBitmap(weak.get());
+//		bitmap.recycle();//不能立马回收，byteorbitmap会问题
 		return createBitmap ;
 	}
 

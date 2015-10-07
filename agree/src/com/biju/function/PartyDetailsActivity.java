@@ -280,41 +280,32 @@ public class PartyDetailsActivity extends Activity implements
 						default:
 							break;
 						}
-						
 						//查找当前用户的参与信息
 						Integer pk_user=relation.getPk_user();
-						if(String.valueOf(pk_user).equals(String.valueOf(sD_pk_user)))
-						{
+						if(String.valueOf(pk_user).equals(String.valueOf(sD_pk_user))){
 							current_relationship = relationList.get(i).getRelationship();
-							if(current_relationship==4)
-							{
-								mPartyDetails_apply.setText("已报名");
-								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_apply_layout_color);//已报名背景为绿色
-							}else
-							{
-								mPartyDetails_apply.setText("未报名");
+							if(current_relationship==4){
+								mPartyDetails_apply.setText("已参与");
 								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_noapply_layout_color);//已报名背景为淡灰色
+							}else{
+								mPartyDetails_apply.setText("报名");
+								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_apply_layout_color);//未报名背景为绿色
 							}
-							Log.e("PartyDetailsActivity","当前current_relationship==========" + current_relationship);
 						}
 					}
 					Log.e("PartyDetailsActivity", "当前partakeNum的数量"+ partakeNumList.size());
 					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"+ not_sayNum);
 					mPartyDetails_partake_number.setText(String.valueOf(partakeNumList.size()));// 显示参与数量
-//					mPartyDetails_did_not_say_number.setText(String.valueOf(not_sayNum));// 显示未表态数量
-					if(partakeNumList.size()>0)
-					{
+					if(partakeNumList.size()>0){
 						not_sayNum=PartyDetailsList.size()-partakeNumList.size();
-					}else
-					{
+					}else{
 						not_sayNum=PartyDetailsList.size();
 					}
 					mPartyDetails_did_not_say_number.setText(String.valueOf(not_sayNum));// 显示未表态数量
 					
 					
 					List<Party3> partylist=returnData.getParty();
-					if(partylist.size()>0)
-					{
+					if(partylist.size()>0){
 						Party3 readparty=partylist.get(0);
 						Integer pk_user=readparty.getFk_user();
 						//查找聚会创建者
@@ -409,23 +400,27 @@ public class PartyDetailsActivity extends Activity implements
 			mPartyDetails_partytime.setText(years + "年" + months + "月" + days + "日"
 					+ "  " + week + "  " + hour + ":" + minute);//显示聚会时间
 			mPartyDetails_partyaddress.setText(allParty.getLocation());//显示聚会地点
-
+			//付款方式
+			Integer pay_type=allParty.getPay_type();
+			if(1==pay_type){
+				mPartyDetails_partypayment.setText("免费");
+			}else {
+				mPartyDetails_partypayment.setText("预支付");
+			}
 			Double latitude = allParty.getLatitude();
 			Double longitude = allParty.getLongitude();
 			String location = allParty.getLocation();
-			if(latitude!=null&longitude!=null)
-			{
+			if(latitude!=null&longitude!=null){
 				mLat = latitude;
 				mLng = longitude;
 				edit_show.setText(location);
-			}else
-			{
+			}else{
 				mLat = 24.497572;
 				mLng = 118.17276;
 			}
+			edit_show.setText(location);
 		} else {
 			oneParty = (Party2) intent.getSerializableExtra(IConstant.OneParty);
-//			isRelationship = intent.getBooleanExtra(IConstant.IsRelationship, false);
 			SharedPreferences partydetails_sp=getSharedPreferences(IConstant.Schedule, 0);
 			pk_party_user = partydetails_sp.getInt(IConstant.Pk_party_user, 0);
 			Log.e("PartyDetailsActivity", "得到的第二个getPk_party_user========="+ pk_party_user);
@@ -447,17 +442,25 @@ public class PartyDetailsActivity extends Activity implements
 			mPartyDetails_partytime.setText(years + "年" + months + "月" + days + "日"
 					+ "  " + week + "  " + hour + ":" + minute);//显示聚会时间
 			mPartyDetails_partyaddress.setText(oneParty.getLocation());//显示聚会地点
-			
-			
+			//付款方式
+			Integer pay_type=oneParty.getPay_type();
+			if(1==pay_type){
+				mPartyDetails_partypayment.setText("免费");
+			}else {
+				mPartyDetails_partypayment.setText("预支付");
+			}
 			Double latitude = oneParty.getLatitude();
 			Double longitude = oneParty.getLongitude();
 			String location = oneParty.getLocation();
-			if(longitude!=null)
-			{
+			if(longitude!=null){
 				mLng = longitude;
-			}else
-			{
+			}else{
 				mLng=118.17276;
+			}
+			if(latitude!=null){
+				mLat = latitude;
+			}else {
+				mLat = 24.497572;
 			}
 			edit_show.setText(location);
 		}
@@ -502,8 +505,12 @@ public class PartyDetailsActivity extends Activity implements
 		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
 
 			public void onMapClick(LatLng point) {
-				startActivity(new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class));
+				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
+				intent.putExtra("mLat", mLat);
+				intent.putExtra("mLng", mLng);
+				Log.e("111", "mLat=="+mLat);
+				Log.e("111", "mLng=="+mLng);
+				startActivity(intent);
 			}
 
 			public boolean onMapPoiClick(MapPoi poi) {
@@ -512,14 +519,22 @@ public class PartyDetailsActivity extends Activity implements
 		});
 		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
 			public void onMapLongClick(LatLng point) {
-				startActivity(new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class));
+				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
+				intent.putExtra("mLat", mLat);
+				intent.putExtra("mLng", mLng);
+				Log.e("222", "mLat=="+mLat);
+				Log.e("222", "mLng=="+mLng);
+				startActivity(intent);
 			}
 		});
 		mBaiduMap.setOnMapDoubleClickListener(new OnMapDoubleClickListener() {
 			public void onMapDoubleClick(LatLng point) {
-				startActivity(new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class));
+				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
+				intent.putExtra("mLat", mLat);
+				intent.putExtra("mLng", mLng);
+				Log.e("333", "mLat=="+mLat);
+				Log.e("333", "mLng=="+mLng);
+				startActivity(intent);
 
 			}
 		});
@@ -539,9 +554,9 @@ public class PartyDetailsActivity extends Activity implements
 	private void initMap() {
 		// 添加地图标点
 		addOverlay(mLat, mLng, R.drawable.iconfont2);
+		Log.e("PartyDetailsActivity", "地图标点mLat="+mLat+"mLng="+mLng);
 		// 开启定位图层
-		mBaiduMap.setMyLocationEnabled(true);
-		mBaiduMap.setMyLocationEnabled(false);
+		mBaiduMap.setMyLocationEnabled(false);//是否显示当前位置默认图标
 		mLocClient = new LocationClient(this);
 		mLocClient.registerLocationListener(myListener);
 		LocationClientOption option = new LocationClientOption();
@@ -555,14 +570,10 @@ public class PartyDetailsActivity extends Activity implements
 
 	private void addOverlay(double lat, double lng, final int drawableRes) {
 		LatLng llA = new LatLng(lat, lng);
-
 		// 设置悬浮的图案
-		BitmapDescriptor bdA = BitmapDescriptorFactory
-				.fromResource(drawableRes);
+		BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(drawableRes);
 		mOverLayList.add(bdA);
-
-		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA)
-				.zIndex(0).draggable(true);
+		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA).zIndex(0).draggable(true);
 		mMarkerD = (Marker) mBaiduMap.addOverlay(ooA);
 	}
 
@@ -581,8 +592,7 @@ public class PartyDetailsActivity extends Activity implements
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",Toast.LENGTH_LONG).show();
 			return;
 		}
 	}

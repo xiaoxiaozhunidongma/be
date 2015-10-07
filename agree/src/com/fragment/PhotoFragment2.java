@@ -282,33 +282,34 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 				for (int i = 0; i < listphotos.size(); i++) {
 					String path = listphotos.get(i).getPath();
 					String pk_photo = listphotos.get(i).getPk_photo();
-					final String completeUrl=beginStr+pk_photo+endStr;
+					final String completeUrl=beginStr+pk_photo+endStr+"album-thumbnail";
 					Log.e("PhotoFragment2", "completeUrl"+completeUrl);
-//					if(!"".equals(path)){
-//						//??????????????????
-//						Log.e("PhotoFragment2", "所获取的的路径path============"+path);
-//						Bitmap convertToBitmap = null;
-//						try {
-//							convertToBitmap = Path2Bitmap.convertToBitmap(path);
-//						} catch (IOException e) {
-//							// TODO Auto-generated catch block
-//							e.printStackTrace();
-//						}
-//						if(convertToBitmap!=null){
-//							bitmaps.add(convertToBitmap);
-//						}else{
-//						Thread thread = new Thread(new Runnable() {
-//									
-//									@Override
-//									public void run() {
-//										Bitmap bitmap = PicUtil.getbitmap4path(completeUrl);
-//										Log.e("PhotoFragment2", "getbitmapAndwrite"+bitmap);
-//										bitmaps.add(bitmap);
-//									}
-//								});
-//						thread.start();
-//						}
-//					}
+					if(!"".equals(path)){
+						//??????????????????
+						Log.e("PhotoFragment2", "所获取的的路径path============"+path);
+						Bitmap convertToBitmap = null;
+						try {
+							convertToBitmap = Path2Bitmap.convertToBitmap(path);//多次decodefactory会OOM！
+						} catch (IOException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						if(convertToBitmap!=null){
+							bitmaps.add(convertToBitmap);
+							convertToBitmap.recycle();
+						}else{
+						Thread thread = new Thread(new Runnable() {
+									
+									@Override
+									public void run() {
+										Bitmap bitmap = PicUtil.getbitmap4path(completeUrl);
+										Log.e("PhotoFragment2", "getbitmapAndwrite"+bitmap);
+										bitmaps.add(bitmap);
+									}
+								});
+						thread.start();
+						}
+					}
 					
 				}
 				
@@ -351,20 +352,6 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 	}
 
 
-	@Override
-	public void onDestroyView() {
-		//获取浏览图片bitmap容器
-		for (int i = 0; i < bitmaps.size(); i++) {
-			Bitmap bitmap = bitmaps.get(i);
-			//回收内存
-			if(!bitmap.isRecycled()){
-				bitmap.recycle();
-			}
-		}
-		//先清空
-		bitmaps.clear();
-		super.onDestroyView();
-	}
 	
 	@Override
 	public void onStart() {

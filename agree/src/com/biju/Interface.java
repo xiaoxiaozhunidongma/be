@@ -18,6 +18,7 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.IDs;
+import com.BJ.javabean.MapAddParty;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.Party_User;
@@ -25,6 +26,7 @@ import com.BJ.javabean.Phone;
 import com.BJ.javabean.PhoneArray;
 import com.BJ.javabean.Photo;
 import com.BJ.javabean.StrPhoneArray;
+import com.BJ.javabean.StringAddParty;
 import com.BJ.javabean.StringCreGroup;
 import com.BJ.javabean.User;
 import com.BJ.javabean.User_Chat;
@@ -137,6 +139,25 @@ public class Interface {
 		params.put("request_type", interfaceType);
 		Log.e("Interface", "小组json:"+jsonObject.toString());
 		params.put("request_data",jsonObject.toString());
+		
+		return params;
+	}
+	public Map<String, String> packParamsAddParty(Object classObject , String interfaceType) {
+		
+		
+		Map map = Bean2Map.ConvertObjToMap(((MapAddParty)classObject).getParty());
+		JSONObject jsonObject=new JSONObject(map);
+		String remarkArray = ((MapAddParty)classObject).getRemarkArray();
+		StringAddParty stringAddParty = new StringAddParty(remarkArray, jsonObject);
+		
+		Log.e("Interface", "map------"+map);
+		Map<String, String> params=new HashMap<String, String>();
+		
+		Map map2 = Bean2Map.ConvertObjToMap(stringAddParty);
+		JSONObject jsonObject2=new JSONObject(map2);
+		params.put("request_type", interfaceType);
+		Log.e("Interface", "小组json:"+jsonObject2.toString());
+		params.put("request_data",jsonObject2.toString());
 		
 		return params;
 	}
@@ -891,8 +912,8 @@ public class Interface {
 		userCanclePartyPost(context,packParams(party, kUserCancleParty));
 	}
 	//增加聚会
-	public void addParty(Context context,Party party) {
-		addPartyPost(context,packParams(party, kAddParty));
+	public void addParty(Context context,MapAddParty mapAddParty) {
+		addPartyPost(context,packParamsAddParty(mapAddParty, kAddParty));
 	}
 	//读取聚会用户的参与信息
 	public void readPartyJoinMsg(Context context,Party party) {

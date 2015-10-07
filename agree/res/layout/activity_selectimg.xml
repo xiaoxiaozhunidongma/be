@@ -18,12 +18,12 @@
             android:id="@+id/noScrollgridview"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:horizontalSpacing="3dp"
+            android:horizontalSpacing="1dp"
             android:numColumns="4"
-            android:layout_margin="5.0dp"
             android:scrollbars="none"
-            android:verticalSpacing="5dp" >
+            android:verticalSpacing="1dp" >
         </GridView>
+
     </RelativeLayout>
 
     <RelativeLayout
