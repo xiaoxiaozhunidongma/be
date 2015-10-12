@@ -447,6 +447,10 @@
             android:name="com.biju.function.TeamSetting2Activity"
             android:label="@string/title_activity_team_setting2" >
         </activity>
+        <activity
+            android:name="com.biju.MyGalleryActivity"
+             >
+        </activity>
     </application>
 
 </manifest>

@@ -536,7 +536,7 @@ protected void initActionBar(String title) {
 //      startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.chat_activity_select_picture)),
 //          GALLERY_REQUEST);
 //    } else {
-//      Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+//      Intent intent = new Intent(Intent.ACTION_ _DOCUMENT);
 //      intent.addCategory(Intent.CATEGORY_OPENABLE);
 //      intent.setType("image/*");
 //      startActivityForResult(intent, GALLERY_KITKAT_REQUEST);

@@ -3,6 +3,8 @@ package com.biju;
 import java.io.File;
 import java.util.UUID;
 
+import leanchatlib.controller.ChatManager;
+import leanchatlib.utils.LogUtils;
 import android.app.Activity;
 import android.content.ContentUris;
 import android.content.Intent;
@@ -37,6 +39,9 @@ import com.BJ.utils.PicCutter;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.fragment.FriendsFragment;
 import com.fragment.HomeFragment;
 import com.fragment.PartyFragment;
@@ -51,6 +56,7 @@ public class MainActivity extends FragmentActivity  {
 			R.drawable.tab_setting_selector };
 
 	private String mFilePath;
+	private Integer SD_pk_user;
 
 //	@SuppressWarnings("unused")//滑动
 //	private GestureDetector mGestureDetector;
@@ -72,9 +78,29 @@ public class MainActivity extends FragmentActivity  {
 		for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
 			RefreshActivity.activList_3.get(i).finish();
 		}
-
+ 
 		initUI();// 初始化Tabhost
-//		initGesture();//滑动
+		SD_pk_user = SdPkUser.getsD_pk_user();
+		chatUserlogin();
+	}
+	
+	private void chatUserlogin() {
+		ChatManager chatManager = ChatManager.getInstance();
+		chatManager.setupManagerWithUserId(String.valueOf(SD_pk_user));
+		chatManager.openClient(new AVIMClientCallback() {
+
+
+
+			@Override
+			public void done(AVIMClient avimClient, AVIMException e) {
+				if (e != null) {
+					LogUtils.logException(e);
+					Log.e("MainActivity", "lean用户登录失败");
+				}else{
+					Log.e("MainActivity", "lean用户登录成功");
+				}
+			}
+		});
 	}
 
 	private void initUI() {

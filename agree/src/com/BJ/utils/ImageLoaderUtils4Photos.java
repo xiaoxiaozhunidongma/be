@@ -1,5 +1,6 @@
 package com.BJ.utils;
 
+import uk.co.senab.photoview.PhotoView;
 import android.content.Context;
 import android.widget.ImageView;
 
@@ -42,7 +43,7 @@ public class ImageLoaderUtils4Photos {
 				.showImageForEmptyUri(R.drawable.plugin_camera_no_pictures)
 				.showImageOnFail(R.drawable.ic_error)
 				.cacheInMemory(true)//是否缓存在内存中
-				.displayer(new RoundedBitmapDisplayer(10))//设置圆角
+//				.displayer(new RoundedBitmapDisplayer(10))//设置圆角
 				.cacheOnDisk(true)//是否缓存在SD卡中
 				.considerExifParams(true)
 				.bitmapConfig(Bitmap.Config.RGB_565)  //格式
@@ -51,6 +52,10 @@ public class ImageLoaderUtils4Photos {
 				.build();
 		
 				
+	}
+	public void LoadImage2(String url, ImageView imageView) {
+		//图片要设置大小！
+		ImageLoader.getInstance().displayImage(url, imageView, options, null);
 	}
 
 }
