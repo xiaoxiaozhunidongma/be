@@ -37,7 +37,7 @@ public class LimitLong {
 	        	  Log.e("", "result对象是否空"+result);
 	        	  Log.e("", "限制图长=="+width);
 	        	  Log.e("", "限制图高=="+height);
-	        	  bitmap.recycle();
+//	        	  bitmap.recycle();
 	          }
 	          catch(Exception e){
 	           return null;

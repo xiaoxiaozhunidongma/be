@@ -82,12 +82,12 @@ public class SlidingActivity extends Activity implements OnClickListener {
 			mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
 			break;
 		case 1:
-			mSlidingMenu_Team_Setting.setBackgroundResource(R.color.lightgray1);
+			mSlidingMenu_Team_Setting.setBackgroundResource(R.drawable.Sliding_choose_color);
 			mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
 			break;
 		case 2:
 			mSlidingMenu_Team_Setting.setBackgroundResource(R.color.white);
-			mSlidingMenu_requestcode.setBackgroundResource(R.color.lightgray1);
+			mSlidingMenu_requestcode.setBackgroundResource(R.drawable.Sliding_choose_color);
 			break;
 		default:
 			break;
@@ -307,7 +307,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 	private void SlidingMenu_requestcode() {
 		isClick=2;
 		mSlidingMenu_Team_Setting.setBackgroundResource(R.color.white);
-		mSlidingMenu_requestcode.setBackgroundResource(R.color.lightgray1);
+		mSlidingMenu_requestcode.setBackgroundResource(R.drawable.Sliding_choose_color);
 		if (!isCode) {
 			Group Group_teamsetting = new Group();
 			Group_teamsetting.setPk_group(pk_group);
@@ -317,7 +317,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 
 	private void SlidingMenu_Team_Setting() {
 		isClick=1;
-		mSlidingMenu_Team_Setting.setBackgroundResource(R.color.lightgray1);
+		mSlidingMenu_Team_Setting.setBackgroundResource(R.drawable.Sliding_choose_color);
 		mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
 		Intent intent = new Intent(SlidingActivity.this,TeamSetting2Activity.class);
 		intent.putExtra(IConstant.Group, pk_group);

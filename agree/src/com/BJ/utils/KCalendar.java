@@ -12,6 +12,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Gravity;
 import android.view.MotionEvent;
@@ -34,14 +35,15 @@ import android.widget.ViewFlipper;
 public class KCalendar extends ViewFlipper implements
 		android.view.GestureDetector.OnGestureListener {
 	public static final int COLOR_BG_WEEK_TITLE = Color.parseColor("#ffeeeeee"); // 星期标题背景颜色
-	public static final int COLOR_TX_WEEK_TITLE = Color.parseColor("#ffcc3333"); // 星期标题文字颜色
+	public static final int COLOR_TX_WEEK_TITLE = Color.parseColor("#c9c9c9"); // 星期标题文字颜色ffcc3333
 	public static final int COLOR_TX_THIS_MONTH_DAY = Color
-			.parseColor("#aa564b4b"); // 当前月日历数字颜色
+			.parseColor("#ff000000"); // 当前月日历数字颜色aa564b4b
 	public static final int COLOR_TX_OTHER_MONTH_DAY = Color
 			.parseColor("#ffcccccc"); // 其他月日历数字颜色
 	public static final int COLOR_TX_THIS_DAY = Color.parseColor("#ff008000"); // 当天日历数字颜色
 	public static final int COLOR_BG_THIS_DAY = Color.parseColor("#ffcccccc"); // 当天日历背景颜色
 	public static final int COLOR_BG_CALENDAR = Color.parseColor("#ffeeeeee"); // 日历背景色
+	public static final int COLOR_DAY_CALENDAR = Color.parseColor("#ffffffff"); // 当天时间字体颜色
 
 	private GestureDetector gd; // 手势监听器
 	private Animation push_left_in; // 动画-左进
@@ -57,7 +59,7 @@ public class KCalendar extends ViewFlipper implements
 	private OnCalendarClickListener onCalendarClickListener; // 日历翻页回调
 	private OnCalendarDateChangedListener onCalendarDateChangedListener; // 日历点击回调
 
-	private String[] weekday = new String[] { "日", "一", "二", "三", "四", "五", "六" }; // 星期标题
+	private String[] weekday = new String[] { "周日", "周一", "周二", "周三", "周四", "周五", "周六" }; // 星期标题
 
 	private int calendarYear; // 日历年份
 	private int calendarMonth; // 日历月份
@@ -131,11 +133,10 @@ public class KCalendar extends ViewFlipper implements
 		LinearLayout title = new LinearLayout(getContext());
 		title.setBackgroundColor(COLOR_BG_WEEK_TITLE);
 		title.setOrientation(LinearLayout.HORIZONTAL);
-		LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(-1, 0,
-				0.5f);
+		LinearLayout.LayoutParams layout = new LinearLayout.LayoutParams(-1, 0,0.5f);
 		Resources res = getResources();
 		tb = res.getDimension(R.dimen.historyscore_tb);
-		layout.setMargins(0, 0, 0, (int) (tb * 1.2));
+		layout.setMargins(0, 0, 0, (int) (tb * 0.5));//1.2
 		title.setLayoutParams(layout);
 		oneCalendar.addView(title);
 
@@ -152,22 +153,24 @@ public class KCalendar extends ViewFlipper implements
 		// 添加日期布局
 		LinearLayout content = new LinearLayout(getContext());
 		content.setOrientation(LinearLayout.VERTICAL);
-		content.setLayoutParams(new LinearLayout.LayoutParams(-1, 0, 7f));
+		content.setLayoutParams(new LinearLayout.LayoutParams(-1, 90,5f));//设置每个格大小7
 		oneCalendar.addView(content);
 
+//		int px2dip = DensityUtil.px2dip(getContext(), 90);//查看高度
+//		Log.e("KCalendar", "============="+content.getHeight());
+//		Log.e("KCalendar", "dp的高度============="+px2dip);
+		
 		// 添加日期TextView
 		for (int i = 0; i < ROWS_TOTAL; i++) {
 			LinearLayout row = new LinearLayout(getContext());
 			row.setOrientation(LinearLayout.HORIZONTAL);
-			row.setLayoutParams(new LinearLayout.LayoutParams(
-					LayoutParams.MATCH_PARENT, 0, 1));
+			row.setLayoutParams(new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, 0, 1));
 			content.addView(row);
 			// 绘制日历上的列
 			for (int j = 0; j < COLS_TOTAL; j++) {
 				RelativeLayout col = new RelativeLayout(getContext());
-				col.setLayoutParams(new LinearLayout.LayoutParams(0,
-						LayoutParams.MATCH_PARENT, 1));
-				col.setBackgroundResource(R.drawable.calendar_day_bg);
+				col.setLayoutParams(new LinearLayout.LayoutParams(0,LayoutParams.MATCH_PARENT, 1));
+//				col.setBackgroundResource(R.drawable.calendar_day_bg);
 				row.addView(col);
 				// 给每一个日子加上监听
 				col.setOnClickListener(new OnClickListener() {
@@ -253,6 +256,7 @@ public class KCalendar extends ViewFlipper implements
 							view.setGravity(Gravity.CENTER);
 							group.addView(view);
 						}
+						view.setTextSize(15);
 						view.setText(Integer.toString(lastMonthDay));
 						view.setTextColor(COLOR_TX_OTHER_MONTH_DAY);
 						dates[0][k] = format(new Date(year, month, lastMonthDay));
@@ -276,7 +280,7 @@ public class KCalendar extends ViewFlipper implements
 						view = (TextView) group.getChildAt(0);
 					} else {
 						LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-								-1, -1);
+								70, 70);
 						view = new TextView(getContext());
 						view.setLayoutParams(params);
 						view.setGravity(Gravity.CENTER);
@@ -288,13 +292,14 @@ public class KCalendar extends ViewFlipper implements
 						dates[i][j] = format(new Date(calendarday.getYear(),
 								calendarday.getMonth(), day));
 						view.setText(Integer.toString(day));
+						view.setTextSize(15);
 						// 当天
 						if (thisday.getDate() == day
 								&& thisday.getMonth() == calendarday.getMonth()
 								&& thisday.getYear() == calendarday.getYear()) {
-							view.setText("今天");
-							view.setTextColor(COLOR_TX_WEEK_TITLE);
-							view.setBackgroundColor(Color.TRANSPARENT);
+//							view.setText("今天");
+							view.setTextColor(COLOR_DAY_CALENDAR);//设置字体颜色为白色
+							view.setBackgroundResource(R.drawable.yuan_gray_1);//今天日期设置背景颜色Color.TRANSPARENT
 						} else {
 							view.setTextColor(COLOR_TX_THIS_MONTH_DAY);
 							view.setBackgroundColor(Color.TRANSPARENT);

@@ -25,6 +25,8 @@ public interface IConstant {
 	public String ParTake = "partake";
 	public String UserAllUoreParty = "userAllmoreparty";
 	public String MoreParty = "moreparty";
+//	public String CommentsList_partake="commentslist_partake";
+//	public String CommentsList_not_say="commentsList_not_say";
 
 	// 使用在PartyDetailsActivity类，ScheduleFragment类，GroupActivity类的sp中
 	public String IsPartyDetails_ = "isPartyDetails_";
@@ -86,4 +88,5 @@ public interface IConstant {
 	//Sliding界面
 	public String SlidingClick="slidingclick";
 	public String Click="click";
+	
 }

@@ -359,10 +359,12 @@
     <string name="requestcode2_add_team">加入小组</string>
     <string name="title_activity_request_code3">RequestCode3Activity</string>
     <string name="title_activity_sliding">SlidingActivity</string>
-	<!--新建小组界面  -->
-	 <string name="NewTeam_title_right">完成</string>
+    <!-- 新建小组界面 -->
+    <string name="NewTeam_title_right">完成</string>
     <string name="NewTeam_title_left">返回</string>
     <string name="NewTeam_prompt">小组封面</string>
     <string name="NewTeam_hint">小组名称</string>
     <string name="NewTeam_prompt_1">邀请好友加入小组</string>
+    <string name="title_activity_add_friends3">AddFriends3Activity</string>
+
 </resources>

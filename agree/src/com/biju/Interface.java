@@ -42,7 +42,7 @@ import com.github.volley_examples.app.VolleyListenner;
 public class Interface {
 	
 //	String url="http://120.25.218.3/webroot/sr_interface_android.php";
-	String url="http://120.26.118.226/app/app_interface/sr_interface_android.php";
+	String url="http://120.26.118.226/app/app_interface/sr_interface.php";
 	
 	private static Interface Thisinterface=new Interface();
 	private Interface(){
@@ -52,6 +52,8 @@ public class Interface {
 		return Thisinterface;
 	}
 	
+	//我的所有好友
+	String KMyAllfriends = "54";
 	//微信登录
 	String KWeixinLogin = "1102";
 	//注册用户
@@ -264,6 +266,22 @@ public class Interface {
 //			}
 //		});	
 //	}
+	//我的所有好友
+	private void MyAllfriendPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError42(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone42(response);
+			}
+		});	
+	}
 	//微信登录
 	private void weixinLoginPost(Context context,Map<String, String> params) {
 		
@@ -821,6 +839,10 @@ public class Interface {
 //		volleyPost(context,per); 
 //	}
 	
+	//我的所有好友
+	public void readMyAllfriend(Context context,User user) {
+		MyAllfriendPost(context,packParams(user, KMyAllfriends));
+	}
 	//微信登录
 	public void weixinLogin(Context context,User user) {
 		weixinLoginPost(context,packParams(user, KWeixinLogin));
@@ -992,6 +1014,8 @@ public class Interface {
 	//接口部分
 //	private static UserInterface listener;
 	//微信登录
+	private static MyAllfriendsListenner myAllfriendsListenner;
+	//微信登录
 	private static weixinLoginListenner weixinloginListenner;
 	
 	private static regNewAccountListenner newAccountListenner;
@@ -1035,6 +1059,11 @@ public class Interface {
 //		void success(String A);
 //		void defail(Object B);
 //	}
+	//我的所有好友
+	public interface MyAllfriendsListenner{
+		void success(String A);
+		void defail(Object B);
+	}
 	//微信登录
 	public interface weixinLoginListenner{
 		void success(String A);
@@ -1187,6 +1216,10 @@ public class Interface {
 //	public void setPostListener(UserInterface listener){
 //		this.listener=listener;
 //	}
+	//我的所有好友
+	public void setPostListener(MyAllfriendsListenner listener){
+		this.myAllfriendsListenner=listener;
+	}
 	//微信登录
 	public void setPostListener(weixinLoginListenner listener){
 		this.weixinloginListenner=listener;
@@ -1600,6 +1633,13 @@ public class Interface {
 	}
 	public static void requestError38(VolleyError error) {
 		weixinloginListenner.defail(error);
+	}
+	//我的所有好友
+	public static void requestDone42(String theObject) {
+		myAllfriendsListenner.success(theObject);
+	}
+	public static void requestError42(VolleyError error) {
+		myAllfriendsListenner.defail(error);
 	}
 	
 }

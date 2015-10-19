@@ -1,5 +1,6 @@
 package com.BJ.utils;
 
+import uk.co.senab.photoview.PhotoView;
 import android.content.Context;
 import android.widget.ImageView;
 
@@ -51,6 +52,10 @@ public class ImageLoaderUtils4Photos {
 				.build();
 		
 				
+	}
+	public void LoadImage2(String url, ImageView imageView) {
+		//图片要设置大小！
+		ImageLoader.getInstance().displayImage(url, imageView, options, null);
 	}
 
 }

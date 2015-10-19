@@ -121,6 +121,15 @@
         android:label="@string/app_name"
         android:theme="@style/AppTheme" >
 
+        <!-- 数据库 -->
+        <!--
+        <meta-data
+            android:name="AA_DB_NAME"
+            android:value="group_team.db" />
+        <meta-data
+            android:name="AA_DB_VERSION"
+            android:value="3" />
+        -->
 
 
         <!-- 百度签名 -->
@@ -156,10 +165,6 @@
         </activity>
         <activity
             android:name="com.biju.function.RequestCodeActivity"
-            android:label="@string/title_activity_request_code" >
-        </activity>
-        <activity
-            android:name="com.biju.function.RequestCode2Activity"
             android:label="@string/title_activity_request_code" >
         </activity>
         <activity
@@ -408,10 +413,6 @@
             android:label="@string/title_activity_contact_search"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
-        <activity
-            android:name="com.biju.function.TeamSetting2Activity"
-            android:label="@string/title_activity_team_setting2" >
-        </activity>
         <!-- leanchat -->
         <service
             android:name="com.avos.avoscloud.PushService"
@@ -442,6 +443,16 @@
             android:name="com.biju.function.SlidingActivity"
             android:label="@string/title_activity_sliding"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.biju.function.TeamSetting2Activity"
+            android:label="@string/title_activity_team_setting2" >
+        </activity>
+        <activity android:name="com.biju.MyGalleryActivity" >
+        </activity>
+        <activity
+            android:name="com.biju.AddFriends3Activity"
+            android:label="@string/title_activity_add_friends3" >
         </activity>
     </application>
 

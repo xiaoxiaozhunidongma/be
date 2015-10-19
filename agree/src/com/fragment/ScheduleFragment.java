@@ -153,7 +153,19 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 						{
 							Toast.makeText(getActivity(), "已结点击过了", Toast.LENGTH_SHORT).show();
 						}
-					} else {
+					}else if(relatonship==0)
+					{
+						Log.e("ScheduleFragment", "进入到relatonship为0的地方==========");
+						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
+						intent.putExtra(IConstant.OneParty, scheduleparty);
+						startActivity(intent);
+						
+						Party_User party_user = new Party_User();
+						party_user.setPk_party_user(scheduleparty.getPk_party_user());
+						party_user.setRelationship(3);
+						party_user.setType(1);
+						scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
+					}else {
 						Log.e("ScheduleFragment", "进入到relatonship不为null的地方==========");
 						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
 						intent.putExtra(IConstant.OneParty, scheduleparty);
@@ -264,21 +276,32 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					holder.Party_item_inNum.setText(""+inNum);
 				}
 				if (ralationship == null) {
+					holder.Party_item_background.setBackgroundResource(R.drawable.white);//如果没有参与聚会则背景为白色
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
 					holder.Party_item_redprompt.setVisibility(View.VISIBLE);
-				} else if(ralationship ==0){
+				} else if(ralationship == 0)
+				{
+					holder.Party_item_redprompt.setVisibility(View.VISIBLE);
+					holder.Party_item_background.setBackgroundResource(R.drawable.white);//如果没有参与聚会则背景为白色
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
-				}else if(ralationship ==1)
+				}else if(ralationship ==3){
+					holder.Party_item_redprompt.setVisibility(View.GONE);
+					holder.Party_item_background.setBackgroundResource(R.drawable.white);//如果没有参与聚会则背景为白色
+					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
+					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
+					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
+					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
+				}else if(ralationship ==4)
 				{
+					holder.Party_item_redprompt.setVisibility(View.GONE);
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_partake_address_color));//参与后地址颜色深灰
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_partake_nickname_color));//参与后名称颜色黑色
-					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
 					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.white));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.white));
@@ -369,7 +392,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 //					SdPkUser.setGetPk_party_user(pk_party_user);
 					Party_User party_user = new Party_User();
 					party_user.setPk_party_user(pk_party_user);
-					party_user.setRelationship(0);
+					party_user.setRelationship(3);
 					party_user.setType(1);
 					scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
 				}

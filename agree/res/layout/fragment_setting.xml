@@ -144,7 +144,7 @@
                         android:layout_marginTop="25.0dp"
                         android:text="账户"
                         android:textColor="@drawable/setting_prompt_color"
-                        android:textSize="@dimen/setting_size" />
+                        android:textSize="@dimen/setting_prompt_size_1" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -478,7 +478,7 @@
                         android:layout_marginTop="25.0dp"
                         android:text="关于"
                         android:textColor="@drawable/setting_prompt_color"
-                        android:textSize="@dimen/setting_size" />
+                        android:textSize="@dimen/setting_prompt_size_1" />
 
                     <TextView
                         android:id="@+id/textView20"
@@ -585,7 +585,7 @@
                         android:layout_marginTop="25.0dp"
                         android:text="其他"
                         android:textColor="@drawable/setting_prompt_color"
-                        android:textSize="@dimen/setting_size" />
+                        android:textSize="@dimen/setting_prompt_size_1" />
 
                     <TextView
                         android:id="@+id/textView26"

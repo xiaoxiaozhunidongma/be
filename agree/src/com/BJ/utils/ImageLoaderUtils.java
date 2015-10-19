@@ -87,7 +87,7 @@ public class ImageLoaderUtils {
 		optionsCricular = new DisplayImageOptions.Builder()
 				.showImageOnLoading(R.drawable.login_1)
 				.showImageForEmptyUri(R.drawable.login_1)
-				.showImageOnFail(R.drawable.ic_error)
+				.showImageOnFail(R.drawable.login_1)
 				.cacheInMemory(true)
 				.displayer(new CircleBitmapDisplayer())//т╡пн
 				.cacheOnDisk(true)

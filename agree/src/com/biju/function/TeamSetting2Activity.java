@@ -223,6 +223,11 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 						SdPkUser.setRefreshTeam(true);//有对小组进行修改过后传true
 						Intent intent=new Intent(TeamSetting2Activity.this, MainActivity.class);
 						startActivity(intent);
+						//退出当前小组后，在Sliding中的点击效果也要保存,而且重新读取小组中的所有用户
+						SharedPreferences Sliding_sp=getSharedPreferences(IConstant.SlidingClick, 0);
+						Editor editor=Sliding_sp.edit();
+						editor.putInt(IConstant.Click, 0);
+						editor.commit();
 					}
 				} else {
 					Teamupdateback teamupdateback = GsonUtils.parseJson(A,Teamupdateback.class);

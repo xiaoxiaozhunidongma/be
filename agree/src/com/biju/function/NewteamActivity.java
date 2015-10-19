@@ -6,12 +6,15 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
-import java.util.List;
+import java.util.HashMap;
 import java.util.Timer;
 import java.util.TimerTask;
+import java.util.List;
 import java.util.UUID;
 
+import leanchatlib.controller.ChatManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -21,6 +24,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -38,6 +42,9 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Newteamback;
+import com.BJ.javabean.ReadUserAllFriends;
+import com.BJ.utils.ByteOrBitmap;
+import com.BJ.utils.LimitLong;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.RequestCodeback;
 import com.BJ.javabean.User;
@@ -52,12 +59,21 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSData;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.createGroupListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
 import com.biju.APP.MyApplication;
+import com.example.testleabcloud.ChatActivityLean;
 import com.github.volley_examples.utils.GsonUtils;
 
 @SuppressLint("SimpleDateFormat")
@@ -87,11 +103,14 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private String newteam_name;
 	private String sDpath;
 	private Group group;
-	private Integer pk_group;
 	private Integer sD_pk_user;
+	private Integer pk_group;
 	private OSSData ossData;
 	private OSSService ossService;
 	private OSSBucket sampleBucket;
+	private byte[] bitmap2Bytes;
+	private String uUid;
+	private boolean isreaduser;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -138,9 +157,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		ReadTeam(sD_pk_user);
 	}
 
-	private boolean isreaduser;
-	private byte[] bitmap2Bytes;
-	private String uUid;
 
 	private void ReadTeam(int pk_user) {
 		cregrouInter = Interface.getInstance();
@@ -247,6 +263,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		case R.id.NewTeam_OK_layout:
 		case R.id.NewTeam_OK:
 			NewTeam_OK();
+			sendMessageToJerryFromTom();
 			break;
 		case R.id.NewTeam_head:
 		case R.id.NewTeam_tv_head:
@@ -256,6 +273,55 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		}
 	}
 
+
+
+		public void sendMessageToJerryFromTom() {
+			 final ArrayList<String> strings=new ArrayList<String>();
+			    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
+				Integer SD_pk_user = SdPkUser.getsD_pk_user();
+				strings.add(String.valueOf(SD_pk_user));//添加当前用户
+			    AVIMClient curuser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
+			    // 与服务器连接
+			    curuser.open(new AVIMClientCallback() {
+			      @Override
+			      public void done(AVIMClient client, AVIMException e) {
+			        if (e == null) {
+			          // 创建与 Jerry，Bob,Harry,William 之间的会话
+			            HashMap<String,Object> attr = new HashMap<String,Object>();
+			            
+			            attr.put("type",1);//1是群聊 ，3是聊天室
+
+			          client.createConversation(strings, "Tom & Jerry & friedns", attr,
+			              new AVIMConversationCreatedCallback() {
+
+			                @Override
+			                public void done(AVIMConversation conversation, AVIMException e) {
+			                  if (e == null) {
+			                	  Log.e("NewteamActivity", "对话创建成功！");
+			          			final ChatManager chatManager = ChatManager.getInstance();
+									 chatManager.registerConversation(conversation);//注册对话
+			                	  group.setEm_id(conversation.getConversationId());//Em_id赋值传服务器
+			              		//上传OSS
+			              		OSSupload(ossData, bitmap2Bytes,uUid);
+//			                    AVIMTextMessage msg = new AVIMTextMessage();
+//			                    msg.setText("你们在哪儿？");
+//			                    // 发送消息
+//			                    conversation.sendMessage(msg, new AVIMConversationCallback() {
+//
+//			                      @Override
+//			                      public void done(AVIMException e) {
+//			                        if (e == null) {
+//			                          Log.d("Tom & Jerry", "发送成功！");
+//			                        }
+//			                      }
+//			                    });
+			                  }
+			                }
+			              });
+			        }
+			      }
+			    });
+			  }
 	private void NewTeam_head() {
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
@@ -275,12 +341,10 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		group.setName(newteam_name);
 		group.setLast_post_time(format2);
 		
-		//上传OSS
-		OSSupload(ossData, bitmap2Bytes,uUid);
+//		//上传OSS
+//		OSSupload(ossData, bitmap2Bytes,uUid);
 
 	}
-
-
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != Activity.RESULT_OK || data == null)
@@ -319,7 +383,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 			mNewTeam_tv_head.setVisibility(View.GONE);// 显示小组头像选择
 			mNewteam_head.setVisibility(View.VISIBLE);
-			mNewTeam_tv_head.setVisibility(View.VISIBLE);
 			mNewteam_head.setImageBitmap(centerSquareScaleBitmap);
 		} catch (Exception e) {
 			Log.e("Demo", "choose file error!", e);
@@ -333,8 +396,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		ossData.uploadInBackground(new SaveCallback() {
 			@Override
 			public void onSuccess(String objectKey) {
-				Log.e("", "图片上传成功");
-				Log.e("Main", "objectKey==" + objectKey);
+				Log.e("NewteamActivity", "图片上传成功");
+				Log.e("NewteamActivity", "objectKey==" + objectKey);
 				// list.add("http://picstyle.beagree.com/"+objectKey);
 				runOnUiThread(new Runnable() {
 					public void run() {
@@ -359,7 +422,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
 				// Log.e("上传进度", "上传进度: " + p + "%");
-			}
+		    }
 
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {

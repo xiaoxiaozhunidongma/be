@@ -5,7 +5,7 @@
 		>
 		<item
 				android:state_pressed="true"
-				android:drawable="@drawable/calendar_last_focused" />
+				android:drawable="@drawable/next_left" />
 		<item
-				android:drawable="@drawable/calendar_last_unfocused" />
+				android:drawable="@drawable/next_left" />
 </selector>
