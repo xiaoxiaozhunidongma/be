@@ -2,6 +2,7 @@ package com.biju;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import org.json.JSONArray;
@@ -19,6 +20,7 @@ import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.IDs;
 import com.BJ.javabean.MapAddParty;
+import com.BJ.javabean.MultiUserModle;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.Party_User;
@@ -52,6 +54,8 @@ public class Interface {
 		return Thisinterface;
 	}
 	
+	//查询多个用户
+	String KMultiUsers = "120";
 	//我的所有好友
 	String KMyAllfriends = "54";
 	//微信登录
@@ -233,6 +237,26 @@ public class Interface {
 		
 		return params;
 	}
+	
+	private MultiUserModle multiUserModle;
+	public Map<String, String> packParamsMulti(List<String> list , String interfaceType) {
+		try {
+			JSONArray array=new JSONArray(list.toString());
+			multiUserModle = new MultiUserModle(array);
+		} catch (JSONException e) {
+			e.printStackTrace();
+		}
+		
+		Map map = Bean2Map.ConvertObjToMap(multiUserModle);
+		Log.e("InterfaceMulti", "map------"+map);
+		JSONObject jsonObject=new JSONObject(map);
+		Map<String, String> params=new HashMap<String, String>();
+		params.put("request_type", interfaceType);
+		Log.e("InterfaceMulti", "小组json:"+jsonObject.toString().replace("\\", ""));
+		params.put("request_data",jsonObject.toString().replace("\\", ""));
+		
+		return params;
+	}
 	//test新建小组
 	public Map<String, String> packParams2(Object classObject , String interfaceType) {
 		Map map = Bean2Map.ConvertObjToMap(classObject);
@@ -266,6 +290,22 @@ public class Interface {
 //			}
 //		});	
 //	}
+	//查询多个用户
+	private void MultiUserPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError43(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone43(response);
+			}
+		});	
+	}
 	//我的所有好友
 	private void MyAllfriendPost(Context context,Map<String, String> params) {
 		
@@ -839,6 +879,10 @@ public class Interface {
 //		volleyPost(context,per); 
 //	}
 	
+	//查询多个用户
+	public void findMultiUsers(Context context,List<String> list) {
+		MultiUserPost(context,packParamsMulti(list, KMultiUsers));
+	}
 	//我的所有好友
 	public void readMyAllfriend(Context context,User user) {
 		MyAllfriendPost(context,packParams(user, KMyAllfriends));
@@ -1013,7 +1057,9 @@ public class Interface {
 	}
 	//接口部分
 //	private static UserInterface listener;
-	//微信登录
+	//我的所有好友
+	private static FindMultiUserListenner multiUserListenner;
+	//我的所有好友
 	private static MyAllfriendsListenner myAllfriendsListenner;
 	//微信登录
 	private static weixinLoginListenner weixinloginListenner;
@@ -1054,11 +1100,17 @@ public class Interface {
 	private static feedBackListenner backListenner;
 	private static getPicSignListenner signListenner;
 
+
 	
 //	public interface UserInterface{
 //		void success(String A);
 //		void defail(Object B);
 //	}
+	//查询多个用户
+	public interface FindMultiUserListenner{
+		void success(String A);
+		void defail(Object B);
+	}
 	//我的所有好友
 	public interface MyAllfriendsListenner{
 		void success(String A);
@@ -1216,6 +1268,10 @@ public class Interface {
 //	public void setPostListener(UserInterface listener){
 //		this.listener=listener;
 //	}
+	//查询多个用户
+	public void setPostListener(FindMultiUserListenner listener){
+		this.multiUserListenner=listener;
+	}
 	//我的所有好友
 	public void setPostListener(MyAllfriendsListenner listener){
 		this.myAllfriendsListenner=listener;
@@ -1640,6 +1696,13 @@ public class Interface {
 	}
 	public static void requestError42(VolleyError error) {
 		myAllfriendsListenner.defail(error);
+	}
+	//查询多个用户
+	public static void requestDone43(String theObject) {
+		multiUserListenner.success(theObject);
+	}
+	public static void requestError43(VolleyError error) {
+		multiUserListenner.defail(error);
 	}
 	
 }

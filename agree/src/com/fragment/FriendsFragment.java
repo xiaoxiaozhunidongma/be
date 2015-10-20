@@ -47,6 +47,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.biju.AddFriends3Activity;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.Interface.FindMultiUserListenner;
 import com.biju.Interface.readFriendListenner;
 import com.biju.R;
 import com.biju.function.AddFriends2Activity;
@@ -125,23 +126,46 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 	private void initFindUserlistener() {
 		instance = Interface.getInstance();
-		instance.setPostListener(new findUserListenner() {
+//		instance.setPostListener(new findUserListenner() {
+//			
+//			@Override
+//			public void success(String A) {
+//				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,
+//						Loginback.class);
+//				int statusmsg = findfriends_statusmsg.getStatusMsg();
+//				if (statusmsg == 1) {
+//					// 取第一个Users[0]
+//					List<User> Users = findfriends_statusmsg.getReturnData();
+//					if (Users.size() >= 1) {
+//						User user = Users.get(0);
+//						String avatar_path = beginStr+user.getAvatar_path()+endStr+"mini-avatar";
+//						FromAvaUrlMap.put(user.getPk_user(), avatar_path);
+//					}
+//				} 
+//
+//			}
+//			
+//			@Override
+//			public void defail(Object B) {
+//				
+//			}
+//		});
+		instance.setPostListener(new FindMultiUserListenner() {
 			
 			@Override
 			public void success(String A) {
+				Log.e("FriendsFragment", "查询多个用户返回成功！！！===="+ A);
 				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,
 						Loginback.class);
 				int statusmsg = findfriends_statusmsg.getStatusMsg();
 				if (statusmsg == 1) {
-					// 取第一个Users[0]
-					List<User> Users = findfriends_statusmsg.getReturnData();
-					if (Users.size() >= 1) {
-						User user = Users.get(0);
-						String avatar_path = beginStr+user.getAvatar_path()+endStr+"mini-avatar";
-						FromAvaUrlMap.put(user.getPk_user(), avatar_path);
+				List<User> Users = findfriends_statusmsg.getReturnData();
+					for (int i = 0; i < Users.size(); i++) {
+					User user = Users.get(i);
+					String avatar_path = beginStr+user.getAvatar_path()+endStr+"mini-avatar";
+					FromAvaUrlMap.put(user.getPk_user(), avatar_path);
 					}
-				} 
-
+				}
 			}
 			
 			@Override
@@ -266,7 +290,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		      query.containsMembers(members);
 //		      query.whereContains("m", String.valueOf(SD_pk_user));
 		      query.whereEqualTo("attr.type", 3);
-		      query.setQueryPolicy(CachePolicy.IGNORE_CACHE);//设置缓存过期！！
+		      query.setQueryPolicy(CachePolicy.IGNORE_CACHE);        //设置缓存过期！！ ！！！
+		      
 //		      query.limit(50);
 
 		      query.findInBackground(new AVIMConversationQueryCallback(){
@@ -470,12 +495,13 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		
 		List<String> members = avimConversation.getMembers();
 			String convName=avimConversation.getName();
-			for (int i = 0; i < members.size(); i++) {
-				//查找用户
-				User user = new User();
-				user.setPhone(members.get(i));
-				instance.findUser(getActivity(),user);
-			}
+//			for (int i = 0; i < members.size(); i++) {
+//				//查找用户
+//				User user = new User();
+//				user.setPhone(members.get(i));
+//				instance.findUser(getActivity(),user);
+//			}
+			instance.findMultiUsers(getActivity(), members);
 			
   			final ChatManager chatManager = ChatManager.getInstance();
 				 chatManager.registerConversation(avimConversation);//注册对话

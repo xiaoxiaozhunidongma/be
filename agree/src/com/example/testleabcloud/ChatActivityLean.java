@@ -100,7 +100,7 @@ public class ChatActivityLean extends Activity implements OnClickListener, ChatA
   protected RefreshableView refreshableView;
   protected ListView messageListView;
   protected RecordButton recordBtn;
-  protected String localCameraPath = PathUtils.getPicturePathByCurrentTime();
+  protected String localCameraPath = PathUtils.getPicturePathByCurrentTime()+"/zzy/pictures";
   protected View addCameraBtn;
 private RelativeLayout picture_source_rela;
 private Button send;
