@@ -241,7 +241,7 @@ public class ChatManager extends AVIMClientEventHandler {
    * @param userId
    * @param callback
    */
-  public void fetchConversationWithUserId(String userId, final AVIMConversationCreatedCallback callback) {
+	public void fetchConversationWithUserId(String userId, final AVIMConversationCreatedCallback callback) {
     final List<String> members = new ArrayList<String>();
     members.add(userId);
     members.add(selfId);
@@ -268,6 +268,33 @@ public class ChatManager extends AVIMClientEventHandler {
         }
     });
   }
+	//检查小组群对话是否存在
+	public void fetchConversationWithGroup( final AVIMConversationCreatedCallback callback) {
+		final List<String> members = new ArrayList<String>();
+		members.add(selfId);
+		AVIMConversationQuery query = imClient.getQuery();
+		query.withMembers(members);
+		query.whereEqualTo(ConversationType.ATTR_TYPE_KEY, ConversationType.Group.getValue());
+		query.orderByDescending(KEY_UPDATED_AT);
+		query.limit(1);
+		query.findInBackground(new AVIMConversationQueryCallback() {
+			
+			@Override
+			public void done(List<AVIMConversation> conversations, AVIMException e) {
+				if (e != null) {
+					callback.done(null, e);
+				} else {
+					if (conversations.size() > 0) {
+						callback.done(conversations.get(0), null);
+					} else {
+						Map<String, Object> attrs = new HashMap<String, Object>();
+						attrs.put(ConversationType.TYPE_KEY, ConversationType.Group.getValue());
+						imClient.createConversation(members, attrs, callback);
+					}
+				}
+			}
+		});
+	}
 
   /**
    * 获取 AVIMConversationQuery，用来查询对话

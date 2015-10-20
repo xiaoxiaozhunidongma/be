@@ -156,6 +156,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 						User readuser = Users.get(0);
 						String mAvatar_path = readuser.getAvatar_path();
 						CurrUserUrl = beginStr + mAvatar_path + endStr+"mini-avatar";
+						//µÇÂ¼ÁÄÌì
 						chatUserlogin();
 					}
 				}

@@ -12,6 +12,7 @@ import android.view.Menu;
 import android.view.Window;
 
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.R;
@@ -43,7 +44,7 @@ public class PhotoViewActivity extends Activity {
 //				photoView.setImageResource(R.drawable.ic_error);
 //		ImageLoaderUtils.getInstance().LoadImageSquare(this, FileUrl, photoView);
 		//可能是裁剪后的图
-		homeImageLoaderUtils.getInstance().LoadImage(this, FileUrl, photoView);
+		ImageLoaderUtils4Photos.getInstance().LoadImage(this, FileUrl, photoView);
 		}
 	}
 

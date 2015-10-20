@@ -65,6 +65,7 @@ import com.biju.APP.MyApplication;
 import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.readPartyPhotosListenner;
 import com.biju.Interface.uploadingPhotoListenner;
+import com.biju.MyGalleryActivity;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.github.volley_examples.utils.GsonUtils;
@@ -214,6 +215,11 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 						UUID randomUUID = UUID.randomUUID();
 						uUid = randomUUID.toString();
 						OSSupload(ossData, bitmap2Bytes, uUid,mFilePath);
+						
+						byte[] bitmap2Bytes2 = ByteOrBitmap.Bitmap2Bytes(convertToBitmap);//原图
+						UUID randomUUID2 = UUID.randomUUID();
+						String uUid2 = randomUUID2.toString();
+						OSSuploadFull(ossData, bitmap2Bytes2, uUid2, mFilePath);
 					}else{
 						hasloaded=false;//默认没有上传
 						for (int i = 0; i < listphotos.size(); i++) {
@@ -242,6 +248,11 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 							UUID randomUUID = UUID.randomUUID();
 							uUid = randomUUID.toString();
 							OSSupload(ossData, bitmap2Bytes, uUid,mFilePath);
+							
+							byte[] bitmap2Bytes2 = ByteOrBitmap.Bitmap2Bytes(convertToBitmap);//原图
+							UUID randomUUID2 = UUID.randomUUID();
+							String uUid2 = randomUUID2.toString();
+							OSSuploadFull(ossData, bitmap2Bytes2, uUid2, mFilePath);
 						}
 					}
 				
@@ -266,24 +277,17 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 				Photosback photosback = GsonUtils.parseJsonArray(A, Photosback.class);
 				listphotos = photosback.getReturnData();
 				
-				//获取浏览图片bitmap容器
-				for (int i = 0; i < bitmaps.size(); i++) {
-					Bitmap bitmap = bitmaps.get(i);
-					//回收内存
-					if(bitmap!=null){
-						if(!bitmap.isRecycled()){
-							bitmap.recycle();
-						}
-					}
-				}
 				//先清空
 				bitmaps.clear();
+				//先清空
+				MyGalleryActivity.netpath.clear();
 				
 				for (int i = 0; i < listphotos.size(); i++) {
 					String path = listphotos.get(i).getPath();
 					String pk_photo = listphotos.get(i).getPk_photo();
 					final String completeUrl=beginStr+pk_photo+endStr+"album-thumbnail";
 					Log.e("PhotoFragment2", "completeUrl"+completeUrl);
+<<<<<<< HEAD
 					if(!"".equals(path)){
 						//??????????????????
 						Log.e("PhotoFragment2", "所获取的的路径path============"+path);
@@ -311,6 +315,10 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 						}
 					}
 					
+=======
+					//将路径全部加入容器
+					MyGalleryActivity.netpath.add(completeUrl);
+>>>>>>> origin/ZCL
 				}
 				
 				
@@ -734,6 +742,35 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 			}
 		});
 	}
+	
+	private void OSSuploadFull(OSSData ossData, byte[] data, String UUid, final String imagePath) {
+		ossData = ossService.getOssData(sampleBucket, UUid);
+		ossData.setData(data, "jpg"); // 指定需要上传的数据和它的类型
+		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
+		ossData.uploadInBackground(new SaveCallback() {
+			@Override
+			public void onSuccess(String objectKey) {
+				Log.e("", "完整原图片上传成功2");
+				Log.e("Main", "objectKey2==" + objectKey);
+				
+				final String completeUrl=beginStr+objectKey;
+				MyGalleryActivity.netFullpath.add(completeUrl);
+				
+			}
+			
+			@Override
+			public void onProgress(String objectKey, int byteCount,
+					int totalSize) {
+			}
+			
+			@Override
+			public void onFailure(String objectKey, OSSException ossException) {
+				Log.e("", "图片上传失败2" + ossException.toString());
+				Toast.makeText(getActivity(), "上传失败，请重新上传2",Toast.LENGTH_SHORT).show();
+				MyGalleryActivity.netFullpath.add("失败");
+			}
+		});
+	}
 
 
 
@@ -765,8 +802,8 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
 		Intent intent = new Intent(getActivity(),
-				GalleryActivity.class);
-		intent.putExtra("position", "1");
+				MyGalleryActivity.class);
+		intent.putExtra("position", position);
 		intent.putExtra("ID", position);
 		startActivity(intent);
 	}

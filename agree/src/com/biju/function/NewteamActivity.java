@@ -6,6 +6,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Timer;
 import java.util.TimerTask;
@@ -15,6 +16,7 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.UUID;
 
+import leanchatlib.controller.ChatManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -24,6 +26,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.Menu;
@@ -41,6 +44,7 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Newteamback;
+import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.LimitLong;
 import com.BJ.javabean.PicSignBack;
@@ -57,12 +61,21 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSData;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.createGroupListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
 import com.biju.APP.MyApplication;
+import com.example.testleabcloud.ChatActivityLean;
 import com.github.volley_examples.utils.GsonUtils;
 
 @SuppressLint("SimpleDateFormat")
@@ -252,6 +265,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		case R.id.NewTeam_OK_layout:
 		case R.id.NewTeam_OK:
 			NewTeam_OK();
+			checkConversation();
 			break;
 		case R.id.NewTeam_head:
 		case R.id.NewTeam_tv_head:
@@ -261,6 +275,45 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		}
 	}
 
+		private void checkConversation() {
+			
+		}
+
+		 public void sendMessageToJerryFromTom() {
+			    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
+				Integer SD_pk_user = SdPkUser.getsD_pk_user();
+			    AVIMClient tom = AVIMClient.getInstance(String.valueOf(SD_pk_user));
+			    // 与服务器连接
+			    tom.open(new AVIMClientCallback() {
+			      @Override
+			      public void done(AVIMClient client, AVIMException e) {
+			        if (e == null) {
+			          // 创建与 Jerry，Bob,Harry,William 之间的会话
+			          client.createConversation(Arrays.asList("Jerry","Bob","Harry","William"), "Tom & Jerry & friedns", null,
+			              new AVIMConversationCreatedCallback() {
+
+			                @Override
+			                public void done(AVIMConversation conversation, AVIMException e) {
+			                  if (e == null) {
+			                    AVIMTextMessage msg = new AVIMTextMessage();
+			                    msg.setText("你们在哪儿？");
+			                    // 发送消息
+			                    conversation.sendMessage(msg, new AVIMConversationCallback() {
+
+			                      @Override
+			                      public void done(AVIMException e) {
+			                        if (e == null) {
+			                          Log.d("Tom & Jerry", "发送成功！");
+			                        }
+			                      }
+			                    });
+			                  }
+			                }
+			              });
+			        }
+			      }
+			    });
+			  }
 	private void NewTeam_head() {
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
