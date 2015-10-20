@@ -240,4 +240,10 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Log.e("GroupActivity", "调用了这个data=="+data);
 		PhotoFragment2.onActivityResultInterface.onActivityResult(requestCode, resultCode, data);
 	}
+	
+	  @Override
+	  protected void onNewIntent(Intent intent) {
+	    super.onNewIntent(intent);
+	    setIntent(intent);
+	  }
 }

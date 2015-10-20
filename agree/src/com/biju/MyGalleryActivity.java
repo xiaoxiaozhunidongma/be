@@ -84,7 +84,7 @@ public class MyGalleryActivity extends Activity {
 //			if(position==curposition){//asdfadsfgsdgsdfjhkabhfigsdruirg
 //				ImageLoaderUtils4Photos.getInstance().LoadImage2(netFullpath.get(0), photoView);
 //			}else{
-				ImageLoaderUtils4Photos.getInstance().LoadImage2(url+"album-thumbnail", photoView);
+				ImageLoaderUtils4Photos.getInstance().LoadImage2(url, photoView);
 //			}
 
 			// Now just add PhotoView to ViewPager and return it

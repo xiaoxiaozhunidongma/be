@@ -2,6 +2,7 @@ package leanchatlib.adapter;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 
 import leanchatlib.controller.ChatManager;
@@ -39,15 +40,15 @@ public class ChatMessageAdapter extends BaseAdapter {
   private ClickListener clickListener;
   private Context context;
   private List<AVIMTypedMessage> datas = new ArrayList<AVIMTypedMessage>();
-  private ReadUserAllFriends mAllFriends;
   private String CurrUserUrl;
 	private String beginStr = "http://picstyle.beagree.com/";
 	private String endStr = "@!";
+	private HashMap<Integer, String> otherAvaurl;
 
-  public ChatMessageAdapter(Context context, ConversationType conversationType, ReadUserAllFriends mAllFriends, String CurrUserUrl) {
+  public ChatMessageAdapter(Context context, ConversationType conversationType, HashMap<Integer, String> fromAvaUrlMap, String CurrUserUrl) {
     this.context = context;
     this.conversationType = conversationType;
-	this.mAllFriends = mAllFriends;
+	this.otherAvaurl = fromAvaUrlMap;
 	this.CurrUserUrl = CurrUserUrl;
   }
 
@@ -209,10 +210,10 @@ public class ChatMessageAdapter extends BaseAdapter {
     		ImageLoader.getInstance().displayImage(CurrUserUrl, avatarView, PhotoUtils.avatarImageOptions);
     		Log.e("", "completeURL==="+CurrUserUrl);
     	}else{
-    		String avatar_path = mAllFriends.getAvatar_path();
-    		String FriendUrl = beginStr+avatar_path+endStr+"mini-avatar";
+    		String from = msg.getFrom();
+    		String FriendUrl = otherAvaurl.get(Integer.valueOf(from));
+//    		String FriendUrl = beginStr+avatar_path+endStr+"mini-avatar";
 			ImageLoader.getInstance().displayImage(FriendUrl, avatarView, PhotoUtils.avatarImageOptions);
-    		Log.e("", "avatar_path==="+avatar_path);
     	}
     	
 //    	ImageLoader.getInstance().displayImage(user.getAvatarUrl(), avatarView, PhotoUtils.avatarImageOptions);

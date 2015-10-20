@@ -374,5 +374,6 @@
     <string name="title_activity_pay">PayActivity</string>
     <string name="title_activity_wxpay_entry">WXPayEntryActivity</string>
     <string name="title_activity_preview">PreviewActivity</string>
+    <string name="title_activity_add_friends3">AddFriends3Activity</string>
 
 </resources>

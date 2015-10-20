@@ -13,6 +13,7 @@ import leanchatlib.model.MessageEvent;
 import leanchatlib.model.Room;
 import leanchatlib.utils.LogUtils;
 import android.content.Context;
+import android.util.Log;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -291,6 +292,26 @@ public class ChatManager extends AVIMClientEventHandler {
 						attrs.put(ConversationType.TYPE_KEY, ConversationType.Group.getValue());
 						imClient.createConversation(members, attrs, callback);
 					}
+				}
+			}
+		});
+	}
+	//检查小组群对话是否存在
+	public void fetchConversationWith( final AVIMConversationCreatedCallback callback) {
+		final List<String> members = new ArrayList<String>();
+		members.add(selfId);
+		AVIMConversationQuery query = imClient.getQuery();
+//		query.withMembers(members);
+		query.whereEqualTo("attr.type",3);
+		query.containsMembers(members);
+		query.findInBackground(new AVIMConversationQueryCallback() {
+			
+			@Override
+			public void done(List<AVIMConversation> conversations, AVIMException e) {
+				if (e != null) {
+					callback.done(null, e);
+				} else {
+	            	  Log.e("asdefasrgdsrhdthdfths", "查询所有对成功！！！！数量："+conversations.size());
 				}
 			}
 		});

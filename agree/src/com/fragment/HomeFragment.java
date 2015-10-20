@@ -6,8 +6,12 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.StreamCorruptedException;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
+import leanchatlib.controller.ChatManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -41,7 +45,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_ReadAllUser;
+import com.BJ.javabean.Group_ReadAllUserback;
 import com.BJ.javabean.Groupback;
+import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.DensityUtil;
 import com.BJ.utils.FooterView;
@@ -49,10 +56,18 @@ import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.R;
+import com.biju.function.CommentsListActivity;
 import com.biju.function.GroupActivity;
 import com.biju.function.NewteamActivity;
 import com.biju.function.RequestCodeActivity;
@@ -60,6 +75,7 @@ import com.biju.login.PhoneLoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
+import com.biju.Interface.readUserListenner;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -93,6 +109,11 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private RelativeLayout mHome_NoTeam_prompt_layout;
 	private int columnWidth;
 	private Typeface tf;
+	private String currUserUrl;
+	private HashMap<Integer, String> FromAvaUrlMap=new HashMap<Integer, String>();
+	private int pk_group;
+	private String group_name;
+	private Group group;
 
 	public String getSDPath() {
 		File sdDir = null;
@@ -240,6 +261,79 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 			}
 		});
+		
+		readCurUser();//读取当前用户
+		readAlluserOfgroup();
+	}
+
+	private void readAlluserOfgroup() {
+		
+		homeInterface.setPostListener(new readAllPerRelationListenner() {
+
+			@Override
+			public void success(String A) {
+				FromAvaUrlMap.clear();
+				Group_ReadAllUserback group_ReadAllUserback = GsonUtils.parseJson(A, Group_ReadAllUserback.class);
+				int status = group_ReadAllUserback.getStatusMsg();
+				if (status == 1) {
+					Log.e("CommentsListActivity", "读取出小组中的所有用户========" + A);
+					List<Group_ReadAllUser> allUsers = group_ReadAllUserback.getReturnData();
+					if (allUsers.size() > 0) {
+						for (int i = 0; i < allUsers.size(); i++) {
+							Group_ReadAllUser readAllUser = allUsers.get(i);
+							String avatar_path = beginStr+readAllUser.getAvatar_path()+endStr+"mini-avatar";
+							FromAvaUrlMap.put(readAllUser.getFk_user(), avatar_path);
+						}
+					}
+				}
+				
+				Intent intent = new Intent(getActivity(),GroupActivity.class);
+				intent.putExtra(IConstant.HomePk_group, pk_group);
+				intent.putExtra(IConstant.HomeGroupName, group_name);
+				intent.putExtra("conName", "group_name");
+				intent.putExtra("FromAvaUrlMap", FromAvaUrlMap);//数组
+				intent.putExtra("convid", group.getEm_id());
+				intent.putExtra("CurrUserUrl", currUserUrl);
+				startActivity(intent);
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+	}
+
+	private void readCurUser() {
+		homeInterface.setPostListener(new readUserListenner() {
+			
+
+			@Override
+			public void success(String A) {
+				Loginback loginbackread = GsonUtils.parseJson(A,
+						Loginback.class);
+				int aa = loginbackread.getStatusMsg();
+				if (aa == 1) {
+					// 取第一个Users[0]
+					List<User> Users = loginbackread.getReturnData();
+					if (Users.size() >= 1) {
+						User readuser = Users.get(0);
+						String mAvatar_path = readuser.getAvatar_path();
+						currUserUrl = beginStr + mAvatar_path + endStr+"mini-avatar";
+					}
+				}
+			}
+			
+			@Override
+			public void defail(Object B) {
+				// TODO Auto-generated method stub
+				
+			}
+		});
+		
+		User user = new User();
+		user.setPk_user(SD_pk_user);
+		homeInterface.readUser(getActivity(), user);
 	}
 
 	private void initUI(LayoutInflater inflater) {
@@ -253,33 +347,87 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		home_gridview.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
 		home_gridview.setOnItemClickListener(new OnItemClickListener() {
 
+
+
+
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
 				if (EvenNumber == 0) {
 					if (!(PhoneLoginActivity.list.size() == arg2)) {
 						Log.e("HomeFragment", "点击到了小组的==========");
-						Group group = PhoneLoginActivity.list.get(arg2);
-						int pk_group = group.getPk_group();
-						String group_name = group.getName();
+						group = PhoneLoginActivity.list.get(arg2);
+						
+						joinConv(group);//加入到对话
+						pk_group = group.getPk_group();
+						
+						Group readAllPerRelation_group = new Group();
+						readAllPerRelation_group.setPk_group(pk_group);
+						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
+						
+						group_name = group.getName();
 						SdPkUser.setTeamSettinggroup(group);// 传小组对象
-						Intent intent = new Intent(getActivity(),GroupActivity.class);
-						intent.putExtra(IConstant.HomePk_group, pk_group);
-						intent.putExtra(IConstant.HomeGroupName, group_name);
-						startActivity(intent);
+//						Intent intent = new Intent(getActivity(),GroupActivity.class);
+//						intent.putExtra(IConstant.HomePk_group, pk_group);
+//						intent.putExtra(IConstant.HomeGroupName, group_name);
+//						intent.putExtra("conName", "group_name");
+//						intent.putExtra("FromAvaUrlList", FromAvaUrlList);//数组
+//						intent.putExtra("convid", group.getEm_id());
+//						intent.putExtra("CurrUserUrl", currUserUrl);
+//						startActivity(intent);
 					}
 				} else {
 					if (!(PhoneLoginActivity.list.size() == arg2)) {
-						Group group = PhoneLoginActivity.list.get(arg2);
-						int pk_group = group.getPk_group();
-						String group_name = group.getName();
+						group = PhoneLoginActivity.list.get(arg2);
+						joinConv(group);//加入到对话
+						pk_group = group.getPk_group();
+						
+						Group readAllPerRelation_group = new Group();
+						readAllPerRelation_group.setPk_group(pk_group);
+						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
+						
+						group_name = group.getName();
 						SdPkUser.setTeamSettinggroup(group);// 传小组对象
-						Intent intent = new Intent(getActivity(),GroupActivity.class);
-						intent.putExtra(IConstant.HomePk_group, pk_group);
-						intent.putExtra(IConstant.HomeGroupName, group_name);
-						startActivity(intent);
+//						Intent intent = new Intent(getActivity(),GroupActivity.class);
+//						intent.putExtra(IConstant.HomePk_group, pk_group);
+//						intent.putExtra(IConstant.HomeGroupName, group_name);
+//						intent.putExtra("conName", "group_name");
+//						intent.putExtra("FromAvaUrlList", FromAvaUrlList);//数组
+//						intent.putExtra("convid", group.getEm_id());
+//						intent.putExtra("CurrUserUrl", currUserUrl);
+//						startActivity(intent);
 					}
 				}
+
+			}
+
+			private void joinConv(final Group group) {
+				final Integer SD_pk_user = SdPkUser.getsD_pk_user();
+				AVIMClient curUser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
+				curUser.open(new AVIMClientCallback(){
+
+
+					@Override
+					public void done(AVIMClient client, AVIMException e) {
+					      if(e==null){
+						        //登录成功
+					    	  String em_id = group.getEm_id();
+						        AVIMConversation conversation = client.getConversation(em_id);
+						        //注册对话
+								final ChatManager chatManager = ChatManager.getInstance();
+								 chatManager.registerConversation(conversation);//注册对话
+								 conversation.join(new AVIMConversationCallback(){
+						            @Override
+						            public void done(AVIMException e){
+						              if(e==null){
+						              //加入成功
+						            	  Log.e("HomeFragment", "当前："+SD_pk_user+"加入小组成功");
+						              }
+						            }
+						        });
+						      }
+						    }
+				});
 
 			}
 		});

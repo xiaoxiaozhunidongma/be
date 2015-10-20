@@ -3,6 +3,7 @@ package com.example.testleabcloud;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -99,7 +100,7 @@ public class ChatActivityLean extends Activity implements OnClickListener, ChatA
   protected RefreshableView refreshableView;
   protected ListView messageListView;
   protected RecordButton recordBtn;
-  protected String localCameraPath = PathUtils.getPicturePathByCurrentTime();
+  protected String localCameraPath = PathUtils.getPicturePathByCurrentTime()+"/zzy/pictures";
   protected View addCameraBtn;
 private RelativeLayout picture_source_rela;
 private Button send;
@@ -330,21 +331,25 @@ private TextView tochatname;
   }
 
   public void initData(Intent intent) {
-	ReadUserAllFriends mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("allFriends");
-	tochatname.setText(mAllFriends.getNickname());
-	String CurrUserUrl = intent.getStringExtra("CurrUserUrl");
-    String convid = intent.getStringExtra(CONVID);
-    conversation = chatManager.lookUpConversationById(convid);
-    if (isConversationEmpty(conversation)) {
-      return;
-    }
-    initActionBar(ConversationHelper.titleOfConversation(conversation));
-    messageAgent = new MessageAgent(conversation);
-    messageAgent.setSendCallback(defaultSendCallback);//回调监听！！！！！！！！！！！！！！！！！！
-    roomsTable.clearUnread(conversation.getConversationId());
-    conversationType = ConversationHelper.typeOfConversation(conversation);
-    bindAdapterToListView(conversationType,mAllFriends,CurrUserUrl);
-  }
+//		ReadUserAllFriends mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("allFriends");
+		  String conName = intent.getStringExtra("conName");
+		  tochatname.setText(conName);
+//		  String otherAvaUrl = intent.getStringExtra("otherAvaUrl");
+		  @SuppressWarnings("unchecked")
+		  HashMap<Integer, String> FromAvaUrlMap= (HashMap<Integer, String>) intent.getSerializableExtra("FromAvaUrlMap");
+		String CurrUserUrl = intent.getStringExtra("CurrUserUrl");
+	    String convid = intent.getStringExtra(CONVID);
+	    conversation = chatManager.lookUpConversationById(convid);
+	    if (isConversationEmpty(conversation)) {
+	      return;
+	    }
+	    initActionBar(ConversationHelper.titleOfConversation(conversation));
+	    messageAgent = new MessageAgent(conversation);
+	    messageAgent.setSendCallback(defaultSendCallback);//回调监听！！！！！！！！！！！！！！！！！！
+	    roomsTable.clearUnread(conversation.getConversationId());
+	    conversationType = ConversationHelper.typeOfConversation(conversation);
+	    bindAdapterToListView(conversationType,FromAvaUrlMap,CurrUserUrl);
+	  }
 
   @SuppressLint("NewApi")
 protected void initActionBar(String title) {
@@ -360,8 +365,10 @@ protected void initActionBar(String title) {
     }
   }
 
-  private void bindAdapterToListView(ConversationType conversationType, ReadUserAllFriends mAllFriends, String CurrUserUrl) {
-    adapter = new ChatMessageAdapter(this, conversationType,mAllFriends,CurrUserUrl);
+  private void bindAdapterToListView(ConversationType conversationType, HashMap<Integer, String> fromAvaUrlMap, String CurrUserUrl) {
+	  
+    adapter = new ChatMessageAdapter(this, conversationType,fromAvaUrlMap,CurrUserUrl);
+	  
     adapter.setClickListener(new ChatMessageAdapter.ClickListener() {
       @Override
       public void onFailButtonClick(AVIMTypedMessage msg) {
