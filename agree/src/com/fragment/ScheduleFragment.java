@@ -61,6 +61,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private TextView mSchedule_new_party;
 	private RelativeLayout mSchedule_swipe_refresh_layout;
 	private RelativeLayout mSchedule_prompt_layout;
+	private boolean isrelationshpi;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -144,27 +145,25 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					String pk_party = scheduleparty.getPk_party();
 					Log.e("ScheduleFragment", "获取到的pk_party ========="+pk_party);
 					if (relatonship == null) {
-						if(num==0)
-						{
-							initcreatePartyRelation(sD_pk_user,pk_party);
-							Log.e("ScheduleFragment", "进入到relatonship为null的地方==========");
-							num++;
-						}else
-						{
-							Toast.makeText(getActivity(), "已结点击过了", Toast.LENGTH_SHORT).show();
-						}
+						initcreatePartyRelation(sD_pk_user,pk_party);
+						Log.e("ScheduleFragment", "进入到relatonship为null的地方==========");
 					}else if(relatonship==0)
 					{
 						Log.e("ScheduleFragment", "进入到relatonship为0的地方==========");
-						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
-						intent.putExtra(IConstant.OneParty, scheduleparty);
-						startActivity(intent);
-						
+						isrelationshpi=true;
 						Party_User party_user = new Party_User();
 						party_user.setPk_party_user(scheduleparty.getPk_party_user());
 						party_user.setRelationship(3);
 						party_user.setType(1);
 						scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
+						
+						SharedPreferences Schedule_sp=getActivity().getSharedPreferences(IConstant.Schedule, 0);
+						Editor editor=Schedule_sp.edit();
+						editor.putInt(IConstant.Pk_party_user, scheduleparty.getPk_party_user());
+						editor.putString(IConstant.Pk_party, scheduleparty.getPk_party());
+						editor.putInt(IConstant.fk_group, scheduleparty.getFk_group());
+						editor.commit();
+						
 					}else {
 						Log.e("ScheduleFragment", "进入到relatonship不为null的地方==========");
 						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
@@ -248,7 +247,6 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			if (partylist.size() > 0) {
 				Party2 party = partylist.get(position);
 				String time = party.getBegin_time();
-				Log.e("ScheduleFragment", "时间的长度====" + time.length());
 				String yuars_month = time.substring(0, 10);
 				String years = yuars_month.substring(0, 4);
 				String months = yuars_month.substring(5, 7);
@@ -266,15 +264,22 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					break;
 				}
 				String datetimes = time.substring(11, 16);
-				Integer ralationship = party.getRelationship();
+				//判断参与的类型，免费还是预支付
+				Integer pay_type=party.getPay_type();
+				if(1==pay_type){
+					holder.Party_item_payment.setText("免费");
+				}else{
+					holder.Party_item_payment.setText("预付款");
+				}
+				//判断参与人数的显示
 				Integer inNum=party.getInNum();
-				if(inNum==null)
-				{
+				if(inNum==null){
 					holder.Party_item_inNum.setText("0");
-				}else
-				{
+				}else{
 					holder.Party_item_inNum.setText(""+inNum);
 				}
+				//判断是否参与的显示
+				Integer ralationship = party.getRelationship();
 				if (ralationship == null) {
 					holder.Party_item_background.setBackgroundResource(R.drawable.white);//如果没有参与聚会则背景为白色
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
@@ -282,9 +287,8 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
 					holder.Party_item_redprompt.setVisibility(View.VISIBLE);
-				} else if(ralationship == 0)
-				{
-					holder.Party_item_redprompt.setVisibility(View.VISIBLE);
+				} else if(ralationship == 0){
+					holder.Party_item_redprompt.setVisibility(View.GONE);
 					holder.Party_item_background.setBackgroundResource(R.drawable.white);//如果没有参与聚会则背景为白色
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
@@ -297,30 +301,27 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
-				}else if(ralationship ==4)
-				{
+				}else if(ralationship ==4){
 					holder.Party_item_redprompt.setVisibility(View.GONE);
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_partake_address_color));//参与后地址颜色深灰
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_partake_nickname_color));//参与后名称颜色黑色
 					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.white));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.white));
+					holder.Party_item_payment.setTextColor(holder.Party_item_payment.getResources().getColor(R.drawable.Party_partake_pay_color));//参与后付款方式变绿色
 				}
 				holder.years_month.setText(times);
 				holder.name.setText(party.getName());
 				holder.times.setText(datetimes);
 				holder.address.setText(party.getLocation());
-				if(position==partylist.size()-1)
-				{
+				if(position==partylist.size()-1){
 					holder.Party_item_prompt_1.setVisibility(View.GONE);
 					holder.Party_item_prompt_2.setVisibility(View.VISIBLE);
-				}else
-				{
+				}else{
 					holder.Party_item_prompt_1.setVisibility(View.VISIBLE);
 					holder.Party_item_prompt_2.setVisibility(View.GONE);
 				}
 			}
-
 			return inflater;
 		}
 	}
@@ -372,8 +373,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					Log.e("ScheduleFragment", "得到的关系结果===="+A);
 					Integer pk_party_user = partyRelationshipback.getReturnData();
 					Log.e("ScheduleFragment", "得到的pk_party_user111111===="+pk_party_user);
-					if(pk_party_user!=null)
-					{
+					if(pk_party_user!=null){
 						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
 						intent.putExtra(IConstant.IsRelationship, true);
 						intent.putExtra(IConstant.OneParty, scheduleparty);
@@ -387,9 +387,6 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 						editor.commit();
 						Log.e("ScheduleFragment", "得到的第一个pk_party_user======="+pk_party_user);
 					}
-					
-					//加入到工具类中
-//					SdPkUser.setGetPk_party_user(pk_party_user);
 					Party_User party_user = new Party_User();
 					party_user.setPk_party_user(pk_party_user);
 					party_user.setRelationship(3);
@@ -409,6 +406,11 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			@Override
 			public void success(String A) {
 				Log.e("ScheduleFragment", "返回的是否更新成功" + A);
+				if(isrelationshpi){
+					Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
+					intent.putExtra(IConstant.OneParty, scheduleparty);
+					startActivity(intent);
+				}
 			}
 
 			@Override

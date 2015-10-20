@@ -252,18 +252,21 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 		mCommentslist_not_say_number.setOnClickListener(this);// 未表态数量
 
 		mComments_list_listview = (ListView) findViewById(R.id.Commentslist_partake_list_listview);// 参与listview列表
+		mComments_list_listview.setDividerHeight(0);//设置listview的item直接的间隙为0
 		partakeadapter = new MyPartakeAdapter();
 		mComments_list_listview.setAdapter(partakeadapter);
 
 		mCommentslist_not_say_listview = (ListView) findViewById(R.id.Commentslist_not_say_listview);// 未表态列表
+		mCommentslist_not_say_listview.setDividerHeight(0);//设置listview的item直接的间隙为0
 		notsayAdapter = new MyNotsayAdapter();
-		// mCommentslist_not_say_listview.setAdapter(notsayAdapter);
 	}
 
 	class ViewHolder {
 		ImageView commentslist_item_head;
 		TextView commentslist_item_nickname;
 		TextView commentslist_item_status;
+		TextView commentslist_item_prompt_1;
+		TextView commentslist_item_prompt_2;
 	}
 
 	class MyPartakeAdapter extends BaseAdapter {
@@ -294,6 +297,8 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 				holder.commentslist_item_head = (ImageView) inflater.findViewById(R.id.commentslist_item_head);
 				holder.commentslist_item_nickname = (TextView) inflater.findViewById(R.id.commentslist_item_nickname);
 				holder.commentslist_item_status = (TextView) inflater.findViewById(R.id.commentslist_item_status);
+				holder.commentslist_item_prompt_1=(TextView) inflater.findViewById(R.id.commentslist_item_prompt_1);
+				holder.commentslist_item_prompt_2=(TextView) inflater.findViewById(R.id.commentslist_item_prompt_2);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -301,13 +306,20 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			}
 			Log.e("CommentsListActivity","这时候的commentsList_msg2222222222222============"+ commentsList_msg);
 			Relation relation = partackList.get(position);
-			holder.commentslist_item_status.setText("参与");
+			holder.commentslist_item_status.setText("已经报名");
 			String useravatar_path1 = relation.getAvatar_path();
 			completeURL = beginStr + useravatar_path1 + endStr;
 			PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
 			ImageLoaderUtils.getInstance().LoadImageCricular(CommentsListActivity.this,
 					completeURL, holder.commentslist_item_head);
 			holder.commentslist_item_nickname.setText(relation.getNickname());
+			if(position==partackList.size()-1){
+				holder.commentslist_item_prompt_2.setVisibility(View.VISIBLE);
+				holder.commentslist_item_prompt_1.setVisibility(View.GONE);
+			}else {
+				holder.commentslist_item_prompt_2.setVisibility(View.GONE);
+				holder.commentslist_item_prompt_1.setVisibility(View.VISIBLE);
+			}
 			return inflater;
 		}
 
@@ -317,8 +329,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 
 		@Override
 		public int getCount() {
-			Log.e("CommentsListActivity", "这时候的commentslist.size()============"+ commentslist.size());
-			return commentslist.size();
+			return not_sayList.size();
 		}
 
 		@Override
@@ -342,72 +353,40 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 				holder.commentslist_item_head = (ImageView) inflater.findViewById(R.id.commentslist_item_head);
 				holder.commentslist_item_nickname = (TextView) inflater.findViewById(R.id.commentslist_item_nickname);
 				holder.commentslist_item_status = (TextView) inflater.findViewById(R.id.commentslist_item_status);
+				holder.commentslist_item_prompt_1=(TextView) inflater.findViewById(R.id.commentslist_item_prompt_1);
+				holder.commentslist_item_prompt_2=(TextView) inflater.findViewById(R.id.commentslist_item_prompt_2);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
 				holder = (ViewHolder) inflater.getTag();
 			}
-
-			if (commentslist.size() > 0) {
-				Group_ReadAllUser allUser = commentslist.get(position);
-				Integer allUser_pk_user = allUser.getFk_user();
-				Log.e("CommentsListActivity", "这时候的allUser_pk_user============"+ allUser_pk_user);
-				Log.e("CommentsListActivity","这时候的not_sayList.size()============"+ not_sayList.size());
-				if (not_sayList.size() > 0) {
-					for (int i = 0; i < not_sayList.size(); i++) {
-						Relation relation = not_sayList.get(i);
-						Integer relation_pk_user = relation.getPk_user();
-						Log.e("CommentsListActivity", "这时候的有进入============");
-						Log.e("CommentsListActivity","这时候的relation_pk_user============"+ relation_pk_user);
-						if (Integer.valueOf(allUser_pk_user).equals(Integer.valueOf(relation_pk_user))) {
-							Log.e("CommentsListActivity", "进入已看的============");
-							Integer relationship = relation.getRelationship();
-							Log.e("CommentsListActivity", "进入已看的relationship============"+relationship);
-							if(relationship==3)
-							{
-								holder.commentslist_item_status.setText("未表态 - 已看");
-								String useravatar_path = allUser.getAvatar_path();
-								completeURL = beginStr + useravatar_path + endStr;
-								PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
-								ImageLoaderUtils.getInstance().LoadImageCricular(
-										CommentsListActivity.this, completeURL,
-										holder.commentslist_item_head);
-								holder.commentslist_item_nickname.setText(allUser.getNickname());
-							}else
-							{
-								holder.commentslist_item_status.setText("未表态 - 未看");
-								String useravatar_path = allUser.getAvatar_path();
-								completeURL = beginStr + useravatar_path + endStr;
-								PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
-								ImageLoaderUtils.getInstance().LoadImageCricular(
-										CommentsListActivity.this, completeURL,
-										holder.commentslist_item_head);
-								holder.commentslist_item_nickname.setText(allUser.getNickname());
-							}
-						} else {
-							Log.e("CommentsListActivity", "进入了未看的============");
-							holder.commentslist_item_status.setText("未表态 - 未看");
-							String useravatar_path = allUser.getAvatar_path();
-							completeURL = beginStr + useravatar_path + endStr;
-							PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
-							ImageLoaderUtils.getInstance().LoadImageCricular(
-									CommentsListActivity.this, completeURL,
-									holder.commentslist_item_head);
-							holder.commentslist_item_nickname.setText(allUser.getNickname());
-						}
-
-					}
-				} else {
-					holder.commentslist_item_status.setText("未表态 - 未看");
-					String useravatar_path = allUser.getAvatar_path();
-					completeURL = beginStr + useravatar_path + endStr;
-					PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
-					ImageLoaderUtils.getInstance().LoadImageCricular(
-							CommentsListActivity.this, completeURL,
-							holder.commentslist_item_head);
-					holder.commentslist_item_nickname.setText(allUser.getNickname());
-				}
-				
+			Relation relation = not_sayList.get(position);
+			Integer relationship = relation.getRelationship();
+			if(relationship==3){
+				holder.commentslist_item_status.setText("未表态 - 已看");
+				String useravatar_path = relation.getAvatar_path();
+				completeURL = beginStr + useravatar_path + endStr;
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
+				ImageLoaderUtils.getInstance().LoadImageCricular(
+						CommentsListActivity.this, completeURL,
+						holder.commentslist_item_head);
+				holder.commentslist_item_nickname.setText(relation.getNickname());
+			}else {
+				holder.commentslist_item_status.setText("未表态 - 未看");
+				String useravatar_path = relation.getAvatar_path();
+				completeURL = beginStr + useravatar_path + endStr;
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
+				ImageLoaderUtils.getInstance().LoadImageCricular(
+						CommentsListActivity.this, completeURL,
+						holder.commentslist_item_head);
+				holder.commentslist_item_nickname.setText(relation.getNickname());
+			}
+			if(position==not_sayList.size()-1){
+				holder.commentslist_item_prompt_2.setVisibility(View.VISIBLE);
+				holder.commentslist_item_prompt_1.setVisibility(View.GONE);
+			}else {
+				holder.commentslist_item_prompt_2.setVisibility(View.GONE);
+				holder.commentslist_item_prompt_1.setVisibility(View.VISIBLE);
 			}
 			return inflater;
 		}

@@ -5,6 +5,8 @@ import java.util.List;
 import java.util.UUID;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
@@ -85,8 +87,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public static void setSIGN(String sIGN) {
 		SIGN = sIGN;
 	}
-
-//	private UploadManager uploadManager;
 
 	private Integer SD_pk_user;
 	private TextView mSetting_User_ID;
@@ -173,9 +173,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@Override
 	public void onResume() {
 		if (isShow) {
-//			// 初始化图片签名
-//			initUpload();
-			
 			User usersetting = new User();
 			usersetting.setPk_user(SD_pk_user);
 			usersetting.setJpush_id(mUserJpush_id);
@@ -187,7 +184,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			usersetting.setWechat_id(mUserWechat_id);
 			usersetting.setSetup_time(mUserSetup_time);
 			usersetting.setLast_login_time(mUserLast_login_time);
-//			upload(usersetting);// 上传
 			//上传
 			String mFilePath = SdPkUser.getFilePath;//回调SD卡路径
 			Bitmap convertToBitmap = null;
@@ -250,7 +246,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 								+ mUserWechat_id);
 
 					}
-//					mSetting_User_ID.setText("" + SD_pk_user);
 					mSetting_User_ID.setText(mUserNickname);
 					mSetting_Nickname.setText(mUserNickname);
 					switch (mUserSex) {
@@ -284,60 +279,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			}
 		});
 
-		// 图像签名初始化
-//		Setting_readuserinter.setPostListener(new getPicSignListenner() {
-//
-//			@Override
-//			public void success(String A) {
-//				Log.e("SettingFragment", "新的方法签名字符串：" + A);
-//				PicSignBack picSignBack = GsonUtils.parseJson(A,
-//						PicSignBack.class);
-//				Integer status = picSignBack.getStatusMsg();
-//				if (status == 1) {
-//					String returnData = picSignBack.getReturnData();
-//					SettingFragment.setSIGN(returnData);
-//
-////					UploadManager.authorize(APPID, USERID, SIGN);
-////					uploadManager = new UploadManager(getActivity(),"persistenceId");
-//					Log.e("SettingFragment","新的方法签名字符串returnData=================="+ returnData);
-//					if (!("".equals(returnData))) {
-//						// 获取到图片后直接进行上传
-//						User usersetting = new User();
-//						usersetting.setPk_user(SD_pk_user);
-//						usersetting.setJpush_id(mUserJpush_id);
-//						usersetting.setNickname(mUserNickname);
-//						usersetting.setPassword(mUserPassword);
-//						usersetting.setSex(mUserSex);
-//						usersetting.setStatus(1);
-//						usersetting.setPhone(mUserPhone);
-//						usersetting.setWechat_id(mUserWechat_id);
-//						usersetting.setSetup_time(mUserSetup_time);
-//						usersetting.setLast_login_time(mUserLast_login_time);
-////						upload(usersetting);// 上传
-//						//上传
-//						String mFilePath = SdPkUser.getFilePath;
-//						Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
-//						Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-//								convertToBitmap, 1080);// 最长边限制为1080
-//						Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-//								limitLongScaleBitmap, 600);// 截取中间正方形
-//						bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
-//						UUID randomUUID = UUID.randomUUID();
-//						uUid = randomUUID.toString();
-//						OSSupload(ossData, bitmap2Bytes, uUid,usersetting);
-//					} else {
-//						Toast.makeText(getActivity(), "更换头像失败，请重新更换",Toast.LENGTH_SHORT).show();
-//					}
-//				}
-//			}
-//
-//
-//
-//			@Override
-//			public void defail(Object B) {
-//
-//			}
-//		});
 
 		// 更新的监听
 		Setting_readuserinter.setPostListener(new updateUserListenner() {
@@ -485,6 +426,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			api.sendReq(req);
 			SdPkUser.setGetUser(Setting_readuser);
 			SdPkUser.setGetweixinBinding(true);
+			SdPkUser.setWeixinRegistered(true);
 		}
 	}
 
@@ -511,6 +453,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 				api.sendReq(req);
 				SdPkUser.setGetUser(Setting_readuser);
 				SdPkUser.setGetweixinBinding(true);
+				SdPkUser.setWeixinRegistered(true);
 			}
 		}).show();
 	}
@@ -593,55 +536,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		}).show();
 
 	}
-
-	// 上传图片
-//	private void upload(final User user) {
-//		String mFilePath = SdPkUser.getFilePath;
-//		UploadTask task = new PhotoUploadTask(mFilePath,
-//				new IUploadTaskListener() {
-//					@Override
-//					public void onUploadSucceed(final FileInfo result) {
-//						Log.e("上传结果", "upload succeed: " + result.fileId);
-//						// 上传完成后注册
-//						user.setAvatar_path(result.fileId);
-//						Setting_readuserinter.updateUser(getActivity(), user);
-//						Log.e("SettingFragment","进入了图片上传的时候====================");
-//					}
-//
-//					@Override
-//					public void onUploadStateChange(TaskState state) {
-//					}
-//
-//					@Override
-//					public void onUploadProgress(long totalSize, long sendSize) {
-//						final long p = (long) ((sendSize * 100) / (totalSize * 1.0f));
-//						// Log.e("上传进度", "上传进度: " + p + "%");
-//						mSetting_progress.post(new Runnable() {
-//
-//							@Override
-//							public void run() {
-//								mSetting_progress.setVisibility(View.VISIBLE);
-//								mSetting_progress.setText(p + "%");
-//								if (p == 100) {
-//									mSetting_progress.setVisibility(View.GONE);
-//								}
-//							}
-//						});
-//					}
-//
-//					@Override
-//					public void onUploadFailed(final int errorCode,
-//							final String errorMsg) {
-//						Log.e("Demo", "上传结果:失败! ret:" + errorCode + " msg:"+ errorMsg);
-//					}
-//				});
-//		uploadManager.upload(task); // 开始上传
-//
-//	}
-
-//	private void initUpload() {
-//		Setting_readuserinter.getPicSign(getActivity(), new User());
-//	}
 
 	@Override
 	public void onDestroyView() {

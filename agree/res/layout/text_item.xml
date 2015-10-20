@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+        <RelativeLayout
+            android:id="@+id/TextMinusLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginTop="20.0dp"
+            android:layout_marginBottom="20.0dp"
+             >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:drawableTop="@drawable/minus_gray"
+                android:text="减少"
+                android:gravity="center"
+                android:textColor="#c9c9c9"
+                android:textSize="13.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/TextMinusLayout" >
+
+            <TextView
+                android:id="@+id/Text_show"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="TextView"
+                android:layout_marginLeft="30.0dp"
+                android:layout_marginTop="10.0dp"
+                android:layout_marginBottom="10.0dp"
+                android:layout_marginRight="20.0dp"
+                android:textColor="#535353"
+                android:textSize="13.0sp" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</RelativeLayout>

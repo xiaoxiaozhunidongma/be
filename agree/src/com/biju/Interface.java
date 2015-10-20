@@ -20,7 +20,6 @@ import com.BJ.javabean.Group_User;
 import com.BJ.javabean.IDs;
 import com.BJ.javabean.MapAddParty;
 import com.BJ.javabean.Party;
-import com.BJ.javabean.Party2;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.Phone;
 import com.BJ.javabean.PhoneArray;
@@ -31,8 +30,9 @@ import com.BJ.javabean.StringCreGroup;
 import com.BJ.javabean.User;
 import com.BJ.javabean.User_Chat;
 import com.BJ.javabean.User_User;
+import com.BJ.javabean.WeChatPay;
+import com.BJ.javabean.UnionPay;
 import com.BJ.utils.Bean2Map;
-import com.BJ.utils.ImageLoaderUtils;
 import com.android.volley.VolleyError;
 import com.github.volley_examples.app.MyVolley;
 import com.github.volley_examples.app.VolleyListenner;
@@ -42,7 +42,7 @@ import com.github.volley_examples.app.VolleyListenner;
 public class Interface {
 	
 //	String url="http://120.25.218.3/webroot/sr_interface_android.php";
-	String url="http://120.26.118.226/app/app_interface/sr_interface_android.php";
+	String url="http://120.26.118.226/app/app_interface/sr_interface.php";
 	
 	private static Interface Thisinterface=new Interface();
 	private Interface(){
@@ -51,7 +51,12 @@ public class Interface {
 	public static  Interface getInstance() {
 		return Thisinterface;
 	}
-	
+	//银联支付
+	String KUnionPay = "9912";
+	//支付宝支付
+	String KAliPay = "9901";
+	//微信支付
+	String KWeChatPay = "9911";
 	//微信登录
 	String KWeixinLogin = "1102";
 	//注册用户
@@ -264,6 +269,56 @@ public class Interface {
 //			}
 //		});	
 //	}
+	
+	//银联支付
+	private void UnionPayPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError41(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone41(response);
+			}
+		});	
+	}
+	//支付宝支付
+	private void AliPayPost(Context context,Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError40(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone40(response);
+			}
+		});	
+	}
+	//微信支付
+	private void WeChatPayPost(Context context,Map<String, String> params) {
+			
+		MyVolley.post(context, url, params, new VolleyListenner() {
+				
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError39(error);
+				Log.e("失败", ""+error);
+			}
+			@Override
+			public void onResponse(String response) {
+				requestDone39(response);
+			}
+		});	
+	}
+	
 	//微信登录
 	private void weixinLoginPost(Context context,Map<String, String> params) {
 		
@@ -821,6 +876,21 @@ public class Interface {
 //		volleyPost(context,per); 
 //	}
 	
+	//银联支付
+	public void UnionPay(Context context,UnionPay unionpay) {
+		UnionPayPost(context,packParams(unionpay, KUnionPay));
+	}
+	
+	//支付宝支付
+	public void AliPay(Context context,WeChatPay wechatpay) {
+		AliPayPost(context,packParams(wechatpay, KAliPay));
+	}
+	
+	//微信支付
+	public void WeChatPay(Context context,WeChatPay wechatpay) {
+		WeChatPayPost(context,packParams(wechatpay, KWeChatPay));
+	}
+	
 	//微信登录
 	public void weixinLogin(Context context,User user) {
 		weixinLoginPost(context,packParams(user, KWeixinLogin));
@@ -993,6 +1063,12 @@ public class Interface {
 //	private static UserInterface listener;
 	//微信登录
 	private static weixinLoginListenner weixinloginListenner;
+	//微信支付
+	private static WeChatPayListenner wechatpayListenner;
+	//支付宝支付
+	private static AliPayListenner alipayListenner;
+	//银联支付
+	private static UnionPayListenner unionpayListenner;
 	
 	private static regNewAccountListenner newAccountListenner;
 	private static checkNicknameListenner nicknameListenner;
@@ -1035,6 +1111,24 @@ public class Interface {
 //		void success(String A);
 //		void defail(Object B);
 //	}
+	//银联支付
+	public interface UnionPayListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	
+	//支付宝支付
+	public interface AliPayListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	
+	//微信支付
+	public interface WeChatPayListenner{
+		void success(String A);
+		void defail(Object B);
+	}
+	
 	//微信登录
 	public interface weixinLoginListenner{
 		void success(String A);
@@ -1187,6 +1281,21 @@ public class Interface {
 //	public void setPostListener(UserInterface listener){
 //		this.listener=listener;
 //	}
+	//银联支付
+	public void setPostListener(UnionPayListenner listener){
+		this.unionpayListenner=listener;
+	}
+	
+	//支付宝支付
+	public void setPostListener(AliPayListenner listener){
+		this.alipayListenner=listener;
+	}
+	
+	//微信支付
+	public void setPostListener(WeChatPayListenner listener){
+		this.wechatpayListenner=listener;
+	}
+	
 	//微信登录
 	public void setPostListener(weixinLoginListenner listener){
 		this.weixinloginListenner=listener;
@@ -1600,6 +1709,30 @@ public class Interface {
 	}
 	public static void requestError38(VolleyError error) {
 		weixinloginListenner.defail(error);
+	}
+	
+	//微信支付
+	public static void requestDone39(String theObject) {
+		wechatpayListenner.success(theObject);
+	}
+	public static void requestError39(VolleyError error) {
+		wechatpayListenner.defail(error);
+	}
+	
+	//支付宝支付
+	public static void requestDone40(String theObject) {
+		alipayListenner.success(theObject);
+	}
+	public static void requestError40(VolleyError error) {
+		alipayListenner.defail(error);
+	}
+	
+	//银联支付
+	public static void requestDone41(String theObject) {
+		unionpayListenner.success(theObject);
+	}
+	public static void requestError41(VolleyError error) {
+		unionpayListenner.defail(error);
 	}
 	
 }

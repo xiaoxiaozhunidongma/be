@@ -7,12 +7,25 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
+    <!-- 解析xml -->
+    <uses-permission android:name="android.permission.INTERNET" >
+    </uses-permission>
 
+    <!-- 银联权限 -->
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+
+    <!-- 微信，支付宝权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
@@ -122,15 +135,12 @@
         android:theme="@style/AppTheme" >
 
         <!-- 数据库 -->
-        <!--
         <meta-data
             android:name="AA_DB_NAME"
-            android:value="group_team.db" />
+            android:value="graphic_details.db" />
         <meta-data
             android:name="AA_DB_VERSION"
-            android:value="3" />        -->
-
-
+            android:value="3" />
         <!-- 百度签名 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -446,6 +456,50 @@
         <activity
             android:name="com.biju.function.TeamSetting2Activity"
             android:label="@string/title_activity_team_setting2" >
+        </activity>
+        <activity
+            android:name="com.biju.pay.CostActivity"
+            android:label="@string/title_activity_cost" >
+        </activity>
+        <activity
+            android:name="com.biju.pay.LimitNumberActivity"
+            android:label="@string/title_activity_limit_number" >
+        </activity>
+        <activity
+            android:name="com.biju.pay.GraphicDetailsActivity"
+            android:label="@string/title_activity_graphic_details" >
+        </activity>
+        <activity
+            android:name="com.biju.pay.PayBaseActivity"
+            android:exported="true"
+            android:label="@string/title_activity_pay"
+            android:launchMode="singleTask"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="wx2ffba147560de2ff" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name="com.biju.wxapi.WXPayEntryActivity"
+            android:exported="true"
+            android:label="@string/title_activity_wxpay_entry"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.unionpay.uppay.PayActivity"
+            android:configChanges="orientation|keyboardHidden"
+            android:excludeFromRecents="true"
+            android:label="@string/app_name"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize" >
+        </activity>
+        <activity
+            android:name="com.biju.pay.PreviewActivity"
+            android:label="@string/title_activity_preview" >
         </activity>
     </application>
 

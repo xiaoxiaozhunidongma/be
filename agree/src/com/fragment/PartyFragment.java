@@ -282,25 +282,30 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 					break;
 				}
 				String datetimes = time.substring(11, 16);
-				Integer relationship=party.getRelationship();
+				//判断参与的类型，免费还是预支付
+				Integer pay_type=party.getPay_type();
+				if(1==pay_type){
+					holder.Party_item_payment.setText("免费");
+				}else{
+					holder.Party_item_payment.setText("预付款");
+				}
+				//判断参与人数的显示
 				Integer inNum=party.getInNum();
-				if(inNum==null)
-				{
+				if(inNum==null){
 					holder.Party_item_inNum.setText("0");
-				}else
-				{
+				}else{
 					holder.Party_item_inNum.setText(""+inNum);
 				}
-				if(relationship==4)
-				{
+				//判断是否参与的显示
+				Integer relationship=party.getRelationship();
+				if(relationship==4){
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_partake_nickname_color));//参与后名称颜色黑色
 					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.white));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.white));
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_partake_address_color));//参与后地址颜色深灰
 					holder.Party_item_payment.setTextColor(holder.Party_item_payment.getResources().getColor(R.drawable.Party_partake_pay_color));//参与后付款方式变绿色
-				}else
-				{
+				}else{
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
@@ -310,12 +315,10 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				holder.name.setText(party.getName());
 				holder.times.setText(datetimes);
 				holder.address.setText(party.getLocation());
-				if(position==userAllPartieList.size()-1)
-				{
+				if(position==userAllPartieList.size()-1){
 					holder.Party_item_prompt_1.setVisibility(View.GONE);
 					holder.Party_item_prompt_2.setVisibility(View.VISIBLE);
-				}else
-				{
+				}else{
 					holder.Party_item_prompt_1.setVisibility(View.VISIBLE);
 					holder.Party_item_prompt_2.setVisibility(View.GONE);
 				}

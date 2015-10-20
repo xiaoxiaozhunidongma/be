@@ -7,6 +7,7 @@ import java.util.List;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
@@ -48,17 +49,28 @@ public class TimeActivity extends Activity implements OnClickListener {
 	private TextView mTimePicker_Time_show;
 	private Integer chooseCurrentHour;
 	private Integer chooseCurrentMinute;
+	private String currentChoose;
+	private Intent intent;
+	private Integer endCurrentMonth_1;
+	private Integer startCurrentMonths_1;
+	private Integer endcurrentDay_2;
+	private Integer startCurrentDay_2;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_time);
-		//加入List中
+		intent = getIntent();
+		currentChoose = intent.getStringExtra(IConstant.Time);
 		initUI();
 		initDate();
 		int px2dip = DensityUtil.px2dip(TimeActivity.this, 90);
 		Log.e("TimeActivity", "px2dip============="+px2dip);
+		if(IConstant.EndTimeChoose.equals(currentChoose)){
+			String startTimeString=intent.getStringExtra(IConstant.StartTimeString);
+			mTimePicker_Time_show.setText("开始时间:"+startTimeString);
+		}
 	}
 
 	private void initDate() {
@@ -147,7 +159,9 @@ public class TimeActivity extends Activity implements OnClickListener {
 				// 调用计算星期几的方法
 				Weeks.CaculateWeekDay(y, m, d);
 				String week = Weeks.getweek();
-				mTimePicker_Time_show.setText("开始时间:"+OldYears+"年"+OldMonth+"月"+OldDay+"日"+" "+week+" "+chooseCurrentHour+":"+chooseCurrentMinute);
+				if(IConstant.StartTimeChoose.equals(currentChoose)){
+					mTimePicker_Time_show.setText("开始时间:"+OldYears+"年"+OldMonth+"月"+OldDay+"日"+" "+week+" "+chooseCurrentHour+":"+chooseCurrentMinute);
+				}
 			}else
 			{
 				mTimePicker_Time_show.setText("开始时间:(null)");
@@ -180,6 +194,122 @@ public class TimeActivity extends Activity implements OnClickListener {
 	}
 
 	private void Time_OK() {
+		if(IConstant.StartTimeChoose.equals(currentChoose)){
+			StartTimeChoose();
+		}else if(IConstant.EndTimeChoose.equals(currentChoose)){
+			EndTimeChoose();
+		}else if(IConstant.DeadlineTimeChoose.equals(currentChoose)){
+			
+		}
+	}
+	//选择结束时间的判断过程
+	private void EndTimeChoose() {
+		String StartMonths=intent.getStringExtra(IConstant.StartMonths);
+		String StartDay=intent.getStringExtra(IConstant.StartDay);
+		Integer StartHour=intent.getIntExtra(IConstant.StartHour, 0);
+		if(date!=null){
+			String EndMonth=date.substring(5, 7);
+			String EndDay=date.substring(8, 10);
+			EndMonthsChoose(StartMonths,StartDay,StartHour,EndMonth,EndDay);
+		}else {
+			SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
+			sd.setTitleText("提示");
+			sd.setContentText("活动日期不能为空哦~");
+			sd.show();
+		}
+	}
+
+	//从月开始判断
+	private void EndMonthsChoose(String startMonths, String startDay,Integer startHour, String endMonth, String endDay) {
+		//判断月份是否超过10
+		String EndCurrentMonth=endMonth.substring(0);
+		if(Integer.valueOf(EndCurrentMonth)>0){
+			endCurrentMonth_1 = Integer.valueOf(endMonth);
+		}else{
+			endCurrentMonth_1=Integer.valueOf(endMonth.substring(1));
+		}
+				
+		String startCurrentMonths=startMonths.substring(0);
+		if(Integer.valueOf(startCurrentMonths)>0)
+		{
+			startCurrentMonths_1 = Integer.valueOf(startMonths);
+		}else
+		{
+			startCurrentMonths_1 = Integer.valueOf(startMonths.substring(1));
+		}
+		//判断月开始时间与结束时间
+		if(endCurrentMonth_1>startCurrentMonths_1){
+			//传值完成
+			EndOK();
+		}else if(endCurrentMonth_1==startCurrentMonths_1){
+			EndDayChoose(startDay,startHour,endDay);//判断日
+		}else if(endCurrentMonth_1<startCurrentMonths_1){
+			SweetAlertDialog();
+		}
+		
+		
+	}
+
+	//进行传值
+	private void EndOK() {
+		SharedPreferences time_sp = getSharedPreferences(IConstant.EndTime, 0);
+		Editor editor = time_sp.edit();
+		editor.putBoolean(IConstant.IsEndTimeChoose, true);
+		editor.putInt(IConstant.EndTimeHour, chooseCurrentHour);
+		editor.putInt(IConstant.EndTimeMinute, chooseCurrentMinute);
+		editor.putString(IConstant.EndTimeDate, date);
+		editor.commit();
+		finish();
+	}
+
+	private void SweetAlertDialog() {
+		SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
+		sd.setTitleText("提示");
+		sd.setContentText("聚会的结束时间应该是在开始时间之后哦~");
+		sd.show();
+	}
+	//判断日开始时间与结束时间
+	private void EndDayChoose(String startDay, Integer startHour, String endDay) {
+		//判断日是否超过10
+		String EndCurrentDay=endDay.substring(0);
+		if(Integer.valueOf(EndCurrentDay)>0)
+		{
+			endcurrentDay_2 = Integer.valueOf(endDay);
+		}else
+		{
+			endcurrentDay_2=Integer.valueOf(endDay.substring(1));
+		}
+			
+		String startCurrentDay=startDay.substring(0);
+		if(Integer.valueOf(startCurrentDay)>0)
+		{
+			startCurrentDay_2 = Integer.valueOf(startDay);
+		}else
+		{
+			startCurrentDay_2 = Integer.valueOf(startDay.substring(1));
+		}
+		if(endcurrentDay_2>startCurrentDay_2){
+			//传值完成
+			EndOK();
+		}else if(endcurrentDay_2==startCurrentDay_2){
+			EndHourChoose(startHour);
+		}else if(endcurrentDay_2<startCurrentDay_2){
+			SweetAlertDialog();
+		}
+	}
+	//判断时开始时间与结束时间
+	private void EndHourChoose(Integer startHour) {
+		Integer chooseCurrentHour = mTimePicker.getCurrentHour();
+		if(chooseCurrentHour>Integer.valueOf(startHour)){
+			//传值完成
+			EndOK();
+		}else if(chooseCurrentHour<=Integer.valueOf(startHour)){
+			SweetAlertDialog();
+		}
+	}
+
+	//选择开始时间时的判断过程
+	private void StartTimeChoose() {
 		if (!(date != null)) {
 			SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
 			sd.setTitleText("提示");
@@ -301,7 +431,6 @@ public class TimeActivity extends Activity implements OnClickListener {
 		editor.putInt(IConstant.Hour, chooseCurrentHour);
 		editor.putInt(IConstant.Minute, chooseCurrentMinute);
 		editor.putString(IConstant.IsCalendar, date);
-		Log.e("TimeActivity", "date=========" + date);
 		editor.commit();
 		finish();
 	}
@@ -391,7 +520,9 @@ public class TimeActivity extends Activity implements OnClickListener {
 					// 调用计算星期几的方法
 					Weeks.CaculateWeekDay(y, m, d);
 					String week = Weeks.getweek();
-					mTimePicker_Time_show.setText("开始时间:"+OldYears+"年"+OldMonth+"月"+OldDay+"日"+" "+week+" "+chooseCurrentHour+":"+chooseCurrentMinute);
+					if(IConstant.StartTimeChoose.equals(currentChoose)){
+						mTimePicker_Time_show.setText("开始时间:"+OldYears+"年"+OldMonth+"月"+OldDay+"日"+" "+week+" "+chooseCurrentHour+":"+chooseCurrentMinute);
+					}
 					
 					SharedPreferences sp = getSharedPreferences("isdate", 0);
 					Editor editor = sp.edit();

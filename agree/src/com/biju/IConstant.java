@@ -81,6 +81,9 @@ public interface IConstant {
 	public String Partyfragmnet_Pk_party = "partyfragmnet_pk_party";
 	public String Partyfragmnet_fk_group = "partyfragmnet_fk_group";
 	public String All_fk_group = "all_fk_group";
+	public String Paymount="paymount";
+	public String Payname="payname";
+	
 	
 	//requestcode
 	public String Requestcode_readhomeuser="requestcode_readhomeuser";
@@ -89,4 +92,29 @@ public interface IConstant {
 	public String SlidingClick="slidingclick";
 	public String Click="click";
 	
+	//Cost活动花费界面
+	public String Cost="cost";
+	public String IsCost="iscost";
+	public String PayMoney="paymoney";
+	
+	//AddNewPartyActivity
+	public String StartTimeChoose="starttimechoose";
+	public String EndTimeChoose="endtimechoose";
+	public String DeadlineTimeChoose="deadlinetimechoose";
+	public String Time="time";
+	public String StartMonths="startmonths";
+	public String StartDay="startday";
+	public String StartHour="starthour";
+	public String StartTimeString="startTimestring";
+	
+	public String IsEndTimeChoose="isendtimechoose";
+	public String EndTime="endtime";
+	public String EndTimeDate="endtimedate";
+	public String EndTimeHour="endtimehour";
+	public String EndTimeMinute="endtimeminute";
+	
+	//LimitNumberActivity
+	public String LimitNumber="limitnumber";
+	public String IsNumber="isnumber";
+	public String Number="number";
 }

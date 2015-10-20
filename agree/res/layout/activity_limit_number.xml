@@ -1,0 +1,106 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efefef"
+    tools:context=".LimitNumberActivity" >
+
+    <RelativeLayout
+        android:id="@+id/LimitNumberTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff" >
+
+        <RelativeLayout
+            android:id="@+id/LimitNumberBackLayout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/LimitNumberBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="返回"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/LimitNumberOKLayout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/LimitNumberOK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="完成"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dp"
+        android:layout_below="@+id/LimitNumberTitleLayout"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginTop="35.0dp"
+            android:text="请输入该活动的最大参与人数"
+            android:textColor="#808080"
+            android:textSize="13.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44.0dp"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true" 
+        android:background="#ffffff"
+        android:id="@+id/relativeLayout2">
+
+        <EditText
+            android:id="@+id/LimitNumberEditText"
+            android:layout_width="match_parent"
+            android:layout_height="30.0dp"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginRight="20.0dp"
+            android:background="@null"
+            android:ems="10"
+            android:textSize="13.0sp" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/relativeLayout2"
+        android:text="当人数为0时,将不限制最大参与人数" 
+        android:textSize="13.0sp"
+        android:textColor="#808080"
+        android:layout_marginTop="10.0dp"
+        android:layout_marginLeft="20.0dp"
+        />
+
+</RelativeLayout>

@@ -288,12 +288,12 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 						//??????????????????
 						Log.e("PhotoFragment2", "所获取的的路径path============"+path);
 						Bitmap convertToBitmap = null;
-						try {
-							convertToBitmap = Path2Bitmap.convertToBitmap(path);//多次decodefactory会OOM！
-						} catch (IOException e) {
-							// TODO Auto-generated catch block
-							e.printStackTrace();
-						}
+//						try {
+//							convertToBitmap = Path2Bitmap.convertToBitmap(path);//多次decodefactory会OOM！
+//						} catch (IOException e) {
+//							// TODO Auto-generated catch block
+//							e.printStackTrace();
+//						}
 						if(convertToBitmap!=null){
 							bitmaps.add(convertToBitmap);
 							convertToBitmap.recycle();

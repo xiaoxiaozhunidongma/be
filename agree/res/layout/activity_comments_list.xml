@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/Comments_list_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/title_height"
+        android:layout_height="40.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
@@ -38,16 +38,6 @@
             android:layout_centerHorizontal="true"
             android:background="#aaaaaa" />
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:text="参与列表"
-            android:textColor="#000000"
-            android:textSize="18.0sp" />
-
         <!--
         <RelativeLayout
             android:layout_width="80.0dp"
@@ -66,6 +56,18 @@
                 android:textSize="17.0sp" />
         </RelativeLayout>
         -->
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="100.0dp"
+            android:text="参与列表"
+            android:textColor="#535353"
+            android:textSize="15.0sp" />
+
     </RelativeLayout>
 
     <LinearLayout

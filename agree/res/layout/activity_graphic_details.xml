@@ -1,0 +1,106 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efefef"
+    tools:context=".GraphicDetailsActivity" >
+
+    <RelativeLayout
+        android:id="@+id/GraphicDetailsTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff" >
+
+        <RelativeLayout
+            android:id="@+id/GraphicDetailsBackLayout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/GraphicDetailsBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="返回"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="@dimen/title_left_size" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/GraphicDetailsOKLayout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" 
+            android:visibility="gone"
+            >
+
+            <TextView
+                android:id="@+id/GraphicDetailsOK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="完成"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+             />
+
+        <RelativeLayout
+            android:id="@+id/GraphicDetailsPreviewLayout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            >
+
+            <TextView
+                android:id="@+id/GraphicDetailsPreview"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="预览"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/GraphicDetailsTitleLayout"
+        android:layout_centerHorizontal="true"
+        >
+
+        <ListView
+            android:id="@+id/GraphicDetailsListview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" 
+            android:background="#ffffff"
+            android:cacheColorHint="#00000000"
+            android:listSelector="#00000000"
+            >
+
+        </ListView>
+<!-- android:transcriptMode="normal"  -->
+    </RelativeLayout>
+
+</RelativeLayout>

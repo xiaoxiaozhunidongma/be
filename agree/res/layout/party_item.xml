@@ -42,7 +42,6 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
                 android:layout_marginLeft="20.0dp"
-                android:background="@drawable/party_green_corners"
                  >
 <!--android:background="@drawable/party_green_corners"  -->
                 <TextView
@@ -103,7 +102,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="20.0dp"
+                android:layout_marginTop="18.0dp"
                 android:gravity="left|bottom"
                 android:singleLine="true"
                 android:text="聚会名称"
