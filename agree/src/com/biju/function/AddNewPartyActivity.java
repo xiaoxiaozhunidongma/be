@@ -564,7 +564,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			String party_name = mAdd_New_Party_name.getText().toString().trim();
 			
 			Party party = new Party();
-			party.setPk_party(pk_party);
+			party.setPk_party(uUid);
 			party.setFk_group(fk_group);
 			party.setFk_user(sD_pk_user);
 			party.setName(party_name);
@@ -585,8 +585,9 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			Log.e("AddNewPartyActivity", "新建日程的mLng=====" + mLng);
 			Log.e("AddNewPartyActivity", "新建日程的mLat=====" + mLat);
 			Log.e("AddNewPartyActivity", "新建日程的地址=====" + address);
-			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(null, party));
-			mAdd_New_Party_OK.setEnabled(false);
+			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(GraphicDetailsList, party));
+			Log.e("PartyComplete~", "GraphicDetailsList.size="+GraphicDetailsList.size());
+//			mAdd_New_Party_OK.setEnabled(false);
 		}
 	}
 
