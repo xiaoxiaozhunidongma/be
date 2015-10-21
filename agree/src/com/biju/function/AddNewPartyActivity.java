@@ -560,11 +560,11 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		if(TotalCount<2){
 			SweetAlerDialog();
 		}else{
-			String pk_party = AddNewPartyActivity.getMyUUID();
+//			String pk_party = AddNewPartyActivity.getMyUUID();
 			String party_name = mAdd_New_Party_name.getText().toString().trim();
 			
 			Party party = new Party();
-			party.setPk_party(pk_party);
+			party.setPk_party(uUid);
 			party.setFk_group(fk_group);
 			party.setFk_user(sD_pk_user);
 			party.setName(party_name);
@@ -578,7 +578,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			party.setPay_amount(0);
 			party.setPay_fk_user(sD_pk_user);
 			party.setParty_interval(1);
-			Log.e("AddNewPartyActivity", "新建日程的UUID=====" + pk_party);
+			Log.e("AddNewPartyActivity", "新建日程的UUID=====" + uUid);
 			Log.e("AddNewPartyActivity", "新建日程的name=====" + party_name);
 			Log.e("AddNewPartyActivity", "新建日程的fk_group=====" + fk_group);
 			Log.e("AddNewPartyActivity", "新建日程的时间=====" + isCalendar + "    " + hour+ ":" + minute);

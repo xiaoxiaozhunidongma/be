@@ -26,13 +26,6 @@
             android:scrollbarStyle="outsideOverlay" />
     </leanchatlib.view.RefreshableView>
 
-<!--     <LinearLayout -->
-<!--         android:id="@+id/bottomLayout" -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_alignParentBottom="true" -->
-<!--         android:background="@drawable/chat_layout_home_bg_bottombar" -->
-<!--         android:orientation="vertical"> -->
 
         <LinearLayout
             android:id="@+id/rl_bottom"
@@ -200,18 +193,22 @@
     <RelativeLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/height_top_bar"
+        android:layout_height="40.0dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:gravity="center_vertical" >
 
         <TextView
             android:id="@+id/name"
-            android:layout_width="wrap_content"
+            android:layout_width="100.0dp"
             android:layout_height="wrap_content"
             android:layout_centerInParent="true"
             android:text="name"
-            android:textSize="20sp" />
+            android:gravity="center"
+            android:textSize="15.0sp" 
+            android:textColor="#535353"
+            android:singleLine="true"
+            />
 
         <RelativeLayout
             android:id="@+id/container_remove"
@@ -250,25 +247,36 @@
 
         <TextView
             android:id="@+id/tv_back"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/selector_back_gray_white"
             android:gravity="center"
             android:text="返回"
-            android:textColor="#8e8e8e" />
+            android:textSize="@dimen/title_left_size"
+            android:textColor="@drawable/title_left_color" />
 
         <TextView
             android:id="@+id/tv_detail"
-            android:layout_width="46dp"
-            android:layout_height="46dp"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:background="@drawable/selector_back_gray_white"
             android:gravity="center"
-            android:text="详情"
-            android:textColor="#00e3e3" />
+            android:text="成员"
+            android:textSize="@dimen/title_right_size"
+            android:textColor="@drawable/title_right_color" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+             />
+
     </RelativeLayout>
 
     <RelativeLayout

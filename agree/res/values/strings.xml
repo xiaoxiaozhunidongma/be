@@ -242,7 +242,7 @@
     <string name="party_prompt">你还没有参与过日程哦！</string>
     <!-- 好友界面 -->
     <string name="friends_title_text">好友</string>
-    <string name="friends_title_right_text">添加好友</string>
+    <string name="friends_title_right_text">添加聊天</string>
     <string name="friends_prompt">你还没有添加任何的好友！</string>
     <!-- 设置界面 -->
     <string name="setting_title_text">账户</string>
@@ -375,5 +375,7 @@
     <string name="title_activity_wxpay_entry">WXPayEntryActivity</string>
     <string name="title_activity_preview">PreviewActivity</string>
     <string name="title_activity_add_friends3">AddFriends3Activity</string>
+    <string name="title_activity_members_chat">MembersChatActivity</string>
+    <string name="title_activity_chat_room">ChatRoomActivity</string>
 
 </resources>

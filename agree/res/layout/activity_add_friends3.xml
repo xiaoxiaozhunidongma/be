@@ -9,25 +9,66 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" >
+        android:layout_alignParentTop="true"
+        android:background="#ffffff" >
+
+        <!-- android:textAppearance="?android:attr/textAppearanceMedium" -->
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+
+        <RelativeLayout
+            android:id="@+id/AddFriends3BackLayout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/AddFriends3Back"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="返回"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_left_size" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/AddFriends3OKLayout"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <TextView
+                android:id="@+id/AddFriends3OK"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:text="完成"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="@dimen/title_right_size" />
+        </RelativeLayout>
+        <!-- android:textAppearance="?android:attr/textAppearanceMedium" -->
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:text="我的好友"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:layout_marginRight="30.0dp"
+            android:layout_toLeftOf="@+id/AddFriends3OKLayout"
+            android:text="好友"
+            android:textColor="@drawable/title_text_color"
+            android:textSize="@dimen/title_size" />
 
-        <TextView
-            android:id="@+id/tv_ok"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/textView1"
-            android:layout_alignParentRight="true"
-            android:text="完成"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 
     <ListView

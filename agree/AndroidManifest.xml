@@ -501,11 +501,20 @@
             android:name="com.biju.pay.PreviewActivity"
             android:label="@string/title_activity_preview" >
         </activity>
-        <activity android:name="com.biju.MyGalleryActivity" >
+        <activity android:name="com.biju.chatroom.MyGalleryActivity" >
         </activity>
         <activity
-            android:name="com.biju.AddFriends3Activity"
+            android:name="com.biju.chatroom.AddFriends3Activity"
             android:label="@string/title_activity_add_friends3" >
+        </activity>
+        <activity
+            android:name="com.biju.chatroom.MembersChatActivity"
+            android:label="@string/title_activity_members_chat"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.biju.chatroom.ChangeChatNameActivity"
+            android:label="@string/title_activity_chat_room" >
         </activity>
     </application>
 
