@@ -15,7 +15,7 @@
             android:layout_width="60.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
-            android:layout_marginLeft="25dp" 
+            android:layout_marginLeft="20.0dp" 
             >
 
             <ImageView
@@ -47,20 +47,38 @@
             android:gravity="left|center"
             android:text="TextView"
             android:textColor="#d3d3d3"
-            android:textSize="15.0sp" />
+            android:textSize="12.0sp" />
 
         <TextView
             android:id="@+id/commentslist_item_nickname"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="20.0dp"
+            android:layout_marginLeft="5.0dp"
             android:layout_toRightOf="@+id/commentslist_item_head_layout"
             android:gravity="left|center"
             android:layout_marginTop="10.0dp"
             android:text="TextView"
             android:textColor="#000000"
-            android:textSize="20.0sp" />
+            android:textSize="18.0sp" />
+
+        <TextView
+            android:id="@+id/commentslist_item_prompt_1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            android:layout_marginLeft="20.0dp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/commentslist_item_prompt_2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+             />
 
     </RelativeLayout>
 

@@ -227,6 +227,9 @@
     <string name="text_delivered_msg">Delivered</string>
     <string name="title_activity_photo_view">PhotoViewActivity</string>
     <string name="title_activity_team_setting2">TeamSetting2Activity</string>
+    <string name="app_tip">提示</string>
+    <string name="getting_prepayid">正在获取预支付订单...</string>
+    <string name="pay_result_callback_msg" formatted="false">微信支付结果：%s</string>
 
     <!-- home界面 -->
     <string name="home_title_text">小组</string>
@@ -366,5 +369,11 @@
     <string name="NewTeam_hint">小组名称</string>
     <string name="NewTeam_prompt_1">邀请好友加入小组</string>
     <string name="title_activity_add_friends3">AddFriends3Activity</string>
+    <string name="title_activity_cost">CostActivity</string>
+    <string name="title_activity_limit_number">LimitNumberActivity</string>
+    <string name="title_activity_graphic_details">GraphicDetailsActivity</string>
+    <string name="title_activity_pay">PayActivity</string>
+    <string name="title_activity_wxpay_entry">WXPayEntryActivity</string>
+    <string name="title_activity_preview">PreviewActivity</string>
 
 </resources>

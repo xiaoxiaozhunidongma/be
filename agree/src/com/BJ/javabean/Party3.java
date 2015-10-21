@@ -39,7 +39,7 @@ public class Party3 implements Serializable{
 	@Column
 	private Integer pay_fk_user;
 	@Column
-	private String interval;
+	private Integer interval;
 	@Column
 	private Integer status;
 	public String getPk_party() {
@@ -138,10 +138,10 @@ public class Party3 implements Serializable{
 	public void setPay_fk_user(Integer pay_fk_user) {
 		this.pay_fk_user = pay_fk_user;
 	}
-	public String getInterval() {
+	public Integer getInterval() {
 		return interval;
 	}
-	public void setInterval(String interval) {
+	public void setInterval(Integer interval) {
 		this.interval = interval;
 	}
 	public Integer getStatus() {
@@ -150,20 +150,32 @@ public class Party3 implements Serializable{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
-	@Override
-	public String toString() {
-		return "Party [pk_party=" + pk_party + ", fk_group=" + fk_group
-				+ ", fk_user=" + fk_user + ", name=" + name + ", remark="
-				+ remark + ", begin_time=" + begin_time + ", end_time="
-				+ end_time + ", tip_time=" + tip_time + ", sign_time="
-				+ sign_time + ", sign_count=" + sign_count + ", longitude="
-				+ longitude + ", latitude=" + latitude + ", location="
-				+ location + ", pay_type=" + pay_type + ", amount=" + amount
-				+ ", pay_fk_user=" + pay_fk_user + ", interval=" + interval
-				+ ", status=" + status + "]";
+	public Party3(String pk_party, Integer fk_group, Integer fk_user,
+			String name, String remark, String begin_time, String end_time,
+			String tip_time, String sign_time, String sign_count,
+			Double longitude, Double latitude, String location,
+			Integer pay_type, Integer amount, Integer pay_fk_user,
+			Integer interval, Integer status) {
+		super();
+		this.pk_party = pk_party;
+		this.fk_group = fk_group;
+		this.fk_user = fk_user;
+		this.name = name;
+		this.remark = remark;
+		this.begin_time = begin_time;
+		this.end_time = end_time;
+		this.tip_time = tip_time;
+		this.sign_time = sign_time;
+		this.sign_count = sign_count;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.location = location;
+		this.pay_type = pay_type;
+		this.amount = amount;
+		this.pay_fk_user = pay_fk_user;
+		this.interval = interval;
+		this.status = status;
 	}
-	
-	
 	
 	
 

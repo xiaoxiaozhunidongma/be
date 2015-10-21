@@ -13,9 +13,7 @@ import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 import com.BJ.photo.Res;
-import com.BJ.utils.ImageLoaderUtils;
-import com.BJ.utils.ImageLoaderUtils4Photos;
-import com.BJ.utils.homeImageLoaderUtils;
+import com.activeandroid.ActiveAndroid;
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.OSSServiceProvider;
 import com.alibaba.sdk.android.oss.model.AccessControlList;
@@ -38,6 +36,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class MyApplication extends Application {
 
@@ -74,6 +74,7 @@ public class MyApplication extends Application {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+		
 		//初始化OSS
 		initOSS();
 		// leanchat
@@ -104,7 +105,7 @@ public class MyApplication extends Application {
 		    });
 		
 		// 初始化数据库
-//		ActiveAndroid.initialize(this);
+		ActiveAndroid.initialize(this);
 
 		Res.init(this);// 初始化RES
 

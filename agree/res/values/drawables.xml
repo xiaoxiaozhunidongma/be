@@ -49,4 +49,14 @@
     <drawable name="sex_choose_color">#d9d9d9</drawable>
     <!-- 侧滑界面 -->
      <drawable name="Sliding_choose_color">#d9d9d9</drawable>
+     <!--支付界面  -->
+     <drawable name="CostChooseColor">#d9d9d9</drawable>
+     
+     <!--设置图文信息字体颜色  -->
+     <drawable name="EditTextLightGrayColor">#c9c9c9</drawable>
+     <drawable name="EditTextDarkGrayColor">#535353</drawable>
+     <drawable name="EditTextBlackColor">#000000</drawable>
+     <drawable name="EditTextRedColor">#ff0000</drawable>
+     <drawable name="EditTextBlueColor">#0080ff</drawable>
+     <drawable name="EditTextGreenColor">#02c874</drawable>
 </resources>

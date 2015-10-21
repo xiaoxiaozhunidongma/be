@@ -5,8 +5,8 @@ import java.io.Serializable;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-@Table (name="t_party")
-public class Party2 implements Serializable{
+@Table(name = "t_party")
+public class Party2 implements Serializable {
 	@Column
 	private String pk_party;
 	@Column
@@ -24,11 +24,23 @@ public class Party2 implements Serializable{
 	@Column
 	private String tip_time;
 	@Column
+	private String sign_time;
+	@Column
+	private String sign_count;
+	@Column
 	private Double longitude;
 	@Column
 	private Double latitude;
 	@Column
 	private String location;
+	@Column
+	private Integer pay_type;
+	@Column
+	private Integer pay_amount;
+	@Column
+	private Integer pay_fk_user;
+	@Column
+	private String interval;
 	@Column
 	private Integer status;
 	@Column
@@ -85,6 +97,18 @@ public class Party2 implements Serializable{
 	public void setTip_time(String tip_time) {
 		this.tip_time = tip_time;
 	}
+	public String getSign_time() {
+		return sign_time;
+	}
+	public void setSign_time(String sign_time) {
+		this.sign_time = sign_time;
+	}
+	public String getSign_count() {
+		return sign_count;
+	}
+	public void setSign_count(String sign_count) {
+		this.sign_count = sign_count;
+	}
 	public Double getLongitude() {
 		return longitude;
 	}
@@ -102,6 +126,30 @@ public class Party2 implements Serializable{
 	}
 	public void setLocation(String location) {
 		this.location = location;
+	}
+	public Integer getPay_type() {
+		return pay_type;
+	}
+	public void setPay_type(Integer pay_type) {
+		this.pay_type = pay_type;
+	}
+	public Integer getPay_amount() {
+		return pay_amount;
+	}
+	public void setPay_amount(Integer pay_amount) {
+		this.pay_amount = pay_amount;
+	}
+	public Integer getPay_fk_user() {
+		return pay_fk_user;
+	}
+	public void setPay_fk_user(Integer pay_fk_user) {
+		this.pay_fk_user = pay_fk_user;
+	}
+	public String getInterval() {
+		return interval;
+	}
+	public void setInterval(String interval) {
+		this.interval = interval;
 	}
 	public Integer getStatus() {
 		return status;
@@ -127,17 +175,35 @@ public class Party2 implements Serializable{
 	public void setInNum(Integer inNum) {
 		this.inNum = inNum;
 	}
-	@Override
-	public String toString() {
-		return "Party2 [pk_party=" + pk_party + ", fk_group=" + fk_group
-				+ ", fk_user=" + fk_user + ", name=" + name + ", remark="
-				+ remark + ", begin_time=" + begin_time + ", end_time="
-				+ end_time + ", tip_time=" + tip_time + ", longitude="
-				+ longitude + ", latitude=" + latitude + ", location="
-				+ location + ", status=" + status + ", relationship="
-				+ relationship + ", pk_party_user=" + pk_party_user
-				+ ", inNum=" + inNum + "]";
+	public Party2(String pk_party, Integer fk_group, Integer fk_user,
+			String name, String remark, String begin_time, String end_time,
+			String tip_time, String sign_time, String sign_count,
+			Double longitude, Double latitude, String location,
+			Integer pay_type, Integer pay_amount, Integer pay_fk_user,
+			String interval, Integer status, Integer relationship,
+			Integer pk_party_user, Integer inNum) {
+		super();
+		this.pk_party = pk_party;
+		this.fk_group = fk_group;
+		this.fk_user = fk_user;
+		this.name = name;
+		this.remark = remark;
+		this.begin_time = begin_time;
+		this.end_time = end_time;
+		this.tip_time = tip_time;
+		this.sign_time = sign_time;
+		this.sign_count = sign_count;
+		this.longitude = longitude;
+		this.latitude = latitude;
+		this.location = location;
+		this.pay_type = pay_type;
+		this.pay_amount = pay_amount;
+		this.pay_fk_user = pay_fk_user;
+		this.interval = interval;
+		this.status = status;
+		this.relationship = relationship;
+		this.pk_party_user = pk_party_user;
+		this.inNum = inNum;
 	}
 
-	
 }

@@ -75,6 +75,7 @@ import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readPartyJoinMsgListenner;
 import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
+import com.biju.pay.PayBaseActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
@@ -118,6 +119,11 @@ public class PartyDetailsActivity extends Activity implements
 	private int not_sayNum;
 	private Integer current_relationship;
 	private RelativeLayout mPartyDetails_apply_layout;
+	private Integer mPay_type;
+	private Integer mPay_amount;
+	private String mPayName;
+	public static GetWeChatPay getWeChatPay;
+	public static GetAliPay getAliPay;
 
 	/**
 	 * 定位SDK监听函数
@@ -203,13 +209,50 @@ public class PartyDetailsActivity extends Activity implements
 
 		// 初始化地图
 		initMap();
-		Log.e("PartyDetailsActivity", "在onCreate()==========");
+		initGetWeChatPay();//微信支付
+		initAliPay();//支付宝支付
 	}
 	
+	private void initAliPay() {
+		GetAliPay getAliPay=new GetAliPay() {
+			
+			@Override
+			public void AliPay() {
+				Party_User party_user = new Party_User();
+				party_user.setPk_party_user(pk_party_user);
+				party_user.setRelationship(4);
+				party_user.setStatus(1);
+				party_user.setFk_party(pk_party);
+				party_user.setFk_user(sD_pk_user);
+				readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+				Toast();
+			}
+		};
+		this.getAliPay=getAliPay;
+	}
+
+	@SuppressWarnings("static-access")
+	private void initGetWeChatPay() {
+		GetWeChatPay getWeChatPay=new GetWeChatPay() {
+			
+			@Override
+			public void WeChatPay() {
+				Party_User party_user = new Party_User();
+				party_user.setPk_party_user(pk_party_user);
+				party_user.setRelationship(4);
+				party_user.setStatus(1);
+				party_user.setFk_party(pk_party);
+				party_user.setFk_user(sD_pk_user);
+				readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+				Toast();
+			}
+		};
+		this.getWeChatPay=getWeChatPay;
+	}
+
 	@Override
 	protected void onRestart() {
 		super.onRestart();
-		Log.e("PartyDetailsActivity", "在onRestart()==========");
 		initInterface();
 		if(userAll)
 		{
@@ -217,7 +260,6 @@ public class PartyDetailsActivity extends Activity implements
 			pk_party_user=PartyDetails_sp.getInt(IConstant.Partyfragmnet_Pk_party_user, 0);
 			pk_party=PartyDetails_sp.getString(IConstant.Partyfragmnet_Pk_party, "");
 			fk_group=PartyDetails_sp.getInt(IConstant.Partyfragmnet_fk_group, 0);
-			Log.e("PartyDetailsActivity", "进入了所有的=========="+fk_group+"      "+pk_party+"   "+pk_party_user);
 		}else
 		{
 			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Schedule, 0);
@@ -280,41 +322,32 @@ public class PartyDetailsActivity extends Activity implements
 						default:
 							break;
 						}
-						
 						//查找当前用户的参与信息
 						Integer pk_user=relation.getPk_user();
-						if(String.valueOf(pk_user).equals(String.valueOf(sD_pk_user)))
-						{
+						if(String.valueOf(pk_user).equals(String.valueOf(sD_pk_user))){
 							current_relationship = relationList.get(i).getRelationship();
-							if(current_relationship==4)
-							{
-								mPartyDetails_apply.setText("已报名");
-								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_apply_layout_color);//已报名背景为绿色
-							}else
-							{
-								mPartyDetails_apply.setText("未报名");
+							if(current_relationship==4){
+								mPartyDetails_apply.setText("已参与");
 								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_noapply_layout_color);//已报名背景为淡灰色
+							}else{
+								mPartyDetails_apply.setText("报名");
+								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_apply_layout_color);//未报名背景为绿色
 							}
-							Log.e("PartyDetailsActivity","当前current_relationship==========" + current_relationship);
 						}
 					}
 					Log.e("PartyDetailsActivity", "当前partakeNum的数量"+ partakeNumList.size());
 					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"+ not_sayNum);
 					mPartyDetails_partake_number.setText(String.valueOf(partakeNumList.size()));// 显示参与数量
-//					mPartyDetails_did_not_say_number.setText(String.valueOf(not_sayNum));// 显示未表态数量
-					if(partakeNumList.size()>0)
-					{
+					if(partakeNumList.size()>0){
 						not_sayNum=PartyDetailsList.size()-partakeNumList.size();
-					}else
-					{
+					}else{
 						not_sayNum=PartyDetailsList.size();
 					}
 					mPartyDetails_did_not_say_number.setText(String.valueOf(not_sayNum));// 显示未表态数量
 					
 					
 					List<Party3> partylist=returnData.getParty();
-					if(partylist.size()>0)
-					{
+					if(partylist.size()>0){
 						Party3 readparty=partylist.get(0);
 						Integer pk_user=readparty.getFk_user();
 						//查找聚会创建者
@@ -409,23 +442,28 @@ public class PartyDetailsActivity extends Activity implements
 			mPartyDetails_partytime.setText(years + "年" + months + "月" + days + "日"
 					+ "  " + week + "  " + hour + ":" + minute);//显示聚会时间
 			mPartyDetails_partyaddress.setText(allParty.getLocation());//显示聚会地点
-
+			mPay_type = allParty.getPay_type();//支付类型
+			mPay_amount = allParty.getPay_amount();//支付金额
+			mPayName = allParty.getName();//聚会名称
+			if(1==mPay_type){
+				mPartyDetails_partypayment.setText("免费");
+			}else {
+				mPartyDetails_partypayment.setText("预支付");
+			}
 			Double latitude = allParty.getLatitude();
 			Double longitude = allParty.getLongitude();
 			String location = allParty.getLocation();
-			if(latitude!=null&longitude!=null)
-			{
+			if(latitude!=null&longitude!=null){
 				mLat = latitude;
 				mLng = longitude;
 				edit_show.setText(location);
-			}else
-			{
+			}else{
 				mLat = 24.497572;
 				mLng = 118.17276;
 			}
+			edit_show.setText(location);
 		} else {
 			oneParty = (Party2) intent.getSerializableExtra(IConstant.OneParty);
-//			isRelationship = intent.getBooleanExtra(IConstant.IsRelationship, false);
 			SharedPreferences partydetails_sp=getSharedPreferences(IConstant.Schedule, 0);
 			pk_party_user = partydetails_sp.getInt(IConstant.Pk_party_user, 0);
 			Log.e("PartyDetailsActivity", "得到的第二个getPk_party_user========="+ pk_party_user);
@@ -447,17 +485,26 @@ public class PartyDetailsActivity extends Activity implements
 			mPartyDetails_partytime.setText(years + "年" + months + "月" + days + "日"
 					+ "  " + week + "  " + hour + ":" + minute);//显示聚会时间
 			mPartyDetails_partyaddress.setText(oneParty.getLocation());//显示聚会地点
-			
-			
+			mPay_type = oneParty.getPay_type();//支付类型
+			mPay_amount = oneParty.getPay_amount();//支付金额
+			mPayName = oneParty.getName();//聚会名称
+			if(1==mPay_type){
+				mPartyDetails_partypayment.setText("免费");
+			}else {
+				mPartyDetails_partypayment.setText("预支付");
+			}
 			Double latitude = oneParty.getLatitude();
 			Double longitude = oneParty.getLongitude();
 			String location = oneParty.getLocation();
-			if(longitude!=null)
-			{
+			if(longitude!=null){
 				mLng = longitude;
-			}else
-			{
+			}else{
 				mLng=118.17276;
+			}
+			if(latitude!=null){
+				mLat = latitude;
+			}else {
+				mLat = 24.497572;
 			}
 			edit_show.setText(location);
 		}
@@ -502,8 +549,7 @@ public class PartyDetailsActivity extends Activity implements
 		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
 
 			public void onMapClick(LatLng point) {
-				Intent intent = new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class);
+				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
 				intent.putExtra("mLat", mLat);
 				intent.putExtra("mLng", mLng);
 				Log.e("111", "mLat=="+mLat);
@@ -517,8 +563,7 @@ public class PartyDetailsActivity extends Activity implements
 		});
 		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
 			public void onMapLongClick(LatLng point) {
-				Intent intent = new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class);
+				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
 				intent.putExtra("mLat", mLat);
 				intent.putExtra("mLng", mLng);
 				Log.e("222", "mLat=="+mLat);
@@ -528,8 +573,7 @@ public class PartyDetailsActivity extends Activity implements
 		});
 		mBaiduMap.setOnMapDoubleClickListener(new OnMapDoubleClickListener() {
 			public void onMapDoubleClick(LatLng point) {
-				Intent intent = new Intent(PartyDetailsActivity.this,
-						BigMapActivity.class);
+				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
 				intent.putExtra("mLat", mLat);
 				intent.putExtra("mLng", mLng);
 				Log.e("333", "mLat=="+mLat);
@@ -570,14 +614,10 @@ public class PartyDetailsActivity extends Activity implements
 
 	private void addOverlay(double lat, double lng, final int drawableRes) {
 		LatLng llA = new LatLng(lat, lng);
-
 		// 设置悬浮的图案
-		BitmapDescriptor bdA = BitmapDescriptorFactory
-				.fromResource(drawableRes);
+		BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(drawableRes);
 		mOverLayList.add(bdA);
-
-		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA)
-				.zIndex(0).draggable(true);
+		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA).zIndex(0).draggable(true);
 		mMarkerD = (Marker) mBaiduMap.addOverlay(ooA);
 	}
 
@@ -596,8 +636,7 @@ public class PartyDetailsActivity extends Activity implements
 	@Override
 	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
 		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",
-					Toast.LENGTH_LONG).show();
+			Toast.makeText(PartyDetailsActivity.this, "抱歉，未能找到结果",Toast.LENGTH_LONG).show();
 			return;
 		}
 	}
@@ -655,51 +694,63 @@ public class PartyDetailsActivity extends Activity implements
 	private void PartyDetails_apply_layout() {
 		if(current_relationship==4)
 		{
-			final SweetAlertDialog sd = new SweetAlertDialog(PartyDetailsActivity.this,SweetAlertDialog.WARNING_TYPE);
-			sd.setTitleText("警告");
-			sd.setContentText("你确定要取消报名？");
-			sd.setCancelText("我再想想");
-			sd.setConfirmText("是的");
-			sd.showCancelButton(true);
-			sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-				@Override
-				public void onClick(SweetAlertDialog sDialog) {
-					sd.cancel();
-				}
-			}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-				@Override
-				public void onClick(SweetAlertDialog sDialog) {
-					sd.cancel();
-					Party_User party_user = new Party_User();
-					party_user.setPk_party_user(pk_party_user);
-					party_user.setRelationship(0);
-					party_user.setStatus(1);
-					party_user.setFk_party(pk_party);
-					party_user.setFk_user(sD_pk_user);
-					readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
-				}
-			}).show();
+			if(1==mPay_type){
+				final SweetAlertDialog sd = new SweetAlertDialog(PartyDetailsActivity.this,SweetAlertDialog.WARNING_TYPE);
+				sd.setTitleText("警告");
+				sd.setContentText("你确定要取消报名？");
+				sd.setCancelText("我再想想");
+				sd.setConfirmText("是的");
+				sd.showCancelButton(true);
+				sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+					@Override
+					public void onClick(SweetAlertDialog sDialog) {
+						sd.cancel();
+					}
+				}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+					@Override
+					public void onClick(SweetAlertDialog sDialog) {
+						sd.cancel();
+						Party_User party_user = new Party_User();
+						party_user.setPk_party_user(pk_party_user);
+						party_user.setRelationship(0);
+						party_user.setStatus(1);
+						party_user.setFk_party(pk_party);
+						party_user.setFk_user(sD_pk_user);
+						readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+					}
+				}).show();
+			}
 		}else
 		{
-			Party_User party_user = new Party_User();
-			party_user.setPk_party_user(pk_party_user);
-			Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222"+ pk_party_user);
-			party_user.setRelationship(4);
-			party_user.setStatus(1);
-			party_user.setFk_party(pk_party);
-			party_user.setFk_user(sD_pk_user);
-			readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
-			
-			//自定义Toast
-			View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
-			Toast toast=new Toast(getApplicationContext());
-			toast.setGravity(Gravity.CENTER, 0, 100);
-			toast.setView(toastRoot);
-			toast.setDuration(100);
-			TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
-			tv.setText("报名成功");
-			toast.show();
+			if(1==mPay_type){
+				Party_User party_user = new Party_User();
+				party_user.setPk_party_user(pk_party_user);
+				party_user.setRelationship(4);
+				party_user.setStatus(1);
+				party_user.setFk_party(pk_party);
+				party_user.setFk_user(sD_pk_user);
+				readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+				Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222"+ pk_party_user);
+				Toast();
+			}else if (3==mPay_type) {
+				Intent intent=new Intent(PartyDetailsActivity.this, PayBaseActivity.class);
+				intent.putExtra(IConstant.Paymount, mPay_amount);
+				intent.putExtra(IConstant.Payname, mPayName);
+				startActivity(intent);
+			}
 		}
+	}
+
+	private void Toast() {
+		//自定义Toast
+		View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+		Toast toast=new Toast(getApplicationContext());
+		toast.setGravity(Gravity.CENTER, 0, 100);
+		toast.setView(toastRoot);
+		toast.setDuration(100);
+		TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+		tv.setText("报名成功");
+		toast.show();
 	}
 
 	private void PartyDetails_more() {
@@ -723,5 +774,15 @@ public class PartyDetailsActivity extends Activity implements
 			editor.putBoolean(IConstant.PartyDetails, true);
 			editor.commit();
 		}
+	}
+	
+	//微信支付报名
+	public interface GetWeChatPay{
+		void WeChatPay();
+	}
+	
+	//支付宝支付
+	public interface GetAliPay{
+		void AliPay();
 	}
 }

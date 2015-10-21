@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:id="@+id/EditText_ImageLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerVertical="true" >
+
+            <RelativeLayout
+                android:id="@+id/InsertImageMinusLayout"
+                android:layout_width="60.0dp"
+                android:layout_height="match_parent"
+                android:layout_alignBottom="@+id/InsertImage"
+                android:layout_alignParentLeft="true"
+                android:layout_alignTop="@+id/InsertImage"
+                android:layout_marginLeft="20.0dp" >
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:drawableTop="@drawable/minus_gray"
+                    android:gravity="center"
+                    android:text="减少"
+                    android:textColor="#c9c9c9"
+                    android:textSize="13.0sp" />
+            </RelativeLayout>
+
+            <ImageView
+                android:id="@+id/InsertImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="10.0dp"
+                android:layout_toRightOf="@+id/InsertImageMinusLayout"
+                android:adjustViewBounds="true"
+                android:layout_marginBottom="10.0dp"
+                android:scaleType="fitCenter"
+                android:src="@drawable/about_us" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="10.0dp"
+                android:layout_alignLeft="@+id/InsertImage"
+                android:layout_alignRight="@+id/InsertImage"
+                android:layout_below="@+id/InsertImageMinusLayout"
+                >
+
+            </RelativeLayout>
+
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20.0dp"
+            android:background="#aaaaaa" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/EditText_TextLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" >
+
+        <include layout="@layout/text_item" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20.0dp"
+            android:background="#aaaaaa" />
+    </RelativeLayout>
+
+</RelativeLayout>

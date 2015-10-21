@@ -93,7 +93,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 //							toast.show();
 							
 							//自定义Toast
-							View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+							View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast, null);
 							Toast toast=new Toast(getApplicationContext());
 							toast.setGravity(Gravity.TOP, 0, toastHeight);
 							toast.setView(toastRoot);
@@ -137,7 +137,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 					}
 					if (isAdd) {
 						//自定义Toast
-						View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+						View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
 						Toast toast=new Toast(getApplicationContext());
 						toast.setGravity(Gravity.TOP, 0, toastHeight);
 						toast.setView(toastRoot);

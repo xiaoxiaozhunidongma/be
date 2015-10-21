@@ -304,7 +304,7 @@
                 android:layout_height="50.0dp"
                 android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:background="#f0f0f0" >
+                android:background="#55d4cc" >
 
                 <TextView
                     android:id="@+id/PartyDetails_apply"

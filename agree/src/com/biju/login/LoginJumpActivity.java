@@ -2,6 +2,8 @@ package com.biju.login;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -103,7 +105,6 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 			api.sendReq(req);
 			
 			SdPkUser.setWeixinRegistered(true);
-			
 		}else
 		{
 			Log.e("LoginJumpActivity", "有进入点击微信的按钮");
@@ -128,6 +129,7 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 			api.sendReq(req);
 //			Log.e("LoginJumpActivity", "这时候的返回值sendReq========"+sendReq);
 			SdPkUser.setGetweixinBinding(false);
+			SdPkUser.setWeixinRegistered(true);
 		}
 	}
 

@@ -1,12 +1,10 @@
 package com.biju;
 
 import java.io.File;
-import java.util.UUID;
 
 import leanchatlib.controller.ChatManager;
 import leanchatlib.utils.LogUtils;
 import android.app.Activity;
-import android.content.ContentUris;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
@@ -15,7 +13,6 @@ import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
-import android.provider.MediaStore.Images;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
@@ -28,12 +25,10 @@ import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.LimitLong;
-import com.BJ.utils.MyBimp;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.PicCutter;
 import com.BJ.utils.RefreshActivity;
