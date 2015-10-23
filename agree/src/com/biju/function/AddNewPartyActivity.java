@@ -585,8 +585,9 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			Log.e("AddNewPartyActivity", "新建日程的mLng=====" + mLng);
 			Log.e("AddNewPartyActivity", "新建日程的mLat=====" + mLat);
 			Log.e("AddNewPartyActivity", "新建日程的地址=====" + address);
-			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(null, party));
-			mAdd_New_Party_OK.setEnabled(false);
+			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(GraphicDetailsList, party));
+			Log.e("PartyComplete~", "GraphicDetailsList.size="+GraphicDetailsList.size());
+//			mAdd_New_Party_OK.setEnabled(false);
 		}
 	}
 

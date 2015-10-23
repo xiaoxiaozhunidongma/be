@@ -135,12 +135,12 @@ public class ImageText extends Model implements Serializable{
 
 	@Override
 	public String toString() {
-		return "ImageText [pk_party_remark=" + pk_party_remark + ", fk_party="
+		return "{pk_party_remark=" + pk_party_remark + ", fk_party="
 				+ fk_party + ", type=" + type + ", text=" + text
 				+ ", image_path=" + image_path + ", style=" + style
 				+ ", font_size=" + font_size + ", font_color=" + font_color
 				+ ", image_height=" + image_height + ", image_width="
-				+ image_width + ", _order=" + _order + ", status=" + status + "]";
+				+ image_width + ", _order=" + _order + ", status=" + status + "}";
 	}
 
 	public ImageText(Integer pk_party_remark, String fk_party, Integer type,

@@ -19,6 +19,8 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.IDs;
+import com.BJ.javabean.ImageText;
+import com.BJ.javabean.JsonAddParty;
 import com.BJ.javabean.MapAddParty;
 import com.BJ.javabean.MultiUserModle;
 import com.BJ.javabean.Party;
@@ -168,24 +170,36 @@ public class Interface {
 		return params;
 	}
 
+	ArrayList<String> ImageTextList=new ArrayList<String>();
 	public Map<String, String> packParamsAddParty(Object classObject,
 			String interfaceType) {
 
 		Map map = Bean2Map.ConvertObjToMap(((MapAddParty) classObject)
 				.getParty());
 		JSONObject jsonObject = new JSONObject(map);
-		String remarkArray = ((MapAddParty) classObject).getRemarkArray();
-		StringAddParty stringAddParty = new StringAddParty(remarkArray,
-				jsonObject);
-
 		Log.e("Interface", "map------" + map);
+		
+		List<ImageText> remarkArray = ((MapAddParty) classObject).getRemarkArray();
+//		ImageTextList.clear();//先清空
+		for (int i = 0; i < remarkArray.size(); i++) {
+			ImageText imageText = remarkArray.get(i);
+			ImageTextList.add(imageText.toString());
+		}
+		JSONArray jsonArray = null;
+		String string2 = ImageTextList.toString();
+		jsonArray = new JSONArray(ImageTextList);
+//		StringAddParty stringAddParty = new StringAddParty(remarkArray,
+//				jsonObject);
+		JsonAddParty jsonAddParty = new JsonAddParty(jsonArray, jsonObject);
+
 		Map<String, String> params = new HashMap<String, String>();
 
-		Map map2 = Bean2Map.ConvertObjToMap(stringAddParty);
+		Map map2 = Bean2Map.ConvertObjToMap(jsonAddParty);
+		Log.e("Interface", "map2------" + map2);
 		JSONObject jsonObject2 = new JSONObject(map2);
 		params.put("request_type", interfaceType);
 		Log.e("Interface", "小组json:" + jsonObject2.toString());
-		params.put("request_data", jsonObject2.toString());
+		params.put("request_data", jsonObject2.toString().replace("\\", ""));
 
 		return params;
 	}

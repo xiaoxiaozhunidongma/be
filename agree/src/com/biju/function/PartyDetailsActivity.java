@@ -453,8 +453,7 @@ public class PartyDetailsActivity extends Activity implements
 			Double latitude = allParty.getLatitude();
 			Double longitude = allParty.getLongitude();
 			String location = allParty.getLocation();
-			if(latitude!=null&longitude!=null)
-			{
+			if(latitude!=null&longitude!=null){
 				mLat = latitude;
 				mLng = longitude;
 				edit_show.setText(location);
@@ -497,8 +496,7 @@ public class PartyDetailsActivity extends Activity implements
 			Double latitude = oneParty.getLatitude();
 			Double longitude = oneParty.getLongitude();
 			String location = oneParty.getLocation();
-			if(longitude!=null)
-			{
+			if(longitude!=null){
 				mLng = longitude;
 			}else{
 				mLng=118.17276;

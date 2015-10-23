@@ -368,6 +368,7 @@
     <string name="NewTeam_prompt">小组封面</string>
     <string name="NewTeam_hint">小组名称</string>
     <string name="NewTeam_prompt_1">邀请好友加入小组</string>
+    
     <string name="title_activity_cost">CostActivity</string>
     <string name="title_activity_limit_number">LimitNumberActivity</string>
     <string name="title_activity_graphic_details">GraphicDetailsActivity</string>

@@ -1,7 +1,9 @@
 package com.BJ.javabean;
 
+import java.util.List;
+
 public class MapAddParty {
-	String remarkArray;
+	List<ImageText> remarkArray;
 	Party party;
 	public Party getParty() {
 		return party;
@@ -9,15 +11,15 @@ public class MapAddParty {
 	public void setParty(Party party) {
 		this.party = party;
 	}
-	public String getRemarkArray() {
+	public List<ImageText> getRemarkArray() {
 		return remarkArray;
 	}
-	public void setRemarkArray(String remarkArray) {
+	public void setRemarkArray(List<ImageText> remarkArray) {
 		this.remarkArray = remarkArray;
 	}
-	public MapAddParty(String remarkArray, Party party) {
+	public MapAddParty(List<ImageText> graphicDetailsList, Party party) {
 		super();
-		this.remarkArray = remarkArray;
+		this.remarkArray = graphicDetailsList;
 		this.party = party;
 	}
 	

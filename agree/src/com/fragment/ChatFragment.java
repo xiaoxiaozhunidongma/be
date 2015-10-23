@@ -133,7 +133,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		    public void onError(AVIMTypedMessage message, Exception e) {
 		      LogUtils.i();
 		      Log.e("ChatFragment", "DefaultSendCallback--onError");
-		      Toast.makeText(getActivity(), "无可用的网络", Toast.LENGTH_SHORT).show();
+		      Toast.makeText(getActivity(), "无可用的网络"+e.toString(), Toast.LENGTH_SHORT).show();
 //		      addMessageAndScroll(message);
 		    }
 
