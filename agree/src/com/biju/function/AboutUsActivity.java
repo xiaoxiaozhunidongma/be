@@ -97,6 +97,7 @@ public class AboutUsActivity extends Activity implements OnClickListener {
 
 	private void aboutus_back() {
 		finish();
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
 }

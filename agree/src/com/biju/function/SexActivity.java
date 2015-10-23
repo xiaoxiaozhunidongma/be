@@ -191,6 +191,7 @@ public class SexActivity extends Activity implements OnClickListener {
 	// ·µ»Ø
 	private void Set_back() {
 		finish();
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
 }

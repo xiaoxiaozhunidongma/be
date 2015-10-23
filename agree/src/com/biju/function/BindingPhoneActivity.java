@@ -250,6 +250,7 @@ public class BindingPhoneActivity extends Activity implements OnClickListener {
 
 	private void binding_phone_back() {
 		finish();
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
 	public interface GetBindingPhone

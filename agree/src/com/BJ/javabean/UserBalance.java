@@ -1,12 +1,10 @@
 package com.BJ.javabean;
 
-import java.io.Serializable;
-
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table(name = "t_user")
-public class User implements Serializable{
+public class UserBalance {
 
 	@Column
 	private Integer pk_user;
@@ -120,4 +118,5 @@ public class User implements Serializable{
 	public void setReal_name(String real_name) {
 		this.real_name = real_name;
 	}
+	
 }

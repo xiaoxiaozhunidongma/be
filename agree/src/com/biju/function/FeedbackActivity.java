@@ -135,6 +135,7 @@ public class FeedbackActivity extends Activity implements OnClickListener {
 
 	private void feedback_back() {
 		finish();
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
 }

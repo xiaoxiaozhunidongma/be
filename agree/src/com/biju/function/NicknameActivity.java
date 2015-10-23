@@ -130,5 +130,6 @@ public class NicknameActivity extends Activity implements OnClickListener{
 
 	private void Nickname_back() {
 		finish();
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 }

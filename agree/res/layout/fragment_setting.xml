@@ -51,7 +51,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="180.0dp"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true" >
+                android:layout_centerHorizontal="true"
+                 >
 
                 <ImageView
                     android:id="@+id/imageView1"
@@ -349,10 +350,9 @@
             <RelativeLayout
                 android:id="@+id/relativeLayout7"
                 android:layout_width="match_parent"
-                android:layout_height="138.0dp"
+                android:layout_height="94.0dp"
                 android:layout_below="@+id/Setting_User_layout"
                 android:layout_centerHorizontal="true"
-                android:visibility="gone"
                  >
 
                 <RelativeLayout
@@ -369,7 +369,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="20.0dp"
                         android:layout_marginTop="25.0dp"
-                        android:text="支付"
+                        android:text="钱包"
                         android:textColor="@drawable/setting_prompt_color"
                         android:textSize="@dimen/setting_size" />
 
@@ -383,7 +383,7 @@
                 </RelativeLayout>
 
                 <RelativeLayout
-                    android:id="@+id/Setting_Binding_weixin_wallet"
+                    android:id="@+id/Setting_Binding_balance_layout"
                     android:layout_width="match_parent"
                     android:layout_height="@dimen/setting_layout_height"
                     android:layout_below="@+id/relativeLayout6"
@@ -397,7 +397,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
-                        android:text="绑定微信钱包"
+                        android:text="余额"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -405,7 +405,6 @@
                         android:layout_width="match_parent"
                         android:layout_height="0.50dp"
                         android:layout_alignParentBottom="true"
-                        android:layout_marginLeft="20.0dp"
                         android:background="#aaaaaa" />
 
                     <ImageView
@@ -417,42 +416,19 @@
                         android:layout_marginRight="15dp"
                         android:contentDescription="@string/app_name"
                         android:src="@drawable/jiantou" />
-                </RelativeLayout>
-
-                <RelativeLayout
-                    android:id="@+id/Setting_Binding_alipay"
-                    android:layout_width="match_parent"
-                    android:layout_height="@dimen/setting_layout_height"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:background="@drawable/setting_click_selector" >
 
                     <TextView
-                        android:id="@+id/textView17"
+                        android:id="@+id/Setting_Binding_balance_show"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_alignParentLeft="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginLeft="20dp"
-                        android:text="绑定支付宝"
-                        android:textSize="@dimen/setting_size" />
+                        android:layout_alignBottom="@+id/Setting_next_5"
+                        android:layout_toLeftOf="@+id/Setting_next_5"
+                        android:text="¥0.00"
+                        android:layout_marginRight="5.0dp"
+                        android:textColor="@drawable/setting_content_color"
+                        android:textSize="@dimen/setting_prompt_size"
+                         />
 
-                    <TextView
-                        android:id="@+id/textView18"
-                        android:layout_width="match_parent"
-                        android:layout_height="0.50dp"
-                        android:layout_alignParentBottom="true"
-                        android:background="#aaaaaa" />
-
-                    <ImageView
-                        android:id="@+id/Setting_next_5"
-                        android:layout_width="15.0dp"
-                        android:layout_height="15.0dp"
-                        android:layout_alignParentRight="true"
-                        android:layout_centerVertical="true"
-                        android:layout_marginRight="15dp"
-                        android:contentDescription="@string/app_name"
-                        android:src="@drawable/jiantou" />
                 </RelativeLayout>
             </RelativeLayout>
 

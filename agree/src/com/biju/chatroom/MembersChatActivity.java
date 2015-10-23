@@ -1,6 +1,5 @@
 package com.biju.chatroom;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -17,7 +16,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
@@ -51,6 +49,7 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 	}
 
 	private void initUI() {
+		findViewById(R.id.MembersChatShowLayout).setOnClickListener(this);
 		findViewById(R.id.MembersChatExitGroup).setOnClickListener(this);//退出群聊
 		findViewById(R.id.MembersChatExitGroupChatLayout).setOnClickListener(this);
 		findViewById(R.id.MembersChatAddMembers).setOnClickListener(this);//添加成员
@@ -191,6 +190,7 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 	private void MembersChatChangeNameLayout() {
 		Intent intent=new Intent(MembersChatActivity.this, ChangeChatNameActivity.class);
 		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	private void MembersChatBackLayout() {

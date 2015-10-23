@@ -30,6 +30,7 @@ import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
+import com.biju.chatroom.PersonalDataActivity;
 import com.biju.function.SlidingActivity.MyMemBerAdapter;
 import com.fragment.CommonFragment;
 import com.fragment.PhotoFragment2;
@@ -88,6 +89,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private RelativeLayout mSlidingMenu_Team_Setting;
 	
 	private boolean isCode;
+	public static GetGroupChat getGroupChat;
+	public static GetClickOK clickOK;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -109,9 +112,37 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 
 		initInterface();// 监听
 		initreadUserGroupRelation();// 获取小组的关系ID
-		initSliding();
+		initSliding();//小组成员列表调用接口
+		initGetGroupChat();//点击群聊头像调用接口实现跳转界面
+		initPersonal();//在头像界面点击完成按钮监听
 	}
 
+	private void initPersonal() {
+		GetClickOK clickOK=new GetClickOK(){
+
+			@Override
+			public void ClickOK() {
+				mGroup_setting.setText("关闭");
+			}
+			
+		};
+		this.clickOK=clickOK;
+	}
+
+	private void initGetGroupChat() {
+		GetGroupChat getGroupChat=new GetGroupChat(){
+
+			@Override
+			public void GroupChat() {
+				Intent intent=new Intent(GroupActivity.this, PersonalDataActivity.class);
+				startActivity(intent);
+				overridePendingTransition(R.anim.leftin_item, R.anim.leftout_item);
+			}
+			
+		};
+		this.getGroupChat=getGroupChat;
+	}
+	
 	@SuppressWarnings("static-access")
 	private void initSliding() {
 		GetSliding getSliding = new GetSliding() {
@@ -245,5 +276,13 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	  protected void onNewIntent(Intent intent) {
 	    super.onNewIntent(intent);
 	    setIntent(intent);
+	  }
+	  
+	  public interface GetGroupChat{
+		  void GroupChat();
+	  }
+	  
+	  public interface GetClickOK{
+		  void ClickOK();
 	  }
 }

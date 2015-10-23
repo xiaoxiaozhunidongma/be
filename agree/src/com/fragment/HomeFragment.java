@@ -203,6 +203,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		super.onStart();
 	}
 
+	
 	@Override
 	public void onResume() {
 		SharedPreferences requestcode_sp = getActivity().getSharedPreferences(IConstant.RequestCode, 0);
@@ -212,6 +213,9 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			SD_pk_user = SdPkUser.getsD_pk_user();
 			ReadTeamInterface(SD_pk_user);
 		}
+		
+		readCurUser();//读取当前用户
+		readAlluserOfgroup();
 		super.onResume();
 	}
 
@@ -261,13 +265,10 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 			}
 		});
-		
-		readCurUser();//读取当前用户
-		readAlluserOfgroup();
 	}
 
 	private void readAlluserOfgroup() {
-		
+		homeInterface = Interface.getInstance();
 		homeInterface.setPostListener(new readAllPerRelationListenner() {
 
 			@Override
@@ -285,16 +286,20 @@ public class HomeFragment extends Fragment implements OnClickListener,
 							FromAvaUrlMap.put(readAllUser.getFk_user(), avatar_path);
 						}
 					}
+					SdPkUser.setHomeClickUser(allUsers);//把容器传到成员列表界面
+					SdPkUser.setGetSource(false);//传个true说明是聊天室的
+					
+					Intent intent = new Intent(getActivity(),GroupActivity.class);
+					intent.putExtra(IConstant.HomePk_group, pk_group);
+					intent.putExtra(IConstant.HomeGroupName, group_name);
+					intent.putExtra("conName", "group_name");
+					intent.putExtra("FromAvaUrlMap", FromAvaUrlMap);//数组
+					intent.putExtra("convid", group.getEm_id());
+					intent.putExtra("CurrUserUrl", currUserUrl);
+					startActivity(intent);
+					Log.e("CommentsListActivity", "有点击到==========");
 				}
 				
-				Intent intent = new Intent(getActivity(),GroupActivity.class);
-				intent.putExtra(IConstant.HomePk_group, pk_group);
-				intent.putExtra(IConstant.HomeGroupName, group_name);
-				intent.putExtra("conName", "group_name");
-				intent.putExtra("FromAvaUrlMap", FromAvaUrlMap);//数组
-				intent.putExtra("convid", group.getEm_id());
-				intent.putExtra("CurrUserUrl", currUserUrl);
-				startActivity(intent);
 			}
 
 			@Override

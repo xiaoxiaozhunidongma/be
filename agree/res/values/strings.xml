@@ -377,5 +377,10 @@
     <string name="title_activity_add_friends3">AddFriends3Activity</string>
     <string name="title_activity_members_chat">MembersChatActivity</string>
     <string name="title_activity_chat_room">ChatRoomActivity</string>
+    <string name="title_activity_personal_data">PersonalDataActivity</string>
+    <string name="title_activity_touch_balance">TouchBalanceActivity</string>
+    <string name="title_activity_new_account">NewAccountActivity</string>
+    <string name="title_activity_history_list">HistoryListActivity</string>
+    <string name="title_activity_delete_payment_account">DeletePaymentAccountActivity</string>
 
 </resources>
