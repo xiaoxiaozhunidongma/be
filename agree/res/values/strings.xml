@@ -284,7 +284,7 @@
     <string name="aboutus_company_name">厦门必聚科技有限公司</string>
     <string name="aboutus_ver">ver: 1.0</string>
     <!-- 好友界面 -->
-    <string name="friends_title_text">通讯录</string>
+    <string name="friends_title_text">聊天</string>
     <string name="friends_title_right">查找好友</string>
     <string name="friends_title_left">返回</string>
     <!-- 新建聚会界面 -->
@@ -377,6 +377,7 @@
     <string name="title_activity_add_friends3">AddFriends3Activity</string>
     <string name="title_activity_members_chat">MembersChatActivity</string>
     <string name="title_activity_chat_room">ChatRoomActivity</string>
+    <string name="title_activity_photo">PhotoActivity</string>
     <string name="title_activity_personal_data">PersonalDataActivity</string>
     <string name="title_activity_touch_balance">TouchBalanceActivity</string>
     <string name="title_activity_new_account">NewAccountActivity</string>

@@ -40,7 +40,7 @@ import com.biju.Interface;
 import com.biju.Interface.FindMultiUserListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.R;
-import com.biju.chatroom.AddFriends3Activity;
+import com.biju.chatroom.AddChatsActivity;
 import com.example.testleabcloud.ChatActivityLean;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -452,7 +452,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 	private void tab_friends_addbuddy() {
 //		Integer size = AllFriends_List.size();
-		Intent intent = new Intent(getActivity(), AddFriends3Activity.class);
+		Intent intent = new Intent(getActivity(), AddChatsActivity.class);
 //		intent.putExtra(IConstant.Size, size);
 		getActivity().overridePendingTransition(R.anim.tab_left_in_item,
 				R.anim.tab_left_out_item);

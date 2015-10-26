@@ -196,7 +196,8 @@ public class CommonFragment extends Fragment implements OnClickListener {
 			} else if (position == 1) {
 				mCurrFragment = new ScheduleFragment();
 			} else if (position == 2) {
-				mCurrFragment = new PhotoFragment2();
+//				mCurrFragment = new PhotoFragment2();
+				mCurrFragment = new PhotosPreviewFragment();
 			}
 			return mCurrFragment;
 		}

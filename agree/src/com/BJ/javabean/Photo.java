@@ -1,13 +1,17 @@
 package com.BJ.javabean;
 
+import java.io.Serializable;
 import java.sql.Date;
 
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table (name="t_photo")
-public class Photo {
+public class Photo implements Serializable {
 
+	/**
+	 * 
+	 */
 	@Column
 	private String pk_photo;
 	@Column
