@@ -43,6 +43,7 @@ import com.BJ.utils.Path2Bitmap;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.biju.R;
+import com.biju.function.AddNewPartyActivity;
 
 public class GraphicDetailsActivity extends Activity implements OnClickListener{
 
@@ -50,13 +51,13 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	private MyGraphicDetailsAdapter myGraphicDetailsAdapter;
 	private List<ImageText> DetailsList=new ArrayList<ImageText>();
 	private boolean isEdit;
-	private int SING = -1;
-	private int LIGHTGRAY = 1;
-	private int DARKGRAY = 2;
-	private int BLACK = 3;
-	private int RED = 4;
-	private int BLUE = 5;
-	private int GREEN = 6;
+	private String SINGCOLOR = "";
+	private String LIGHTGRAYCOLOR = "#C4C4C4";
+	private String DARKGRAYCOLOR = "#43434C";
+	private String BLACKCOLOR = "#040404";
+	private String REDCOLOR = "#B6000A";
+	private String BLUECOLOR = "#2B61D5";
+	private String GREENCOLOR = "#6FCE1B";
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
 	protected String mFilePath = null;
@@ -73,6 +74,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	private ImageView mEditTextBlueImage;
 	private ImageView mEditTextGreenImage;
 	private ImageText imageText;
+	private String uuid;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +84,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 		SharedPreferences GraphicDetails_sp=getSharedPreferences("GraphicDetails", 0);
 		boolean IsGraphicDetails=GraphicDetails_sp.getBoolean("IsGraphicDetails", false);
 		initUI();
+		uuid = AddNewPartyActivity.getMyUUID();
 		if(IsGraphicDetails){
 			initDB();
 		}
@@ -95,16 +98,16 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 				Integer Type=DetailsList.get(i).getType();
 				if(1==Type){
 					String mEditText=DetailsList.get(i).getText();
-					String SING=DetailsList.get(i).getFont_color();
+					String SINGCOLOR=DetailsList.get(i).getFont_color();
 					//存入数据库
-					ImageText text=new ImageText(null, null, 1, mEditText, null, null, 13, SING, null, null, null, 1);
+					ImageText text=new ImageText(null, uuid, 1, mEditText, null, null, 13, SINGCOLOR, null, null, 1);
 					text.save();
 				}else if (2==Type){
 					String mFilePath=DetailsList.get(i).getImage_path();
 					Integer image_height=DetailsList.get(i).getImage_height();
 					Integer image_width=DetailsList.get(i).getImage_width();
 					//存入数据库
-					ImageText text=new ImageText(null, null, 2, null, mFilePath, null, null, null, image_height, image_width, null, 1);
+					ImageText text=new ImageText(null, uuid, 2, null, mFilePath, null, null, null, image_height, image_width, 1);
 					text.save();
 				}
 			}
@@ -218,29 +221,19 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 			if(1 == type){
 				holder.EditText_TextLayout.setVisibility(View.VISIBLE);
 				holder.EditText_ImageLayout.setVisibility(View.GONE);
-				Integer sing=Integer.valueOf(imageText.getFont_color());
-				switch (sing) {
-				case 1:
+				String SINGCOLOR=imageText.getFont_color();
+				if(LIGHTGRAYCOLOR.equals(SINGCOLOR)){
 					holder.Text_show.setTextColor(holder.Text_show.getResources().getColor(R.drawable.EditTextLightGrayColor));
-					break;
-				case 2:
+				}else if(DARKGRAYCOLOR.equals(SINGCOLOR)){
 					holder.Text_show.setTextColor(holder.Text_show.getResources().getColor(R.drawable.EditTextDarkGrayColor));
-					break;
-				case 3:
+				}else if(BLACKCOLOR.equals(SINGCOLOR)){
 					holder.Text_show.setTextColor(holder.Text_show.getResources().getColor(R.drawable.EditTextBlackColor));
-					break;
-				case 4:
+				}else if(REDCOLOR.equals(SINGCOLOR)){
 					holder.Text_show.setTextColor(holder.Text_show.getResources().getColor(R.drawable.EditTextRedColor));
-					break;
-				case 5:
+				}else if(BLUECOLOR.equals(SINGCOLOR)){
 					holder.Text_show.setTextColor(holder.Text_show.getResources().getColor(R.drawable.EditTextBlueColor));
-					break;
-				case 6:
+				}else if(GREENCOLOR.equals(SINGCOLOR)){
 					holder.Text_show.setTextColor(holder.Text_show.getResources().getColor(R.drawable.EditTextGreenColor));
-					break;
-
-				default:
-					break;
 				}
 				holder.Text_show.setText(imageText.getText()+"");
 				holder.TextMinusLayout.setOnClickListener(new OnClickListener() {
@@ -249,8 +242,6 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 					public void onClick(View v) {
 						DetailsList.remove(position);
 						myGraphicDetailsAdapter.notifyDataSetChanged();
-						Log.e("GraphicDetailsActivity", "删除了文字的========="+position);
-						Log.e("GraphicDetailsActivity", "删除了文字的DetailsList的长度========="+DetailsList.size());
 					}
 				});
 			}else if(2 == type){
@@ -260,11 +251,8 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 				Bitmap convertToBitmap = null;
 				try {
 					convertToBitmap = Path2Bitmap.convertToBitmap(mPath);
-					Log.e("GraphicDetailsActivity", "获取的原来图片的宽和高======"+convertToBitmap.getWidth()+"        "+convertToBitmap.getHeight());
 					Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1280);
-//					Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 180);
 					holder.InsertImage.setImageBitmap(limitLongScaleBitmap);
-					Log.e("GraphicDetailsActivity", "获取的截取后图片的宽和高======"+limitLongScaleBitmap.getWidth()+"          "+limitLongScaleBitmap.getHeight());
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -274,7 +262,6 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 					public void onClick(View v) {
 						DetailsList.remove(position);
 						myGraphicDetailsAdapter.notifyDataSetChanged();
-						Log.e("GraphicDetailsActivity", "删除了图片的========="+position);
 					}
 				});
 			}
@@ -351,22 +338,23 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	private void GraphicDetailsPreview3() {
 		//先清除数据库,无条件全部删除，然后再保存
 		new Delete().from(ImageText.class).execute();
+		Log.e("GraphicDetailsActivity", " 获取到的UUID========"+uuid);
 		//进行保存
 		if(DetailsList.size()>0){
 			for (int i = 0; i < DetailsList.size(); i++) {
 				Integer Type=DetailsList.get(i).getType();
 				if(1==Type){
 					String mEditText=DetailsList.get(i).getText();
-					String SING=DetailsList.get(i).getFont_color();
+					String SINGCOLOR=DetailsList.get(i).getFont_color();
 					//存入数据库
-					ImageText text=new ImageText(null, null, 1, mEditText, null, null, 13, SING, null, null, null, 1);
+					ImageText text=new ImageText(null, uuid, 1, mEditText, null, null, 13, SINGCOLOR, null, null, 1);
 					text.save();
 				}else if (2==Type){
 					String mFilePath=DetailsList.get(i).getImage_path();
 					Integer image_height=DetailsList.get(i).getImage_height();
 					Integer image_width=DetailsList.get(i).getImage_width();
 					//存入数据库
-					ImageText text=new ImageText(null, null, 2, null, mFilePath, null, null, null, image_height, image_width, null, 1);
+					ImageText text=new ImageText(null, uuid, 2, null, mFilePath, null, null, null, image_height, image_width, 1);
 					text.save();
 				}
 			}
@@ -385,7 +373,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 
 	//绿色字体颜色
 	private void EditTextGreenLayout() {
-		SING=GREEN;
+		SINGCOLOR=GREENCOLOR;
 		mEditTextGreenImage.setBackgroundResource(R.drawable.tick_green);
 		mEditTextLightGrayImage.setBackgroundResource(R.drawable.round_light_gray);
 		mEditTextDarkGrayImage.setBackgroundResource(R.drawable.round_dark_gray);
@@ -397,7 +385,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 
 	//蓝色字体颜色
 	private void EditTextBlueLayout() {
-		SING=BLUE;
+		SINGCOLOR=BLUECOLOR;
 		mEditTextBlueImage.setBackgroundResource(R.drawable.tick_blue);
 		mEditTextLightGrayImage.setBackgroundResource(R.drawable.round_light_gray);
 		mEditTextDarkGrayImage.setBackgroundResource(R.drawable.round_dark_gray);
@@ -409,7 +397,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 
 	//红色字体颜色
 	private void EditTextRedLayout() {
-		SING=RED;
+		SINGCOLOR=REDCOLOR;
 		mEditTextRedImage.setBackgroundResource(R.drawable.tick_red);
 		mEditTextLightGrayImage.setBackgroundResource(R.drawable.round_light_gray);
 		mEditTextDarkGrayImage.setBackgroundResource(R.drawable.round_dark_gray);
@@ -421,7 +409,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 
 	//黑色字体颜色
 	private void EditTextBlackLayout() {
-		SING=BLACK;
+		SINGCOLOR=BLACKCOLOR;
 		mEditTextBlackImage.setBackgroundResource(R.drawable.tick_black);
 		mEditTextLightGrayImage.setBackgroundResource(R.drawable.round_light_gray);
 		mEditTextDarkGrayImage.setBackgroundResource(R.drawable.round_dark_gray);
@@ -433,7 +421,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 
 	//深灰色字体颜色
 	private void EditTextDarkGrayLayout() {
-		SING=DARKGRAY;
+		SINGCOLOR=DARKGRAYCOLOR;
 		mEditTextDarkGrayImage.setBackgroundResource(R.drawable.tick_dark_gray);
 		mEditTextLightGrayImage.setBackgroundResource(R.drawable.round_light_gray);
 		mEditTextBlackImage.setBackgroundResource(R.drawable.round_black);
@@ -445,7 +433,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 
 	//设置浅灰色字体颜色
 	private void EditTextLightGrayLayout() {
-		SING=LIGHTGRAY;
+		SINGCOLOR=LIGHTGRAYCOLOR;
 		mEditTextLightGrayImage.setBackgroundResource(R.drawable.tick_light_gray);
 		mEditTextDarkGrayImage.setBackgroundResource(R.drawable.round_dark_gray);
 		mEditTextBlackImage.setBackgroundResource(R.drawable.round_black);
@@ -467,7 +455,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 		ImageText imageText=new ImageText();
 		imageText.setType(1);
 		imageText.setText(mEditText);
-		imageText.setFont_color(String.valueOf(SING));
+		imageText.setFont_color(SINGCOLOR);
 		DetailsList.add(imageText);
 		mEditTextEditLayout.setVisibility(View.GONE);
 		mGraphicDetailsPreviewLayout.setVisibility(View.VISIBLE);
@@ -513,7 +501,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 			ImageText imageText=new ImageText();
 			imageText.setType(1);
 			imageText.setText(mEditText);
-			imageText.setFont_color(String.valueOf(SING));
+			imageText.setFont_color(SINGCOLOR);
 			DetailsList.add(imageText);
 			mEditTextEditLayout.setVisibility(View.GONE);
 			mGraphicDetailsPreviewLayout.setVisibility(View.VISIBLE);

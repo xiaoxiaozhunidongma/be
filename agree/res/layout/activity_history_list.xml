@@ -1,0 +1,51 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".HistoryListActivity"
+    android:background="#efefef"
+     >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="40.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" 
+        android:background="#ffffff"
+        >
+
+        <Button
+            android:id="@+id/HistoryListBack"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="返回"
+            android:textSize="13.0sp"
+            android:background="@null"
+            android:textColor="@drawable/title_left_color"
+             />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="60.0dp"
+            android:text="交易记录"
+            android:textSize="15.0sp"
+            android:textColor="#535353"
+             />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

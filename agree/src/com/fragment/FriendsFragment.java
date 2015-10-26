@@ -150,6 +150,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 					FromAvaUrlMap.put(user.getPk_user(), avatar_path);
 					}
 					SdPkUser.setUser(Users);//把容器传到成员列表界面
+					SdPkUser.setGetSource(true);//传个true说明是聊天室的
 				}
 			}
 			

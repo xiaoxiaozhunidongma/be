@@ -75,6 +75,7 @@ import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readPartyJoinMsgListenner;
 import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
+import com.biju.pay.GraphicPreviewActivity;
 import com.biju.pay.PayBaseActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
@@ -190,7 +191,7 @@ public class PartyDetailsActivity extends Activity implements
 		RelativeLayout.LayoutParams params_show = new LayoutParams(
 				LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 40));
 		edit_show.setGravity(Gravity.CENTER);
-		params_show.setMargins(0, DensityUtil.dip2px(this, 210), 0, 0);
+		params_show.setMargins(0, DensityUtil.dip2px(this, 110), 0, 0);
 		edit_show.setBackgroundColor(android.graphics.Color.parseColor("#aaffffff"));
 		edit_show.setTextColor(android.graphics.Color.parseColor("#535353"));
 		edit_show.setTextSize(15);
@@ -453,8 +454,7 @@ public class PartyDetailsActivity extends Activity implements
 			Double latitude = allParty.getLatitude();
 			Double longitude = allParty.getLongitude();
 			String location = allParty.getLocation();
-			if(latitude!=null&longitude!=null)
-			{
+			if(latitude!=null&longitude!=null){
 				mLat = latitude;
 				mLng = longitude;
 				edit_show.setText(location);
@@ -497,8 +497,7 @@ public class PartyDetailsActivity extends Activity implements
 			Double latitude = oneParty.getLatitude();
 			Double longitude = oneParty.getLongitude();
 			String location = oneParty.getLocation();
-			if(longitude!=null)
-			{
+			if(longitude!=null){
 				mLng = longitude;
 			}else{
 				mLng=118.17276;
@@ -536,6 +535,9 @@ public class PartyDetailsActivity extends Activity implements
 		findViewById(R.id.PartyDetails_back).setOnClickListener(this);
 		findViewById(R.id.PartyDetails_more_layout).setOnClickListener(this);// 设置
 		findViewById(R.id.PartyDetails_more).setOnClickListener(this);
+		
+		
+		findViewById(R.id.PartyDetails_prompt).setOnClickListener(this);//跳转图文信息界面
 
 	}
 
@@ -669,9 +671,21 @@ public class PartyDetailsActivity extends Activity implements
 		case R.id.PartyDetails_apply_layout:
 		case R.id.PartyDetails_apply:
 			PartyDetails_apply_layout();
+			break;
+		case R.id.PartyDetails_prompt:
+			PartyDetails_prompt();
+			break;
 		default:
 			break;
 		}
+	}
+
+	//跳转图文信息界面
+	private void PartyDetails_prompt() {
+		Intent intent=new Intent(PartyDetailsActivity.this, GraphicPreviewActivity.class);
+		intent.putExtra("Pk_party", pk_party);
+		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	// 未表态

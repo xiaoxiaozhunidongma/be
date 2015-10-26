@@ -18,12 +18,15 @@ import org.ocpsoft.prettytime.PrettyTime;
 import android.content.Context;
 import android.util.Log;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.ReadUserAllFriends;
+import com.BJ.javabean.User;
 import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
@@ -31,6 +34,8 @@ import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.biju.R;
+import com.biju.function.GroupActivity;
+import com.example.testleabcloud.ChatActivityLean;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ChatMessageAdapter extends BaseAdapter {
@@ -186,7 +191,7 @@ public class ChatMessageAdapter extends BaseAdapter {
 		tv_hhmm.setText(HHmm2);
 	}
 
-    UserInfo user = ChatManager.getInstance().getChatManagerAdapter().getUserInfoById(msg.getFrom());
+    final UserInfo user = ChatManager.getInstance().getChatManagerAdapter().getUserInfoById(msg.getFrom());
     if (user == null) {
       throw new IllegalStateException("user is null, please implement ChatManagetAdapter.cacheUserInfoById()");
     }
@@ -215,6 +220,42 @@ public class ChatMessageAdapter extends BaseAdapter {
 //    		String FriendUrl = beginStr+avatar_path+endStr+"mini-avatar";
 			ImageLoader.getInstance().displayImage(FriendUrl, avatarView, PhotoUtils.avatarImageOptions);
     	}
+    	avatarView.setOnClickListener(new OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				String Click_user=user.getUsername();
+				boolean source=SdPkUser.GetSource;
+				if(source){
+					//聊天室来的
+					List<User> AllUser=SdPkUser.getUser();
+					for (int i = 0; i < AllUser.size(); i++) {
+						User user=AllUser.get(i);
+						Integer pk_user=user.getPk_user();
+						Log.e("============", " 获取到当前的pk_user==="+pk_user);
+						if(Click_user.equals(String.valueOf(pk_user))){
+							SdPkUser.setClickUser(user);
+							Log.e("============", " 进入了IF==="+pk_user);
+							ChatActivityLean.getPersonal.PersonalData();
+						}
+					}
+				}else {
+					//群聊来的
+					List<Group_ReadAllUser> Group_AllUser=SdPkUser.getHomeClickUser();
+					for (int i = 0; i < Group_AllUser.size(); i++) {
+						Group_ReadAllUser Group_user=Group_AllUser.get(i);
+						Integer pk_user=Group_user.getPk_user();
+						Log.e("============", " 获取到当前的pk_user==="+pk_user);
+						if(Click_user.equals(String.valueOf(pk_user))){
+							SdPkUser.setGroupChatUser(Group_user);
+							Log.e("============", " 进入了IF==="+pk_user);
+							GroupActivity.getGroupChat.GroupChat();
+						}
+					}
+				}
+				Log.e("============", " 获取到当前的头像ID==="+user.getUsername());
+			}
+		});
     	
 //    	ImageLoader.getInstance().displayImage(user.getAvatarUrl(), avatarView, PhotoUtils.avatarImageOptions);
     }

@@ -1,6 +1,5 @@
 package com.biju.chatroom;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -18,7 +17,6 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
@@ -57,12 +55,10 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 	}
 
 	private void initUI() {
-		findViewById(R.id.MembersChatExitGroup).setOnClickListener(this);//退出群聊
-		findViewById(R.id.MembersChatExitGroupChatLayout).setOnClickListener(this);
-		findViewById(R.id.MembersChatAddMembers).setOnClickListener(this);//添加成员
-		findViewById(R.id.MembersChatAddMembersLayout).setOnClickListener(this);
+		findViewById(R.id.MembersChatShowLayout).setOnClickListener(this);
+		findViewById(R.id.MembersChatExitGroupChatLayout).setOnClickListener(this);//退出群聊
+		findViewById(R.id.MembersChatAddMembersLayout).setOnClickListener(this);//添加成员
 		findViewById(R.id.MembersChatChangeNameLayout).setOnClickListener(this);//改名
-		findViewById(R.id.MembersChatChangeNameBut).setOnClickListener(this);
 		findViewById(R.id.MembersChatNoShowLayout).setOnClickListener(this);
 		findViewById(R.id.MembersChatOKLayout).setOnClickListener(this);//关闭
 		findViewById(R.id.MembersChatBackLayout).setOnClickListener(this);//返回
@@ -167,15 +163,12 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 			MembersChatBackLayout();
 			break;
 		case R.id.MembersChatChangeNameLayout:
-		case R.id.MembersChatChangeNameBut:
 			MembersChatChangeNameLayout();
 			break;
 		case R.id.MembersChatAddMembersLayout:
-		case R.id.MembersChatAddMembers:
 			MembersChatAddMembers();
 			break;
 		case R.id.MembersChatExitGroupChatLayout:
-		case R.id.MembersChatExitGroup:
 			MembersChatExitGroup();
 			break;
 		default:
@@ -229,6 +222,7 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 	private void MembersChatChangeNameLayout() {
 		Intent intent=new Intent(MembersChatActivity.this, ChangeChatNameActivity.class);
 		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	private void MembersChatBackLayout() {

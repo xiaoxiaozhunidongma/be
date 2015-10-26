@@ -30,7 +30,6 @@ import com.BJ.javabean.PartyOkback;
 import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
-import com.BJ.utils.PicCutter;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Weeks;
 import com.activeandroid.query.Delete;
@@ -42,16 +41,14 @@ import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSData;
 import com.biju.IConstant;
 import com.biju.Interface;
-import com.biju.APP.MyApplication;
 import com.biju.Interface.addPartyListenner;
-import com.biju.login.RegisteredActivity;
+import com.biju.MainActivity;
+import com.biju.R;
+import com.biju.APP.MyApplication;
 import com.biju.pay.CostActivity;
 import com.biju.pay.GraphicDetailsActivity;
 import com.biju.pay.LimitNumberActivity;
-import com.biju.MainActivity;
-import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
-import com.tencent.mm.sdk.modelmsg.SendAuth;
 
 public class AddNewPartyActivity extends Activity implements OnClickListener {
 
@@ -161,7 +158,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 				Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
 						convertToBitmap, 1280);// 最长边限制为1080
 				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
-				uUid = AddNewPartyActivity.getMyUUID();
+				uUid = text.getFk_party();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -170,7 +167,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	private void OSSupload(OSSData ossData, byte[] bitmap2Bytes2, String uUid2) {
+	private void OSSupload(OSSData ossData, byte[] bitmap2Bytes2, final String uUid2) {
 		Log.e("AddNewPartyActivity", "进入图片上传了====");
 		ossData = ossService.getOssData(sampleBucket, uUid2);
 		ossData.setData(bitmap2Bytes2, "jpg"); // 指定需要上传的数据和它的类型
@@ -180,7 +177,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			public void onSuccess(String objectKey) {
 				Log.e("", "图片上传成功");
 				Log.e("Main", "objectKey==" + objectKey);
-				PartyComplete();
+				PartyComplete(uUid2);
 			}
 
 			@Override
@@ -228,20 +225,21 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
-				PartyOkback partyOkback = GsonUtils.parseJson(A,PartyOkback.class);
-				Integer status = partyOkback.getStatusMsg();
-				if (status == 1) {
-					Log.e("AddNewPartyActivity", "日程是否创建成功======" + A);
-					SharedPreferences refresh_sp=getSharedPreferences(IConstant.AddRefresh, 0);
-					Editor editor2=refresh_sp.edit();
-					editor2.putBoolean(IConstant.IsAddRefresh, true);
-					editor2.commit();
-					finish();
-					if(!source){
-						Intent intent=new Intent(AddNewPartyActivity.this, MainActivity.class);
-						startActivity(intent);
-					}
-				}
+				Log.e("AddNewPartyActivity", "日程是否创建成功======" + A);
+//				PartyOkback partyOkback = GsonUtils.parseJson(A,PartyOkback.class);
+//				Integer status = partyOkback.getStatusMsg();
+//				if (status == 1) {
+//					Log.e("AddNewPartyActivity", "日程是否创建成功======" + A);
+//					SharedPreferences refresh_sp=getSharedPreferences(IConstant.AddRefresh, 0);
+//					Editor editor2=refresh_sp.edit();
+//					editor2.putBoolean(IConstant.IsAddRefresh, true);
+//					editor2.commit();
+//					finish();
+//					if(!source){
+//						Intent intent=new Intent(AddNewPartyActivity.this, MainActivity.class);
+//						startActivity(intent);
+//					}
+//				}
 			}
 
 			@Override
@@ -544,7 +542,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		
 	}
 
-	private void PartyComplete() {
+	private void PartyComplete(String uUid) {
 		String ems=mAdd_New_Party_name.getText().toString().trim();
 		if("".equals(ems)){
 		}else{
@@ -560,9 +558,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		if(TotalCount<2){
 			SweetAlerDialog();
 		}else{
-//			String pk_party = AddNewPartyActivity.getMyUUID();
 			String party_name = mAdd_New_Party_name.getText().toString().trim();
-			
 			Party party = new Party();
 			party.setPk_party(uUid);
 			party.setFk_group(fk_group);

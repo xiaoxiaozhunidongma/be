@@ -73,6 +73,8 @@ import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.biju.R;
+import com.biju.chatroom.PersonalDataActivity;
+import com.biju.function.GroupActivity;
 import com.example.testleabcloud.ChatActivityEventListener;
 import com.example.testleabcloud.ChatActivityLean;
 import com.example.testleabcloud.PhotoViewActivity;
@@ -186,7 +188,6 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 //
 		    Intent intent = getActivity().getIntent();
 			initByIntent(intent);
-
 		}
 		return mLayout;
 	}
@@ -886,4 +887,5 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		      }
 		    }
 		  }
+	  
 }

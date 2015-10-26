@@ -1,0 +1,231 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efefef"
+    tools:context=".DeletePaymentAccountActivity" >
+
+    <RelativeLayout
+        android:id="@+id/DeletePaymentTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff" >
+
+        <Button
+            android:id="@+id/DeletePaymentBack"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@null"
+            android:gravity="center"
+            android:text="返回"
+            android:textColor="@drawable/title_left_color"
+            android:textSize="13.0sp" />
+
+        <Button
+            android:id="@+id/DeletePaymentWithdrawal"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@null"
+            android:gravity="center"
+            android:text="提现"
+            android:textColor="@drawable/title_right_color"
+            android:textSize="13.0sp" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/DeletePaymentBack"
+            android:layout_alignBottom="@+id/DeletePaymentBack"
+            android:layout_marginLeft="38dp"
+            android:layout_toRightOf="@+id/DeletePaymentBack"
+            android:text="我的账户"
+            android:textColor="#535353"
+            android:textSize="15.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="230.0dp"
+        android:layout_below="@+id/DeletePaymentTitleLayout"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/DeletePaymentWay"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="56dp"
+            android:text="微信钱包"
+            android:textColor="#535353"
+            android:textSize="30.0sp" />
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+
+        <TextView
+            android:id="@+id/DeletePaymentAccountText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/DeletePaymentWay"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="16dp"
+            android:text="账户"
+            android:gravity="center"
+            android:textColor="#959595"
+            android:textSize="13.0sp" />
+
+        <TextView
+            android:id="@+id/textView6"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="10.0dp"
+            android:layout_marginLeft="20.0dp"
+            android:text="提现金额"
+            android:textColor="#808080"
+            android:textSize="13.0sp" />
+
+        <TextView
+            android:id="@+id/DeletePaymentNameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/DeletePaymentAccountText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12.0dp"
+            android:text="name" 
+            android:textSize="13.0sp"
+            android:textColor="#959595"
+            android:gravity="center"
+            android:visibility="gone"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="44.0dp"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff" >
+
+        <TextView
+            android:id="@+id/textView7"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+
+        <EditText
+            android:id="@+id/DeletePaymentWithdrawalEdit"
+            android:layout_width="match_parent"
+            android:layout_height="30.0dp"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginRight="20.0dp"
+            android:layout_marginTop="7.0dp"
+            android:background="@null"
+            android:ems="10"
+            android:hint="请输入想要提现的金额"
+            android:textColorHint="#c9c9c9"
+            android:textSize="14.0sp" >
+
+            <requestFocus />
+        </EditText>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout3"
+        android:layout_width="match_parent"
+        android:layout_height="100.0dp"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView8"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginRight="20.0dp"
+            android:layout_marginTop="10.0dp"
+            android:gravity="left|center"
+            android:text="我们提现将会酌情收取3%手续费.如果不满1元,则按1元计算,转出金额将在3个工作日内到账."
+            android:textColor="#535353"
+            android:textSize="14.0sp" />
+
+        <TextView
+            android:id="@+id/textView9"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_marginBottom="10.0dp"
+            android:layout_marginLeft="20.0dp"
+            android:text="账户操作"
+            android:textColor="#808080"
+            android:textSize="13.0sp" />
+
+        <TextView
+            android:id="@+id/textView10"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/DeletePayment_delete"
+        android:layout_width="match_parent"
+        android:layout_height="44.0dp"
+        android:layout_below="@+id/relativeLayout3"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+         >
+
+        <TextView
+            android:id="@+id/textView11"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="20.0dp"
+            android:text="删除该账户"
+            android:textSize="14.0sp"
+            android:textColor="#ff0000"
+             />
+
+    </RelativeLayout>
+
+</RelativeLayout>

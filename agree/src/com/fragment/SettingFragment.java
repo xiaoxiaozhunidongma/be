@@ -49,8 +49,10 @@ import com.biju.function.AboutUsActivity;
 import com.biju.function.BindingPhoneActivity;
 import com.biju.function.FeedbackActivity;
 import com.biju.function.NicknameActivity;
+import com.biju.function.RequestCode3Activity.findTeamInterface;
 import com.biju.function.SexActivity;
 import com.biju.login.BeforeLoginActivity;
+import com.biju.withdrawal.TouchBalanceActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -74,7 +76,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 
 	private final String IMAGE_TYPE = "image/*";
-	private final int IMAGE_CODE = 0; // ÕâÀïµÄIMAGE_CODEÊÇ×Ô¼ºÈÎÒâ¶¨ÒåµÄ
+	private final int IMAGE_CODE = 0; // è¿™é‡Œçš„IMAGE_CODEæ˜¯è‡ªå·±ä»»æ„å®šä¹‰çš„
 	public static String APP_VERSION = "1.0.0";
 	public static String APPID = "201139";
 	public static String USERID = "";
@@ -94,8 +96,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private RelativeLayout mSetting_Sex_change;
 	private RelativeLayout mSetting_Binding_phone;
 	private RelativeLayout mSetting_Binding_weixin;
-	private RelativeLayout mSetting_Binding_weixin_wallet;
-	private RelativeLayout mSetting_Binding_alipay;
+	private RelativeLayout mSetting_Binding_balance_layout;
 	private RelativeLayout mSetting_feedback;
 	private RelativeLayout mSetting_about_us;
 	private RelativeLayout mSetting_Exit;
@@ -126,8 +127,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private OSSBucket sampleBucket;
 	private byte[] bitmap2Bytes;
 	private String uUid;
+	private TextView mSetting_Binding_balance_show;
+	private float mUserAmount;
 
-	// ÍêÕûÂ·¾¶completeURL=beginStr+result.filepath+endStr;
+	// å®Œæ•´è·¯å¾„completeURL=beginStr+result.filepath+endStr;
 
 	public SettingFragment() {
 		// Required empty public constructor
@@ -138,9 +141,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		if (mLayout == null) {
 			mLayout = inflater.inflate(R.layout.fragment_setting, container,false);
-			Log.e("SettingFragment", "½øÈëÁËonCreateView()====================");
+			Log.e("SettingFragment", "è¿›å…¥äº†onCreateView()====================");
 		}
-		// »ñÈ¡ossServiceºÍsampleBucket
+		// è·å–ossServiceå’ŒsampleBucket
 		ossService = MyApplication.getOssService();
 		sampleBucket = MyApplication.getSampleBucket();
 		return mLayout;
@@ -149,9 +152,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private void User4head() {
 		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
 		completeURL = Cacheurl;
-		// »ñÈ¡SD¿¨ÖĞµÄpk_user
+		// è·å–SDå¡ä¸­çš„pk_user
 		SD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("SettingFragment", "´ÓSD¿¨ÖĞ»ñÈ¡µ½µÄPk_user" + SD_pk_user);
+		Log.e("SettingFragment", "ä»SDå¡ä¸­è·å–åˆ°çš„Pk_user" + SD_pk_user);
 
 		initUI();
 		boolean isWIFI = Ifwifi.getNetworkConnected(getActivity());
@@ -184,8 +187,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			usersetting.setWechat_id(mUserWechat_id);
 			usersetting.setSetup_time(mUserSetup_time);
 			usersetting.setLast_login_time(mUserLast_login_time);
-			//ÉÏ´«
-			String mFilePath = SdPkUser.getFilePath;//»Øµ÷SD¿¨Â·¾¶
+			//ä¸Šä¼ 
+			String mFilePath = SdPkUser.getFilePath;//å›è°ƒSDå¡è·¯å¾„
 			Bitmap convertToBitmap = null;
 			try {
 				convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
@@ -193,9 +196,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 				e.printStackTrace();
 			}
 			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-					convertToBitmap, 1080);// ×î³¤±ßÏŞÖÆÎª1080
+					convertToBitmap, 1080);// æœ€é•¿è¾¹é™åˆ¶ä¸º1080
 			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-					limitLongScaleBitmap, 180);// ½ØÈ¡ÖĞ¼äÕı·½ĞÎ
+					limitLongScaleBitmap, 180);// æˆªå–ä¸­é—´æ­£æ–¹å½¢
 			bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
 			UUID randomUUID = UUID.randomUUID();
 			uUid = randomUUID.toString();
@@ -218,11 +221,11 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			@Override
 			public void success(String A) {
 
-				// ¶ÁÈ¡ÓÃ»§×ÊÁÏ³É¹¦
+				// è¯»å–ç”¨æˆ·èµ„æ–™æˆåŠŸ
 				Loginback usersettingback = GsonUtils.parseJson(A,Loginback.class);
 				int userStatusmsg = usersettingback.getStatusMsg();
 				if (userStatusmsg == 1) {
-					Log.e("SettingFragment", "ÓÃ»§×ÊÁÏ" + A);
+					Log.e("SettingFragment", "ç”¨æˆ·èµ„æ–™" + A);
 					List<User> Users = usersettingback.getReturnData();
 					if (Users.size() >= 1) {
 						Setting_readuser = Users.get(0);
@@ -236,8 +239,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						mUserSex = Setting_readuser.getSex();
 						mUserDevice_id = Setting_readuser.getDevice_id();
 						mUserWechat_id = Setting_readuser.getWechat_id();
+						mUserAmount = Setting_readuser.getAmount();
 
-						Log.e("SettingFragment", "µÚÒ»´ÎµÃµ½µÄÓÃ»§ĞÅÏ¢11111111===="
+						Log.e("SettingFragment", "ç¬¬ä¸€æ¬¡å¾—åˆ°çš„ç”¨æˆ·ä¿¡æ¯11111111===="
 								+ SD_pk_user + "\n" + mUserJpush_id + "\n"
 								+ mUserNickname + "\n" + mUserPassword + "\n"
 								+ mUserSex + "\n" + mUserPhone + "\n"
@@ -250,13 +254,13 @@ public class SettingFragment extends Fragment implements OnClickListener {
 					mSetting_Nickname.setText(mUserNickname);
 					switch (mUserSex) {
 					case 0:
-						mSetting_Sex.setText("ÆäËû");
+						mSetting_Sex.setText("å…¶ä»–");
 						break;
 					case 1:
-						mSetting_Sex.setText("ÄĞ");
+						mSetting_Sex.setText("ç”·");
 						break;
 					case 2:
-						mSetting_Sex.setText("Å®");
+						mSetting_Sex.setText("å¥³");
 						break;
 
 					default:
@@ -264,12 +268,14 @@ public class SettingFragment extends Fragment implements OnClickListener {
 					}
 					mSetting_Phone.setText(mUserPhone);
 					completeURL = beginStr + mUserAvatar_path + endStr+"avatar";
-					PreferenceUtils.saveImageCache(getActivity(), completeURL);// ´æSP
+					PreferenceUtils.saveImageCache(getActivity(), completeURL);// å­˜SP
 					ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(),completeURL, mSetting_head);
 					if(!("".equals(mUserWechat_id)))
 					{
-						mSetting_weixin.setText("ÒÑ°ó¶¨");
+						mSetting_weixin.setText("å·²ç»‘å®š");
 					}
+					
+					mSetting_Binding_balance_show.setText("Â¥"+mUserAmount+"0");
 				}
 			}
 
@@ -280,16 +286,16 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		});
 
 
-		// ¸üĞÂµÄ¼àÌı
+		// æ›´æ–°çš„ç›‘å¬
 		Setting_readuserinter.setPostListener(new updateUserListenner() {
 
 			@Override
 			public void success(String A) {
-				// ¸üĞÂÓÃ»§×ÊÁÏ³É¹¦
+				// æ›´æ–°ç”¨æˆ·èµ„æ–™æˆåŠŸ
 				updateback usersetting_updateback = GsonUtils.parseJson(A,updateback.class);
 				int a = usersetting_updateback.getStatusMsg();
 				if (a == 1) {
-					Log.e("SettingFragment", "¸üĞÂ³É¹¦" + A);
+					Log.e("SettingFragment", "æ›´æ–°æˆåŠŸ" + A);
 					isShow = false;
 					User readuser = new User();
 					readuser.setPk_user(SD_pk_user);
@@ -308,30 +314,30 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initUI() {
-		mSetting_weixin = (TextView) mLayout.findViewById(R.id.Setting_weixin);//ÏÔÊ¾ÓÃ»§ÊÇ·ñÒÑ°ó¶¨Î¢ĞÅ
-		mSetting_Phone = (TextView) mLayout.findViewById(R.id.Setting_Phone);// ÓÃ»§µÄÊÖ»úºÅÂëÏÔÊ¾
-		mSetting_Sex = (TextView) mLayout.findViewById(R.id.Setting_Sex);// ÓÃ»§µÄĞÔ±ğÏÔÊ¾
-		mSetting_Nickname = (TextView) mLayout.findViewById(R.id.Setting_Nickname);// ÓÃ»§µÄêÇ³ÆÏÔÊ¾
-		mSetting_head_1 = (ImageView) mLayout.findViewById(R.id.Setting_head_1);// ÉÏ´«Í¼Æ¬Ê±ÏÔÊ¾
+		mSetting_weixin = (TextView) mLayout.findViewById(R.id.Setting_weixin);//æ˜¾ç¤ºç”¨æˆ·æ˜¯å¦å·²ç»‘å®šå¾®ä¿¡
+		mSetting_Phone = (TextView) mLayout.findViewById(R.id.Setting_Phone);// ç”¨æˆ·çš„æ‰‹æœºå·ç æ˜¾ç¤º
+		mSetting_Sex = (TextView) mLayout.findViewById(R.id.Setting_Sex);// ç”¨æˆ·çš„æ€§åˆ«æ˜¾ç¤º
+		mSetting_Nickname = (TextView) mLayout.findViewById(R.id.Setting_Nickname);// ç”¨æˆ·çš„æ˜µç§°æ˜¾ç¤º
+		mSetting_head_1 = (ImageView) mLayout.findViewById(R.id.Setting_head_1);// ä¸Šä¼ å›¾ç‰‡æ—¶æ˜¾ç¤º
 		mSetting_head = (ImageView) mLayout.findViewById(R.id.Setting_head);
-		mSetting_progress = (TextView) mLayout.findViewById(R.id.Setting_progress);// ÉÏ´«Í¼Æ¬Ê± µÄ½ø¶È
-		mSetting_User_ID = (TextView) mLayout.findViewById(R.id.Setting_User_id);// ÓÃ»§µÄID
-		mSetting_Nickname_change = (RelativeLayout) mLayout.findViewById(R.id.Setting_Nickname_change);// ÓÃ»§êÇ³Æ½øĞĞĞŞ¸Ä
-		mSetting_Sex_change = (RelativeLayout) mLayout.findViewById(R.id.Setting_Sex_change);// ÓÃ»§µÄĞÔ±ğĞŞ¸Ä
-		mSetting_Binding_phone = (RelativeLayout) mLayout.findViewById(R.id.Setting_Binding_phone);// ÓÃ»§°ó¶¨ÊÖ»ú
-		mSetting_Binding_weixin = (RelativeLayout) mLayout.findViewById(R.id.Setting_Binding_weixin);// °ó¶¨Î¢ĞÅ
-		mSetting_Binding_weixin_wallet = (RelativeLayout) mLayout.findViewById(R.id.Setting_Binding_weixin_wallet);// °ó¶¨Î¢ĞÅÇ®°ü
-		mSetting_Binding_alipay = (RelativeLayout) mLayout.findViewById(R.id.Setting_Binding_alipay);// °ó¶¨Ö§¸¶±¦
-		mSetting_feedback = (RelativeLayout) mLayout.findViewById(R.id.Setting_feedback);// ÓÃ»§·´À¡
-		mSetting_about_us = (RelativeLayout) mLayout.findViewById(R.id.Setting_about_us);// ¹ØÓÚÎÒÃÇ
-		mSetting_Exit = (RelativeLayout) mLayout.findViewById(R.id.Setting_Exit);// ÍË³öµÇÂ¼
+		mSetting_progress = (TextView) mLayout.findViewById(R.id.Setting_progress);// ä¸Šä¼ å›¾ç‰‡æ—¶ çš„è¿›åº¦
+		mSetting_User_ID = (TextView) mLayout.findViewById(R.id.Setting_User_id);// ç”¨æˆ·çš„ID
+		mSetting_Nickname_change = (RelativeLayout) mLayout.findViewById(R.id.Setting_Nickname_change);// ç”¨æˆ·æ˜µç§°è¿›è¡Œä¿®æ”¹
+		mSetting_Sex_change = (RelativeLayout) mLayout.findViewById(R.id.Setting_Sex_change);// ç”¨æˆ·çš„æ€§åˆ«ä¿®æ”¹
+		mSetting_Binding_phone = (RelativeLayout) mLayout.findViewById(R.id.Setting_Binding_phone);// ç”¨æˆ·ç»‘å®šæ‰‹æœº
+		mSetting_Binding_weixin = (RelativeLayout) mLayout.findViewById(R.id.Setting_Binding_weixin);// ç»‘å®šå¾®ä¿¡
+		mSetting_Binding_balance_layout = (RelativeLayout) mLayout.findViewById(R.id.Setting_Binding_balance_layout);// ä½™é¢
+		mSetting_feedback = (RelativeLayout) mLayout.findViewById(R.id.Setting_feedback);// ç”¨æˆ·åé¦ˆ
+		mSetting_about_us = (RelativeLayout) mLayout.findViewById(R.id.Setting_about_us);// å…³äºæˆ‘ä»¬
+		mSetting_Exit = (RelativeLayout) mLayout.findViewById(R.id.Setting_Exit);// é€€å‡ºç™»å½•
+		mSetting_Binding_balance_show = (TextView) mLayout.findViewById(R.id.Setting_Binding_balance_show);//æ˜¾ç¤ºä½™é¢
+		
 		mSetting_head.setOnClickListener(this);
 		mSetting_Nickname_change.setOnClickListener(this);
 		mSetting_Sex_change.setOnClickListener(this);
 		mSetting_Binding_phone.setOnClickListener(this);
 		mSetting_Binding_weixin.setOnClickListener(this);
-		mSetting_Binding_weixin_wallet.setOnClickListener(this);
-		mSetting_Binding_alipay.setOnClickListener(this);
+		mSetting_Binding_balance_layout.setOnClickListener(this);
 		mSetting_feedback.setOnClickListener(this);
 		mSetting_about_us.setOnClickListener(this);
 		mSetting_Exit.setOnClickListener(this);
@@ -373,28 +379,40 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		case R.id.Setting_Sex_change:
 			Setting_Sex_change();
 			break;
+		case R.id.Setting_Binding_balance_layout:
+			Setting_Binding_balance_layout();
+			break;
 		default:
 			break;
 		}
 	}
 
-	// ĞŞ¸ÄĞÔ±ğ
+	//ä½™é¢æç°
+	private void Setting_Binding_balance_layout() {
+		Intent intent=new Intent(getActivity(), TouchBalanceActivity.class);
+		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
+	}
+
+	// ä¿®æ”¹æ€§åˆ«
 	private void Setting_Sex_change() {
 		SdPkUser.setGetSexUser(Setting_readuser);
 		Intent intent = new Intent(getActivity(), SexActivity.class);
 		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
-	// ÓÃ»§µÄêÇ³ÆĞŞ¸Ä
+	// ç”¨æˆ·çš„æ˜µç§°ä¿®æ”¹
 	private void Setting_Nickname_change() {
 		SdPkUser.setGetNicknameUser(Setting_readuser);
 		Intent intent = new Intent(getActivity(), NicknameActivity.class);
 		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	private void Setting_head() {
 		isShow = true;
-		// Ê¹ÓÃintentµ÷ÓÃÏµÍ³Ìá¹©µÄÏà²á¹¦ÄÜ£¬Ê¹ÓÃstartActivityForResultÊÇÎªÁË»ñÈ¡ÓÃ»§Ñ¡ÔñµÄÍ¼Æ¬
+		// ä½¿ç”¨intentè°ƒç”¨ç³»ç»Ÿæä¾›çš„ç›¸å†ŒåŠŸèƒ½ï¼Œä½¿ç”¨startActivityForResultæ˜¯ä¸ºäº†è·å–ç”¨æˆ·é€‰æ‹©çš„å›¾ç‰‡
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
 		startActivityForResult(getAlbum, IMAGE_CODE);
@@ -402,15 +420,15 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		mSetting_head_1.setVisibility(View.VISIBLE);
 	}
 
-	// °ó¶¨Î¢ĞÅÕËºÅ
+	// ç»‘å®šå¾®ä¿¡è´¦å·
 	private void Setting_Binding_weixin() {
 		if (api == null) {
 			api = WXAPIFactory.createWXAPI(getActivity(), "wx2ffba147560de2ff",false);
 		}
 
 		if (!api.isWXAppInstalled()) {
-			// ÌáĞÑÓÃ»§Ã»ÓĞ°´ÕÕÎ¢ĞÅ
-			Toast.makeText(getActivity(), "»¹Ã»ÓĞ°²×°Î¢ĞÅ,ÇëÏÈ°²×°Î¢ĞÅ!", Toast.LENGTH_SHORT).show();
+			// æé†’ç”¨æˆ·æ²¡æœ‰æŒ‰ç…§å¾®ä¿¡
+			Toast.makeText(getActivity(), "è¿˜æ²¡æœ‰å®‰è£…å¾®ä¿¡,è¯·å…ˆå®‰è£…å¾®ä¿¡!", Toast.LENGTH_SHORT).show();
 			return;
 		}
 
@@ -419,7 +437,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		if (!("".equals(mUserWechat_id))) {
 			WeiXin_NiftyDialogBuilder();
 		} else {
-			// Ìø×ªÎ¢ĞÅ°ó¶¨½çÃæ
+			// è·³è½¬å¾®ä¿¡ç»‘å®šç•Œé¢
 			final SendAuth.Req req = new SendAuth.Req();
 			req.scope = "snsapi_userinfo";
 			req.state = "agree_weixin_login";
@@ -432,10 +450,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 	private void WeiXin_NiftyDialogBuilder() {
 		final SweetAlertDialog sd = new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE);
-		sd.setTitleText("ÌáÊ¾");
-		sd.setContentText("ÄúÒÑ¾­°ó¶¨ÁËÎ¢ĞÅÕËºÅ£¬ÊÇ·ñÖØĞÂ°ó¶¨ÁíÒ»¸öÕËºÅ£¿");
-		sd.setCancelText("È¡Ïû");
-		sd.setConfirmText("È·¶¨");
+		sd.setTitleText("æç¤º");
+		sd.setContentText("æ‚¨å·²ç»ç»‘å®šäº†å¾®ä¿¡è´¦å·ï¼Œæ˜¯å¦é‡æ–°ç»‘å®šå¦ä¸€ä¸ªè´¦å·ï¼Ÿ");
+		sd.setCancelText("å–æ¶ˆ");
+		sd.setConfirmText("ç¡®å®š");
 		sd.showCancelButton(true);
 		sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
 			@Override
@@ -446,7 +464,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			@Override
 			public void onClick(SweetAlertDialog sDialog) {
 				sd.cancel();
-				// Ìø×ªÎ¢ĞÅ°ó¶¨½çÃæ
+				// è·³è½¬å¾®ä¿¡ç»‘å®šç•Œé¢
 				final SendAuth.Req req = new SendAuth.Req();
 				req.scope = "snsapi_userinfo";
 				req.state = "agree_weixin_login";
@@ -458,7 +476,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		}).show();
 	}
 
-	// °ó¶¨ÊÖ»ú
+	// ç»‘å®šæ‰‹æœº
 	private void Setting_Binding_phone() {
 		if (!("".equals(mUserPhone))) {
 			Phone_NiftyDialogBuilder();
@@ -466,33 +484,36 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			Intent intent = new Intent(getActivity(),BindingPhoneActivity.class);
 			intent.putExtra(IConstant.UserData, Setting_readuser);
 			startActivity(intent);
+			getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
 		}
 	}
 
-	// ÍË³öµÇÂ¼
+	// é€€å‡ºç™»å½•
 	private void Setting_Exit() {
 		NiftyDialogBuilder();
 	}
 
-	// ¹ØÓÚÎÒÃÇ
+	// å…³äºæˆ‘ä»¬
 	private void Setting_about_us() {
 		Intent intent = new Intent(getActivity(), AboutUsActivity.class);
 		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
-	// ÓÃ»§·´À¡
+	// ç”¨æˆ·åé¦ˆ
 	private void Setting_feedback() {
 		Intent intent = new Intent(getActivity(), FeedbackActivity.class);
 		startActivity(intent);
+		getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
-	// °ó¶¨ÊÖ»úºÅÂë
+	// ç»‘å®šæ‰‹æœºå·ç 
 	private void Phone_NiftyDialogBuilder() {
 		final SweetAlertDialog sd = new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE);
-		sd.setTitleText("ÌáÊ¾");
-		sd.setContentText("ÄúÒÑ¾­°ó¶¨ÁËÊÖ»úºÅÂë£¬ÊÇ·ñÖØĞÂ°ó¶¨ÁíÒ»¸öºÅÂë£¿");
-		sd.setCancelText("È¡Ïû");
-		sd.setConfirmText("È·¶¨");
+		sd.setTitleText("æç¤º");
+		sd.setContentText("æ‚¨å·²ç»ç»‘å®šäº†æ‰‹æœºå·ç ï¼Œæ˜¯å¦é‡æ–°ç»‘å®šå¦ä¸€ä¸ªå·ç ï¼Ÿ");
+		sd.setCancelText("å–æ¶ˆ");
+		sd.setConfirmText("ç¡®å®š");
 		sd.showCancelButton(true);
 		sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
 			@Override
@@ -506,18 +527,19 @@ public class SettingFragment extends Fragment implements OnClickListener {
 				Intent intent = new Intent(getActivity(),BindingPhoneActivity.class);
 				intent.putExtra(IConstant.UserData, Setting_readuser);
 				startActivity(intent);
+				getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
 			}
 		}).show();
 
 	}
 
-	// ÍË³öµÇÂ¼
+	// é€€å‡ºç™»å½•
 	private void NiftyDialogBuilder() {
 		final SweetAlertDialog sd = new SweetAlertDialog(getActivity(),SweetAlertDialog.WARNING_TYPE);
-		sd.setTitleText("¾¯¸æ");
-		sd.setContentText("È·¶¨ÒªµÇ³öÕËºÅÂğ£¿" + "\n" + "±£´æµÄ×ÊÁÏ½«»á±»Çå¿ÕÅ¶~");
-		sd.setCancelText("ÎÒÔÙÏëÏë");
-		sd.setConfirmText("ÊÇµÄ");
+		sd.setTitleText("è­¦å‘Š");
+		sd.setContentText("ç¡®å®šè¦ç™»å‡ºè´¦å·å—ï¼Ÿ" + "\n" + "ä¿å­˜çš„èµ„æ–™å°†ä¼šè¢«æ¸…ç©ºå“¦~");
+		sd.setCancelText("æˆ‘å†æƒ³æƒ³");
+		sd.setConfirmText("æ˜¯çš„");
 		sd.showCancelButton(true);
 		sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
 			@Override
@@ -560,17 +582,17 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	
 	public void OSSupload(OSSData ossData, byte[] data, String UUid, final User user) {
 		ossData = ossService.getOssData(sampleBucket, UUid);
-		ossData.setData(data, "jpg"); // Ö¸¶¨ĞèÒªÉÏ´«µÄÊı¾İºÍËüµÄÀàĞÍ
-		ossData.enableUploadCheckMd5sum(); // ¿ªÆôÉÏ´«MD5Ğ£Ñé
+		ossData.setData(data, "jpg"); // æŒ‡å®šéœ€è¦ä¸Šä¼ çš„æ•°æ®å’Œå®ƒçš„ç±»å‹
+		ossData.enableUploadCheckMd5sum(); // å¼€å¯ä¸Šä¼ MD5æ ¡éªŒ
 		ossData.uploadInBackground(new SaveCallback() {
 			@Override
 			public void onSuccess(String objectKey) {
-				Log.e("", "Í¼Æ¬ÉÏ´«³É¹¦");
+				Log.e("", "å›¾ç‰‡ä¸Šä¼ æˆåŠŸ");
 				Log.e("Main", "objectKey==" + objectKey);
-				//ÉÏ´«Íê³Éºó×¢²á
+				//ä¸Šä¼ å®Œæˆåæ³¨å†Œ
 				user.setAvatar_path(objectKey);
 				Setting_readuserinter.updateUser(getActivity(), user);
-				Log.e("SettingFragment","½øÈëÁËÍ¼Æ¬ÉÏ´«µÄÊ±ºò====================");
+				Log.e("SettingFragment","è¿›å…¥äº†å›¾ç‰‡ä¸Šä¼ çš„æ—¶å€™====================");
 				
 				
 			}
@@ -579,7 +601,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			public void onProgress(String objectKey, int byteCount,
 					int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
-				// Log.e("ÉÏ´«½ø¶È", "ÉÏ´«½ø¶È: " + p + "%");
+				// Log.e("ä¸Šä¼ è¿›åº¦", "ä¸Šä¼ è¿›åº¦: " + p + "%");
 				mSetting_progress.post(new Runnable() {
 					
 					@Override
@@ -595,7 +617,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
-				Log.e("", "Í¼Æ¬ÉÏ´«Ê§°Ü" + ossException.toString());
+				Log.e("", "å›¾ç‰‡ä¸Šä¼ å¤±è´¥" + ossException.toString());
 			}
 		});
 	}

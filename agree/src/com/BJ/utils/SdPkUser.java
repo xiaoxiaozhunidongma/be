@@ -3,6 +3,7 @@ package com.BJ.utils;
 import java.util.List;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.User;
 
 public class SdPkUser {
@@ -191,5 +192,49 @@ public class SdPkUser {
 
 	public static void setCreator(String creator) {
 		Creator = creator;
+	}
+	
+	//从聊天室界面点击头像传User到头像界面
+	public static User ClickUser;
+	public static User getClickUser() {
+		return ClickUser;
+	}
+
+	public static void setClickUser(User clickUser) {
+		ClickUser = clickUser;
+	}
+	
+	//从群聊界面点击头像传User到头像界面
+	public static Group_ReadAllUser GroupChatUser;
+	
+	
+	public static Group_ReadAllUser getGroupChatUser() {
+		return GroupChatUser;
+	}
+
+	public static void setGroupChatUser(Group_ReadAllUser groupChatUser) {
+		GroupChatUser = groupChatUser;
+	}
+
+	//从聊天界面点击头像传User到头像界面,群聊的
+	public static List<Group_ReadAllUser> HomeClickUser;
+	
+
+	public static List<Group_ReadAllUser> getHomeClickUser() {
+		return HomeClickUser;
+	}
+
+	public static void setHomeClickUser(List<Group_ReadAllUser> homeClickUser) {
+		HomeClickUser = homeClickUser;
+	}
+
+	//判断是从群聊来的还是聊天室来的
+	public static boolean GetSource;
+	public static boolean isGetSource() {
+		return GetSource;
+	}
+
+	public static void setGetSource(boolean getSource) {
+		GetSource = getSource;
 	}
 }

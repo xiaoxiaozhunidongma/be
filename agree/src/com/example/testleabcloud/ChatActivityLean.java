@@ -70,6 +70,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.biju.R;
 import com.biju.chatroom.MembersChatActivity;
+import com.biju.chatroom.PersonalDataActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
@@ -112,6 +113,8 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	private TextView tochatname;
 	private TextView mTv_detail;
 	public static GetMemberChat memberChat;
+	public static GetPersonal getPersonal;
+	public static GetChatRoomClickOK chatRoomClickOK;
 
 	public static ChatActivityLean getChatInstance() {
 		return chatInstance;
@@ -129,7 +132,35 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		initListView();
 
 		initByIntent(getIntent());
-		initMemberChat();
+		initMemberChat();//成员界面调用接口
+		initPersonalData();//好友资料界面调用接口
+		initChatRoomClickOK();//在头像界面点击完成调用接口
+	}
+
+	private void initChatRoomClickOK() {
+		GetChatRoomClickOK chatRoomClickOK=new GetChatRoomClickOK(){
+
+			@Override
+			public void ChatRoomClickOK() {
+				mTv_detail.setText("关闭");
+			}
+			
+		};
+		this.chatRoomClickOK=chatRoomClickOK;
+	}
+
+	private void initPersonalData() {
+		GetPersonal getPersonal=new GetPersonal(){
+
+			@Override
+			public void PersonalData() {
+				Intent intent=new Intent(ChatActivityLean.this, PersonalDataActivity.class);
+				startActivity(intent);
+				overridePendingTransition(R.anim.leftin_item, R.anim.leftout_item);
+			}
+			
+		};
+		this.getPersonal=getPersonal;
 	}
 
 	private void initMemberChat() {
@@ -953,5 +984,13 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	
 	public interface GetMemberChat{
 		void MemberChat();
+	}
+	
+	public interface GetPersonal{
+		void PersonalData();
+	}
+	
+	public interface GetChatRoomClickOK{
+		void ChatRoomClickOK();
 	}
 }

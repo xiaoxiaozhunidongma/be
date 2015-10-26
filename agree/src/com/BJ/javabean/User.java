@@ -31,7 +31,11 @@ public class User implements Serializable{
 	@Column
 	private Integer status;
 	@Column
+	private float amount;
+	@Column
 	private String wechat_id ;
+	@Column
+	private String real_name ;
 	public Integer getPk_user() {
 		return pk_user;
 	}
@@ -98,12 +102,22 @@ public class User implements Serializable{
 	public void setStatus(Integer status) {
 		this.status = status;
 	}
+	public float getAmount() {
+		return amount;
+	}
+	public void setAmount(float amount) {
+		this.amount = amount;
+	}
 	public String getWechat_id() {
 		return wechat_id;
 	}
 	public void setWechat_id(String wechat_id) {
 		this.wechat_id = wechat_id;
 	}
-	
-
+	public String getReal_name() {
+		return real_name;
+	}
+	public void setReal_name(String real_name) {
+		this.real_name = real_name;
+	}
 }

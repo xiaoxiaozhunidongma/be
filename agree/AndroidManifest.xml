@@ -527,6 +527,31 @@
             android:name="com.biju.PhotoActivity"
             android:label="@string/title_activity_photo" >
         </activity>
+        <activity
+            android:name="com.biju.chatroom.PersonalDataActivity"
+            android:label="@string/title_activity_personal_data"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.biju.withdrawal.TouchBalanceActivity"
+            android:label="@string/title_activity_touch_balance" >
+        </activity>
+        <activity
+            android:name="com.biju.withdrawal.NewAccountActivity"
+            android:label="@string/title_activity_new_account" >
+        </activity>
+        <activity
+            android:name="com.biju.withdrawal.HistoryListActivity"
+            android:label="@string/title_activity_history_list" >
+        </activity>
+        <activity
+            android:name="com.biju.withdrawal.DeletePaymentAccountActivity"
+            android:label="@string/title_activity_delete_payment_account" >
+        </activity>
+        <activity
+            android:name="com.biju.pay.GraphicPreviewActivity"
+            android:label="@string/title_activity_graphic_preview" >
+        </activity>
     </application>
 
 </manifest>

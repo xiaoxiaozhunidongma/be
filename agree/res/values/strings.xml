@@ -265,7 +265,7 @@
     <string name="partydetails_partake">参与</string>
     <string name="partydetails_did_not_say">未表态</string>
     <string name="partydetails_party_organizer">组织者</string>
-    <string name="partydetails_prompt">点击参与人数,查看支付信息</string>
+    <string name="partydetails_prompt">点击查看图文信息</string>
     <string name="partydetails_apply">报名</string>
     <!-- 小组设置界面 -->
     <string name="setting2_title_text">社团设置</string>
@@ -378,5 +378,11 @@
     <string name="title_activity_members_chat">MembersChatActivity</string>
     <string name="title_activity_chat_room">ChatRoomActivity</string>
     <string name="title_activity_photo">PhotoActivity</string>
+    <string name="title_activity_personal_data">PersonalDataActivity</string>
+    <string name="title_activity_touch_balance">TouchBalanceActivity</string>
+    <string name="title_activity_new_account">NewAccountActivity</string>
+    <string name="title_activity_history_list">HistoryListActivity</string>
+    <string name="title_activity_delete_payment_account">DeletePaymentAccountActivity</string>
+    <string name="title_activity_graphic_preview">GraphicPreviewActivity</string>
 
 </resources>
