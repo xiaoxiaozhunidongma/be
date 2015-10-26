@@ -1,0 +1,53 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".GraphicPreviewActivity"
+    android:background="#efefef"
+     >
+
+    <RelativeLayout
+        android:id="@+id/GraphicPreviewTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" 
+        android:background="#ffffff"
+        >
+
+        <TextView
+            android:id="@+id/GraphicPreviewBack"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="返回"
+            android:textSize="13.0sp"
+            android:textColor="@drawable/title_left_color"
+            android:gravity="center"
+             />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+             />
+
+        
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/GraphicPreviewListView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/GraphicPreviewTitleLayout"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+         >
+
+    </ListView>
+
+</RelativeLayout>

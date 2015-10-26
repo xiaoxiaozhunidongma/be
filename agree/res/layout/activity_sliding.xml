@@ -98,12 +98,14 @@
 
                     <TextView
                         android:id="@+id/textView2"
-                        android:layout_width="wrap_content"
+                        android:layout_width="83.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="小组设置"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/slidingsetting"
                         android:textColor="#000000"
                         android:textSize="15.0sp" />
 
@@ -137,13 +139,15 @@
 
                     <TextView
                         android:id="@+id/SlidingMenu_requestcode_code"
-                        android:layout_width="wrap_content"
+                        android:layout_width="130.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="生成小组邀请码"
                         android:textColor="#000000"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/slidingcode"
                         android:textSize="15.0sp" />
 
                     <TextView

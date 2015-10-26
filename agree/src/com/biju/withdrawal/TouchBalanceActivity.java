@@ -66,7 +66,6 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 			public void BalancePayMentAccount() {
 				initBalance();//获取用户的余额
 				initReadPayMnetAccount();//获取用户的提现账户
-				Log.e("TouchBalanceActivity", "删除账户第一步=======");
 			}
 			
 		};
@@ -78,7 +77,6 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 		User user=new User();
 		user.setPk_user(sd_pk_user);
 		mTouchBalanceInterface.ReadPayMentAccount(TouchBalanceActivity.this, user);
-		Log.e("TouchBalanceActivity", "删除账户第二步======="+sd_pk_user);
 	}
 
 	private void initInterFace() {
@@ -112,7 +110,6 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 			public void success(String A) {
 				PaymentAccountList.clear();
 				Log.e("TouchBalanceActivity", "获取回来的账户========="+A);
-				Log.e("TouchBalanceActivity", "删除账户第4步=======");
 				PaymentAccountBack paymentAccountBack=GsonUtils.parseJson(A, PaymentAccountBack.class);
 				Integer StatusMsg=paymentAccountBack.getStatusMsg();
 				if(1==StatusMsg){
@@ -124,12 +121,14 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 						}
 						adapter.notifyDataSetChanged();
 					}
-					Log.e("TouchBalanceActivity", "删除账户第5步======="+PaymentAccountList.size());
+					Log.e("TouchBalanceActivity", "删除账户第1步======="+PaymentAccountList.size());
 					if(PaymentAccountList.size()>0){
 						mAccountFooter.setVisibility(View.GONE);
 					}
 				}else {
+					Log.e("TouchBalanceActivity", "删除账户第2步======="+PaymentAccountList.size());
 					mAccountFooter.setVisibility(View.VISIBLE);
+					adapter.notifyDataSetChanged();
 				}
 			}
 			

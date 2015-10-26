@@ -153,12 +153,14 @@
 
                     <TextView
                         android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
+                        android:layout_width="83.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="小组名称"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/groupname"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -203,12 +205,14 @@
 
                     <TextView
                         android:id="@+id/textView9"
-                        android:layout_width="wrap_content"
+                        android:layout_width="110.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="邀请好友加入"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/addfriends"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -239,12 +243,14 @@
 
                     <TextView
                         android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
+                        android:layout_width="83.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="历史聚会"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/oldparty"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -475,13 +481,15 @@
 
                     <TextView
                         android:id="@+id/textView27"
-                        android:layout_width="wrap_content"
+                        android:layout_width="83.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="退出小组"
                         android:textColor="#ff0000"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/settingexit"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView

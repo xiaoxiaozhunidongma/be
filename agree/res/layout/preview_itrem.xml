@@ -8,16 +8,14 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        
-         >
+        android:layout_centerHorizontal="true" >
 
         <ImageView
             android:id="@+id/PreviewImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10.0dp"
-            android:layout_marginBottom="10.0dp"
+            android:layout_marginBottom="20.0dp"
             android:adjustViewBounds="true"
             android:scaleType="fitCenter"
             android:src="@drawable/about_us" />
@@ -28,18 +26,15 @@
             android:layout_alignLeft="@+id/PreviewImage"
             android:layout_alignRight="@+id/PreviewImage"
             android:layout_below="@+id/PreviewImage" >
-
         </RelativeLayout>
-
     </RelativeLayout>
 
     <RelativeLayout
         android:id="@+id/PreviewTextLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:visibility="gone" >
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/PreviewImageLayout" >
 
         <TextView
             android:id="@+id/PreviewTextShow"
@@ -47,10 +42,8 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:layout_marginBottom="40.0dp"
-            android:layout_marginLeft="30.0dp"
-            android:layout_marginRight="20.0dp"
-            android:layout_marginTop="40.0dp"
+            android:gravity="left|center"
+            android:layout_margin="20.0dp"
             android:text="TextView"
             android:textColor="#535353"
             android:textSize="13.0sp" />

@@ -97,6 +97,7 @@
             android:background="#ffffff" >
 
             <RelativeLayout
+                android:id="@+id/NewAccountWeChatAccountBut"
                 android:layout_width="match_parent"
                 android:layout_height="44.0dp"
                 android:layout_alignParentTop="true"
@@ -110,23 +111,23 @@
                     android:layout_marginLeft="20.0dp"
                     android:background="#aaaaaa" />
 
-                <Button
-                    android:id="@+id/NewAccountWeChatAccountBut"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:id="@+id/textView16"
+                    android:layout_width="83.0dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:layout_marginBottom="0.50dp"
-                    android:background="@null"
-                    android:gravity="left|center"
-                    android:paddingLeft="20.0dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:drawableLeft="@drawable/settingname1"
+                    android:gravity="right|center"
                     android:text="微信账户"
                     android:textColor="#535353"
                     android:textSize="13.0sp" />
+
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/relativeLayout2"
+                 android:id="@+id/NewAccountAliPayAccountBut"
                 android:layout_width="match_parent"
                 android:layout_height="44.0dp"
                 android:layout_centerHorizontal="true"
@@ -140,38 +141,28 @@
                     android:layout_marginLeft="20.0dp"
                     android:background="#aaaaaa" />
 
-                <Button
-                    android:id="@+id/NewAccountAliPayAccountBut"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
+                <TextView
+                    android:id="@+id/textView17"
+                    android:layout_width="96.0dp"
+                    android:layout_height="wrap_content"
                     android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@null"
-                    android:gravity="left|center"
-                    android:paddingLeft="20.0dp"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20.0dp"
                     android:text="支付宝账户"
                     android:textColor="#535353"
+                    android:gravity="right|center"
+                    android:drawableLeft="@drawable/settingname1"
                     android:textSize="13.0sp" />
+
             </RelativeLayout>
 
             <RelativeLayout
+                android:id="@+id/NewAccountUnionPayAccountBut"
                 android:layout_width="match_parent"
                 android:layout_height="44.0dp"
-                android:layout_below="@+id/relativeLayout2"
+                android:layout_below="@+id/NewAccountAliPayAccountBut"
                 android:layout_centerHorizontal="true" >
 
-                <Button
-                    android:id="@+id/NewAccountUnionPayAccountBut"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_alignParentLeft="true"
-                    android:layout_alignParentTop="true"
-                    android:background="@null"
-                    android:gravity="left|center"
-                    android:paddingLeft="20.0dp"
-                    android:text="银联账户"
-                    android:textColor="#535353"
-                    android:textSize="13.0sp" />
 
                 <TextView
                     android:id="@+id/textView6"
@@ -179,6 +170,20 @@
                     android:layout_height="0.50dp"
                     android:layout_alignParentBottom="true"
                     android:background="#aaaaaa" />
+
+                <TextView
+                    android:id="@+id/textView18"
+                    android:layout_width="83.0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="20.0dp"
+                    android:text="银联账户"
+                    android:gravity="right|center"
+                    android:drawableLeft="@drawable/settingname1"
+                    android:textColor="#535353"
+                    android:textSize="13.0sp" />
+
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

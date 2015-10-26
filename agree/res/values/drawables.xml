@@ -53,12 +53,12 @@
      <drawable name="CostChooseColor">#d9d9d9</drawable>
      
      <!--设置图文信息字体颜色  -->
-     <drawable name="EditTextLightGrayColor">#c9c9c9</drawable>
-     <drawable name="EditTextDarkGrayColor">#535353</drawable>
-     <drawable name="EditTextBlackColor">#000000</drawable>
-     <drawable name="EditTextRedColor">#ff0000</drawable>
-     <drawable name="EditTextBlueColor">#0080ff</drawable>
-     <drawable name="EditTextGreenColor">#02c874</drawable>
+     <drawable name="EditTextLightGrayColor">#C4C4C4</drawable>
+     <drawable name="EditTextDarkGrayColor">#43434C</drawable>
+     <drawable name="EditTextBlackColor">#040404</drawable>
+     <drawable name="EditTextRedColor">#B6000A</drawable>
+     <drawable name="EditTextBlueColor">#2B61D5</drawable>
+     <drawable name="EditTextGreenColor">#6FCE1B</drawable>
      
      <!--button点击效果颜色  -->
       <drawable name="but_white">#ffffff</drawable>

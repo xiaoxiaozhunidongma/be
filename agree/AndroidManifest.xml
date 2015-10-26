@@ -537,6 +537,10 @@
             android:name="com.biju.withdrawal.DeletePaymentAccountActivity"
             android:label="@string/title_activity_delete_payment_account" >
         </activity>
+        <activity
+            android:name="com.biju.pay.GraphicPreviewActivity"
+            android:label="@string/title_activity_graphic_preview" >
+        </activity>
     </application>
 
 </manifest>

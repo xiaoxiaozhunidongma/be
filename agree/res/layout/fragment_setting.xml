@@ -158,12 +158,14 @@
 
                     <TextView
                         android:id="@+id/textView5"
-                        android:layout_width="wrap_content"
+                        android:layout_width="55.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="姓名"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/settingname1"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -209,12 +211,14 @@
 
                     <TextView
                         android:id="@+id/textView7"
-                        android:layout_width="wrap_content"
+                        android:layout_width="55.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="性别"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/settingsex"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -259,12 +263,14 @@
 
                     <TextView
                         android:id="@+id/textView9"
-                        android:layout_width="wrap_content"
+                        android:layout_width="83.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="绑定手机"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/settingphone"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -309,12 +315,14 @@
 
                     <TextView
                         android:id="@+id/textView11"
-                        android:layout_width="wrap_content"
+                        android:layout_width="83.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20dp"
                         android:text="绑定微信"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/settingwechat"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -392,12 +400,14 @@
 
                     <TextView
                         android:id="@+id/textView15"
-                        android:layout_width="wrap_content"
+                        android:layout_width="55.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="余额"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/settingbalance"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -475,12 +485,14 @@
 
                     <TextView
                         android:id="@+id/textView21"
-                        android:layout_width="wrap_content"
+                        android:layout_width="55.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="反馈"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/settingfeedback"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -512,12 +524,14 @@
 
                     <TextView
                         android:id="@+id/textView23"
-                        android:layout_width="wrap_content"
+                        android:layout_width="83.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="关于必聚"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/settingaboutus"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -581,12 +595,14 @@
 
                     <TextView
                         android:id="@+id/textView27"
-                        android:layout_width="wrap_content"
+                        android:layout_width="83.0dp"
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
                         android:text="退出登录"
+                        android:gravity="right|center"
+                        android:drawableLeft="@drawable/settingexit"
                         android:textColor="#ff0000"
                         android:textSize="@dimen/setting_size" />
 

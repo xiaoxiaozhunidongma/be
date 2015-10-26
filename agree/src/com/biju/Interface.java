@@ -58,15 +58,17 @@ public class Interface {
 		return Thisinterface;
 	}
 
-	// 用户的提现 
+	// 获取聚会的图文详情
+	String KReadGraphic = "418";
+	// 用户的提现
 	String KOrder = "116";
-	//  删除用户的取现账户 
+	// 删除用户的取现账户
 	String KDeletePayMentAccount = "117";
-	// 添加用户的取现账户 
+	// 添加用户的取现账户
 	String KPayMentAccount = "114";
 	// 读取用户的取现账户
 	String KReadPayMentAccount = "115";
-	//  计算用户的余额
+	// 计算用户的余额
 	String KBalance = "113";
 	// 查询多个用户
 	String KMultiUsers = "120";
@@ -170,7 +172,8 @@ public class Interface {
 		return params;
 	}
 
-	ArrayList<String> ImageTextList=new ArrayList<String>();
+	ArrayList<String> ImageTextList = new ArrayList<String>();
+
 	public Map<String, String> packParamsAddParty(Object classObject,
 			String interfaceType) {
 
@@ -178,9 +181,10 @@ public class Interface {
 				.getParty());
 		JSONObject jsonObject = new JSONObject(map);
 		Log.e("Interface", "map------" + map);
-		
-		List<ImageText> remarkArray = ((MapAddParty) classObject).getRemarkArray();
-//		ImageTextList.clear();//先清空
+
+		List<ImageText> remarkArray = ((MapAddParty) classObject)
+				.getRemarkArray();
+		// ImageTextList.clear();//先清空
 		for (int i = 0; i < remarkArray.size(); i++) {
 			ImageText imageText = remarkArray.get(i);
 			ImageTextList.add(imageText.toString());
@@ -188,10 +192,11 @@ public class Interface {
 		JSONArray jsonArray = null;
 		String string2 = ImageTextList.toString();
 		jsonArray = new JSONArray(ImageTextList);
-//		StringAddParty stringAddParty = new StringAddParty(remarkArray,
-//				jsonObject);
+		// StringAddParty stringAddParty = new StringAddParty(remarkArray,
+		// jsonObject);
+		Log.e("Interface", "jsonArray------" + jsonArray);
 		JsonAddParty jsonAddParty = new JsonAddParty(jsonArray, jsonObject);
-
+		Log.e("Interface", "jsonAddParty------" + jsonAddParty);
 		Map<String, String> params = new HashMap<String, String>();
 
 		Map map2 = Bean2Map.ConvertObjToMap(jsonAddParty);
@@ -200,7 +205,6 @@ public class Interface {
 		params.put("request_type", interfaceType);
 		Log.e("Interface", "小组json:" + jsonObject2.toString());
 		params.put("request_data", jsonObject2.toString().replace("\\", ""));
-
 		return params;
 	}
 
@@ -340,93 +344,116 @@ public class Interface {
 	// });
 	// }
 
-	//  用户的提现 
-	private void OrderPost(Context context, Map<String, String> params) {
-		
+	// 获取聚会的图文详情
+	private void ReadGraphicPost(Context context, Map<String, String> params) {
+
 		MyVolley.post(context, url, params, new VolleyListenner() {
-			
+
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError50(error);
+				Log.e("失败", "" + error);
+			}
+
+			@Override
+			public void onResponse(String response) {
+				requestDone50(response);
+			}
+		});
+	}
+
+	// 用户的提现
+	private void OrderPost(Context context, Map<String, String> params) {
+
+		MyVolley.post(context, url, params, new VolleyListenner() {
+
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				requestError49(error);
 				Log.e("失败", "" + error);
 			}
-			
+
 			@Override
 			public void onResponse(String response) {
 				requestDone49(response);
 			}
 		});
 	}
-	
-	//  删除用户的取现账户 
-	private void DeletePayMentAccountPost(Context context, Map<String, String> params) {
-		
+
+	// 删除用户的取现账户
+	private void DeletePayMentAccountPost(Context context,
+			Map<String, String> params) {
+
 		MyVolley.post(context, url, params, new VolleyListenner() {
-			
+
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				requestError48(error);
 				Log.e("失败", "" + error);
 			}
-			
+
 			@Override
 			public void onResponse(String response) {
 				requestDone48(response);
 			}
 		});
 	}
-	
-	// 添加用户的取现账户 
+
+	// 添加用户的取现账户
 	private void PayMentAccountPost(Context context, Map<String, String> params) {
-		
+
 		MyVolley.post(context, url, params, new VolleyListenner() {
-			
+
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				requestError47(error);
 				Log.e("失败", "" + error);
 			}
-			
+
 			@Override
 			public void onResponse(String response) {
 				requestDone47(response);
 			}
 		});
 	}
-	//  读取用户的取现账户
-	private void ReadPayMentAccountPost(Context context, Map<String, String> params) {
-		
+
+	// 读取用户的取现账户
+	private void ReadPayMentAccountPost(Context context,
+			Map<String, String> params) {
+
 		MyVolley.post(context, url, params, new VolleyListenner() {
-			
+
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				requestError46(error);
 				Log.e("失败", "" + error);
 			}
-			
+
 			@Override
 			public void onResponse(String response) {
 				requestDone46(response);
 			}
 		});
 	}
-	//  计算用户的余额
+
+	// 计算用户的余额
 	private void BalancePost(Context context, Map<String, String> params) {
-		
+
 		MyVolley.post(context, url, params, new VolleyListenner() {
-			
+
 			@Override
 			public void onErrorResponse(VolleyError error) {
 				requestError44(error);
 				Log.e("失败", "" + error);
 			}
-			
+
 			@Override
 			public void onResponse(String response) {
 				requestDone44(response);
 			}
 		});
 	}
+
 	// 查询多个用户
 	private void MultiUserPost(Context context, Map<String, String> params) {
 
@@ -1154,31 +1181,38 @@ public class Interface {
 	// volleyPost(context,per);
 	// }
 
-	//  用户的取现
+	// 获取聚会的图文详情
+	public void ReadGraphic(Context context, Party party) {
+		ReadGraphicPost(context, packParams(party, KReadGraphic));
+	}
+
+	// 用户的取现
 	public void Order(Context context, Order user_order) {
 		OrderPost(context, packParams(user_order, KOrder));
 	}
-	
-	//  删除用户的取现账户 
-	public void DeletePayMentAccount(Context context, PaymentAccount paymentAccount) {
-		DeletePayMentAccountPost(context, packParams(paymentAccount, KDeletePayMentAccount));
+
+	// 删除用户的取现账户
+	public void DeletePayMentAccount(Context context,
+			PaymentAccount paymentAccount) {
+		DeletePayMentAccountPost(context,
+				packParams(paymentAccount, KDeletePayMentAccount));
 	}
-	
-	// 添加用户的取现账户 
+
+	// 添加用户的取现账户
 	public void PayMentAccount(Context context, PaymentAccount paymentAccount) {
 		PayMentAccountPost(context, packParams(paymentAccount, KPayMentAccount));
 	}
-	
-	//  读取用户的取现账户
+
+	// 读取用户的取现账户
 	public void ReadPayMentAccount(Context context, User user) {
 		ReadPayMentAccountPost(context, packParams(user, KReadPayMentAccount));
 	}
-	
-	//  计算用户的余额
+
+	// 计算用户的余额
 	public void Balance(Context context, User user) {
 		BalancePost(context, packParams(user, KBalance));
 	}
-	
+
 	// 查询多个用户
 	public void findMultiUsers(Context context, List<String> list) {
 		MultiUserPost(context, packParamsMulti(list, KMultiUsers));
@@ -1415,15 +1449,17 @@ public class Interface {
 	// 接口部分
 	// private static UserInterface listener;
 
-	//   用户的取现
+	// 获取聚会的图文详情
+	private static ReadGraphicListenner readgraphicListenner;
+	// 用户的取现
 	private static OrderListenner orderListenner;
-	//   删除用户的取现账户 
+	// 删除用户的取现账户
 	private static DeletePayMentAccountListenner deletepaymentaccountListenner;
-	//  添加用户的取现账户 
+	// 添加用户的取现账户
 	private static PayMentAccountListenner paymentaccountListenner;
-	//  读取用户的取现账户
+	// 读取用户的取现账户
 	private static ReadPayMentAccountListenner readpaymentaccountListenner;
-	//  计算用户的余额
+	// 计算用户的余额
 	private static BalanceListenner balanceListenner;
 	// 我的所有好友
 	private static FindMultiUserListenner multiUserListenner;
@@ -1479,41 +1515,48 @@ public class Interface {
 	// void defail(Object B);
 	// }
 
-	//   用户的取现
+	// 获取聚会的图文详情
+	public interface ReadGraphicListenner {
+		void success(String A);
+
+		void defail(Object B);
+	}
+
+	// 用户的取现
 	public interface OrderListenner {
 		void success(String A);
-		
+
 		void defail(Object B);
 	}
-	
-	//   删除用户的取现账户
+
+	// 删除用户的取现账户
 	public interface DeletePayMentAccountListenner {
 		void success(String A);
-		
+
 		void defail(Object B);
 	}
-	
-	//  添加用户的取现账户 
+
+	// 添加用户的取现账户
 	public interface PayMentAccountListenner {
 		void success(String A);
-		
+
 		void defail(Object B);
 	}
-	
-	//  读取用户的取现账户
+
+	// 读取用户的取现账户
 	public interface ReadPayMentAccountListenner {
 		void success(String A);
-		
+
 		void defail(Object B);
 	}
-	
-	//  计算用户的余额
+
+	// 计算用户的余额
 	public interface BalanceListenner {
 		void success(String A);
-		
+
 		void defail(Object B);
 	}
-	
+
 	// 查询多个用户
 	public interface FindMultiUserListenner {
 		void success(String A);
@@ -1771,31 +1814,36 @@ public class Interface {
 	// this.listener=listener;
 	// }
 
-	//   用户的取现
+	// 获取聚会的图文详情
+	public void setPostListener(ReadGraphicListenner listener) {
+		this.readgraphicListenner = listener;
+	}
+
+	// 用户的取现
 	public void setPostListener(OrderListenner listener) {
 		this.orderListenner = listener;
 	}
-	
-	//   删除用户的取现账户
+
+	// 删除用户的取现账户
 	public void setPostListener(DeletePayMentAccountListenner listener) {
 		this.deletepaymentaccountListenner = listener;
 	}
-	
-	//  读取用户的取现账户
+
+	// 读取用户的取现账户
 	public void setPostListener(PayMentAccountListenner listener) {
 		this.paymentaccountListenner = listener;
 	}
-	
-	//  读取用户的取现账户
+
+	// 读取用户的取现账户
 	public void setPostListener(ReadPayMentAccountListenner listener) {
 		this.readpaymentaccountListenner = listener;
 	}
-	
-	//  计算用户的余额
+
+	// 计算用户的余额
 	public void setPostListener(BalanceListenner listener) {
 		this.balanceListenner = listener;
 	}
-	
+
 	// 查询多个用户
 	public void setPostListener(FindMultiUserListenner listener) {
 		this.multiUserListenner = listener;
@@ -2382,49 +2430,58 @@ public class Interface {
 	public static void requestError43(VolleyError error) {
 		multiUserListenner.defail(error);
 	}
-	
+
 	// 计算用户的余额
 	public static void requestDone44(String theObject) {
 		balanceListenner.success(theObject);
 	}
-	
+
 	public static void requestError44(VolleyError error) {
 		balanceListenner.defail(error);
 	}
-	
+
 	// 读取用户的取现账户
 	public static void requestDone46(String theObject) {
 		readpaymentaccountListenner.success(theObject);
 	}
-	
+
 	public static void requestError46(VolleyError error) {
 		readpaymentaccountListenner.defail(error);
 	}
-	
-	// 添加用户的取现账户 
+
+	// 添加用户的取现账户
 	public static void requestDone47(String theObject) {
 		paymentaccountListenner.success(theObject);
 	}
-	
+
 	public static void requestError47(VolleyError error) {
 		paymentaccountListenner.defail(error);
 	}
-	
-	//  删除用户的取现账户 
+
+	// 删除用户的取现账户
 	public static void requestDone48(String theObject) {
 		deletepaymentaccountListenner.success(theObject);
 	}
-	
+
 	public static void requestError48(VolleyError error) {
 		deletepaymentaccountListenner.defail(error);
 	}
-	
-	//  用户的取现
+
+	// 用户的取现
 	public static void requestDone49(String theObject) {
 		orderListenner.success(theObject);
 	}
-	
+
 	public static void requestError49(VolleyError error) {
 		orderListenner.defail(error);
+	}
+
+	// 获取聚会的图文详情
+	public static void requestDone50(String theObject) {
+		readgraphicListenner.success(theObject);
+	}
+
+	public static void requestError50(VolleyError error) {
+		readgraphicListenner.defail(error);
 	}
 }

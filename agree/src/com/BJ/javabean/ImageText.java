@@ -2,12 +2,14 @@ package com.BJ.javabean;
 
 import java.io.Serializable;
 
+import android.util.Log;
+
 import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table(name = "graphic_details")
-public class ImageText extends Model implements Serializable{
+public class ImageText extends Model implements Serializable {
 	public ImageText() {
 	}
 
@@ -32,8 +34,8 @@ public class ImageText extends Model implements Serializable{
 	private Integer image_height;
 	@Column
 	private Integer image_width;
-	@Column
-	private Integer _order;
+	// @Column
+	// private Integer _order;
 	@Column
 	private Integer status;
 
@@ -117,13 +119,13 @@ public class ImageText extends Model implements Serializable{
 		this.image_width = image_width;
 	}
 
-	public Integer get_order() {
-		return _order;
-	}
-
-	public void set_order(Integer _order) {
-		this._order = _order;
-	}
+	// public Integer get_order() {
+	// return _order;
+	// }
+	//
+	// public void set_order(Integer _order) {
+	// this._order = _order;
+	// }
 
 	public Integer getStatus() {
 		return status;
@@ -135,18 +137,53 @@ public class ImageText extends Model implements Serializable{
 
 	@Override
 	public String toString() {
-		return "{pk_party_remark=" + pk_party_remark + ", fk_party="
-				+ fk_party + ", type=" + type + ", text=" + text
-				+ ", image_path=" + image_path + ", style=" + style
-				+ ", font_size=" + font_size + ", font_color=" + font_color
-				+ ", image_height=" + image_height + ", image_width="
-				+ image_width + ", _order=" + _order + ", status=" + status + "}";
+		// return "{pk_party_remark=" + pk_party_remark + ", fk_party="+
+		// fk_party +
+		// ", type=" + type + ", text=" + text
+		// + ", image_path=" + image_path + ", style=" + style
+		// + ", font_size=" + font_size + ", font_color=" + font_color
+		// + ", image_height=" + image_height + ", image_width="
+		// + image_width + ", status=" + status + "}";
+
+//		return "{" + "\"" +"pk_party_remark" + "\"" + ":" + pk_party_remark + ","+"\""+"fk_party"+"\""+":"
+//				+ fk_party + ","+"\""+"type"+"\""+":" + type + ","+"\""+"text"+"\""+":" + text
+//				+ ",\"image_path\":" + image_path + ",\"style\":" + style
+//				+ ","+"\""+"font_size"+"\""+":" + font_size + ","+"\""+"font_color"+"\""+":"
+//				+ font_color + ","+"\""+"image_height"+"\""+":" + image_height
+//				+ ","+"\""+"image_width"+"\""+":" + image_width + ","+"\""+"status"+"\""+":" + status
+//				+ "}";
+		
+		StringBuffer sb = new StringBuffer(); 
+//		sb.append('{').append("\"pk_party_remark\":").append(pk_party_remark).append(",\"fk_party\":").append(fk_party)
+//		.append(",\"type\":").append(type).append(",\"text\":").append(text).append(",\"image_path\":").append(image_path)
+//		.append(",\"style\":").append(style).append(",\"font_size\":").append(font_size).append(",\"font_color\":").append(font_color).append(",\"image_height\":")
+//		.append(image_height).append(",\"image_width\":").append(image_width).append(",\"status\":").append(status).append('}');
+		sb.append('{').append('"').append("pk_party_remark").append('"').append(':').append(pk_party_remark)
+		.append(',').append('"').append("fk_party").append('"').append(':').append(fk_party)
+		.append(',').append('"').append("type").append('"').append(':').append(type)
+		.append(',').append('"').append("text").append('"').append(':').append(text)
+		.append(',').append('"').append("image_path").append('"').append(':').append(image_path)
+		.append(',').append('"').append("style").append('"').append(':').append(style)
+		.append(',').append('"').append("font_size").append('"').append(':').append(font_size)
+		.append(',').append('"').append("font_color").append('"').append(':').append(font_color)
+		.append(',').append('"').append("image_height").append('"').append(':').append(image_height)
+		.append(',').append('"').append("image_width").append('"').append(':').append(image_width)
+		.append(',').append('"').append("status").append('"').append(':').append(status).append('}');
+		
+		Log.e("ImageText", "»ñÈ¡µÄsb======="+sb.toString());
+		
+		
+		
+		
+		
+		return sb.toString();
+
 	}
 
 	public ImageText(Integer pk_party_remark, String fk_party, Integer type,
 			String text, String image_path, Integer style, Integer font_size,
 			String font_color, Integer image_height, Integer image_width,
-			Integer _order, Integer status) {
+			Integer status) {
 		super();
 		this.pk_party_remark = pk_party_remark;
 		this.fk_party = fk_party;
@@ -158,7 +195,6 @@ public class ImageText extends Model implements Serializable{
 		this.font_color = font_color;
 		this.image_height = image_height;
 		this.image_width = image_width;
-		this._order = _order;
 		this.status = status;
 	}
 
