@@ -29,14 +29,16 @@ import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.biju.Interface;
 import com.biju.Interface.MyAllfriendsListenner;
 import com.biju.R;
+import com.example.testleabcloud.ChatActivityLean;
 import com.github.volley_examples.utils.GsonUtils;
 
 @SuppressLint("UseSparseArrays")
-public class AddChatsActivity extends Activity implements OnClickListener {
+public class AddMembersActivity extends Activity implements OnClickListener {
 
 	private ListView listView;
 	private MyAdapter myAdapter;
@@ -146,7 +148,7 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 			String avatar_path = user.getAvatar_path();
 			holder.ReadUserAllFriends_name.setText(nickname);
 			String completeURL = beginStr + avatar_path + endStr+"mini-avatar";
-			ImageLoaderUtils.getInstance().LoadImageCricular(AddChatsActivity.this,
+			ImageLoaderUtils.getInstance().LoadImageCricular(AddMembersActivity.this,
 					completeURL, holder.ReadUserAllFriends_head);
 			if(position==userList.size()-1){
 				holder.ReadUserAllFriendsLine1.setVisibility(View.VISIBLE);
@@ -207,60 +209,46 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 	private void AddFriends3OK() {
 		    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
 			Integer SD_pk_user = SdPkUser.getsD_pk_user();
-			members.add(String.valueOf(SD_pk_user));//添加当前用户
-			Log.e("AddFriend3Activity", "members===="+members+members.size());
-		    AVIMClient curuser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
-		    // 与服务器连接
-		    curuser.open(new AVIMClientCallback() {
-		      @Override
-		      public void done(AVIMClient client, AVIMException e) {
-		        if (e == null) {
-		          // 创建与 Jerry，Bob,Harry,William 之间的会话
-		            HashMap<String,Object> attr = new HashMap<String,Object>();
-		            
-		            attr.put("type",3);//1是群聊 ，3是聊天室
+			
+			 AVIMClient currUser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
+			 currUser.open(new AVIMClientCallback() {
 
-					String convName="";
-					for (int i = 0; i < members.size(); i++) {
-						if(i!=members.size()-1){
-							convName=convName+members.get(i)+",";
-						}
-						if(i==members.size()-1){
-							convName=convName+members.get(i)+"的对话";
-						}
-					}
-		            
-		          client.createConversation(members, convName, attr,
-		              new AVIMConversationCreatedCallback() {
+			      @Override
+			      public void done(AVIMClient client, AVIMException e) {
+			        if (e == null) {
+			          //登录成功
+			          final AVIMConversation conv = client.getConversation(ChatActivityLean.conversation.getConversationId());
+			          conv.join(new AVIMConversationCallback() {
+			            @Override
+			            public void done(AVIMException e) {
+			              if (e == null) {
+			                //加入成功
+			                conv.addMembers(members, new AVIMConversationCallback() {
+			                  @Override
+			                  public void done(AVIMException e) {
+			                	  Log.e("AddMembersActivity", "添加成员成功："+members.toString());
+			                	  
+			                	  List<String> list = ChatActivityLean.conversation.getMembers();
+			  					String convName="";
+								for (int i = 0; i < list.size(); i++) {
+									if(i!=list.size()-1){
+										convName=convName+list.get(i)+",";
+									}
+									if(i==list.size()-1){
+										convName=convName+list.get(i)+"的对话";
+									}
+								}
+								ChatActivityLean.conversation.setName(convName);
+								
+			                	  finish();
+			                  }
+			                });
+			              }
+			            }
+			          });
+			        }
+			      }
+			    });
 
-		                @Override
-		                public void done(AVIMConversation conversation, AVIMException e) {
-		                  if (e == null) {
-		                	  Log.e("AddFriend3Activity", "聊天室对话创建成功！");
-		          			final ChatManager chatManager = ChatManager.getInstance();
-								 chatManager.registerConversation(conversation);//注册对话
-								 members.clear();//最后情空
-								 finish();//返回
-		              		//上传OSS
-//		              		OSSupload(ossData, bitmap2Bytes,uUid);
-//		                    AVIMTextMessage msg = new AVIMTextMessage();
-//		                    msg.setText("你们在哪儿？");
-//		                    // 发送消息
-//		                    conversation.sendMessage(msg, new AVIMConversationCallback() {
-//
-//		                      @Override
-//		                      public void done(AVIMException e) {
-//		                        if (e == null) {
-//		                          Log.d("Tom & Jerry", "发送成功！");
-//		                        }
-//		                      }
-//		                    });
-		                  }
-		                }
-		              });
-		        }
-		      }
-		    });
-		    
 		  }
 }

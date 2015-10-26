@@ -213,6 +213,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			ReadTeamInterface(SD_pk_user);
 		}
 		super.onResume();
+		readCurUser();//读取当前用户
+		readAlluserOfgroup();
 	}
 
 	private void ReadTeamInterface(int pk_user) {
@@ -262,12 +264,10 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			}
 		});
 		
-		readCurUser();//读取当前用户
-		readAlluserOfgroup();
 	}
 
 	private void readAlluserOfgroup() {
-		
+		homeInterface = Interface.getInstance();
 		homeInterface.setPostListener(new readAllPerRelationListenner() {
 
 			@Override
@@ -276,7 +276,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 				Group_ReadAllUserback group_ReadAllUserback = GsonUtils.parseJson(A, Group_ReadAllUserback.class);
 				int status = group_ReadAllUserback.getStatusMsg();
 				if (status == 1) {
-					Log.e("CommentsListActivity", "读取出小组中的所有用户========" + A);
+					Log.e("HomeFragment", "读取出小组中的所有用户========" + A);
 					List<Group_ReadAllUser> allUsers = group_ReadAllUserback.getReturnData();
 					if (allUsers.size() > 0) {
 						for (int i = 0; i < allUsers.size(); i++) {

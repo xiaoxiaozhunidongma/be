@@ -18,6 +18,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
+import android.view.Window;
 
 
 public class MyGalleryActivity extends Activity {
@@ -30,6 +31,7 @@ public class MyGalleryActivity extends Activity {
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gallery);
 		 mViewPager = (HackyViewPager) findViewById(R.id.view_pager);

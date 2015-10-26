@@ -87,7 +87,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 
 	private volatile static ChatActivityLean chatInstance;
 	protected ConversationType conversationType;
-	protected AVIMConversation conversation;
+	public static  AVIMConversation conversation;
 	protected MessageAgent messageAgent;
 	protected MessageAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
 	protected EventBus eventBus;

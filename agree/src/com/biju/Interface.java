@@ -102,6 +102,8 @@ public class Interface {
 	String kReadUserAllParty = "41";
 	// 读取用户在小组中的所有聚会
 	String kReadUserGroupParty = "43";
+	// 读取用户在小组中的所有聚会包含过期
+	String kReadUserGroupPartyAll = "64";
 	// 更新用户对于聚会的参与信息
 	String kUpdateUserJoinMsg = "45";
 	// 用户取消聚会
@@ -731,6 +733,25 @@ public class Interface {
 			}
 		});
 	}
+	
+	//包含过期
+	private void readUserGroupPartyAllPost(Context context,
+			Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError45(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone45(response);
+			}
+		});
+	}
 
 	private void updateUserJoinMsgPost(Context context,
 			Map<String, String> params) {
@@ -1179,6 +1200,10 @@ public class Interface {
 	public void readUserGroupParty(Context context, IDs idsmap) {// ...........传入字典
 		readUserGroupPartyPost(context, packParams(idsmap, kReadUserGroupParty));
 	}
+	// 读取用户在小组中的所有聚会包含过期
+	public void readUserGroupPartyAll(Context context, Group group) {
+		readUserGroupPartyAllPost(context, packParams(group, kReadUserGroupPartyAll));
+	}
 
 	// 更新用户对于聚会的参与信息
 	public void updateUserJoinMsg(Context context, Party_User party_User) {
@@ -1291,7 +1316,9 @@ public class Interface {
 	// 接口部分
 	// private static UserInterface listener;
 
-	// 我的所有好友
+	// 读取小组中所有聚会包含过期
+	private static ReadGroupPartyAlllistenner readGroupPartyAlllistenner;
+	// 查询多个用户
 	private static FindMultiUserListenner multiUserListenner;
 	// 我的所有好友
 	private static MyAllfriendsListenner myAllfriendsListenner;
@@ -1345,6 +1372,12 @@ public class Interface {
 	// void defail(Object B);
 	// }
 
+	// 读取小组中所有聚会包含过期
+	public interface ReadGroupPartyAlllistenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
 	// 查询多个用户
 	public interface FindMultiUserListenner {
 		void success(String A);
@@ -1715,6 +1748,10 @@ public class Interface {
 	// 读取用户在小组中的所以聚会
 	public void setPostListener(readUserGroupPartyListenner listener) {
 		this.userGroupPartyListenner = listener;
+	}
+	// 读取用户在小组中的所有聚会包含过期
+	public void setPostListener(ReadGroupPartyAlllistenner listener) {
+		this.readGroupPartyAlllistenner = listener;
 	}
 
 	// 更新用户对于聚会的参与信息
@@ -2187,5 +2224,13 @@ public class Interface {
 
 	public static void requestError43(VolleyError error) {
 		multiUserListenner.defail(error);
+	}
+	// 包含过期的所有聚会
+	public static void requestDone45(String theObject) {
+		readGroupPartyAlllistenner.success(theObject);
+	}
+	
+	public static void requestError45(VolleyError error) {
+		readGroupPartyAlllistenner.defail(error);
 	}
 }

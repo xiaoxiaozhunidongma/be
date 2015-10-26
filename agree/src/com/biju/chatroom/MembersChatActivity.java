@@ -6,6 +6,7 @@ import java.util.List;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,11 @@ import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.avos.avoscloud.im.v2.AVIMClient;
+import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.example.testleabcloud.ChatActivityLean;
@@ -179,12 +185,44 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 
 	//退出群聊。。。。未做
 	private void MembersChatExitGroup() {
+		AVIMClient tom = AVIMClient.getInstance(String.valueOf(sd_pk_user));
+		tom.open(new AVIMClientCallback(){
+
+			@Override
+			public void done(AVIMClient client, AVIMException e) {
+			      if(e==null){
+				      //登录成功
+				        final AVIMConversation conv = client.getConversation(ChatActivityLean.conversation.getConversationId());
+				        conv.join(new AVIMConversationCallback(){
+				            @Override
+				            public void done(AVIMException e){
+				              if(e==null){
+				              //加入成功
+				              conv.quit(new AVIMConversationCallback(){
+				                @Override
+				                public void done(AVIMException e){
+				                  if(e==null){
+				                  //退出成功
+				                	  Log.e("MembersCha", sd_pk_user+"退出群聊成功~");
+				                	  Intent intent=new Intent(MembersChatActivity.this, MainActivity.class);
+									startActivity(intent);
+				                  }
+				                } 
+				              });
+				              }
+				            }
+				        });
+				      }
+				    }
+		});
+
 		
 	}
 
 	//添加成员。。。。。未做
 	private void MembersChatAddMembers() {
-		
+		Intent intent=new Intent(MembersChatActivity.this, AddMembersActivity.class);
+		startActivity(intent);
 	}
 
 	//更改聊天室名称
