@@ -3,28 +3,58 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
+    <RelativeLayout
+        android:id="@+id/GraphicPreviewWhiteLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="30.0dp"
+        android:layout_alignLeft="@+id/GraphicPreviewImageView"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/GraphicPreviewImageView"
+        android:visibility="gone" >
+    </RelativeLayout>
+
     <ImageView
         android:id="@+id/GraphicPreviewImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_margin="20.0dp"
-        android:layout_marginTop="37dp"
+        android:layout_width="match_parent"
+        android:layout_height="300.0dp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/GraphicPreviewWhiteLayout1"
+        android:layout_marginLeft="10.0dp"
+        android:layout_marginRight="10.0dp"
         android:adjustViewBounds="true"
+        android:scaleType="fitCenter"
         android:src="@drawable/about_us" />
+
+    <RelativeLayout
+        android:id="@+id/GraphicPreviewWhiteLayout"
+        android:layout_width="match_parent"
+        android:layout_height="30.0dp"
+        android:layout_alignLeft="@+id/GraphicPreviewImageView"
+        android:layout_alignRight="@+id/GraphicPreviewImageView"
+        android:layout_below="@+id/GraphicPreviewImageView"
+        android:visibility="gone" >
+    </RelativeLayout>
 
     <TextView
         android:id="@+id/GraphicPreviewText"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_below="@+id/GraphicPreviewImageView"
-        android:layout_centerVertical="true"
-        android:layout_margin="20.0dp"
+        android:layout_below="@+id/GraphicPreviewWhiteLayout"
+        android:layout_marginLeft="30.0dp"
+        android:layout_marginRight="20.0dp"
         android:gravity="left|center"
+        android:text="ssda"
         android:textColor="#535353"
-        android:textSize="13.0sp" 
-        android:visibility="gone"/>
+        android:textSize="13.0sp" />
+
+    <RelativeLayout
+        android:id="@+id/GraphicPreviewWhiteLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="30.0dp"
+        android:layout_alignLeft="@+id/GraphicPreviewText"
+        android:layout_alignRight="@+id/GraphicPreviewText"
+        android:layout_below="@+id/GraphicPreviewText"
+        android:visibility="gone" >
+    </RelativeLayout>
 
 </RelativeLayout>

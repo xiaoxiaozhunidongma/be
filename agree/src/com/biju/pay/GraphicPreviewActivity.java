@@ -10,20 +10,26 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.BJ.javabean.ImageText;
 import com.BJ.javabean.ImageTextBack;
 import com.BJ.javabean.Party;
+import com.BJ.utils.DensityUtil;
+import com.BJ.utils.GraphicImageLoaderUtils;
+import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
 import com.biju.Interface.ReadGraphicListenner;
+import com.biju.function.TeamSetting2Activity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -54,20 +60,21 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 		initUI();
 		initInterface();
 		initGraphic();
-		
 	}
-
 
 	private void initUI() {
 		findViewById(R.id.GraphicPreviewBack).setOnClickListener(this);
 		mGraphicPreviewListView = (ListView) findViewById(R.id.GraphicPreviewListView);
+		mGraphicPreviewListView.setDividerHeight(0);
 		adapter = new MyGraphicPreviewAdapter();
-		mGraphicPreviewListView.setAdapter(adapter);
 	}
 
 	class ViewHolder{
 		ImageView GraphicPreviewImageView;
 		TextView GraphicPreviewText;
+		RelativeLayout GraphicPreviewWhiteLayout;
+		RelativeLayout GraphicPreviewWhiteLayout1;
+		RelativeLayout GraphicPreviewWhiteLayout2;
 	}
 	
 	class MyGraphicPreviewAdapter extends BaseAdapter{
@@ -97,6 +104,9 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				inflater = layoutInflater.inflate(R.layout.graphicpreview_item, null);
 				holder.GraphicPreviewImageView=(ImageView) inflater.findViewById(R.id.GraphicPreviewImageView);
 				holder.GraphicPreviewText=(TextView) inflater.findViewById(R.id.GraphicPreviewText);
+				holder.GraphicPreviewWhiteLayout=(RelativeLayout) inflater.findViewById(R.id.GraphicPreviewWhiteLayout);
+				holder.GraphicPreviewWhiteLayout1=(RelativeLayout) inflater.findViewById(R.id.GraphicPreviewWhiteLayout1);
+				holder.GraphicPreviewWhiteLayout2=(RelativeLayout) inflater.findViewById(R.id.GraphicPreviewWhiteLayout2);
 				inflater.setTag(holder);
 			}else {
 				inflater=convertView;
@@ -108,6 +118,8 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 			if(1==type){
 				holder.GraphicPreviewText.setVisibility(View.VISIBLE);
 				holder.GraphicPreviewImageView.setVisibility(View.GONE);
+				holder.GraphicPreviewWhiteLayout.setVisibility(View.VISIBLE);
+				holder.GraphicPreviewWhiteLayout1.setVisibility(View.GONE);
 				String SINGCOLOR=imageText.getFont_color();
 				if(LIGHTGRAYCOLOR.equals(SINGCOLOR)){
 					holder.GraphicPreviewText.setTextColor(holder.GraphicPreviewText.getResources().getColor(R.drawable.EditTextLightGrayColor));
@@ -126,12 +138,22 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 			}else if(2==type){
 				holder.GraphicPreviewText.setVisibility(View.GONE);
 				holder.GraphicPreviewImageView.setVisibility(View.VISIBLE);
+				holder.GraphicPreviewWhiteLayout.setVisibility(View.GONE);
+				holder.GraphicPreviewWhiteLayout1.setVisibility(View.VISIBLE);
 				String mPath=imageText.getImage_path();
 				Log.e("GraphicPreviewActivity", "获取到的图片路径======"+mPath);
 				String completeURL = beginStr + mPath + endStr+ "group-front-cover";
-				PreferenceUtils.saveImageCache(GraphicPreviewActivity.this,completeURL);
-				homeImageLoaderUtils.getInstance().LoadImage(GraphicPreviewActivity.this, completeURL, holder.GraphicPreviewImageView);
-				
+				Log.e("GraphicPreviewActivity", "获取到的图片路径completeURL======"+completeURL);
+				PreferenceUtils.saveImageCache(GraphicPreviewActivity.this, completeURL);// 存SP
+				GraphicImageLoaderUtils.getInstance().LoadImage(GraphicPreviewActivity.this,completeURL, holder.GraphicPreviewImageView);
+			}
+			
+			if(position==GraphicPreviewList.size()-1){
+				if(1==type){
+					holder.GraphicPreviewWhiteLayout2.setVisibility(View.VISIBLE);
+				}else if(2==type){
+					holder.GraphicPreviewWhiteLayout.setVisibility(View.VISIBLE);
+				}
 			}
 			
 			return inflater;
@@ -152,6 +174,7 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 			
 			@Override
 			public void success(String A) {
+				GraphicPreviewList.clear();
 				Log.e("GraphicPreviewActivity", "获取回来的图文信息========="+A);
 				ImageTextBack imageTextBack=GsonUtils.parseJson(A, ImageTextBack.class);
 				Integer StatusMsg=imageTextBack.getStatusMsg();
@@ -162,7 +185,10 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 							ImageText imageText=imageTextslist.get(i);
 							GraphicPreviewList.add(imageText);
 						}
-						adapter.notifyDataSetChanged();
+						if(GraphicPreviewList.size()>0){
+							mGraphicPreviewListView.setAdapter(adapter);
+							adapter.notifyDataSetChanged();
+						}
 					}
 				}
 			}

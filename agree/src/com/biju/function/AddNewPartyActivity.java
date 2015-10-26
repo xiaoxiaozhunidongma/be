@@ -91,6 +91,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private String startTime;
 	
 	private List<ImageText> GraphicDetailsList=new ArrayList<ImageText>();
+	private List<ImageText> GraphicDetailsList2=new ArrayList<ImageText>();
 	private List<ImageText> ImageDetailsList=new ArrayList<ImageText>();
 	private OSSData ossData;
 	private OSSService ossService;
@@ -177,7 +178,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			public void onSuccess(String objectKey) {
 				Log.e("", "图片上传成功");
 				Log.e("Main", "objectKey==" + objectKey);
-				PartyComplete(uUid2);
+				GraphicDetailsPreview3(uUid2,objectKey);
 			}
 
 			@Override
@@ -192,6 +193,35 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		});
 	
 	}
+	
+	private void GraphicDetailsPreview3(String uUid2, String objectKey) {
+		//先清除数据库,无条件全部删除，然后再保存
+		new Delete().from(ImageText.class).execute();
+		Log.e("GraphicDetailsActivity", " 获取到的UUID========"+uUid2);
+		//进行保存
+		if(GraphicDetailsList.size()>0){
+			for (int i = 0; i < GraphicDetailsList.size(); i++) {
+				Integer Type=GraphicDetailsList.get(i).getType();
+				if(1==Type){
+					String mEditText=GraphicDetailsList.get(i).getText();
+					String SINGCOLOR=GraphicDetailsList.get(i).getFont_color();
+					//存入数据库
+					ImageText text=new ImageText(null, uUid2, 1, mEditText, null, null, 13, SINGCOLOR, null, null, 1);
+					text.save();
+				}else if (2==Type){
+					Integer image_height=GraphicDetailsList.get(i).getImage_height();
+					Integer image_width=GraphicDetailsList.get(i).getImage_width();
+					//存入数据库
+					ImageText text=new ImageText(null, uUid2, 2, null, objectKey, null, null, null, image_height, image_width, 1);
+					text.save();
+				}
+			}
+		}
+		//第二次查表
+		GraphicDetailsList2 = new Select().from(ImageText.class).execute();
+		PartyComplete(uUid2);
+	}
+	
 
 	private void initLimitNumber() {
 		SharedPreferences Limit_sp=getSharedPreferences(IConstant.LimitNumber, 0);
@@ -581,7 +611,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			Log.e("AddNewPartyActivity", "新建日程的mLng=====" + mLng);
 			Log.e("AddNewPartyActivity", "新建日程的mLat=====" + mLat);
 			Log.e("AddNewPartyActivity", "新建日程的地址=====" + address);
-			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(GraphicDetailsList, party));
+			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(GraphicDetailsList2, party));
 			Log.e("PartyComplete~", "GraphicDetailsList.size="+GraphicDetailsList.size());
 //			mAdd_New_Party_OK.setEnabled(false);
 		}
