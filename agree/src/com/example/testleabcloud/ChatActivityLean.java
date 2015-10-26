@@ -61,7 +61,6 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BJ.javabean.ReadUserAllFriends;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
@@ -70,64 +69,85 @@ import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.biju.R;
+import com.biju.chatroom.MembersChatActivity;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
 import de.greenrobot.event.EventBus;
 
-public class ChatActivityLean extends Activity implements OnClickListener, ChatActivityEventListener {
-  public static final String CONVID = "convid";
-  private static final int PAGE_SIZE = 8;
-  private static final int TAKE_CAMERA_REQUEST = 2;
-  private static final int GALLERY_REQUEST = 0;
-  private static final int GALLERY_KITKAT_REQUEST = 3;
+public class ChatActivityLean extends Activity implements OnClickListener,
+		ChatActivityEventListener {
+	public static final String CONVID = "convid";
+	private static final int PAGE_SIZE = 8;
+	private static final int TAKE_CAMERA_REQUEST = 2;
+	private static final int GALLERY_REQUEST = 0;
+	private static final int GALLERY_KITKAT_REQUEST = 3;
 	public static final String COPY_IMAGE = "EASEMOBIMG";
 	public static final int REQUEST_CODE_COPY_AND_PASTE = 11;
 
-  private volatile static ChatActivityLean chatInstance;
-  protected ConversationType conversationType;
-  protected AVIMConversation conversation;
-  protected MessageAgent messageAgent;
-  protected MessageAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
-  protected EventBus eventBus;
-  protected ChatManager chatManager = ChatManager.getInstance();
-  protected ChatMessageAdapter adapter;
-  protected RoomsTable roomsTable;
-  protected View chatTextLayout, chatAudioLayout, chatAddLayout, chatEmotionLayout;
-  protected View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
-  protected ViewPager emotionPager;
-  protected PasteEditText contentEdit;
-  protected RefreshableView refreshableView;
-  protected ListView messageListView;
-  protected RecordButton recordBtn;
-  protected String localCameraPath = PathUtils.getPicturePathByCurrentTime()+"/zzy/pictures";
-  protected View addCameraBtn;
-private RelativeLayout picture_source_rela;
-private Button send;
-//private PasteEditText input;
-private TextView tochatname;
+	private volatile static ChatActivityLean chatInstance;
+	protected ConversationType conversationType;
+	protected AVIMConversation conversation;
+	protected MessageAgent messageAgent;
+	protected MessageAgent.SendCallback defaultSendCallback = new DefaultSendCallback();
+	protected EventBus eventBus;
+	protected ChatManager chatManager = ChatManager.getInstance();
+	protected ChatMessageAdapter adapter;
+	protected RoomsTable roomsTable;
+	protected View chatTextLayout, chatAudioLayout, chatAddLayout,
+			chatEmotionLayout;
+	protected View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn,
+			showAddBtn, addLocationBtn, showEmotionBtn;
+	protected ViewPager emotionPager;
+	protected PasteEditText contentEdit;
+	protected RefreshableView refreshableView;
+	protected ListView messageListView;
+	protected RecordButton recordBtn;
+	protected String localCameraPath = PathUtils.getPicturePathByCurrentTime()
+			+ "/zzy/pictures";
+	protected View addCameraBtn;
+	private RelativeLayout picture_source_rela;
+	private Button send;
+	// private PasteEditText input;
+	private TextView tochatname;
+	private TextView mTv_detail;
+	public static GetMemberChat memberChat;
 
-  public static ChatActivityLean getChatInstance() {
-    return chatInstance;
-  }
+	public static ChatActivityLean getChatInstance() {
+		return chatInstance;
+	}
 
-  public void onCreate(Bundle savedInstanceState) {
-    super.onCreate(savedInstanceState);
-    requestWindowFeature(Window.FEATURE_NO_TITLE);
-    setContentView(R.layout.leanchat_layout);
-    commonInit();
-    findView();
-    initEmotionPager();
-    initRecordBtn();
-    setEditTextChangeListener();
-    initListView();
+	public void onCreate(Bundle savedInstanceState) {
+		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_NO_TITLE);
+		setContentView(R.layout.leanchat_layout);
+		commonInit();
+		findView();
+		initEmotionPager();
+		initRecordBtn();
+		setEditTextChangeListener();
+		initListView();
 
-    initByIntent(getIntent());
-  }
+		initByIntent(getIntent());
+		initMemberChat();
+	}
 
-  private void findView() {
-	  tochatname = (TextView) findViewById(R.id.name);
-	  findViewById(R.id.tv_detail).setOnClickListener(this);//详情
+	private void initMemberChat() {
+		GetMemberChat memberChat=new GetMemberChat(){
+
+			@Override
+			public void MemberChat() {
+				mTv_detail.setText("成员");
+			}
+			
+		};
+		this.memberChat=memberChat;
+	}
+
+	private void findView() {
+		tochatname = (TextView) findViewById(R.id.name);
+		mTv_detail = (TextView) findViewById(R.id.tv_detail);
+		mTv_detail.setOnClickListener(this);// 详情
 		findViewById(R.id.rela_more).setOnClickListener(this);
 		findViewById(R.id.tv_back).setOnClickListener(this);
 		picture_source_rela = (RelativeLayout) findViewById(R.id.picture_source_rela);
@@ -136,279 +156,302 @@ private TextView tochatname;
 		findViewById(R.id.take_photo_rela).setOnClickListener(this);
 		findViewById(R.id.locpicture_rela).setOnClickListener(this);
 		findViewById(R.id.rela_cancle).setOnClickListener(this);
-		findViewById(R.id.iv_more).setOnClickListener(this);//拍照、 图片库
-		
+		findViewById(R.id.iv_more).setOnClickListener(this);// 拍照、 图片库
+
 		send = (Button) findViewById(R.id.send);
 		send.setOnClickListener(this);
-    refreshableView = (RefreshableView) findViewById(R.id.refreshableView);
-    messageListView = (ListView) findViewById(R.id.messageListView);
-    addImageBtn = findViewById(R.id.addImageBtn);
+		refreshableView = (RefreshableView) findViewById(R.id.refreshableView);
+		messageListView = (ListView) findViewById(R.id.messageListView);
+		addImageBtn = findViewById(R.id.addImageBtn);
 
-    contentEdit = (PasteEditText) findViewById(R.id.et_sendmessage);
-    chatTextLayout = findViewById(R.id.chatTextLayout);
-    chatAudioLayout = findViewById(R.id.chatRecordLayout);
-    turnToAudioBtn = findViewById(R.id.turnToAudioBtn);
-    turnToTextBtn = findViewById(R.id.turnToTextBtn);
-    recordBtn = (RecordButton) findViewById(R.id.recordBtn);
-    chatTextLayout = findViewById(R.id.chatTextLayout);
-    chatAddLayout = findViewById(R.id.chatAddLayout);
-    addLocationBtn = findViewById(R.id.addLocationBtn);
-    chatEmotionLayout = findViewById(R.id.chatEmotionLayout);
-    showAddBtn = findViewById(R.id.showAddBtn);
-    showEmotionBtn = findViewById(R.id.showEmotionBtn);
-    sendBtn = findViewById(R.id.sendBtn);
-    emotionPager = (ViewPager) findViewById(R.id.emotionPager);
-    addCameraBtn = findViewById(R.id.addCameraBtn);
+		contentEdit = (PasteEditText) findViewById(R.id.et_sendmessage);
+		chatTextLayout = findViewById(R.id.chatTextLayout);
+		chatAudioLayout = findViewById(R.id.chatRecordLayout);
+		turnToAudioBtn = findViewById(R.id.turnToAudioBtn);
+		turnToTextBtn = findViewById(R.id.turnToTextBtn);
+		recordBtn = (RecordButton) findViewById(R.id.recordBtn);
+		chatTextLayout = findViewById(R.id.chatTextLayout);
+		chatAddLayout = findViewById(R.id.chatAddLayout);
+		addLocationBtn = findViewById(R.id.addLocationBtn);
+		chatEmotionLayout = findViewById(R.id.chatEmotionLayout);
+		showAddBtn = findViewById(R.id.showAddBtn);
+		showEmotionBtn = findViewById(R.id.showEmotionBtn);
+		sendBtn = findViewById(R.id.sendBtn);
+		emotionPager = (ViewPager) findViewById(R.id.emotionPager);
+		addCameraBtn = findViewById(R.id.addCameraBtn);
 
-    sendBtn.setOnClickListener(this);
-    contentEdit.setOnClickListener(this);
-    addImageBtn.setOnClickListener(this);
-    addLocationBtn.setOnClickListener(this);
-    turnToAudioBtn.setOnClickListener(this);
-    turnToTextBtn.setOnClickListener(this);
-    showAddBtn.setOnClickListener(this);
-    showEmotionBtn.setOnClickListener(this);
-    addCameraBtn.setOnClickListener(this);
+		sendBtn.setOnClickListener(this);
+		contentEdit.setOnClickListener(this);
+		addImageBtn.setOnClickListener(this);
+		addLocationBtn.setOnClickListener(this);
+		turnToAudioBtn.setOnClickListener(this);
+		turnToTextBtn.setOnClickListener(this);
+		showAddBtn.setOnClickListener(this);
+		showEmotionBtn.setOnClickListener(this);
+		addCameraBtn.setOnClickListener(this);
 
-    addLocationBtn.setVisibility(View.GONE);
-    
-    contentEdit.addTextChangedListener(new TextWatcher() {
-		
-		@Override
-		public void onTextChanged(CharSequence s, int start, int before, int count) {
-			if("".equals(s.toString())){
-				send.setVisibility(View.GONE);
-			}else{
-				send.setVisibility(View.VISIBLE);
+		addLocationBtn.setVisibility(View.GONE);
+
+		contentEdit.addTextChangedListener(new TextWatcher() {
+
+			@Override
+			public void onTextChanged(CharSequence s, int start, int before,
+					int count) {
+				if ("".equals(s.toString())) {
+					send.setVisibility(View.GONE);
+				} else {
+					send.setVisibility(View.VISIBLE);
+				}
 			}
+
+			@Override
+			public void beforeTextChanged(CharSequence s, int start, int count,
+					int after) {
+			}
+
+			@Override
+			public void afterTextChanged(Editable s) {
+			}
+		});
+	}
+
+	private void initByIntent(Intent intent) {
+		initData(intent);
+		loadMessagesWhenInit(PAGE_SIZE);
+	}
+
+	@Override
+	protected void onNewIntent(Intent intent) {
+		super.onNewIntent(intent);
+		initByIntent(intent);
+	}
+
+	private void initListView() {
+		refreshableView
+				.setRefreshListener(new RefreshableView.ListRefreshListener(
+						messageListView) {
+					@Override
+					public void onRefresh() {
+						loadOldMessages();
+					}
+				});
+		messageListView.setOnScrollListener(new PauseOnScrollListener(
+				ImageLoader.getInstance(), true, true));
+		messageListView.setOnTouchListener(new OnTouchListener() {
+
+			@Override
+			public boolean onTouch(View v, MotionEvent event) {
+				// 隐藏软键盘
+				hideSoftInputView();
+				return false;
+			}
+		});
+
+	}
+
+	private void initEmotionPager() {
+		List<View> views = new ArrayList<View>();
+		for (int i = 0; i < EmotionHelper.emojiGroups.size(); i++) {
+			views.add(getEmotionGridView(i));
 		}
-		
-		@Override
-		public void beforeTextChanged(CharSequence s, int start, int count,
-				int after) {
+		ChatEmotionPagerAdapter pagerAdapter = new ChatEmotionPagerAdapter(
+				views);
+		emotionPager.setOffscreenPageLimit(3);
+		emotionPager.setAdapter(pagerAdapter);
+	}
+
+	private View getEmotionGridView(int pos) {
+		LayoutInflater inflater = LayoutInflater.from(this);
+		View emotionView = inflater.inflate(R.layout.chat_emotion_gridview,
+				null, false);
+		GridView gridView = (GridView) emotionView.findViewById(R.id.gridview);
+		final ChatEmotionGridAdapter chatEmotionGridAdapter = new ChatEmotionGridAdapter(
+				this);
+		List<String> pageEmotions = EmotionHelper.emojiGroups.get(pos);
+		chatEmotionGridAdapter.setDatas(pageEmotions);
+		gridView.setAdapter(chatEmotionGridAdapter);
+		gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+			@Override
+			public void onItemClick(AdapterView<?> parent, View view,
+					int position, long id) {
+				String emotionText = (String) parent.getAdapter().getItem(
+						position);
+				int start = contentEdit.getSelectionStart();
+				StringBuffer sb = new StringBuffer(contentEdit.getText());
+				sb.replace(contentEdit.getSelectionStart(),
+						contentEdit.getSelectionEnd(), emotionText);
+				contentEdit.setText(sb.toString());
+
+				CharSequence info = contentEdit.getText();
+				if (info instanceof Spannable) {
+					Spannable spannable = (Spannable) info;
+					Selection.setSelection(spannable,
+							start + emotionText.length());
+				}
+			}
+		});
+		return gridView;
+	}
+
+	public void initRecordBtn() {
+		recordBtn.setSavePath(PathUtils.getRecordPathByCurrentTime());
+		recordBtn
+				.setRecordEventListener(new RecordButton.RecordEventListener() {
+					@Override
+					public void onFinishedRecord(final String audioPath,
+							int secs) {
+						// LogUtils.d("audioPath = ", audioPath);
+						messageAgent.sendAudio(audioPath);
+					}
+
+					@Override
+					public void onStartRecord() {
+
+					}
+				});
+	}
+
+	public void setEditTextChangeListener() {
+		contentEdit.addTextChangedListener(new TextWatcher() {
+			@Override
+			public void beforeTextChanged(CharSequence charSequence, int i,
+					int i2, int i3) {
+
+			}
+
+			@Override
+			public void onTextChanged(CharSequence charSequence, int i, int i2,
+					int i3) {
+				if (charSequence.length() > 0) {
+					sendBtn.setEnabled(true);
+					showSendBtn();
+				} else {
+					sendBtn.setEnabled(false);
+					showTurnToRecordBtn();
+				}
+			}
+
+			@Override
+			public void afterTextChanged(Editable editable) {
+
+			}
+		});
+	}
+
+	private void showTurnToRecordBtn() {
+		sendBtn.setVisibility(View.GONE);
+		turnToAudioBtn.setVisibility(View.VISIBLE);
+	}
+
+	private void showSendBtn() {
+		sendBtn.setVisibility(View.VISIBLE);
+		turnToAudioBtn.setVisibility(View.GONE);
+	}
+
+	void commonInit() {
+		chatInstance = this;
+		roomsTable = ChatManager.getInstance().getRoomsTable();
+		eventBus = EventBus.getDefault();
+		eventBus.register(this);
+		getWindow().setSoftInputMode(
+				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
+	}
+
+	private boolean isConversationEmpty(AVIMConversation conversation) {
+		if (conversation == null) {
+			toast("未找到对话，请�?出重试�?请检查是否调用了 ChatManager.registerConversation()");
+			this.finish();
+			return true;
 		}
-		
-		@Override
-		public void afterTextChanged(Editable s) {
-		}
-	});
-  }
+		return false;
+	}
 
-  private void initByIntent(Intent intent) {
-    initData(intent);
-    loadMessagesWhenInit(PAGE_SIZE);
-  }
-
-  @Override
-  protected void onNewIntent(Intent intent) {
-    super.onNewIntent(intent);
-    initByIntent(intent);
-  }
-
-  private void initListView() {
-    refreshableView.setRefreshListener(new RefreshableView.ListRefreshListener(messageListView) {
-      @Override
-      public void onRefresh() {
-        loadOldMessages();
-      }
-    });
-    messageListView.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
-    messageListView.setOnTouchListener(new OnTouchListener() {
-
-		@Override
-		public boolean onTouch(View v, MotionEvent event) {
-			//隐藏软键盘
-			hideSoftInputView();
-			return false;
-		}
-	});
-    
-  }
-
-  private void initEmotionPager() {
-    List<View> views = new ArrayList<View>();
-    for (int i = 0; i < EmotionHelper.emojiGroups.size(); i++) {
-      views.add(getEmotionGridView(i));
-    }
-    ChatEmotionPagerAdapter pagerAdapter = new ChatEmotionPagerAdapter(views);
-    emotionPager.setOffscreenPageLimit(3);
-    emotionPager.setAdapter(pagerAdapter);
-  }
-
-  private View getEmotionGridView(int pos) {
-    LayoutInflater inflater = LayoutInflater.from(this);
-    View emotionView = inflater.inflate(R.layout.chat_emotion_gridview, null, false);
-    GridView gridView = (GridView) emotionView.findViewById(R.id.gridview);
-    final ChatEmotionGridAdapter chatEmotionGridAdapter = new ChatEmotionGridAdapter(this);
-    List<String> pageEmotions = EmotionHelper.emojiGroups.get(pos);
-    chatEmotionGridAdapter.setDatas(pageEmotions);
-    gridView.setAdapter(chatEmotionGridAdapter);
-    gridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-      @Override
-      public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        String emotionText = (String) parent.getAdapter().getItem(position);
-        int start = contentEdit.getSelectionStart();
-        StringBuffer sb = new StringBuffer(contentEdit.getText());
-        sb.replace(contentEdit.getSelectionStart(), contentEdit.getSelectionEnd(), emotionText);
-        contentEdit.setText(sb.toString());
-
-        CharSequence info = contentEdit.getText();
-        if (info instanceof Spannable) {
-          Spannable spannable = (Spannable) info;
-          Selection.setSelection(spannable, start + emotionText.length());
-        }
-      }
-    });
-    return gridView;
-  }
-
-  public void initRecordBtn() {
-    recordBtn.setSavePath(PathUtils.getRecordPathByCurrentTime());
-    recordBtn.setRecordEventListener(new RecordButton.RecordEventListener() {
-      @Override
-      public void onFinishedRecord(final String audioPath, int secs) {
-//        LogUtils.d("audioPath = ", audioPath);
-        messageAgent.sendAudio(audioPath);
-      }
-
-      @Override
-      public void onStartRecord() {
-
-      }
-    });
-  }
-
-  public void setEditTextChangeListener() {
-    contentEdit.addTextChangedListener(new TextWatcher() {
-      @Override
-      public void beforeTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-
-      }
-
-      @Override
-      public void onTextChanged(CharSequence charSequence, int i, int i2, int i3) {
-        if (charSequence.length() > 0) {
-          sendBtn.setEnabled(true);
-          showSendBtn();
-        } else {
-          sendBtn.setEnabled(false);
-          showTurnToRecordBtn();
-        }
-      }
-
-      @Override
-      public void afterTextChanged(Editable editable) {
-
-      }
-    });
-  }
-
-  private void showTurnToRecordBtn() {
-    sendBtn.setVisibility(View.GONE);
-    turnToAudioBtn.setVisibility(View.VISIBLE);
-  }
-
-  private void showSendBtn() {
-	  sendBtn.setVisibility(View.VISIBLE);
-    turnToAudioBtn.setVisibility(View.GONE);
-  }
-
-  void commonInit() {
-    chatInstance = this;
-    roomsTable = ChatManager.getInstance().getRoomsTable();
-    eventBus = EventBus.getDefault();
-    eventBus.register(this);
-    getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
-  }
-
-  private boolean isConversationEmpty(AVIMConversation conversation) {
-    if (conversation == null) {
-      toast("未找到对话，请�?出重试�?请检查是否调用了 ChatManager.registerConversation()");
-      this.finish();
-      return true;
-    }
-    return false;
-  }
-
-  public void initData(Intent intent) {
-//		ReadUserAllFriends mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("allFriends");
-		  String conName = intent.getStringExtra("conName");
-		  tochatname.setText(conName);
-//		  String otherAvaUrl = intent.getStringExtra("otherAvaUrl");
-		  @SuppressWarnings("unchecked")
-		  HashMap<Integer, String> FromAvaUrlMap= (HashMap<Integer, String>) intent.getSerializableExtra("FromAvaUrlMap");
+	public void initData(Intent intent) {
+		// ReadUserAllFriends mAllFriends = (ReadUserAllFriends)
+		// intent.getSerializableExtra("allFriends");
+		String conName = intent.getStringExtra("conName");
+		tochatname.setText(conName);
+		// String otherAvaUrl = intent.getStringExtra("otherAvaUrl");
+		@SuppressWarnings("unchecked")
+		HashMap<Integer, String> FromAvaUrlMap = (HashMap<Integer, String>) intent
+				.getSerializableExtra("FromAvaUrlMap");
 		String CurrUserUrl = intent.getStringExtra("CurrUserUrl");
-	    String convid = intent.getStringExtra(CONVID);
-	    conversation = chatManager.lookUpConversationById(convid);
-	    if (isConversationEmpty(conversation)) {
-	      return;
-	    }
-	    initActionBar(ConversationHelper.titleOfConversation(conversation));
-	    messageAgent = new MessageAgent(conversation);
-	    messageAgent.setSendCallback(defaultSendCallback);//回调监听！！！！！！！！！！！！！！！！！！
-	    roomsTable.clearUnread(conversation.getConversationId());
-	    conversationType = ConversationHelper.typeOfConversation(conversation);
-	    bindAdapterToListView(conversationType,FromAvaUrlMap,CurrUserUrl);
-	  }
+		String convid = intent.getStringExtra(CONVID);
+		conversation = chatManager.lookUpConversationById(convid);
+		if (isConversationEmpty(conversation)) {
+			return;
+		}
+		initActionBar(ConversationHelper.titleOfConversation(conversation));
+		messageAgent = new MessageAgent(conversation);
+		messageAgent.setSendCallback(defaultSendCallback);// 回调监听！！！！！！！！！！！！！！！！！！
+		roomsTable.clearUnread(conversation.getConversationId());
+		conversationType = ConversationHelper.typeOfConversation(conversation);
+		bindAdapterToListView(conversationType, FromAvaUrlMap, CurrUserUrl);
+	}
 
-  @SuppressLint("NewApi")
-protected void initActionBar(String title) {
-    ActionBar actionBar = getActionBar();
-    if (actionBar != null) {
-      if (title != null) {
-        actionBar.setTitle(title);
-      }
-      actionBar.setDisplayUseLogoEnabled(false);
-      actionBar.setDisplayHomeAsUpEnabled(true);
-    } else {
-      LogUtils.i("action bar is null, so no title, please set an ActionBar style for activity");
-    }
-  }
+	@SuppressLint("NewApi")
+	protected void initActionBar(String title) {
+		ActionBar actionBar = getActionBar();
+		if (actionBar != null) {
+			if (title != null) {
+				actionBar.setTitle(title);
+			}
+			actionBar.setDisplayUseLogoEnabled(false);
+			actionBar.setDisplayHomeAsUpEnabled(true);
+		} else {
+			LogUtils.i("action bar is null, so no title, please set an ActionBar style for activity");
+		}
+	}
 
-  private void bindAdapterToListView(ConversationType conversationType, HashMap<Integer, String> fromAvaUrlMap, String CurrUserUrl) {
-	  
-    adapter = new ChatMessageAdapter(this, conversationType,fromAvaUrlMap,CurrUserUrl);
-	  
-    adapter.setClickListener(new ChatMessageAdapter.ClickListener() {
-      @Override
-      public void onFailButtonClick(AVIMTypedMessage msg) {
-        messageAgent.resendMessage(msg, new MessageAgent.SendCallback() {
-          @Override
-          public void onError(AVIMTypedMessage message, Exception e) {
-            LogUtils.d("resend message error");
-            Log.e("ChatActivity", "==resend message error");
-            // 应该只重新加载一�? Todo
-            loadMessagesWhenInit(adapter.getCount());
-          }
+	private void bindAdapterToListView(ConversationType conversationType,
+			HashMap<Integer, String> fromAvaUrlMap, String CurrUserUrl) {
 
-          @Override
-          public void onSuccess(AVIMTypedMessage message) {
-            LogUtils.d("resend message success");
-            // 应该只重新加载一�? Todo
-            loadMessagesWhenInit(adapter.getCount());
-          }
-        });
-      }
+		adapter = new ChatMessageAdapter(this, conversationType, fromAvaUrlMap,
+				CurrUserUrl);
 
-      @Override
-      public void onLocationViewClick(AVIMLocationMessage locMsg) {
-        onLocationMessageViewClicked(locMsg);
-      }
+		adapter.setClickListener(new ChatMessageAdapter.ClickListener() {
+			@Override
+			public void onFailButtonClick(AVIMTypedMessage msg) {
+				messageAgent.resendMessage(msg,
+						new MessageAgent.SendCallback() {
+							@Override
+							public void onError(AVIMTypedMessage message,
+									Exception e) {
+								LogUtils.d("resend message error");
+								Log.e("ChatActivity", "==resend message error");
+								// 应该只重新加载一�? Todo
+								loadMessagesWhenInit(adapter.getCount());
+							}
 
-      @Override
-      public void onImageViewClick(AVIMImageMessage imageMsg) {
-        onImageMessageViewClicked(imageMsg, MessageHelper.getFilePath(imageMsg));
-      }
-    });
-    messageListView.setAdapter(adapter);
-  }
+							@Override
+							public void onSuccess(AVIMTypedMessage message) {
+								LogUtils.d("resend message success");
+								// 应该只重新加载一�? Todo
+								loadMessagesWhenInit(adapter.getCount());
+							}
+						});
+			}
 
-  @Override
-  public void onClick(View v) {
-	  
-	  boolean sendSt;
-	switch (v.getId()) {
-		
+			@Override
+			public void onLocationViewClick(AVIMLocationMessage locMsg) {
+				onLocationMessageViewClicked(locMsg);
+			}
+
+			@Override
+			public void onImageViewClick(AVIMImageMessage imageMsg) {
+				onImageMessageViewClicked(imageMsg,
+						MessageHelper.getFilePath(imageMsg));
+			}
+		});
+		messageListView.setAdapter(adapter);
+	}
+
+	@Override
+	public void onClick(View v) {
+
+		boolean sendSt;
+		switch (v.getId()) {
+
 		case R.id.tv_back:
 			finish();
 			break;
@@ -418,449 +461,497 @@ protected void initActionBar(String title) {
 		case R.id.locpicture_rela:
 			selectImageFromLocal();
 			picture_source_rela.setVisibility(View.GONE);
-//			selectPicFromLocal();
+			// selectPicFromLocal();
 			break;
 		case R.id.take_photo_rela:
 			selectImageFromCamera();
 			picture_source_rela.setVisibility(View.GONE);
-//			selectPicFromCamera();
+			// selectPicFromCamera();
 			break;
 		case R.id.picture_source_rela:
 			picture_source_rela.setVisibility(View.GONE);
 			break;
 		case R.id.iv_more:
 		case R.id.rela_more:
-//			hideKeyboard();
+			// hideKeyboard();
 			hideSoftInputView();
 			picture_source_rela.setVisibility(View.VISIBLE);
 			break;
-			
+
 		case R.id.send:
-//			SharedPreferences sp = getSharedPreferences("text.xml", 0);
-//			sendSt = sp.getBoolean("sendSt", true);
-////			String s = input.getText().toString();
-//			if(sendSt){
-////				sendText(s);
-//			}
+			// SharedPreferences sp = getSharedPreferences("text.xml", 0);
+			// sendSt = sp.getBoolean("sendSt", true);
+			// // String s = input.getText().toString();
+			// if(sendSt){
+			// // sendText(s);
+			// }
 			hideSoftInputView();
 			sendText();
+			break;
+		case R.id.tv_detail:
+			tv_detail();
 			break;
 		default:
 			break;
 		}
-	  
-    //之所以不�?switch 是因为在Library�?R.id.btn 不是常量，不能用在switch case中�?
-    // 如果主项目有重名，Library 的会被重命名。，�?��不能是常量�?
-    if (v.getId() == R.id.sendBtn) {
-      sendText();
-    } else if (v.getId() == R.id.addImageBtn) {
-      selectImageFromLocal();
-    } else if (v.getId() == R.id.turnToAudioBtn) {
-      showAudioLayout();
-    } else if (v.getId() == R.id.turnToTextBtn) {
-      showTextLayout();
-    } else if (v.getId() == R.id.showAddBtn) {
-      toggleBottomAddLayout();
-    } else if (v.getId() == R.id.showEmotionBtn) {
-      toggleEmotionLayout();
-    } else if (v.getId() == R.id.addLocationBtn) {
-      onAddLocationButtonClicked(v);
-    } else if (v.getId() == R.id.textEdit) {
-      hideBottomLayoutAndScrollToLast();
-    } else if (v.getId() == R.id.addCameraBtn) {
-      selectImageFromCamera();
-    }
-  }
 
-  private void hideBottomLayoutAndScrollToLast() {
-    hideBottomLayout();
-    scrollToLast();
-  }
+		// 之所以不�?switch 是因为在Library�?R.id.btn 不是常量，不能用在switch case中�?
+		// 如果主项目有重名，Library 的会被重命名。，�?��不能是常量�?
+		if (v.getId() == R.id.sendBtn) {
+			sendText();
+		} else if (v.getId() == R.id.addImageBtn) {
+			selectImageFromLocal();
+		} else if (v.getId() == R.id.turnToAudioBtn) {
+			showAudioLayout();
+		} else if (v.getId() == R.id.turnToTextBtn) {
+			showTextLayout();
+		} else if (v.getId() == R.id.showAddBtn) {
+			toggleBottomAddLayout();
+		} else if (v.getId() == R.id.showEmotionBtn) {
+			toggleEmotionLayout();
+		} else if (v.getId() == R.id.addLocationBtn) {
+			onAddLocationButtonClicked(v);
+		} else if (v.getId() == R.id.textEdit) {
+			hideBottomLayoutAndScrollToLast();
+		} else if (v.getId() == R.id.addCameraBtn) {
+			selectImageFromCamera();
+		}
+	}
 
-  protected void hideBottomLayout() {
-    hideAddLayout();
-    chatEmotionLayout.setVisibility(View.GONE);
-  }
+	//查看成员
+	private void tv_detail() {
+		mTv_detail.setText("关闭");
+		Intent intent = new Intent(ChatActivityLean.this, MembersChatActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
+	}
 
-  private void toggleEmotionLayout() {
-    if (chatEmotionLayout.getVisibility() == View.VISIBLE) {
-      chatEmotionLayout.setVisibility(View.GONE);
-    } else {
-      chatEmotionLayout.setVisibility(View.VISIBLE);
-      hideAddLayout();
-      showTextLayout();
-      hideSoftInputView();
-    }
-  }
+	private void hideBottomLayoutAndScrollToLast() {
+		hideBottomLayout();
+		scrollToLast();
+	}
 
-  protected void hideSoftInputView() {
-    if (getWindow().getAttributes().softInputMode !=
-        WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
-      InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
-      View currentFocus = getCurrentFocus();
-      if (currentFocus != null) {
-        manager.hideSoftInputFromWindow(currentFocus.getWindowToken(),
-            InputMethodManager.HIDE_NOT_ALWAYS);
-      }
-    }
-  }
+	protected void hideBottomLayout() {
+		hideAddLayout();
+		chatEmotionLayout.setVisibility(View.GONE);
+	}
 
-  private void toggleBottomAddLayout() {
-    if (chatAddLayout.getVisibility() == View.VISIBLE) {
-      hideAddLayout();
-    } else {
-      chatEmotionLayout.setVisibility(View.GONE);
-      hideSoftInputView();
-      showAddLayout();
-    }
-  }
+	private void toggleEmotionLayout() {
+		if (chatEmotionLayout.getVisibility() == View.VISIBLE) {
+			chatEmotionLayout.setVisibility(View.GONE);
+		} else {
+			chatEmotionLayout.setVisibility(View.VISIBLE);
+			hideAddLayout();
+			showTextLayout();
+			hideSoftInputView();
+		}
+	}
 
-  private void hideAddLayout() {
-    chatAddLayout.setVisibility(View.GONE);
-  }
+	protected void hideSoftInputView() {
+		if (getWindow().getAttributes().softInputMode != WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+			InputMethodManager manager = (InputMethodManager) getSystemService(INPUT_METHOD_SERVICE);
+			View currentFocus = getCurrentFocus();
+			if (currentFocus != null) {
+				manager.hideSoftInputFromWindow(currentFocus.getWindowToken(),
+						InputMethodManager.HIDE_NOT_ALWAYS);
+			}
+		}
+	}
 
-  private void showAddLayout() {
-    chatAddLayout.setVisibility(View.VISIBLE);
-  }
+	private void toggleBottomAddLayout() {
+		if (chatAddLayout.getVisibility() == View.VISIBLE) {
+			hideAddLayout();
+		} else {
+			chatEmotionLayout.setVisibility(View.GONE);
+			hideSoftInputView();
+			showAddLayout();
+		}
+	}
 
-  private void showTextLayout() {
-    chatTextLayout.setVisibility(View.VISIBLE);
-    chatAudioLayout.setVisibility(View.GONE);
-  }
+	private void hideAddLayout() {
+		chatAddLayout.setVisibility(View.GONE);
+	}
 
-  private void showAudioLayout() {
-    chatTextLayout.setVisibility(View.GONE);
-    chatAudioLayout.setVisibility(View.VISIBLE);
-    chatEmotionLayout.setVisibility(View.GONE);
-    hideSoftInputView();
-  }
+	private void showAddLayout() {
+		chatAddLayout.setVisibility(View.VISIBLE);
+	}
 
-  public void selectImageFromLocal() {
-//    if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
-//      Intent intent = new Intent();
-//      intent.setType("image/*");
-//      intent.setAction(Intent.ACTION_GET_CONTENT);
-//      startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.chat_activity_select_picture)),
-//          GALLERY_REQUEST);
-//    } else {
-//      Intent intent = new Intent(Intent.ACTION_ _DOCUMENT);
-//      intent.addCategory(Intent.CATEGORY_OPENABLE);
-//      intent.setType("image/*");
-//      startActivityForResult(intent, GALLERY_KITKAT_REQUEST);
-//    }
+	private void showTextLayout() {
+		chatTextLayout.setVisibility(View.VISIBLE);
+		chatAudioLayout.setVisibility(View.GONE);
+	}
+
+	private void showAudioLayout() {
+		chatTextLayout.setVisibility(View.GONE);
+		chatAudioLayout.setVisibility(View.VISIBLE);
+		chatEmotionLayout.setVisibility(View.GONE);
+		hideSoftInputView();
+	}
+
+	public void selectImageFromLocal() {
+		// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
+		// Intent intent = new Intent();
+		// intent.setType("image/*");
+		// intent.setAction(Intent.ACTION_GET_CONTENT);
+		// startActivityForResult(Intent.createChooser(intent,
+		// getResources().getString(R.string.chat_activity_select_picture)),
+		// GALLERY_REQUEST);
+		// } else {
+		// Intent intent = new Intent(Intent.ACTION_ _DOCUMENT);
+		// intent.addCategory(Intent.CATEGORY_OPENABLE);
+		// intent.setType("image/*");
+		// startActivityForResult(intent, GALLERY_KITKAT_REQUEST);
+		// }
 		Intent intent;
 		if (Build.VERSION.SDK_INT < 19) {
 			intent = new Intent(Intent.ACTION_GET_CONTENT);
 			intent.setType("image/*");
-			startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.chat_activity_select_picture)),
-          GALLERY_REQUEST);
+			startActivityForResult(
+					Intent.createChooser(
+							intent,
+							getResources().getString(
+									R.string.chat_activity_select_picture)),
+					GALLERY_REQUEST);
 		} else {
-			intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			intent = new Intent(
+					Intent.ACTION_PICK,
+					android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 			intent.setType("image/*");
 			startActivityForResult(intent, GALLERY_REQUEST);
 			Log.e("", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
 		}
-  }
+	}
 
-  public void selectImageFromCamera() {
-    Intent takePictureIntent = new Intent(android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
-    Uri imageUri = Uri.fromFile(new File(localCameraPath));
-    takePictureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
-    if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-      startActivityForResult(takePictureIntent, TAKE_CAMERA_REQUEST);
-    }
-  }
+	public void selectImageFromCamera() {
+		Intent takePictureIntent = new Intent(
+				android.provider.MediaStore.ACTION_IMAGE_CAPTURE);
+		Uri imageUri = Uri.fromFile(new File(localCameraPath));
+		takePictureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT,
+				imageUri);
+		if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
+			startActivityForResult(takePictureIntent, TAKE_CAMERA_REQUEST);
+		}
+	}
 
-  private void sendText() {
-    final String content = contentEdit.getText().toString();
-//    String content = input.getText().toString();
-    if (!TextUtils.isEmpty(content)) {
-      messageAgent.sendText(content);
-      contentEdit.setText("");
-    }
-  }
+	private void sendText() {
+		final String content = contentEdit.getText().toString();
+		// String content = input.getText().toString();
+		if (!TextUtils.isEmpty(content)) {
+			messageAgent.sendText(content);
+			contentEdit.setText("");
+		}
+	}
 
-  @Override
-  public boolean onOptionsItemSelected(MenuItem item) {
-    switch (item.getItemId()) {
-      case android.R.id.home:
-        super.onBackPressed();
-        return true;
-    }
-    return super.onOptionsItemSelected(item);
-  }
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			super.onBackPressed();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
+	}
 
-  @TargetApi(Build.VERSION_CODES.KITKAT)
-  @Override
-  protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-    super.onActivityResult(requestCode, resultCode, intent);
-    if (resultCode == RESULT_OK) {
-      switch (requestCode) {
-        case GALLERY_REQUEST:
-        case GALLERY_KITKAT_REQUEST:
-          if (intent == null) {
-            toast("return intent is null");
-            return;
-          }
-          Uri uri;
-          if (requestCode == GALLERY_REQUEST) {
-            uri = intent.getData();
-          } else {
-        	  Log.e("", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-            //for Android 4.4
-            uri = intent.getData();
-            final int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-            getContentResolver().takePersistableUriPermission(uri, takeFlags);
-          }
-          String localSelectPath = ProviderPathUtils.getPath(this, uri);
-          messageAgent.sendImage(localSelectPath,this);
-          hideBottomLayout();
-          break;
-        case TAKE_CAMERA_REQUEST:
-          messageAgent.sendImage(localCameraPath,this);
-          hideBottomLayout();
-          break;
-      }
-    }
-  }
+	@TargetApi(Build.VERSION_CODES.KITKAT)
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode,
+			Intent intent) {
+		super.onActivityResult(requestCode, resultCode, intent);
+		if (resultCode == RESULT_OK) {
+			switch (requestCode) {
+			case GALLERY_REQUEST:
+			case GALLERY_KITKAT_REQUEST:
+				if (intent == null) {
+					toast("return intent is null");
+					return;
+				}
+				Uri uri;
+				if (requestCode == GALLERY_REQUEST) {
+					uri = intent.getData();
+				} else {
+					Log.e("", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+					// for Android 4.4
+					uri = intent.getData();
+					final int takeFlags = intent.getFlags()
+							& (Intent.FLAG_GRANT_READ_URI_PERMISSION | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+					getContentResolver().takePersistableUriPermission(uri,
+							takeFlags);
+				}
+				String localSelectPath = ProviderPathUtils.getPath(this, uri);
+				messageAgent.sendImage(localSelectPath, this);
+				hideBottomLayout();
+				break;
+			case TAKE_CAMERA_REQUEST:
+				messageAgent.sendImage(localCameraPath, this);
+				hideBottomLayout();
+				break;
+			}
+		}
+	}
 
-  public void scrollToLast() {
-    messageListView.post(new Runnable() {
-      @Override
-      public void run() {
-        messageListView.smoothScrollToPosition(messageListView.getAdapter().getCount() - 1);
-      }
-    });
-  }
+	public void scrollToLast() {
+		messageListView.post(new Runnable() {
+			@Override
+			public void run() {
+				messageListView.smoothScrollToPosition(messageListView
+						.getAdapter().getCount() - 1);
+			}
+		});
+	}
 
-  @Override
-  protected void onDestroy() {
-    chatInstance = null;
-    eventBus.unregister(this);
-    super.onDestroy();
-  }
+	@Override
+	protected void onDestroy() {
+		chatInstance = null;
+		eventBus.unregister(this);
+		super.onDestroy();
+	}
 
-  public void onEvent(MessageEvent messageEvent) {
-    final AVIMTypedMessage message = messageEvent.getMessage();
-    if (message.getConversationId().equals(conversation
-        .getConversationId())) {
-      if (messageEvent.getType() == MessageEvent.Type.Come) {
-        new CacheMessagesTask(this, Arrays.asList(message)) {
-          @Override
-          void onSucceed(List<AVIMTypedMessage> messages) {
-            addMessageAndScroll(message);
-          }
-        }.execute();
-      } else if (messageEvent.getType() == MessageEvent.Type.Receipt) {
-        //Utils.i("receipt");
-        AVIMTypedMessage originMessage = findMessage(message.getMessageId());
-        if (originMessage != null) {
-          originMessage.setMessageStatus(message.getMessageStatus());
-          originMessage.setReceiptTimestamp(message.getReceiptTimestamp());
-          adapter.notifyDataSetChanged();
-        }
-      }
-    }
-  }
+	public void onEvent(MessageEvent messageEvent) {
+		final AVIMTypedMessage message = messageEvent.getMessage();
+		if (message.getConversationId()
+				.equals(conversation.getConversationId())) {
+			if (messageEvent.getType() == MessageEvent.Type.Come) {
+				new CacheMessagesTask(this, Arrays.asList(message)) {
+					@Override
+					void onSucceed(List<AVIMTypedMessage> messages) {
+						addMessageAndScroll(message);
+					}
+				}.execute();
+			} else if (messageEvent.getType() == MessageEvent.Type.Receipt) {
+				// Utils.i("receipt");
+				AVIMTypedMessage originMessage = findMessage(message
+						.getMessageId());
+				if (originMessage != null) {
+					originMessage.setMessageStatus(message.getMessageStatus());
+					originMessage.setReceiptTimestamp(message
+							.getReceiptTimestamp());
+					adapter.notifyDataSetChanged();
+				}
+			}
+		}
+	}
 
-  private AVIMTypedMessage findMessage(String messageId) {
-    for (AVIMTypedMessage originMessage : adapter.getDatas()) {
-      if (originMessage.getMessageId() != null && originMessage.getMessageId().equals(messageId)) {
-        return originMessage;
-      }
-    }
-    return null;
-  }
+	private AVIMTypedMessage findMessage(String messageId) {
+		for (AVIMTypedMessage originMessage : adapter.getDatas()) {
+			if (originMessage.getMessageId() != null
+					&& originMessage.getMessageId().equals(messageId)) {
+				return originMessage;
+			}
+		}
+		return null;
+	}
 
-  @Override
-  protected void onResume() {
-    super.onResume();
-    if (isConversationEmpty(conversation)) {
-      return;
-    }
-    ChatManager.setCurrentChattingConvid(conversation.getConversationId());
-  }
+	@Override
+	protected void onResume() {
+		super.onResume();
+		if (isConversationEmpty(conversation)) {
+			return;
+		}
+		ChatManager.setCurrentChattingConvid(conversation.getConversationId());
+	}
 
-  @Override
-  protected void onPause() {
-    super.onPause();
-    roomsTable.clearUnread(conversation.getConversationId());
-    ChatManager.setCurrentChattingConvid(null);
-  }
+	@Override
+	protected void onPause() {
+		super.onPause();
+		roomsTable.clearUnread(conversation.getConversationId());
+		ChatManager.setCurrentChattingConvid(null);
+	}
 
-  public void loadMessagesWhenInit(int limit) {
-    ChatManager.getInstance().queryMessages(conversation, null, System.currentTimeMillis(), limit, new
-        AVIMTypedMessagesArrayCallback() {
-          @Override
-          public void done(final List<AVIMTypedMessage> typedMessages, AVException e) {
-            if (filterException(e)) {
-              new CacheMessagesTask(ChatActivityLean.this, typedMessages) {
-                @Override
-                void onSucceed(List<AVIMTypedMessage> messages) {
-                  adapter.setDatas(typedMessages);
-                  adapter.notifyDataSetChanged();
-                  scrollToLast();
-                }
-              }.execute();
-            }
-          }
-        });
-  }
+	public void loadMessagesWhenInit(int limit) {
+		ChatManager.getInstance().queryMessages(conversation, null,
+				System.currentTimeMillis(), limit,
+				new AVIMTypedMessagesArrayCallback() {
+					@Override
+					public void done(
+							final List<AVIMTypedMessage> typedMessages,
+							AVException e) {
+						if (filterException(e)) {
+							new CacheMessagesTask(ChatActivityLean.this,
+									typedMessages) {
+								@Override
+								void onSucceed(List<AVIMTypedMessage> messages) {
+									adapter.setDatas(typedMessages);
+									adapter.notifyDataSetChanged();
+									scrollToLast();
+								}
+							}.execute();
+						}
+					}
+				});
+	}
 
-  @SuppressLint("NewApi")
-public abstract class CacheMessagesTask extends AsyncTask<Void, Void, Void> {
-    private List<AVIMTypedMessage> messages;
-    private volatile Exception e;
+	@SuppressLint("NewApi")
+	public abstract class CacheMessagesTask extends AsyncTask<Void, Void, Void> {
+		private List<AVIMTypedMessage> messages;
+		private volatile Exception e;
 
-    public CacheMessagesTask(Context context, List<AVIMTypedMessage> messages) {
-      this.messages = messages;
-    }
+		public CacheMessagesTask(Context context,
+				List<AVIMTypedMessage> messages) {
+			this.messages = messages;
+		}
 
-    @Override
-    protected Void doInBackground(Void... voids) {
-      Set<String> userIds = new HashSet<String>();
-      for (AVIMTypedMessage msg : messages) {
-        AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType());
-        if (type == AVIMReservedMessageType.AudioMessageType) {
-          File file = new File(MessageHelper.getFilePath(msg));
-          if (!file.exists()) {
-            AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
-            String url = audioMsg.getFileUrl();
-//            if (audioMsg.getFileMetaData() != null) {
-//              int size = (Integer) audioMsg.getFileMetaData().get("size");
-//              LogUtils.d("metaData size", size + "");
-//            }
-            Utils.downloadFileIfNotExists(url, file);
-          }
-        }
-        userIds.add(msg.getFrom());
-      }
-      if (chatManager.getChatManagerAdapter() == null) {
-        throw new IllegalStateException("please set ChatManagerAdapter in ChatManager to provide userInfo");
-      }
-      try {
-        chatManager.getChatManagerAdapter().cacheUserInfoByIdsInBackground(new ArrayList<String>(    ));
-      } catch (Exception e1) {
-        LogUtils.logException(e1);
-      }
-      return null;
-    }
+		@Override
+		protected Void doInBackground(Void... voids) {
+			Set<String> userIds = new HashSet<String>();
+			for (AVIMTypedMessage msg : messages) {
+				AVIMReservedMessageType type = AVIMReservedMessageType
+						.getAVIMReservedMessageType(msg.getMessageType());
+				if (type == AVIMReservedMessageType.AudioMessageType) {
+					File file = new File(MessageHelper.getFilePath(msg));
+					if (!file.exists()) {
+						AVIMAudioMessage audioMsg = (AVIMAudioMessage) msg;
+						String url = audioMsg.getFileUrl();
+						// if (audioMsg.getFileMetaData() != null) {
+						// int size = (Integer)
+						// audioMsg.getFileMetaData().get("size");
+						// LogUtils.d("metaData size", size + "");
+						// }
+						Utils.downloadFileIfNotExists(url, file);
+					}
+				}
+				userIds.add(msg.getFrom());
+			}
+			if (chatManager.getChatManagerAdapter() == null) {
+				throw new IllegalStateException(
+						"please set ChatManagerAdapter in ChatManager to provide userInfo");
+			}
+			try {
+				chatManager
+						.getChatManagerAdapter()
+						.cacheUserInfoByIdsInBackground(new ArrayList<String>());
+			} catch (Exception e1) {
+				LogUtils.logException(e1);
+			}
+			return null;
+		}
 
-    @Override
-    protected void onPostExecute(Void aVoid) {
-      if (filterException(e)) {
-        onSucceed(messages);
-      }
-    }
+		@Override
+		protected void onPostExecute(Void aVoid) {
+			if (filterException(e)) {
+				onSucceed(messages);
+			}
+		}
 
-    abstract void onSucceed(List<AVIMTypedMessage> messages);
-  }
+		abstract void onSucceed(List<AVIMTypedMessage> messages);
+	}
 
-  public void loadOldMessages() {
-    if (adapter.getDatas().size() == 0) {
-      refreshableView.finishRefreshing();
-      return;
-    } else {
-      AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
-      String msgId = firstMsg.getMessageId();
-      long time = firstMsg.getTimestamp();
-      ChatManager.getInstance().queryMessages(conversation, msgId, time, PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
-        @Override
-        public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
-          refreshableView.finishRefreshing();
-          if (filterException(e)) {
-            new CacheMessagesTask(ChatActivityLean.this, typedMessages) {
-              @Override
-              void onSucceed(List<AVIMTypedMessage> typedMessages) {
-                List<AVIMTypedMessage> newMessages = new ArrayList<AVIMTypedMessage>(PAGE_SIZE);
-                newMessages.addAll(typedMessages);
-                newMessages.addAll(adapter.getDatas());
-                adapter.setDatas(newMessages);
-                adapter.notifyDataSetChanged();
-                if (typedMessages.size() > 0) {
-                  messageListView.setSelection(typedMessages.size() - 1);
-                } else {
-                  toast(R.string.chat_activity_loadMessagesFinish);
-                }
-              }
-            }.execute();
-          }
-        }
-      });
-    }
+	public void loadOldMessages() {
+		if (adapter.getDatas().size() == 0) {
+			refreshableView.finishRefreshing();
+			return;
+		} else {
+			AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
+			String msgId = firstMsg.getMessageId();
+			long time = firstMsg.getTimestamp();
+			ChatManager.getInstance().queryMessages(conversation, msgId, time,
+					PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
+						@Override
+						public void done(List<AVIMTypedMessage> typedMessages,
+								AVException e) {
+							refreshableView.finishRefreshing();
+							if (filterException(e)) {
+								new CacheMessagesTask(ChatActivityLean.this,
+										typedMessages) {
+									@Override
+									void onSucceed(
+											List<AVIMTypedMessage> typedMessages) {
+										List<AVIMTypedMessage> newMessages = new ArrayList<AVIMTypedMessage>(
+												PAGE_SIZE);
+										newMessages.addAll(typedMessages);
+										newMessages.addAll(adapter.getDatas());
+										adapter.setDatas(newMessages);
+										adapter.notifyDataSetChanged();
+										if (typedMessages.size() > 0) {
+											messageListView
+													.setSelection(typedMessages
+															.size() - 1);
+										} else {
+											toast(R.string.chat_activity_loadMessagesFinish);
+										}
+									}
+								}.execute();
+							}
+						}
+					});
+		}
 
-  }
+	}
 
-  class DefaultSendCallback implements MessageAgent.SendCallback {
+	class DefaultSendCallback implements MessageAgent.SendCallback {
 
-    @Override
-    public void onError(AVIMTypedMessage message, Exception e) {
-      LogUtils.i();
-      Log.e("ChatActivity", "DefaultSendCallback--onError");
-      Toast.makeText(ChatActivityLean.this, "无可用的网络", Toast.LENGTH_SHORT).show();
-//      addMessageAndScroll(message);
-    }
+		@Override
+		public void onError(AVIMTypedMessage message, Exception e) {
+			LogUtils.i();
+			Log.e("ChatActivity", "DefaultSendCallback--onError");
+			Toast.makeText(ChatActivityLean.this, "无可用的网络", Toast.LENGTH_SHORT)
+					.show();
+			// addMessageAndScroll(message);
+		}
 
-    @Override
-    public void onSuccess(AVIMTypedMessage message) {
-//      Utils.i();
-    	Log.e("ChatActivity", "DefaultSendCallback--onSuccess");
-      addMessageAndScroll(message);
-    }
-  }
+		@Override
+		public void onSuccess(AVIMTypedMessage message) {
+			// Utils.i();
+			Log.e("ChatActivity", "DefaultSendCallback--onSuccess");
+			addMessageAndScroll(message);
+		}
+	}
 
-  public void addMessageAndScroll(AVIMTypedMessage message) {
-    AVIMTypedMessage foundMessage = findMessage(message.getMessageId());
-    if (foundMessage == null) {
-      adapter.add(message);
-      scrollToLast();
-    }
-  }
+	public void addMessageAndScroll(AVIMTypedMessage message) {
+		AVIMTypedMessage foundMessage = findMessage(message.getMessageId());
+		if (foundMessage == null) {
+			adapter.add(message);
+			scrollToLast();
+		}
+	}
 
-  protected boolean filterException(Exception e) {
-    if (e != null) {
-      LogUtils.logException(e);
-      toast(e.getMessage());
-      return false;
-    } else {
-      return true;
-    }
-  }
+	protected boolean filterException(Exception e) {
+		if (e != null) {
+			LogUtils.logException(e);
+			toast(e.getMessage());
+			return false;
+		} else {
+			return true;
+		}
+	}
 
-  protected void toast(String str) {
-    Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
-  }
+	protected void toast(String str) {
+		Toast.makeText(this, str, Toast.LENGTH_SHORT).show();
+	}
 
-  protected void toast(Exception e) {
-    if (e != null) {
-        toast("发生错误：" + e.getMessage());
-    }
-  }
+	protected void toast(Exception e) {
+		if (e != null) {
+			toast("发生错误：" + e.getMessage());
+		}
+	}
 
-  protected void toast(int id) {
-    Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
-  }
+	protected void toast(int id) {
+		Toast.makeText(this, id, Toast.LENGTH_SHORT).show();
+	}
 
+	@Override
+	public void onAddLocationButtonClicked(View v) {
 
-  @Override
-  public void onAddLocationButtonClicked(View v) {
+	}
 
-  }
+	@Override
+	public void onLocationMessageViewClicked(AVIMLocationMessage locationMessage) {
 
-  @Override
-  public void onLocationMessageViewClicked(AVIMLocationMessage locationMessage) {
+	}
 
-  }
+	@Override
+	public void onImageMessageViewClicked(AVIMImageMessage imageMessage,
+			String localImagePath) {
+		Log.e("ChatActivity", "imageMessage.URL==" + imageMessage.getFileUrl());
+		Log.e("ChatActivity", "localImagePath==" + localImagePath);
+		Intent intent = new Intent(ChatActivityLean.this,
+				PhotoViewActivity.class);
+		intent.putExtra("FileUrl", imageMessage.getFileUrl());
+		intent.putExtra("localImagePath", localImagePath);
+		startActivityForResult(intent, 910);
 
-  @Override
-  public void onImageMessageViewClicked(AVIMImageMessage imageMessage, String localImagePath) {
-	  Log.e("ChatActivity", "imageMessage.URL=="+imageMessage.getFileUrl());
-	  Log.e("ChatActivity", "localImagePath=="+localImagePath);
-	  Intent intent=new Intent(ChatActivityLean.this, PhotoViewActivity.class);
-	  intent.putExtra("FileUrl", imageMessage.getFileUrl());
-	  intent.putExtra("localImagePath", localImagePath);
-	startActivityForResult(intent, 910);
-	  
-  }
+	}
+	
+	public interface GetMemberChat{
+		void MemberChat();
+	}
 }

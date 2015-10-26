@@ -2,8 +2,10 @@ package com.biju.function;
 
 import java.util.ArrayList;
 import java.util.List;
+
 import org.json.JSONException;
 import org.json.JSONObject;
+
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
@@ -11,6 +13,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
@@ -22,6 +25,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
 import com.BJ.javabean.Group;
 import com.BJ.javabean.GroupCodeback;
 import com.BJ.javabean.GroupCodeback2;
@@ -296,6 +300,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 		finish();
 		Intent intent = new Intent(SlidingActivity.this, MainActivity.class);
 		startActivity(intent);
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
 	private void Sliding_OK_layout() {
@@ -343,5 +348,17 @@ public class SlidingActivity extends Activity implements OnClickListener {
 			editor.putInt(IConstant.Click, isClick);
 			editor.commit();
 		}
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			Sliding_back_layout();
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

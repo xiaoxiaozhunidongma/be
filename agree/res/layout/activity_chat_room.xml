@@ -1,0 +1,112 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#efefef"
+    tools:context=".ChangeChatNameActivity" >
+
+    <RelativeLayout
+        android:id="@+id/ChangeChatNameTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="40.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff" >
+
+        <Button
+            android:id="@+id/ChangeChatNameBackBut"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@null"
+            android:text="返回"
+            android:textColor="@drawable/title_left_color"
+            android:textSize="13.0sp" />
+
+        <Button
+            android:id="@+id/ChangeChatNameOKBut"
+            android:layout_width="60.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@null"
+            android:text="完成"
+            android:textColor="@drawable/title_right_color"
+            android:textSize="13.0sp" />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dp"
+        android:layout_below="@+id/ChangeChatNameTitleLayout"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginTop="35.0dp"
+            android:text="请输入你想要更改的讨论组名称"
+            android:textColor="#808080"
+            android:textSize="13.0sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout2"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_below="@+id/relativeLayout1"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff" >
+
+        <EditText
+            android:id="@+id/ChangeChatNameEdit"
+            android:layout_width="match_parent"
+            android:layout_height="40.0dp"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginRight="20.0dp"
+            android:layout_marginTop="5.0dp"
+            android:background="@null"
+            android:ems="10"
+            android:hint="讨论组名"
+            android:textColorHint="#c9c9c9"
+            android:textSize="13.0sp" >
+
+            <requestFocus />
+        </EditText>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="100.0dp"
+        android:layout_below="@+id/relativeLayout2"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginTop="10.0dp"
+            android:text="讨论组名长度不能小于2个字符,
+最多只能包含7个字符,可以使用英文字母,
+数字或者中文构成,但是不能使用特殊的字符,
+如:&apos;/:;|=,+#*?&lt;>&apos;等,
+也不能使用包含有空格"
+            android:textColor="#808080"
+            android:textSize="13.0sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

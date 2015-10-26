@@ -4,14 +4,14 @@
     android:layout_height="wrap_content" >
 
     <RelativeLayout
-        android:id="@+id/ReadUserAllFriendsLayout"
+        android:id="@+id/PartyReadUserAllFriendsLayout"
         android:layout_width="match_parent"
         android:layout_height="60.0dp"
         android:layout_alignParentLeft="true"
         android:background="#ffffff" >
 
         <TextView
-            android:id="@+id/ReadUserAllFriendsLine1"
+            android:id="@+id/PartyReadUserAllFriendsLine1"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
@@ -19,15 +19,15 @@
             android:visibility="gone" />
 
         <ImageView
-            android:id="@+id/ReadUserAllFriends_head"
+            android:id="@+id/PartyReadUserAllFriends_head"
             android:layout_width="50.0dp"
             android:layout_height="50.0dp"
-            android:layout_marginLeft="10.0dp"
+            android:layout_marginLeft="40.0dp"
             android:layout_marginTop="5.0dp"
             android:src="@drawable/login_1" />
 
         <TextView
-            android:id="@+id/ReadUserAllFriendsLine2"
+            android:id="@+id/PartyReadUserAllFriendsLine2"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
@@ -35,38 +35,16 @@
             android:background="#aaaaaa" />
 
         <TextView
-            android:id="@+id/ReadUserAllFriends_name"
+            android:id="@+id/PartyReadUserAllFriends_name"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignTop="@+id/ReadUserAllFriends_head"
+            android:layout_centerVertical="true"
             android:layout_marginLeft="18dp"
-            android:layout_marginTop="8.0dp"
-            android:layout_toRightOf="@+id/ReadUserAllFriends_head"
+            android:layout_toRightOf="@+id/PartyReadUserAllFriends_head"
             android:gravity="left|center"
             android:singleLine="true"
             android:text="15614"
             android:textSize="17.0sp" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignLeft="@+id/ReadUserAllFriends_name"
-            android:layout_below="@+id/ReadUserAllFriends_name"
-            android:text="来源于小组好友"
-            android:textColor="#c9c9c9"
-            android:textSize="12.0sp" />
-
-        <ImageView
-            android:id="@+id/ReadUserAllFriends_choose"
-            android:layout_width="13.0dp"
-            android:layout_height="13.0dp"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="20dp"
-            android:src="@drawable/gou_3" 
-            android:visibility="gone"
-            />
     </RelativeLayout>
     <!-- android:textAppearance="?android:textAppearanceLarge" -->
 

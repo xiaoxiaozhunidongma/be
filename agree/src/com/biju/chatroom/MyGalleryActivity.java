@@ -1,8 +1,10 @@
-package com.biju;
+package com.biju.chatroom;
 
 import java.util.ArrayList;
 
 import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.biju.HackyViewPager;
+import com.biju.R;
 
 import uk.co.senab.photoview.PhotoView;
 import android.app.Activity;

@@ -136,7 +136,8 @@
 
         <!-- 数据库 -->
 
-<!-- yGkNOAGTinoQq0oFRuksvUIi -->
+
+        <!-- yGkNOAGTinoQq0oFRuksvUIi -->
         <meta-data
             android:name="AA_DB_NAME"
             android:value="graphic_details.db" />
@@ -503,11 +504,28 @@
             android:name="com.biju.pay.PreviewActivity"
             android:label="@string/title_activity_preview" >
         </activity>
-                <activity android:name="com.biju.MyGalleryActivity" >
+        <activity android:name="com.biju.chatroom.MyGalleryActivity" >
         </activity>
         <activity
-            android:name="com.biju.AddFriends3Activity"
+            android:name="com.biju.chatroom.AddChatsActivity"
             android:label="@string/title_activity_add_friends3" >
+        </activity>
+        <activity
+            android:name="com.biju.chatroom.AddMembersActivity"
+             >
+        </activity>
+        <activity
+            android:name="com.biju.chatroom.MembersChatActivity"
+            android:label="@string/title_activity_members_chat"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.biju.chatroom.ChangeChatNameActivity"
+            android:label="@string/title_activity_chat_room" >
+        </activity>
+        <activity
+            android:name="com.biju.PhotoActivity"
+            android:label="@string/title_activity_photo" >
         </activity>
     </application>
 

@@ -1,13 +1,10 @@
 package com.fragment;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
 import leanchatlib.controller.ChatManager;
-import leanchatlib.model.ConversationType;
-import leanchatlib.utils.LogUtils;
 import android.annotation.TargetApi;
 import android.content.Intent;
 import android.os.Build;
@@ -15,7 +12,6 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,11 +24,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.BJ.javabean.Loginback;
-import com.BJ.javabean.ReadUserAllFriends;
-import com.BJ.javabean.ReadUserAllFriendsback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.SdPkUser;
@@ -42,23 +35,14 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
-import com.biju.AddFriends3Activity;
-import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.FindMultiUserListenner;
-import com.biju.Interface.readFriendListenner;
+import com.biju.Interface.readUserListenner;
 import com.biju.R;
-import com.biju.function.AddFriends2Activity;
-import com.biju.function.FriendsDataActivity;
-import com.biju.function.GroupActivity;
-import com.biju.function.PartyDetailsActivity;
-import com.example.huanxin.ChatActivity;
+import com.biju.chatroom.AddFriends3Activity;
 import com.example.testleabcloud.ChatActivityLean;
 import com.github.volley_examples.utils.GsonUtils;
-import com.biju.Interface.readUserListenner;
-import com.biju.Interface.findUserListenner;;
 
 ;
 
@@ -165,6 +149,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 					String avatar_path = beginStr+user.getAvatar_path()+endStr+"mini-avatar";
 					FromAvaUrlMap.put(user.getPk_user(), avatar_path);
 					}
+					SdPkUser.setUser(Users);//把容器传到成员列表界面
 				}
 			}
 			
@@ -360,16 +345,11 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 //	}
 
 	private void initUI() {
-		mLayout.findViewById(R.id.tab_friends_addbuddy_layout)
-				.setOnClickListener(this);
-		mLayout.findViewById(R.id.tab_friends_addbuddy)
-				.setOnClickListener(this);// 添加好友
-		mFriends_add_layout = (RelativeLayout) mLayout
-				.findViewById(R.id.friends_add_layout);// 有好友的时候的布局
-		mFriends_add_tishi_layout = (RelativeLayout) mLayout
-				.findViewById(R.id.friends_add_tishi_layout);// 没有好友的时候的提示布局
-		mFriends_listview = (ListView) mLayout
-				.findViewById(R.id.friends_listview);// listview布局
+		mLayout.findViewById(R.id.tab_friends_addbuddy_layout).setOnClickListener(this);
+		mLayout.findViewById(R.id.tab_friends_addbuddy).setOnClickListener(this);// 添加好友
+		mFriends_add_layout = (RelativeLayout) mLayout.findViewById(R.id.friends_add_layout);// 有好友的时候的布局
+		mFriends_add_tishi_layout = (RelativeLayout) mLayout.findViewById(R.id.friends_add_tishi_layout);// 没有好友的时候的提示布局
+		mFriends_listview = (ListView) mLayout.findViewById(R.id.friends_listview);// listview布局
 		mFriends_listview.setDividerHeight(0);// 设置listview的item直接的间隙为0
 		adapter = new MyAdapter();
 		mFriends_listview.setOnItemClickListener(this);
@@ -377,8 +357,10 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	}
 
 	class ViewHolder {
-		ImageView ReadUserAllFriends_head;
-		TextView ReadUserAllFriends_name;
+		ImageView PartyReadUserAllFriends_head;
+		TextView PartyReadUserAllFriends_name;
+		TextView PartyReadUserAllFriendsLine1;
+		TextView PartyReadUserAllFriendsLine2;
 	}
 
 	class MyAdapter extends BaseAdapter {
@@ -405,14 +387,12 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			ViewHolder holder = null;
 			if (convertView == null) {
 				holder = new ViewHolder();
-				LayoutInflater layoutInflater = getActivity()
-						.getLayoutInflater();
-				inflater = layoutInflater.inflate(
-						R.layout.readuserallfriends_item, null);
-				holder.ReadUserAllFriends_head = (ImageView) inflater
-						.findViewById(R.id.ReadUserAllFriends_head);
-				holder.ReadUserAllFriends_name = (TextView) inflater
-						.findViewById(R.id.ReadUserAllFriends_name);
+				LayoutInflater layoutInflater = getActivity().getLayoutInflater();
+				inflater = layoutInflater.inflate(R.layout.partyreaduserallfriends_item, null);
+				holder.PartyReadUserAllFriends_head = (ImageView) inflater.findViewById(R.id.PartyReadUserAllFriends_head);
+				holder.PartyReadUserAllFriends_name = (TextView) inflater.findViewById(R.id.PartyReadUserAllFriends_name);
+				holder.PartyReadUserAllFriendsLine1=(TextView) inflater.findViewById(R.id.PartyReadUserAllFriendsLine1);
+				holder.PartyReadUserAllFriendsLine2=(TextView) inflater.findViewById(R.id.PartyReadUserAllFriendsLine2);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -421,13 +401,21 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			
 			AVIMConversation avimConversation = convs.get(position);
 			String convName = avimConversation.getName();
-			holder.ReadUserAllFriends_name.setText(convName);
+			holder.PartyReadUserAllFriends_name.setText(convName);
 			
 			String avatar_path = "http://ac-x3o016bx.clouddn.com/86O7RAPx2BtTW5zgZTPGNwH9RZD5vNDtPm1YbIcu";
 			String completeURL = beginStr + avatar_path + endStr+"mini-avatar";
-			ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(),
-					"http://ac-x3o016bx.clouddn.com/86O7RAPx2BtTW5zgZTPGNwH9RZD5vNDtPm1YbIcu", holder.ReadUserAllFriends_head);
+			ImageLoaderUtils.getInstance().LoadImageSquare(getActivity(),
+					"http://ac-x3o016bx.clouddn.com/86O7RAPx2BtTW5zgZTPGNwH9RZD5vNDtPm1YbIcu", holder.PartyReadUserAllFriends_head);
 
+			if(position==convs.size()-1){
+				holder.PartyReadUserAllFriendsLine1.setVisibility(View.VISIBLE);
+				holder.PartyReadUserAllFriendsLine2.setVisibility(View.GONE);
+			}else {
+				holder.PartyReadUserAllFriendsLine1.setVisibility(View.GONE);
+				holder.PartyReadUserAllFriendsLine2.setVisibility(View.VISIBLE);
+			}
+			
 //			holder.ReadUserAllFriends_head
 //					.setOnClickListener(new OnClickListener() {
 //
@@ -502,6 +490,10 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 //				instance.findUser(getActivity(),user);
 //			}
 			instance.findMultiUsers(getActivity(), members);
+			
+			String creator = avimConversation.getCreator();
+			Log.e("FriendsFragment", "创建者的ID======="+creator);
+			SdPkUser.setCreator(creator);//传创建者ID给成员界面
 			
   			final ChatManager chatManager = ChatManager.getInstance();
 				 chatManager.registerConversation(avimConversation);//注册对话

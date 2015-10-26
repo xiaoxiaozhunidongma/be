@@ -59,4 +59,8 @@
      <drawable name="EditTextRedColor">#ff0000</drawable>
      <drawable name="EditTextBlueColor">#0080ff</drawable>
      <drawable name="EditTextGreenColor">#02c874</drawable>
+     
+     <!--button点击效果颜色  -->
+      <drawable name="but_white">#ffffff</drawable>
+      <drawable name="but_lightblack">#d9d9d9</drawable>
 </resources>
