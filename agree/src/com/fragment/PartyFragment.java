@@ -103,8 +103,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 			@Override
 			public void success(String A) {
 				userAllPartieList.clear();
-				UserAllPartyback allPartyback = GsonUtils.parseJson(A,
-						UserAllPartyback.class);
+				UserAllPartyback allPartyback = GsonUtils.parseJson(A,UserAllPartyback.class);
 				int status = allPartyback.getStatusMsg();
 				if (status == 1) {
 					Log.e("PartyFragment", "读取出用户的所有日程====" + A);

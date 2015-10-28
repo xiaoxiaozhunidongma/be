@@ -35,7 +35,7 @@ public class Party3 implements Serializable{
 	@Column
 	private Integer pay_type;
 	@Column
-	private Integer amount;
+	private float amount;
 	@Column
 	private Integer pay_fk_user;
 	@Column
@@ -126,10 +126,10 @@ public class Party3 implements Serializable{
 	public void setPay_type(Integer pay_type) {
 		this.pay_type = pay_type;
 	}
-	public Integer getAmount() {
+	public float getAmount() {
 		return amount;
 	}
-	public void setAmount(Integer amount) {
+	public void setAmount(float amount) {
 		this.amount = amount;
 	}
 	public Integer getPay_fk_user() {

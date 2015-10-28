@@ -57,6 +57,7 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_graphic_preview);
 		Intent intent = getIntent();
 		pk_party = intent.getStringExtra("Pk_party");
+		Log.e("GraphicPreviewActivity", "得到的pk_party=========="+pk_party);
 		initUI();
 		initInterface();
 		initGraphic();
@@ -140,6 +141,25 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				holder.GraphicPreviewImageView.setVisibility(View.VISIBLE);
 				holder.GraphicPreviewWhiteLayout.setVisibility(View.GONE);
 				holder.GraphicPreviewWhiteLayout1.setVisibility(View.VISIBLE);
+				
+				int px2dip_left_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
+				int px2dip_top_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
+				int px2dip_right_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
+				int px2dip_bottom = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
+
+				int columnWidth=imageText.getImage_width();
+				int columnHeight=imageText.getImage_height();
+				Log.e("GraphicPreviewActivity", "高度======"+columnHeight);
+				Log.e("GraphicPreviewActivity", "宽度======"+columnWidth);
+				// 设置图片的位置
+				MarginLayoutParams margin9 = new MarginLayoutParams(holder.GraphicPreviewImageView.getLayoutParams());
+				margin9.setMargins(px2dip_left_1, 0, px2dip_right_1,0);
+				RelativeLayout.LayoutParams layoutParams9 = new RelativeLayout.LayoutParams(margin9);
+				layoutParams9.height = columnHeight;// 设置图片的高度
+				layoutParams9.width = columnWidth; // 设置图片的宽度
+				holder.GraphicPreviewImageView.setAdjustViewBounds(true);
+				holder.GraphicPreviewImageView.setLayoutParams(layoutParams9);
+				
 				String mPath=imageText.getImage_path();
 				Log.e("GraphicPreviewActivity", "获取到的图片路径======"+mPath);
 				String completeURL = beginStr + mPath + endStr+ "group-front-cover";

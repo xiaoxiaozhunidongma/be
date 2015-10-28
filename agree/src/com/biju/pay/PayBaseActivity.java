@@ -75,7 +75,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 	private TextView mPayTreasureTv;
 	private TextView mPayWeChatWalletTv;
 	private TextView mPayUnionpayTv;
-	private Integer mPaymount;
+	private float mPaymount;
 	private Interface mPayInterface;
 	// 微信支付，以下
 	final IWXAPI msgApi = WXAPIFactory.createWXAPI(PayBaseActivity.this, null);
@@ -675,7 +675,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 			}
 		};
 	};
-	private Integer mUnionPayMount;
+	private float mUnionPayMount;
 
 	// ////////////////////////////////////////////支付宝支付，以上
 	// ////////////////////////////////////////////银联支付,以下

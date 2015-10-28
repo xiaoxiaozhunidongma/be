@@ -13,6 +13,8 @@ import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 
+import com.BJ.javabean.Party2;
+import com.BJ.javabean.UserAllParty;
 import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
@@ -90,11 +92,18 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 		setContentView(R.layout.activity_big_map);
 		
 		Intent intent = getIntent();
-		mLat = intent.getDoubleExtra("mLat", (float) mLat);
-		mLng = intent.getDoubleExtra("mLng", (float) mLng);
-		Log.e("BigMapActivity", "mLat=="+mLat);
-		Log.e("BigMapActivity", "mLng=="+mLng);
-
+		boolean isWay=intent.getBooleanExtra("BigMap", false);
+		Log.e("BigMapActivity", "ÕâÊ±ºòµÄisWay=========="+isWay);
+		if(isWay){
+			UserAllParty allParty=(UserAllParty) intent.getSerializableExtra("AllBigMap");
+			mLat=allParty.getLatitude();
+			mLng=allParty.getLongitude();
+		}else {
+			Party2 party2=(Party2) intent.getSerializableExtra("OneBigMap");
+			mLat=party2.getLatitude();
+			mLng=party2.getLongitude();
+		}
+				
 		mMapView = (MapView) findViewById(R.id.bmapView);
 		mBaiduMap = mMapView.getMap();
 
@@ -103,7 +112,6 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 		mBaiduMap.setMapStatus(msu);
 
 		initMap();
-		
 		initUI();
 	}
 

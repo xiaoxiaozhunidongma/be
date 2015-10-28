@@ -1,5 +1,6 @@
 package com.biju.chatroom;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -38,20 +39,20 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 	private String completeURL;
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
-	private List<User> membersChatList;
+	private List<User> membersChatList=new ArrayList<User>();
 	private MyMemberChatAdapter adapter;
 	private Integer sd_pk_user;
+	private boolean source;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_members_chat);
 		sd_pk_user = SdPkUser.getsD_pk_user();
+		Intent intent = getIntent();
+		source = intent.getBooleanExtra("PersonalData", false);
 		initUI();
 		membersChatList = SdPkUser.getUser();
-		if(membersChatList.size()>0){
-			mMembersChatListview.setAdapter(adapter);
-		}
 	}
 
 	private void initUI() {
@@ -64,6 +65,7 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 		findViewById(R.id.MembersChatBackLayout).setOnClickListener(this);//·µ»Ø
 		mMembersChatListview = (ListView) findViewById(R.id.MembersChatListview);
 		adapter = new MyMemberChatAdapter();
+		mMembersChatListview.setAdapter(adapter);
 	}
 
 	class ViewHolder{
@@ -237,6 +239,11 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 		ChatActivityLean.memberChat.MemberChat();
 		finish();
 		overridePendingTransition(R.anim.left, R.anim.right);
+		if(source){
+			PersonalDataActivity.getClose.Close();
+		}else {
+			ChatActivityLean.getClose.Close();
+		}
 	}
 	
 	@Override

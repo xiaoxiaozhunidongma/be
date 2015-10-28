@@ -88,9 +88,8 @@
             android:layout_width="wrap_content"
             android:layout_height="2.0dp"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/linearLayout1" 
-            android:background="#88d4cc"
-            />
+            android:layout_below="@+id/linearLayout1"
+            android:background="#88d4cc" />
     </RelativeLayout>
 
     <RelativeLayout
@@ -104,6 +103,15 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent" >
         </android.support.v4.view.ViewPager>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/CommonBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerHorizontal="true"
+        android:background="#cc000000"
+        android:visibility="gone" >
     </RelativeLayout>
 
 </RelativeLayout>

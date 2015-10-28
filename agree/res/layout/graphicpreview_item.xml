@@ -15,14 +15,11 @@
 
     <ImageView
         android:id="@+id/GraphicPreviewImageView"
-        android:layout_width="match_parent"
-        android:layout_height="300.0dp"
-        android:layout_alignParentLeft="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@+id/GraphicPreviewWhiteLayout1"
-        android:layout_marginLeft="10.0dp"
-        android:layout_marginRight="10.0dp"
         android:adjustViewBounds="true"
-        android:scaleType="fitCenter"
+        android:scaleType="fitXY"
         android:src="@drawable/about_us" />
 
     <RelativeLayout

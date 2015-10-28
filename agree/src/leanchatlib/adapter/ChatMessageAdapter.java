@@ -36,6 +36,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.example.testleabcloud.ChatActivityLean;
+import com.fragment.CommonFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 
 public class ChatMessageAdapter extends BaseAdapter {
@@ -234,9 +235,13 @@ public class ChatMessageAdapter extends BaseAdapter {
 						Integer pk_user=user.getPk_user();
 						Log.e("============", " 获取到当前的pk_user==="+pk_user);
 						if(Click_user.equals(String.valueOf(pk_user))){
-							SdPkUser.setClickUser(user);
-							Log.e("============", " 进入了IF==="+pk_user);
-							ChatActivityLean.getPersonal.PersonalData();
+							Integer sd_pk_user=SdPkUser.getsD_pk_user();
+							if(!(Click_user.equals(String.valueOf(sd_pk_user)))){
+								SdPkUser.setClickUser(user);
+								Log.e("============", " 进入了IF==="+pk_user);
+								ChatActivityLean.getOpen.Open();
+								ChatActivityLean.getPersonal.PersonalData();
+							}
 						}
 					}
 				}else {
@@ -245,11 +250,13 @@ public class ChatMessageAdapter extends BaseAdapter {
 					for (int i = 0; i < Group_AllUser.size(); i++) {
 						Group_ReadAllUser Group_user=Group_AllUser.get(i);
 						Integer pk_user=Group_user.getPk_user();
-						Log.e("============", " 获取到当前的pk_user==="+pk_user);
 						if(Click_user.equals(String.valueOf(pk_user))){
-							SdPkUser.setGroupChatUser(Group_user);
-							Log.e("============", " 进入了IF==="+pk_user);
-							GroupActivity.getGroupChat.GroupChat();
+							Integer sd_pk_user=SdPkUser.getsD_pk_user();
+							if(!(Click_user.equals(String.valueOf(sd_pk_user)))){
+								SdPkUser.setGroupChatUser(Group_user);
+								CommonFragment.getOpen.Open();
+								GroupActivity.getGroupChat.GroupChat();
+							}
 						}
 					}
 				}

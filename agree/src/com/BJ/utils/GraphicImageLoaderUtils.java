@@ -37,7 +37,7 @@ public class GraphicImageLoaderUtils {
 
 	private void initUILOptions() {
 		options = new DisplayImageOptions.Builder()
-		.showImageOnLoading(R.drawable.preview_2)
+//		.showImageOnLoading(R.drawable.preview_2)
 		.showImageForEmptyUri(R.drawable.preview_2)
 		.showImageOnFail(R.drawable.ic_error)
 		.cacheInMemory(true)//是否缓存在内存中

@@ -93,11 +93,14 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private List<ImageText> GraphicDetailsList=new ArrayList<ImageText>();
 	private List<ImageText> GraphicDetailsList2=new ArrayList<ImageText>();
 	private List<ImageText> ImageDetailsList=new ArrayList<ImageText>();
+	private List<String> objectKeyList=new ArrayList<String>();
 	private OSSData ossData;
 	private OSSService ossService;
 	private OSSBucket sampleBucket;
 	private byte[] bitmap2Bytes;
 	private String uUid;
+	private float Pay_amount=0;
+	private Integer type=1;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +136,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	private String uniqueId;
 	//查表
 	private void initDB() {
 		GraphicDetailsList = new Select().from(ImageText.class).execute();
@@ -146,31 +150,40 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			}
 		}
 		Log.e("AddNewPartyActivity", "ImageDetailsList的长度======"+ImageDetailsList.size());
-		ImageOSS();//然后进行图片上传
+		if(ImageDetailsList.size()>0){
+			ImageOSS();//然后进行图片上传
+		}else {
+			FoundParty();//直接进行聚会的创建
+		}
+	}
+
+	private void FoundParty() {
+		String fk_party=AddNewPartyActivity.getMyUUID();
+		PartyComplete(fk_party);
 	}
 
 	private void ImageOSS() {
-		for (int i = 0; i < ImageDetailsList.size(); i++) {
-			ImageText text=ImageDetailsList.get(i);
+		for (int j = 0; j < ImageDetailsList.size(); j++) {
+			ImageText text=ImageDetailsList.get(j);
 			String imagePath=text.getImage_path();
+			String fk_party=text.getFk_party();
 			Bitmap convertToBitmap;
 			try {
 				convertToBitmap = Path2Bitmap.convertToBitmap(imagePath);
 				Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-						convertToBitmap, 1280);// 最长边限制为1080
+						convertToBitmap, 1280);// 最长边限制为1280
 				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
-				uUid = text.getFk_party();
+				UUID uuid = UUID.randomUUID();
+				uniqueId = uuid.toString();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			Log.e("AddNewPartyActivity", "进入for循环了===="+i);
-			OSSupload(ossData, bitmap2Bytes, uUid);
+			OSSupload(ossData, bitmap2Bytes, uniqueId,imagePath,fk_party);
 		}
 	}
 
-	private void OSSupload(OSSData ossData, byte[] bitmap2Bytes2, final String uUid2) {
-		Log.e("AddNewPartyActivity", "进入图片上传了====");
-		ossData = ossService.getOssData(sampleBucket, uUid2);
+	private void OSSupload(OSSData ossData, byte[] bitmap2Bytes2, final String uniqueId, final String imagePath, final String fk_party) {
+		ossData = ossService.getOssData(sampleBucket, uniqueId);
 		ossData.setData(bitmap2Bytes2, "jpg"); // 指定需要上传的数据和它的类型
 		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
 		ossData.uploadInBackground(new SaveCallback() {
@@ -178,7 +191,16 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			public void onSuccess(String objectKey) {
 				Log.e("", "图片上传成功");
 				Log.e("Main", "objectKey==" + objectKey);
-				GraphicDetailsPreview3(uUid2,objectKey);
+					objectKeyList.add(objectKey);
+					ImageText imageText2=new Select().from(ImageText.class).where("image_path=?", imagePath).executeSingle();
+					imageText2.setImage_path(objectKey);
+					imageText2.save();
+					if(objectKeyList.size()==ImageDetailsList.size()){
+						//第二次查表
+						GraphicDetailsList2.clear();
+						GraphicDetailsList2 = new Select().from(ImageText.class).execute();
+						PartyComplete(fk_party);
+					}
 			}
 
 			@Override
@@ -193,35 +215,6 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		});
 	
 	}
-	
-	private void GraphicDetailsPreview3(String uUid2, String objectKey) {
-		//先清除数据库,无条件全部删除，然后再保存
-		new Delete().from(ImageText.class).execute();
-		Log.e("GraphicDetailsActivity", " 获取到的UUID========"+uUid2);
-		//进行保存
-		if(GraphicDetailsList.size()>0){
-			for (int i = 0; i < GraphicDetailsList.size(); i++) {
-				Integer Type=GraphicDetailsList.get(i).getType();
-				if(1==Type){
-					String mEditText=GraphicDetailsList.get(i).getText();
-					String SINGCOLOR=GraphicDetailsList.get(i).getFont_color();
-					//存入数据库
-					ImageText text=new ImageText(null, uUid2, 1, mEditText, null, null, 13, SINGCOLOR, null, null, 1);
-					text.save();
-				}else if (2==Type){
-					Integer image_height=GraphicDetailsList.get(i).getImage_height();
-					Integer image_width=GraphicDetailsList.get(i).getImage_width();
-					//存入数据库
-					ImageText text=new ImageText(null, uUid2, 2, null, objectKey, null, null, null, image_height, image_width, 1);
-					text.save();
-				}
-			}
-		}
-		//第二次查表
-		GraphicDetailsList2 = new Select().from(ImageText.class).execute();
-		PartyComplete(uUid2);
-	}
-	
 
 	private void initLimitNumber() {
 		SharedPreferences Limit_sp=getSharedPreferences(IConstant.LimitNumber, 0);
@@ -243,8 +236,12 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			String CurrentPayMoney=CostSp.getString(IConstant.PayMoney, "");
 			if("0".equals(CurrentPayMoney)){
 				mAdd_New_Party_activity_cost.setText("免费");
+				Pay_amount=0;
+				type=1;
 			}else {
 				mAdd_New_Party_activity_cost.setText(CurrentPayMoney+"元");
+				Pay_amount=Float.valueOf(CurrentPayMoney);
+				type=3;
 			}
 		}
 	}
@@ -256,20 +253,23 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				Log.e("AddNewPartyActivity", "日程是否创建成功======" + A);
-//				PartyOkback partyOkback = GsonUtils.parseJson(A,PartyOkback.class);
-//				Integer status = partyOkback.getStatusMsg();
-//				if (status == 1) {
-//					Log.e("AddNewPartyActivity", "日程是否创建成功======" + A);
-//					SharedPreferences refresh_sp=getSharedPreferences(IConstant.AddRefresh, 0);
-//					Editor editor2=refresh_sp.edit();
-//					editor2.putBoolean(IConstant.IsAddRefresh, true);
-//					editor2.commit();
-//					finish();
-//					if(!source){
-//						Intent intent=new Intent(AddNewPartyActivity.this, MainActivity.class);
-//						startActivity(intent);
-//					}
-//				}
+				PartyOkback partyOkback = GsonUtils.parseJson(A,PartyOkback.class);
+				Integer status = partyOkback.getStatusMsg();
+				if (status == 1) {
+					Log.e("AddNewPartyActivity", "日程是否创建成功======" + A);
+					SharedPreferences refresh_sp=getSharedPreferences(IConstant.AddRefresh, 0);
+					Editor editor2=refresh_sp.edit();
+					editor2.putBoolean(IConstant.IsAddRefresh, true);
+					editor2.commit();
+					finish();
+					if(!source){
+						Intent intent=new Intent(AddNewPartyActivity.this, MainActivity.class);
+						startActivity(intent);
+					}else {
+						Intent intent=new Intent(AddNewPartyActivity.this, GroupActivity.class);
+						startActivity(intent);
+					}
+				}
 			}
 
 			@Override
@@ -362,22 +362,22 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			{
 				if(minute<10)
 				{
-					mAdd_New_Party_time_details.setText(years + "年" + months + "月"
+					mAdd_New_Party_time_details.setText(months + "月"
 							+ days + "日" + " " + week + " " +"0"+hour + ":" +"0"+minute);
 				}else
 				{
-					mAdd_New_Party_time_details.setText(years + "年" + months + "月"
+					mAdd_New_Party_time_details.setText(months + "月"
 							+ days + "日" + " " + week + " " +"0"+hour + ":" + minute);
 				}
 			}else
 			{
 				if(minute<10)
 				{
-					mAdd_New_Party_time_details.setText(years + "年" + months + "月"
+					mAdd_New_Party_time_details.setText(months + "月"
 							+ days + "日" + " " + week + " " + hour + ":" +"0"+minute);
 				}else
 				{
-					mAdd_New_Party_time_details.setText(years + "年" + months + "月"
+					mAdd_New_Party_time_details.setText(months + "月"
 							+ days + "日" + " " + week + " " + hour + ":" + minute);
 				}
 			}
@@ -572,7 +572,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		
 	}
 
-	private void PartyComplete(String uUid) {
+	private void PartyComplete(String fk_party) {
 		String ems=mAdd_New_Party_name.getText().toString().trim();
 		if("".equals(ems)){
 		}else{
@@ -590,7 +590,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		}else{
 			String party_name = mAdd_New_Party_name.getText().toString().trim();
 			Party party = new Party();
-			party.setPk_party(uUid);
+			party.setPk_party(fk_party);
 			party.setFk_group(fk_group);
 			party.setFk_user(sD_pk_user);
 			party.setName(party_name);
@@ -600,8 +600,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			party.setLatitude(mLat);
 			party.setLocation(address);
 			party.setStatus(1);
-			party.setPay_type(1);
-			party.setPay_amount(0);
+			party.setPay_type(type);
+			party.setPay_amount(Pay_amount);
 			party.setPay_fk_user(sD_pk_user);
 			party.setParty_interval(1);
 			Log.e("AddNewPartyActivity", "新建日程的UUID=====" + uUid);
@@ -613,7 +613,6 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			Log.e("AddNewPartyActivity", "新建日程的地址=====" + address);
 			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(GraphicDetailsList2, party));
 			Log.e("PartyComplete~", "GraphicDetailsList.size="+GraphicDetailsList.size());
-//			mAdd_New_Party_OK.setEnabled(false);
 		}
 	}
 
@@ -663,6 +662,12 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		
 		//清楚数据库,无条件全部删除
 		new Delete().from(ImageText.class).execute();
+		
+		//是否进入过金额界面
+		SharedPreferences CostSp=getSharedPreferences(IConstant.Cost, 0);
+		Editor Costeditor=CostSp.edit();
+		Costeditor.putBoolean(IConstant.IsCost, false);
+		Costeditor.commit();
 		super.onStop();
 	}
 	

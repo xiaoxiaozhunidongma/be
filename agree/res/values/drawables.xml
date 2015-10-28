@@ -63,4 +63,5 @@
      <!--button点击效果颜色  -->
       <drawable name="but_white">#ffffff</drawable>
       <drawable name="but_lightblack">#d9d9d9</drawable>
+      <drawable name="GroupBackground">#cc000000</drawable>
 </resources>

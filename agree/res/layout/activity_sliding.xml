@@ -40,7 +40,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/Sliding_title_layout"
-        android:background="#88000000" >
+         >
 
         <RelativeLayout
             android:id="@+id/Sliding_show_layout"
@@ -49,7 +49,8 @@
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
             android:layout_marginLeft="100.0dp"
-            android:background="#ffffff" >
+            android:background="#ffffff" 
+            >
 
             <RelativeLayout
                 android:id="@+id/SlidingMenu_Team_title_layout"

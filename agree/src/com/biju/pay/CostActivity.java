@@ -47,6 +47,7 @@ public class CostActivity extends Activity implements OnClickListener{
 		mCostPayMoneyEditText = (EditText) findViewById(R.id.CostPayMoneyEditText);//所需支付
 		mCostPayMoneyEditText.setInputType(EditorInfo.TYPE_CLASS_PHONE);// 点击电话号码时直接弹出数字键盘
 		mCostPayMoneyEditText.setFocusable(true);
+		mCostPayMoneyEditText.setText("");
 		mCostPayMoneyEditText.setFocusableInTouchMode(true);
 		mCostPayMoneyEditText.requestFocus();
 		Timer timer = new Timer();
@@ -102,6 +103,7 @@ public class CostActivity extends Activity implements OnClickListener{
 		String mCurrentPayMoney = mCostPayMoneyEditText.getText().toString().trim();
 		SharedPreferences CostSp=getSharedPreferences(IConstant.Cost, 0);
 		Editor editor=CostSp.edit();
+		editor.putBoolean(IConstant.IsCost, true);
 		if("".equals(mCurrentPayMoney)){
 			editor.putString(IConstant.PayMoney, "0");
 		}else {

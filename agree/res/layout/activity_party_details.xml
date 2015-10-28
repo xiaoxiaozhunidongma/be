@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/PartyDetails_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="@dimen/title_height"
+        android:layout_height="40.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
@@ -73,210 +73,285 @@
         android:layout_centerHorizontal="true" >
 
         <RelativeLayout
-            android:id="@+id/PartyDetails_map_layout"
-            android:layout_width="match_parent"
-            android:layout_height="150dp"
-            android:layout_margin="5.0dp" >
-        </RelativeLayout>
-
-        <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_below="@+id/PartyDetails_map_layout"
-            android:background="#ffffff" >
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" >
 
             <RelativeLayout
-                android:id="@+id/PartyDetails_partyaddress_layout"
+                android:id="@+id/PartyDetailsPayWayLayout"
                 android:layout_width="match_parent"
-                android:layout_height="40.0dp"
+                android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_centerHorizontal="true"
-                android:visibility="gone" >
-
-                <TextView
-                    android:id="@+id/PartyDetails_partyaddress"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/partydetails_partyaddress"
-                    android:textSize="15.0sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/PartyDetails_partyname_layout"
-                android:layout_width="match_parent"
-                android:layout_height="30.0dp"
-                android:layout_below="@+id/PartyDetails_partyaddress_layout"
-                android:layout_centerHorizontal="true"
-                android:layout_marginTop="15.0dp" >
-
-                <TextView
-                    android:id="@+id/PartyDetails_partyname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_alignParentBottom="true"
-                    android:layout_centerHorizontal="true"
-                    android:text="@string/partydetails_partyname"
-                    android:textColor="@drawable/PartyDetails_name_color"
-                    android:textSize="22.0sp" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/PartyDetails_partytime_layout"
-                android:layout_width="match_parent"
-                android:layout_height="60.0dp"
-                android:layout_below="@+id/PartyDetails_partyname_layout"
                 android:layout_centerHorizontal="true" >
 
                 <TextView
-                    android:id="@+id/PartyDetails_partytime"
+                    android:id="@+id/PartyDetailsPayWayText"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="20.0dp"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="5.0dp"
                     android:gravity="center"
-                    android:text="@string/partydetails_partytime"
                     android:textColor="#959595"
-                    android:textSize="15.0sp" />
+                    android:textSize="11.0sp" />
+            </RelativeLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_above="@+id/PartyDetailsPartyGraphicNumber"
+                android:layout_below="@+id/PartyDetailsPayWayLayout"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:orientation="vertical" >
 
                 <RelativeLayout
-                    android:id="@+id/PartyDetails_partypayment_layout"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/PartyDetails_partytime"
-                    android:layout_centerHorizontal="true"
-                    android:layout_marginTop="5.0dp"
-                    android:background="@drawable/payprompt_corners" >
+                    android:id="@+id/PartyDetailsPartyNameLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
 
                     <TextView
-                        android:id="@+id/PartyDetails_partypayment"
+                        android:id="@+id/textView1"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.50dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="70.0dp"
+                        android:background="#aaaaaa" />
+
+                    <TextView
+                        android:id="@+id/PartyDetailsPartyName"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="15.0dp"
+                        android:layout_marginLeft="70.0dp"
+                        android:layout_marginRight="20.0dp"
+                        android:gravity="left|center"
+                        android:singleLine="true"
+                        android:textColor="#535353"
+                        android:textSize="15.0sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView1"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:paddingBottom="2.0dp"
-                        android:paddingLeft="20.0dp"
-                        android:paddingRight="20.0dp"
-                        android:paddingTop="2.0dp"
-                        android:text="@string/partydetails_partypayment"
-                        android:textSize="12.0sp" />
+                        android:layout_alignBottom="@+id/PartyDetailsPartyName"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="40.0dp"
+                        android:src="@drawable/groupname" />
                 </RelativeLayout>
-            </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/relativeLayout1"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_below="@+id/PartyDetails_partytime_layout"
-                android:layout_centerHorizontal="true" >
-
-                <LinearLayout
-                    android:id="@+id/linearLayout1"
+                <RelativeLayout
+                    android:id="@+id/PartyDetailsPartyStartTimeLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="30.0dp"
-                    android:layout_alignParentTop="true"
-                    android:layout_centerHorizontal="true" >
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
 
-                    <RelativeLayout
-                        android:id="@+id/PartyDetails_partake_layout"
+                    <TextView
+                        android:id="@+id/textView4"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.50dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="70.0dp"
+                        android:background="#aaaaaa" />
+
+                    <TextView
+                        android:id="@+id/PartyDetailsPartyStartTime"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="15.0dp"
+                        android:layout_marginLeft="70.0dp"
+                        android:layout_marginRight="20.0dp"
+                        android:gravity="left|center"
+                        android:singleLine="true"
+                        android:textColor="#535353"
+                        android:textSize="15.0sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView2"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" >
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/PartyDetailsPartyStartTime"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="40.0dp"
+                        android:src="@drawable/time" />
+                </RelativeLayout>
 
-                        <TextView
-                            android:id="@+id/PartyDetails_partake"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:text="@string/partydetails_partake"
-                            android:textColor="#959595"
-                            android:textSize="17.0sp" />
-                    </RelativeLayout>
-
-                    <RelativeLayout
-                        android:id="@+id/PartyDetails_did_not_say_layout"
-                        android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="0.9" >
-
-                        <TextView
-                            android:id="@+id/PartyDetails_did_not_say"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:text="@string/partydetails_did_not_say"
-                            android:textColor="#959595"
-                            android:textSize="17.0sp" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/PartyDetails_numner_layout"
+                <RelativeLayout
+                    android:id="@+id/PartyDetailsPartyAddressLayout"
                     android:layout_width="match_parent"
-                    android:layout_height="40.0dp"
-                    android:layout_below="@+id/linearLayout1"
-                    android:layout_centerHorizontal="true" >
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
 
-                    <RelativeLayout
-                        android:id="@+id/PartyDetails_partake_number_layout"
+                    <TextView
+                        android:id="@+id/textView5"
+                        android:layout_width="match_parent"
+                        android:layout_height="0.50dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginLeft="70.0dp"
+                        android:background="#aaaaaa" />
+
+                    <TextView
+                        android:id="@+id/PartyDetailsPartyAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="15.0dp"
+                        android:layout_marginLeft="70.0dp"
+                        android:layout_marginRight="35.0dp"
+                        android:gravity="left|center"
+                        android:singleLine="true"
+                        android:textColor="#535353"
+                        android:textSize="15.0sp" />
+
+                    <ImageView
+                        android:id="@+id/imageView3"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" >
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/PartyDetailsPartyAddress"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="40.0dp"
+                        android:src="@drawable/map" />
 
-                        <TextView
-                            android:id="@+id/PartyDetails_partake_number"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:text="0"
-                            android:textColor="@drawable/PartyDetails_number_color"
-                            android:textSize="30.0sp" />
-                    </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/imageView6"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
+                        android:layout_alignParentRight="true"
+                        android:layout_alignTop="@+id/PartyDetailsPartyAddress"
+                        android:layout_marginRight="20.0dp"
+                        android:src="@drawable/jiantou" />
+                </RelativeLayout>
 
-                    <RelativeLayout
-                        android:id="@+id/PartyDetails_did_not_say_number_layout"
+                <RelativeLayout
+                    android:id="@+id/PartyDetailsPartyGraphicLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:id="@+id/PartyDetailsPartyGraphic"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_weight="1" >
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginBottom="15.0dp"
+                        android:layout_marginLeft="70.0dp"
+                        android:layout_marginRight="20.0dp"
+                        android:gravity="left|center"
+                        android:singleLine="true"
+                        android:text="更多详情"
+                        android:textColor="#535353"
+                        android:textSize="15.0sp" />
 
-                        <TextView
-                            android:id="@+id/PartyDetails_did_not_say_number"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_centerHorizontal="true"
-                            android:layout_centerVertical="true"
-                            android:text="0"
-                            android:textColor="@drawable/PartyDetails_number_color"
-                            android:textSize="30.0sp" />
-                    </RelativeLayout>
-                </LinearLayout>
-            </RelativeLayout>
+                    <ImageView
+                        android:id="@+id/imageView4"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignBottom="@+id/PartyDetailsPartyGraphic"
+                        android:layout_alignParentLeft="true"
+                        android:layout_marginLeft="40.0dp"
+                        android:src="@drawable/oldparty" />
 
-            <RelativeLayout
-                android:id="@+id/PartyDetails_prompt"
-                android:layout_width="match_parent"
-                android:layout_height="30.0dp"
+                    <ImageView
+                        android:id="@+id/imageView5"
+                        android:layout_width="15.0dp"
+                        android:layout_height="15.0dp"
+                        android:layout_alignBottom="@+id/PartyDetailsPartyGraphic"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="20.0dp"
+                        android:src="@drawable/jiantou" />
+                </RelativeLayout>
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/PartyDetailsPartyGraphicNumber"
+                android:layout_width="wrap_content"
+                android:layout_height="20.0dp"
+                android:layout_above="@+id/PartyDetailsPartyChooseWayLayout"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/relativeLayout1"
-                android:layout_marginTop="10.0dp" >
+                android:layout_marginLeft="70.0dp"
+                android:gravity="left|center"
+                android:textColor="#959595"
+                android:textSize="12.0sp" />
 
-                <!-- 30.0dp -->
+            <LinearLayout
+                android:id="@+id/PartyDetailsPartyChooseWayLayout"
+                android:layout_width="match_parent"
+                android:layout_height="100.0dp"
+                android:layout_above="@+id/PartyDetailsPartyOrganizersLayout"
+                android:layout_alignParentRight="true" >
 
-                <TextView
-                    android:id="@+id/textView7"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:text="@string/partydetails_prompt"
-                    android:textColor="#d3d3d3"
-                    android:textSize="13.0sp" />
-            </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/PartyDetailsPartakeLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:id="@+id/textView6"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15.0dp"
+                        android:text="参与"
+                        android:textColor="#959595"
+                        android:textSize="15.0sp" />
+
+                    <TextView
+                        android:id="@+id/PartyDetailsPartakeNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="15.0dp"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#55d4cc"
+                        android:textSize="30.0sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/PartyDetailsNotSayLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1" >
+
+                    <TextView
+                        android:id="@+id/textView8"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentTop="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginTop="15.0dp"
+                        android:text="未表态"
+                        android:textColor="#959595"
+                        android:textSize="15.0sp" />
+
+                    <TextView
+                        android:id="@+id/PartyDetailsNotSayNumber"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerHorizontal="true"
+                        android:layout_marginBottom="15.0dp"
+                        android:gravity="center"
+                        android:text="0"
+                        android:textColor="#55d4cc"
+                        android:textSize="30.0sp"
+                        android:textStyle="bold" />
+
+                </RelativeLayout>
+            </LinearLayout>
 
             <RelativeLayout
                 android:id="@+id/PartyDetails_apply_layout"
@@ -298,20 +373,32 @@
             </RelativeLayout>
 
             <RelativeLayout
-                android:id="@+id/PartyDetails_party_organizer_layout"
+                android:id="@+id/PartyDetailsPartyOrganizersLayout"
                 android:layout_width="match_parent"
-                android:layout_height="30.0dp"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/PartyDetails_prompt"
-                android:layout_marginTop="32dp" >
+                android:layout_height="40.0dp"
+                android:layout_above="@+id/PartyDetails_apply_layout"
+                android:layout_alignParentLeft="true" >
+
+                <ImageView
+                    android:id="@+id/PartyDetailsPartyOrganizersHead"
+                    android:layout_width="23.0dp"
+                    android:layout_height="23.0dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginLeft="130.0dp"
+                    android:src="@drawable/yuan_6" />
 
                 <TextView
-                    android:id="@+id/PartyDetails_party_organizer"
-                    android:layout_width="wrap_content"
+                    android:id="@+id/PartyDetailsPartyOrganizersName"
+                    android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:text="@string/partydetails_party_organizer"
+                    android:layout_marginLeft="10.0dp"
+                    android:layout_marginRight="20.0dp"
+                    android:layout_toRightOf="@+id/PartyDetailsPartyOrganizersHead"
+                    android:gravity="left|center"
+                    android:singleLine="true"
+                    android:textColor="#959595"
                     android:textSize="13.0sp" />
             </RelativeLayout>
         </RelativeLayout>

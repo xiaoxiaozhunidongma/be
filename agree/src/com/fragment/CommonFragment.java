@@ -19,8 +19,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.view.animation.TranslateAnimation;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.biju.R;
@@ -30,12 +32,14 @@ import com.biju.R;
  *
  */
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-@SuppressLint("ResourceAsColor")
+@SuppressLint({ "ResourceAsColor", "NewApi" })
 public class CommonFragment extends Fragment implements OnClickListener {
 
 	private int[] mTextviewResIds = new int[] { R.id.tv_1, R.id.tv_2, R.id.tv_3 };
 	private View mLayout;
 	private ViewPager mPager;
+	public static GetOpen getOpen;
+	public static GetClose getClose;
 
 	// 保存上一次滑动的像素,为了判断当前viewpager是向左还是向右滑动
 	// private int lastoffset;
@@ -56,7 +60,38 @@ public class CommonFragment extends Fragment implements OnClickListener {
 		getScreenWidth();
 		initUI(mLayout);
 		initPager(mLayout);
+		initOpen();//覆盖色打开调用接口
+		initClose();//覆盖色关闭调用接口
 		return mLayout;
+	}
+
+	private void initClose() {
+		GetClose getClose=new GetClose(){
+
+			@Override
+			public void Close() {
+				mCommonBackground.setVisibility(View.GONE);
+				Animation animation=new AlphaAnimation(1.0f,0.0f);
+				animation.setDuration(500);
+				mCommonBackground.startAnimation(animation);
+			}
+		};
+		this.getClose=getClose;
+	}
+
+	private void initOpen() {
+		GetOpen getOpen=new GetOpen(){
+
+			@Override
+			public void Open() {
+				mCommonBackground.setVisibility(View.VISIBLE);
+				Animation animation=new AlphaAnimation(0.5f,1.0f);
+				animation.setDuration(300);
+				mCommonBackground.startAnimation(animation);
+			}
+			
+		};
+		this.getOpen=getOpen;
 	}
 
 	// 获取屏幕宽度
@@ -81,6 +116,9 @@ public class CommonFragment extends Fragment implements OnClickListener {
 		tv_1.setCompoundDrawables(drawable, null, null, null);
 		current_realwidth = getScreenWidth();
 		mCommon_ArticleIndicates.setWidth(current_realwidth / 3);// 设置滑块的长度
+		
+		mCommonBackground = (RelativeLayout) mLayout.findViewById(R.id.CommonBackground);//覆盖色
+		
 	}
 
 	// viewpaer滑动监听
@@ -166,6 +204,7 @@ public class CommonFragment extends Fragment implements OnClickListener {
 
 		}
 	};
+	private RelativeLayout mCommonBackground;
 
 	private void initPager(View mLayout2) {
 		mPager = (ViewPager) mLayout.findViewById(R.id.pager);
@@ -223,4 +262,11 @@ public class CommonFragment extends Fragment implements OnClickListener {
 		Log.e("CommonFragment", "调用了这个onActivityResult");
 	}
 
+	public interface GetOpen{
+		void Open();
+	}
+	public interface GetClose{
+		void Close();
+	}
+	
 }

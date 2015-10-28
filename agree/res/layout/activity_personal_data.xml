@@ -45,7 +45,6 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/PersonalDataTitleLayout"
         android:layout_centerHorizontal="true"
-        android:background="#88000000"
          >
 
         <RelativeLayout
@@ -97,11 +96,11 @@
                 android:layout_centerHorizontal="true"
                 android:layout_marginTop="25.0dp"
                 android:text="Name"
-                android:textSize="15.0sp"
                 android:textColor="#000000"
-                 />
+                android:textSize="15.0sp" />
 
             <RelativeLayout
+                android:id="@+id/relativeLayout4"
                 android:layout_width="match_parent"
                 android:layout_height="150.0dp"
                 android:layout_below="@+id/PersonalDataName"
@@ -178,16 +177,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="50.0dp"
                     android:layout_below="@+id/relativeLayout3"
-                    android:layout_centerHorizontal="true"
-                     >
+                    android:layout_centerHorizontal="true" >
 
                     <TextView
                         android:id="@+id/textView6"
                         android:layout_width="match_parent"
                         android:layout_height="0.50dp"
                         android:layout_alignParentBottom="true"
-                        android:background="#aaaaaa"
-                        />
+                        android:background="#aaaaaa" />
 
                     <Button
                         android:id="@+id/PersonalDataDirectMessagesBut"
@@ -201,12 +198,20 @@
                         android:gravity="left|center"
                         android:paddingLeft="20.0dp"
                         android:text="私信ta"
-                        android:textSize="13.0sp"/>
-
+                        android:textSize="13.0sp" />
                 </RelativeLayout>
             </RelativeLayout>
 
         </RelativeLayout>
+            <RelativeLayout
+                android:id="@+id/PersonalDataBackground"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="#cc000000"
+                android:visibility="gone"
+                 >
+
+            </RelativeLayout>
 
     </RelativeLayout>
 

@@ -38,8 +38,10 @@ import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.produceRequestCodeListenner;
 import com.biju.Interface.readAllPerRelationListenner;
+import com.biju.chatroom.PersonalDataActivity;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.fragment.CommonFragment;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
@@ -63,6 +65,8 @@ public class SlidingActivity extends Activity implements OnClickListener {
 	private Interface sildingInterface;
 	private int isClick=0;
 	private boolean MainClikc;
+	private RelativeLayout mSliding_OK_layout;
+	private boolean source;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -71,7 +75,8 @@ public class SlidingActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.activity_sliding);
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("group_group", 0);
-
+		source = intent.getBooleanExtra("PersonalData", false);
+		
 		initUI();
 		initSlidingMenuUI();// 侧滑ui
 		initInterface();
@@ -162,10 +167,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 							Group_Readalluser_List.add(readAllUser);
 						}
 					}
-					if (Group_Readalluser_List.size() > 0) {
-						mSlidingMenu_member_listView.setAdapter(adapter);
-						adapter.notifyDataSetChanged();
-					}
+					adapter.notifyDataSetChanged();
 				}
 			}
 
@@ -183,13 +185,19 @@ public class SlidingActivity extends Activity implements OnClickListener {
 		mSlidingMenu_requestcode.setOnClickListener(this);// 生成小组邀请码
 		mSlidingMenu_requestcode_code = (TextView) findViewById(R.id.SlidingMenu_requestcode_code);// 显示所生成的邀请码
 		mSlidingMenu_member_listView = (ListView) findViewById(R.id.SlidingMenu_member_listView);// listview
+		View mFooterView= View.inflate(SlidingActivity.this, R.layout.sliding_footer_item, null);
+		RelativeLayout SlidingFooterLayout=(RelativeLayout) mFooterView.findViewById(R.id.SlidingFooterLayout);
+		mSlidingMenu_member_listView.addFooterView(mFooterView);
 		adapter = new MyMemBerAdapter();
+		mSlidingMenu_member_listView.setAdapter(adapter);
 	}
 
 	private void initUI() {
-		findViewById(R.id.Sliding_OK_layout).setOnClickListener(this);
+		mSliding_OK_layout = (RelativeLayout) findViewById(R.id.Sliding_OK_layout);
+		mSliding_OK_layout.setOnClickListener(this);
 		findViewById(R.id.Sliding_back_layout).setOnClickListener(this);
 		findViewById(R.id.Sliding_noshow_layout).setOnClickListener(this);
+		findViewById(R.id.Sliding_show_layout).setOnClickListener(this);
 	}
 
 	class ViewHOlder {
@@ -307,6 +315,11 @@ public class SlidingActivity extends Activity implements OnClickListener {
 		GroupActivity.getSliding.SlidingClick();//调用时改变字
 		finish();
 		overridePendingTransition(R.anim.left, R.anim.right);
+		if(source){
+			PersonalDataActivity.getClose.Close();
+		}else {
+			CommonFragment.getClose.Close();
+		}
 	}
 
 	private void SlidingMenu_requestcode() {
