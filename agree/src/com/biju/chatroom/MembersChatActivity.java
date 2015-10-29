@@ -1,5 +1,7 @@
 package com.biju.chatroom;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
@@ -29,6 +31,8 @@ import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.example.testleabcloud.ChatActivityLean;
+import com.fragment.FriendsFragment;
+import com.fragment.HomeFragment;
 
 public class MembersChatActivity extends Activity implements OnClickListener{
 
@@ -38,7 +42,7 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 	private String completeURL;
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
-	private List<User> membersChatList;
+	private ArrayList<User> membersChatList=new ArrayList<User>();
 	private MyMemberChatAdapter adapter;
 	private Integer sd_pk_user;
 
@@ -47,11 +51,22 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_members_chat);
 		sd_pk_user = SdPkUser.getsD_pk_user();
-		initUI();
-		membersChatList = SdPkUser.getUser();
-		if(membersChatList.size()>0){
-			mMembersChatListview.setAdapter(adapter);
+		
+		List<String> members = ChatActivityLean.conversation.getMembers();
+		members.remove(String.valueOf(sd_pk_user));//ÒÆ³ýµ±Ç°menber
+		membersChatList.clear();
+		for (int i = 0; i < members.size(); i++) {
+			String string = members.get(i);
+			User user = FriendsFragment.AllFriendsMap.get(Integer.valueOf(string));
+			membersChatList.add(user);
 		}
+		membersChatList.add(HomeFragment.readuser);
+		initUI();
+		
+//		membersChatList = SdPkUser.getUser();
+//		if(membersChatList.size()>0){
+//			mMembersChatListview.setAdapter(adapter);
+//		}
 	}
 
 	private void initUI() {
@@ -64,6 +79,7 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 		findViewById(R.id.MembersChatBackLayout).setOnClickListener(this);//·µ»Ø
 		mMembersChatListview = (ListView) findViewById(R.id.MembersChatListview);
 		adapter = new MyMemberChatAdapter();
+		mMembersChatListview.setAdapter(adapter);
 	}
 
 	class ViewHolder{

@@ -266,7 +266,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Log.e("GroupActivity", "调用了这个onActivityResult");
 		Log.e("GroupActivity", "调用了这个requestCode=="+requestCode);
 		Log.e("GroupActivity", "调用了这个data=="+data);
-		PhotoFragment2.onActivityResultInterface.onActivityResult(requestCode, resultCode, data);
+//		PhotoFragment2.onActivityResultInterface.onActivityResult(requestCode, resultCode, data);
 	}
 
 	public interface GetSliding {

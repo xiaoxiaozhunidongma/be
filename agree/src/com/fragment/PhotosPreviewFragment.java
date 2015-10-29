@@ -13,10 +13,10 @@ import com.BJ.javabean.Photo;
 import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.MyGridView;
 import com.biju.Interface;
-import com.biju.PhotoActivity;
 import com.biju.R;
 import com.biju.Interface.ReadGroupPartyAlllistenner;
 import com.biju.R.layout;
+import com.biju.chatroom.PhotoActivity;
 import com.biju.function.GroupActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -26,6 +26,7 @@ import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
@@ -129,6 +130,7 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 			// TODO Auto-generated method stub
 			View inflate = getActivity().getLayoutInflater().inflate(R.layout.preview_item,null);
 			MyGridView gridView = (MyGridView) inflate.findViewById(R.id.gv_partypreview);
+			View onclick_layout = inflate.findViewById(R.id.onclick_layout);
 			 MyAdapter2 myAdapter2 = new MyAdapter2();
 			gridView.setAdapter(myAdapter2);
 			
@@ -144,62 +146,29 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 			myAdapter2.setPhotos(photos);
 			myAdapter2.notifyDataSetChanged();
 			
+			final int pos=position;
+			onclick_layout.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+					Party4 party4 = returnData.get(pos);
+					String pk_party = party4.getPk_party();
+					ArrayList<Photo> photos = (ArrayList<Photo>) party4.getPhotos();
+					
+					Log.e("", "点击了跳转PhotoActivity");
+					Intent intent=new Intent(getActivity(), PhotoActivity.class);
+					intent.putExtra("pk_party", pk_party);
+					intent.putExtra("photos", photos);
+					startActivity(intent);
+				}
+			});
+			
 			
 			return inflate;
 		}
 		
 	}
 	
-//	/**
-//	 * 计算gridview高度
-//	 * @param gridView
-//	 */
-//	public static void setGridViewHeightBasedOnChildren(GridView gridView) {
-//		// 获取GridView对应的Adapter
-//		ListAdapter listAdapter = gridView.getAdapter();
-//		if (listAdapter == null) {
-//			return;
-//		}
-//		int rows;
-//		int columns = 10;
-//		int horizontalBorderHeight = 0;
-//		Class<?> clazz = gridView.getClass();
-//		try {
-//			// 利用反射，取得每行显示的个数
-//			Field column = clazz.getDeclaredField("mRequestedNumColumns");
-//			column.setAccessible(true);
-//			columns = (Integer) column.get(gridView);
-//			// 利用反射，取得横向分割线高度
-//			Field horizontalSpacing = clazz
-//					.getDeclaredField("mRequestedHorizontalSpacing");
-//			horizontalSpacing.setAccessible(true);
-//			horizontalBorderHeight = (Integer) horizontalSpacing.get(gridView);
-//		} catch (Exception e) {
-//			// TODO: handle exception
-//			e.printStackTrace();
-//		}
-//		// 判断数据总数除以每行个数是否整除。不能整除代表有多余，需要加一行
-//		if (listAdapter.getCount() % columns > 0) {
-//			rows = listAdapter.getCount() / columns + 1;
-//		} else {
-//			rows = listAdapter.getCount() / columns;
-//		}
-//		//行数最大为3行！
-//		if(rows>=3){
-//			rows=3;
-//		}
-//		int totalHeight = 0;
-//		for (int i = 0; i < rows; i++) { // 只计算每项高度*行数
-//			View listItem = listAdapter.getView(i, null, gridView);
-//			listItem.measure(0, 0); // 计算子项View 的宽高
-//			totalHeight += 90; // 统计所有子项的总高度
-//		}
-//		ViewGroup.LayoutParams params = gridView.getLayoutParams();
-//		params.height = totalHeight + horizontalBorderHeight * (rows - 1);// 最后加上分割线总高度
-//		Log.e("rows==="+rows, "rows==="+rows);
-//		Log.e("totalHeight==="+totalHeight, "horizontalBorderHeight * (rows - 1)==="+horizontalBorderHeight * (rows - 1));
-//		gridView.setLayoutParams(params);
-//	}
 	
 	class MyAdapter2 extends BaseAdapter{
 		List<Photo> photos=new ArrayList<Photo>();
@@ -250,15 +219,18 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
-		Party4 party4 = returnData.get(position);
-		String pk_party = party4.getPk_party();
-		ArrayList<Photo> photos = (ArrayList<Photo>) party4.getPhotos();
 		
-		Log.e("", "点击了跳转PhotoActivity");
-		Intent intent=new Intent(getActivity(), PhotoActivity.class);
-		intent.putExtra("pk_party", pk_party);
-		intent.putExtra("photos", photos);
-		startActivity(intent);
+		//此处用透明布局代替了！
+		
+//		Party4 party4 = returnData.get(position);
+//		String pk_party = party4.getPk_party();
+//		ArrayList<Photo> photos = (ArrayList<Photo>) party4.getPhotos();
+//		
+//		Log.e("", "点击了跳转PhotoActivity");
+//		Intent intent=new Intent(getActivity(), PhotoActivity.class);
+//		intent.putExtra("pk_party", pk_party);
+//		intent.putExtra("photos", photos);
+//		startActivity(intent);
 	}
 
 }

@@ -115,6 +115,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	public static GetMemberChat memberChat;
 	public static GetPersonal getPersonal;
 	public static GetChatRoomClickOK chatRoomClickOK;
+	private HashMap<Integer, String> fromAvaUrlMap;
 
 	public static ChatActivityLean getChatInstance() {
 		return chatInstance;
@@ -396,17 +397,24 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		}
 		return false;
 	}
+	
+	//异步更新头像接口
+	public static FromAvaUrlMapInter fromAvaUrlMapInter;
+	private String currUserUrl;
+	public interface FromAvaUrlMapInter{
+		void AvaSuccess(HashMap<Integer, String> fromAvaUrlMap );
+	}
 
+	@SuppressWarnings("unchecked")
 	public void initData(Intent intent) {
 		// ReadUserAllFriends mAllFriends = (ReadUserAllFriends)
 		// intent.getSerializableExtra("allFriends");
 		String conName = intent.getStringExtra("conName");
 		tochatname.setText(conName);
-		// String otherAvaUrl = intent.getStringExtra("otherAvaUrl");
-		@SuppressWarnings("unchecked")
-		HashMap<Integer, String> FromAvaUrlMap = (HashMap<Integer, String>) intent
+		fromAvaUrlMap = (HashMap<Integer, String>) intent
 				.getSerializableExtra("FromAvaUrlMap");
-		String CurrUserUrl = intent.getStringExtra("CurrUserUrl");
+		FromAvaUrlMapInterInter();//异步更新头像接口
+		currUserUrl = intent.getStringExtra("CurrUserUrl");
 		String convid = intent.getStringExtra(CONVID);
 		conversation = chatManager.lookUpConversationById(convid);
 		if (isConversationEmpty(conversation)) {
@@ -417,7 +425,18 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		messageAgent.setSendCallback(defaultSendCallback);// 回调监听！！！！！！！！！！！！！！！！！！
 		roomsTable.clearUnread(conversation.getConversationId());
 		conversationType = ConversationHelper.typeOfConversation(conversation);
-		bindAdapterToListView(conversationType, FromAvaUrlMap, CurrUserUrl);
+	}
+
+	private void FromAvaUrlMapInterInter() {
+		FromAvaUrlMapInter fromAvaUrlMapInter = new FromAvaUrlMapInter() {
+			
+			@Override
+			public void AvaSuccess(HashMap<Integer, String> fromAvaUrlMap) {
+				ChatActivityLean.this.fromAvaUrlMap=fromAvaUrlMap;
+				bindAdapterToListView(conversationType, fromAvaUrlMap, currUserUrl);
+			}
+		};
+		this.fromAvaUrlMapInter=fromAvaUrlMapInter;
 	}
 
 	@SuppressLint("NewApi")
@@ -974,8 +993,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 			String localImagePath) {
 		Log.e("ChatActivity", "imageMessage.URL==" + imageMessage.getFileUrl());
 		Log.e("ChatActivity", "localImagePath==" + localImagePath);
-		Intent intent = new Intent(ChatActivityLean.this,
-				PhotoViewActivity.class);
+		Intent intent = new Intent(ChatActivityLean.this,PhotoViewActivity.class);
 		intent.putExtra("FileUrl", imageMessage.getFileUrl());
 		intent.putExtra("localImagePath", localImagePath);
 		startActivityForResult(intent, 910);
