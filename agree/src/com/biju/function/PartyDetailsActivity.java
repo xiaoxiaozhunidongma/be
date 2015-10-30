@@ -574,7 +574,6 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 				party_user.setFk_party(pk_party);
 				party_user.setFk_user(sD_pk_user);
 				readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
-				Log.e("PartyDetailsActivity", "得到的getPk_party_user2222222222"+ pk_party_user);
 				Toast();
 			} else if (3 == mPay_type) {
 				Intent intent = new Intent(PartyDetailsActivity.this,PayBaseActivity.class);

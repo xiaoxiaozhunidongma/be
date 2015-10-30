@@ -551,9 +551,11 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 			
 			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
 			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1280);// 最长边限制为1280
-			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 1280);// 截取中间正方形
-			int height=centerSquareScaleBitmap.getHeight();
-			int width = centerSquareScaleBitmap.getWidth();
+			int height=limitLongScaleBitmap.getHeight();
+			int width = limitLongScaleBitmap.getWidth();
+			
+			Log.e("GraphicDetailsActivity", "高度========="+height);
+			Log.e("GraphicDetailsActivity", "宽度========="+width);
 			
 			ImageText imageText=new ImageText();
 			imageText.setType(2);

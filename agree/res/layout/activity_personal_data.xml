@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/PersonalDataTitleLayout"
         android:layout_width="match_parent"
-        android:layout_height="40.0dp"
+        android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
@@ -21,7 +21,7 @@
 
         <Button
             android:id="@+id/PersonalDataBack"
-            android:layout_width="60.0dp"
+            android:layout_width="65.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
@@ -30,7 +30,7 @@
 
         <Button
             android:id="@+id/PersonalDataOK"
-            android:layout_width="60.0dp"
+            android:layout_width="65.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"

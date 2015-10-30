@@ -9,13 +9,13 @@
         <RelativeLayout
         android:id="@+id/PhotoActivity_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
         <RelativeLayout
             android:id="@+id/PhotoActivity_back_layout"
-            android:layout_width="60dp"
+            android:layout_width="65dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
@@ -33,7 +33,7 @@
 
         <RelativeLayout
             android:id="@+id/PhotoActivity_detail_layout"
-            android:layout_width="60dp"
+            android:layout_width="65dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >

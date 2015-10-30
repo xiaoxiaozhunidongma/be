@@ -64,4 +64,7 @@
       <drawable name="but_white">#ffffff</drawable>
       <drawable name="but_lightblack">#d9d9d9</drawable>
       <drawable name="GroupBackground">#cc000000</drawable>
+      
+      <!-- 聚会列表参与时背景颜色为白色 -->
+      <drawable name="party_partake_background">#ffffff</drawable>
 </resources>

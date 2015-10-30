@@ -8,14 +8,14 @@
     <RelativeLayout
         android:id="@+id/ChangeChatNameTitleLayout"
         android:layout_width="match_parent"
-        android:layout_height="40.0dp"
+        android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:background="#ffffff" >
 
         <Button
             android:id="@+id/ChangeChatNameBackBut"
-            android:layout_width="60.0dp"
+            android:layout_width="65.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
@@ -26,7 +26,7 @@
 
         <Button
             android:id="@+id/ChangeChatNameOKBut"
-            android:layout_width="60.0dp"
+            android:layout_width="65.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"

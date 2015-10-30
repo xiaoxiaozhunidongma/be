@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/Setting_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="40.0dp"
+        android:layout_height="@dimen/title_height"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="@drawable/title_background" >

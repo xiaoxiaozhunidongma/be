@@ -112,15 +112,16 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-			mLayout = inflater.inflate(R.layout.activity_selectimg, container,false);
-			
-			//获取sd卡中的pk_user
-			SD_pk_user = SdPkUser.getsD_pk_user();
-			Log.e("PhotoFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
-			
-			Init(inflater);
-			initPhotoUplisten();
-			initGroupPhotoListen();
+			if(mLayout==null){
+				mLayout = inflater.inflate(R.layout.activity_selectimg, container,false);
+				
+				//获取sd卡中的pk_user
+				SD_pk_user = SdPkUser.getsD_pk_user();
+				Log.e("PhotoFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+				
+				Init(inflater);
+				initPhotoUplisten();
+				initGroupPhotoListen();
 //			Interface.getInstance().setOnActivityResultListener(new OnArticleSelectedListener() {
 //				
 //				@Override
@@ -135,10 +136,11 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 //					}
 //				}
 //			});
-			initOnActivityResult();
-			// 获取ossService和sampleBucket
-			ossService = MyApplication.getOssService();
-			sampleBucket = MyApplication.getSampleBucket();
+				initOnActivityResult();
+				// 获取ossService和sampleBucket
+				ossService = MyApplication.getOssService();
+				sampleBucket = MyApplication.getSampleBucket();
+			}
 		return mLayout;
 	}
 	
@@ -769,6 +771,11 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 		startActivity(intent);
 	}
 	
-	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
+	}
 	
 }

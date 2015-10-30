@@ -118,6 +118,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 	  *****************************************************************/
 	  private final String mMode = "00";
 	  private static String TN_URL_00 = "";
+	  private float mUnionPayMount;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,7 +133,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		sb = new StringBuffer();
 		
 		Intent intent = getIntent();
-		mPaymount = intent.getIntExtra(IConstant.Paymount, 0);
+		mPaymount = intent.getFloatExtra(IConstant.Paymount, 0);
 		mWeChatPayMount = String.valueOf(mPaymount * 100);// 微信支付金额// 测试完要*100，单位是分
 		mAliPayMount = String.valueOf(mPaymount);// 支付宝金额
 		mUnionPayMount = mPaymount;
@@ -169,10 +170,15 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 					app_secret = chatPayModes.getApp_secret();
 					mch_id = chatPayModes.getMch_id();
 					partner_id = chatPayModes.getPartner_id();
+					Log.e("PayActivity", "所得到的结果app_id========"+ app_id);
+					Log.e("PayActivity", "所得到的结果app_secret========"+ app_secret);
+					Log.e("PayActivity", "所得到的结果mch_id========"+ mch_id);
+					Log.e("PayActivity", "所得到的结果partner_id========"+ partner_id);
 					if (app_id != null) {
 						msgApi.registerApp(app_id);
 						GetPrepayIdTask getPrepayId = new GetPrepayIdTask();
 						getPrepayId.execute();
+						Log.e("PayActivity", "第一步========");
 					}
 				}
 			}
@@ -283,8 +289,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		mPayInterface.WeChatPay(PayBaseActivity.this, mWeChatPay);
 	}
 
-	private class GetPrepayIdTask extends
-			AsyncTask<Void, Void, Map<String, String>> {
+	private class GetPrepayIdTask extends AsyncTask<Void, Void, Map<String, String>> {
 		private ProgressDialog dialog;
 
 		@Override
@@ -296,14 +301,17 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		protected void onPostExecute(Map<String, String> result) {
 			if (dialog != null) {
 				dialog.dismiss();
+				Log.e("PayActivity", "第2步========");
 			}
 			sb.append("prepay_id\n" + result.get("prepay_id") + "\n\n");
 			resultunifiedorder = result;
-			Log.e("PayActivity", "所得到的结果result1111111========"+ resultunifiedorder);
-			Log.e("PayActivity", "所得到的结果result2222222========" + sb.toString());
-			Log.e("PayActivity","所得到的结果result3333333========"+ result.get("prepay_id").toString());
+			Log.e("PayActivity", "第3步========");
+//			Log.e("PayActivity", "所得到的结果result1111111========"+ resultunifiedorder);
+//			Log.e("PayActivity", "所得到的结果result2222222========" + sb.toString());
+//			Log.e("PayActivity","所得到的结果result3333333========"+ result.get("prepay_id").toString());
 			if (result.get("prepay_id").toString() != null) {
 				genPayReq();
+				Log.e("PayActivity", "第4步========");
 			}
 		}
 
@@ -357,20 +365,21 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		try {
 			String nonceStr = genNonceStr();
 			xml.append("</xml>");
-			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
+			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();//device_info=APP-001
 			packageParams.add(new BasicNameValuePair("appid", app_id));
-			packageParams.add(new BasicNameValuePair("body", mPayName));
+			packageParams.add(new BasicNameValuePair("body", "asd"));
+			packageParams.add(new BasicNameValuePair("device_info", "APP-001"));
 			packageParams.add(new BasicNameValuePair("input_charset", "UTF-8"));
 			packageParams.add(new BasicNameValuePair("mch_id", mch_id));
 			packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));
 			packageParams.add(new BasicNameValuePair("notify_url","http://121.40.35.3/test"));
 			packageParams.add(new BasicNameValuePair("out_trade_no",genOutTradNo()));
 			packageParams.add(new BasicNameValuePair("spbill_create_ip","127.0.0.1"));
-			packageParams.add(new BasicNameValuePair("total_fee",mWeChatPayMount));
+			packageParams.add(new BasicNameValuePair("total_fee","0.01"));
 			packageParams.add(new BasicNameValuePair("trade_type", "APP"));
 
 			String sign = genPackageSign(packageParams);
-			Log.e("PayActivity", "========" + sign);
+			Log.e("PayActivity", "sign========" + sign);
 			packageParams.add(new BasicNameValuePair("sign", sign));
 			String xmlstring = toXml(packageParams);
 			return new String(xmlstring.toString().getBytes(), "ISO-8859-1");
@@ -393,7 +402,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		}
 		sb.append("key=");
 		sb.append(partner_id);// app_key
-		Log.e("PayActivity", "==========" + sb.toString());
+		Log.e("PayActivity", "app_key==========" + sb.toString());
 		String packageSign = MD5.getMessageDigest(sb.toString().getBytes()).toUpperCase();
 		return packageSign;
 	}
@@ -427,7 +436,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		req.packageValue = "Sign=WXPay";
 		req.nonceStr = genNonceStr();
 		req.timeStamp = String.valueOf(genTimeStamp());
-
+		Log.e("PayActivity", "第5步========");
 		List<NameValuePair> signParams = new LinkedList<NameValuePair>();
 		signParams.add(new BasicNameValuePair("appid", req.appId));
 		signParams.add(new BasicNameValuePair("noncestr", req.nonceStr));
@@ -441,8 +450,9 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 	}
 
 	private void sendPayReq() {
-		// msgApi.registerApp(app_id);
+		msgApi.registerApp(app_id);
 		msgApi.sendReq(req);
+		Log.e("PayActivity", "第6步========");
 	}
 
 	private long genTimeStamp() {
@@ -675,7 +685,6 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 			}
 		};
 	};
-	private float mUnionPayMount;
 
 	// ////////////////////////////////////////////支付宝支付，以上
 	// ////////////////////////////////////////////银联支付,以下

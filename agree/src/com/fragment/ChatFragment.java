@@ -36,7 +36,6 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.Selection;
@@ -45,40 +44,30 @@ import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
-import android.view.inputmethod.InputMethodManager;
 import android.view.ViewGroup;
+import android.view.WindowManager;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
-import com.avos.avoscloud.im.v2.AVIMException;
-import com.avos.avoscloud.im.v2.AVIMMessage;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
-import com.avos.avoscloud.im.v2.callback.AVIMMessagesQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.biju.R;
-import com.biju.chatroom.PersonalDataActivity;
-import com.biju.function.GroupActivity;
 import com.example.testleabcloud.ChatActivityEventListener;
-import com.example.testleabcloud.ChatActivityLean;
 import com.example.testleabcloud.PhotoViewActivity;
-import com.example.testleabcloud.ChatActivityLean.CacheMessagesTask;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
@@ -176,8 +165,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 			Bundle savedInstanceState) {
 		// Inflate the layout for this fragment
 		if (mLayout == null) {
-			mLayout = inflater
-					.inflate(R.layout.leanchat_layout_groupchat, container, false);
+			mLayout = inflater.inflate(R.layout.leanchat_layout_groupchat, container, false);
 			
 		    commonInit();
 		    findView();

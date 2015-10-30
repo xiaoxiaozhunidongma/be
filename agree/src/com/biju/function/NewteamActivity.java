@@ -100,6 +100,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private byte[] bitmap2Bytes;
 	private String uUid;
 	private boolean isreaduser;
+	private int toastHeight;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -118,6 +119,14 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		Interface();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
 		format1 = sdf.format(new Date());
+		DisplayMetrics();
+	}
+	
+	private void DisplayMetrics() {
+		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int height = metric.heightPixels;   // 屏幕高度（像素）
+        toastHeight = height/4;
 	}
 
 	private void Interface() {
@@ -132,7 +141,20 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					Log.e("NewteamActivity", "小组ID" + A);
 					SdPkUser.setRefreshTeam(true);
 					finish();
+					toast();
 				}
+			}
+
+			private void toast() {
+				//自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+				Toast toast=new Toast(getApplicationContext());
+				toast.setGravity(Gravity.TOP, 0, toastHeight);
+				toast.setView(toastRoot);
+				toast.setDuration(100);
+				TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+				tv.setText("创建成功");
+				toast.show();
 			}
 
 			@Override
@@ -141,76 +163,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			}
 		});
 	}
-
-	private void readUser() {
-		ReadTeam(sD_pk_user);
-	}
-
-
-	private void ReadTeam(int pk_user) {
-		cregrouInter = Interface.getInstance();
-		User homeuser = new User();
-		homeuser.setPk_user(pk_user);
-		cregrouInter.readUserGroupMsg(NewteamActivity.this, homeuser);
-		cregrouInter.setPostListener(new readUserGroupMsgListenner() {
-
-			@Override
-			public void success(String A) {
-				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
-				int homeStatusMsg = homeback.getStatusMsg();
-				if (homeStatusMsg == 1) {
-					Log.e("NewteamActivity", "读取出的用户小组信息==========" + A);
-					List<Group> users = homeback.getReturnData();
-					if (users.size() > 0) {
-						for (int i = 0; i < users.size(); i++) {
-							Group readhomeuser_1 = users.get(i);
-							readuesrlist.add(readhomeuser_1);
-						}
-					}
-					for (int i = 0; i < readuesrlist.size(); i++) {
-						pk_group = readuesrlist.get(i).getPk_group();
-						if (String.valueOf(pk_group).equals(String.valueOf(readhomeuser.getPk_group()))) {
-							isreaduser = true;
-						}
-					}
-				}
-
-			}
-
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
-
-		// 读取用户小组信息使用邀请码添加后的监听
-		cregrouInter.setPostListener(new userJoin2gourpListenner() {
-
-			@Override
-			public void success(String A) {
-				RequestCodeback requestCodeback = GsonUtils.parseJson(A,
-						RequestCodeback.class);
-				Integer status = requestCodeback.getStatusMsg();
-				if (status == 1) {
-					Log.e("NewteamActivity", "读取用户小组信息使用邀请码添加后的===" + A);
-					SdPkUser.setRefreshTeam(true);
-					finish();
-				}
-			}
-
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
-	}
-
-//	private void initUpload() {
-//		// 注册签名
-//		UploadManager.authorize(APPID, USERID, SIGN);
-//		uploadManager = new UploadManager(NewteamActivity.this, "persistenceId");
-//
-//	}
 
 	private void initUI() {
 		mNewteam_name = (EditText) findViewById(R.id.NewTeam_teamname);// 小组名称
@@ -220,7 +172,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		mNewTeam_tv_head.setOnClickListener(this);// 选择小组头像
 		findViewById(R.id.NewTeam_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.NewTeam_back).setOnClickListener(this);// 返回
-		findViewById(R.id.NewTeam_OK_layout).setOnClickListener(this);// 完成
 		findViewById(R.id.NewTeam_OK_layout).setOnClickListener(this);// 完成
 		mNewteam_name.setFocusable(true);
 		mNewteam_name.setFocusableInTouchMode(true);
@@ -235,12 +186,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		}, 998);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.newteam, menu);
-		return true;
-	}
 
 	@Override
 	public void onClick(View v) {
@@ -292,18 +237,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			                	  group.setEm_id(conversation.getConversationId());//Em_id赋值传服务器
 			              		//上传OSS
 			              		OSSupload(ossData, bitmap2Bytes,uUid);
-//			                    AVIMTextMessage msg = new AVIMTextMessage();
-//			                    msg.setText("你们在哪儿？");
-//			                    // 发送消息
-//			                    conversation.sendMessage(msg, new AVIMConversationCallback() {
-//
-//			                      @Override
-//			                      public void done(AVIMException e) {
-//			                        if (e == null) {
-//			                          Log.d("Tom & Jerry", "发送成功！");
-//			                        }
-//			                      }
-//			                    });
 			                  }
 			                }
 			              });
