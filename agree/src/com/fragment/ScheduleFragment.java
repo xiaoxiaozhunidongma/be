@@ -91,6 +91,13 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	}
 	
 	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
+	}
+	
+	@Override
 	public void onResume() {
 		Log.e("ScheduleFragment", "Ω¯»Î¡ÀonResume() =========");
 		SharedPreferences PartyDetails_sp = getActivity().getSharedPreferences(IConstant.IsPartyDetails_, 0);
@@ -464,12 +471,5 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		intent.putExtra(IConstant.Fk_group, GroupActivity.getPk_group());
 		intent.putExtra(IConstant.IsSchedule, true);
 		startActivity(intent);
-	}
-	
-	@Override
-	public void onDestroyView() {
-		super.onDestroyView();
-		ViewGroup parent = (ViewGroup) mLayout.getParent();
-		parent.removeView(mLayout);
 	}
 }

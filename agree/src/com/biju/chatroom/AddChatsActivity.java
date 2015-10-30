@@ -15,6 +15,9 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -36,7 +39,7 @@ import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
 @SuppressLint("UseSparseArrays")
-public class AddChatsActivity extends Activity implements OnClickListener {
+public class AddChatsActivity extends Activity implements OnClickListener, OnItemClickListener {
 
 	private ListView listView;
 	private MyAdapter myAdapter;
@@ -44,9 +47,11 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 	private String beginStr = "http://picstyle.beagree.com/";
 	private String endStr = "@!";
 	final ArrayList<String> members=new ArrayList<String>();
+	final ArrayList<String> NicNameList=new ArrayList<String>();
 	@SuppressWarnings("unused")
 	private HashMap<Integer, String> HasKnowFromAvaUrlMap=new HashMap<Integer, String>();
-	private boolean isChoose;
+	private HashMap<Integer, Boolean> isSelectMap=new HashMap<Integer, Boolean>();
+	private boolean isSelected;
 	
 	
 	@Override
@@ -67,6 +72,7 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 		listView.setDividerHeight(0);
 		myAdapter = new MyAdapter();
 		listView.setAdapter(myAdapter);
+		listView.setOnItemClickListener(this);
 	}
 
 	private void readAllfriends() {
@@ -100,7 +106,6 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 		TextView ReadUserAllFriendsLine1;
 		TextView ReadUserAllFriendsLine2;
 		ImageView ReadUserAllFriends_choose;
-		RelativeLayout ReadUserAllFriendsLayout;
 	}
 	
 	class MyAdapter extends BaseAdapter{
@@ -133,7 +138,6 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 				holder.ReadUserAllFriendsLine1=(TextView) inflater.findViewById(R.id.ReadUserAllFriendsLine1);
 				holder.ReadUserAllFriendsLine2=(TextView) inflater.findViewById(R.id.ReadUserAllFriendsLine2);
 				holder.ReadUserAllFriends_choose=(ImageView) inflater.findViewById(R.id.ReadUserAllFriends_choose);
-				holder.ReadUserAllFriendsLayout=(RelativeLayout) inflater.findViewById(R.id.ReadUserAllFriendsLayout);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -155,26 +159,11 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 				holder.ReadUserAllFriendsLine1.setVisibility(View.GONE);
 				holder.ReadUserAllFriendsLine2.setVisibility(View.VISIBLE);
 			}
-			Choose(holder,position,pk_user);
+			
+			isSelectMap.put(position, false);//设置容器默认为false 即未选中
 			return inflater;
 		}
 
-		private void Choose(final ViewHolder holder, final int position, final Integer pk_user) {
-			holder.ReadUserAllFriendsLayout.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					isChoose=!isChoose;
-					if(isChoose){
-						holder.ReadUserAllFriends_choose.setVisibility(View.VISIBLE);
-						User user1 = userList.get(position);
-						members.add(String.valueOf(user1.getPk_user()));
-					}else {
-						holder.ReadUserAllFriends_choose.setVisibility(View.GONE);
-					}
-				}
-			});
-		}
 	}
 
 	@Override
@@ -206,9 +195,9 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 
 	private void AddFriends3OK() {
 		    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
-			Integer SD_pk_user = SdPkUser.getsD_pk_user();
+			final Integer SD_pk_user = SdPkUser.getsD_pk_user();
 			members.add(String.valueOf(SD_pk_user));//添加当前用户
-			Log.e("AddFriend3Activity", "members===="+members+members.size());
+			Log.e("AddChatsActivity", "members===="+members+members.size());
 		    AVIMClient curuser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
 		    // 与服务器连接
 		    curuser.open(new AVIMClientCallback() {
@@ -221,13 +210,14 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 		            attr.put("type",3);//1是群聊 ，3是聊天室
 
 					String convName="";
-					for (int i = 0; i < members.size(); i++) {
-						if(i!=members.size()-1){
-							convName=convName+members.get(i)+",";
-						}
-						if(i==members.size()-1){
-							convName=convName+members.get(i)+"的对话";
-						}
+					for (int i = 0; i < NicNameList.size(); i++) {
+							
+							if(i!=NicNameList.size()-1){
+								convName=convName+NicNameList.get(i)+",";
+							}
+							if(i==NicNameList.size()-1){
+								convName=convName+NicNameList.get(i)+"的对话";
+							}
 					}
 		            
 		          client.createConversation(members, convName, attr,
@@ -236,10 +226,11 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 		                @Override
 		                public void done(AVIMConversation conversation, AVIMException e) {
 		                  if (e == null) {
-		                	  Log.e("AddFriend3Activity", "聊天室对话创建成功！");
+		                	  Log.e("AddChatsActivity", "聊天室对话创建成功！");
 		          			final ChatManager chatManager = ChatManager.getInstance();
 								 chatManager.registerConversation(conversation);//注册对话
 								 members.clear();//最后情空
+								 NicNameList.clear();
 								 finish();//返回
 		              		//上传OSS
 //		              		OSSupload(ossData, bitmap2Bytes,uUid);
@@ -263,4 +254,26 @@ public class AddChatsActivity extends Activity implements OnClickListener {
 		    });
 		    
 		  }
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		isSelected = isSelectMap.get(position);
+		isSelected=!isSelected;
+		isSelectMap.put(position, isSelected);
+		User user1 = userList.get(position);
+		if(isSelected){
+			view.findViewById(R.id.ReadUserAllFriends_choose).setVisibility(View.VISIBLE);
+//			holder.ReadUserAllFriends_choose.setVisibility(View.VISIBLE);
+				members.add(String.valueOf(user1.getPk_user()));
+			NicNameList.add(user1.getNickname());
+		}else {
+			view.findViewById(R.id.ReadUserAllFriends_choose).setVisibility(View.GONE);
+//			holder.ReadUserAllFriends_choose.setVisibility(View.GONE);
+			members.remove(String.valueOf(user1.getPk_user()));
+			NicNameList.remove(user1.getNickname());
+		}
+	
+	}
+
 }

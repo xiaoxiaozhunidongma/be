@@ -12,40 +12,6 @@ import android.graphics.BitmapFactory;
 
 public class Path2Bitmap {
 	public static Bitmap convertToBitmap(String path) throws IOException {
-//		BitmapFactory.Options opts = null;
-////		if (w > 0 && h > 0) {
-//			opts = new BitmapFactory.Options();
-//			opts.inJustDecodeBounds = true;
-//			BitmapFactory.decodeFile(path, opts);
-//			opts.inSampleSize = 1;
-////			final int minSideLength = Math.max(w, h);
-////			opts.inSampleSize = computeSampleSize(opts, minSideLength, w * h);
-////			Log.e("Path2Bitmap", "computeSampleSize=="+computeSampleSize(opts, minSideLength, w * h));
-//			opts.inJustDecodeBounds = false;
-//			opts.inInputShareable = true;
-//			opts.inPreferredConfig = Bitmap.Config.RGB_565;
-//			opts.inPurgeable = true;
-////		}
-//
-//
-//		Bitmap decodeFile = BitmapFactory.decodeFile(path, opts);
-//		WeakReference<Bitmap> weak=null;
-//		if(decodeFile!=null){
-//			 weak = new WeakReference<Bitmap>(decodeFile);
-//			 decodeFile.recycle();
-//		}
-////		SoftReference<Bitmap> weak = new SoftReference<Bitmap>(decodeFile);
-////		// return BitmapFactory.decodeFile(path, opts);
-//			 
-//		 Bitmap createBitmap = null;
-//		 if(weak!=null){
-//			  createBitmap = Bitmap.createBitmap(weak.get());
-//		 }
-//		//		ByteArrayOutputStream baos = new ByteArrayOutputStream();
-////		createBitmap.compress(Bitmap.CompressFormat.PNG, 50, baos);
-////		return decodeFile;
-//		return createBitmap;
-		// return Bitmap.createScaledBitmap(weak.get(), w, h, true);
 		
 		BufferedInputStream in = new BufferedInputStream(new FileInputStream(
 				new File(path)));
@@ -59,7 +25,7 @@ public class Path2Bitmap {
 
 
 		
-		Bitmap decodeStream = BitmapFactory.decodeStream(in, null, options);
+		BitmapFactory.decodeStream(in, null, options);
 		//decodeStreamÕâ¸öÎª¿Õ£¡
 		
 		in.close();

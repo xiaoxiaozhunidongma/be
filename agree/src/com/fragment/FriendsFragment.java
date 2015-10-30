@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
+import leanchatlib.controller.AVIMTypedMessagesArrayCallback;
 import leanchatlib.controller.ChatManager;
 import android.annotation.TargetApi;
 import android.content.Intent;
@@ -29,15 +30,20 @@ import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.SdPkUser;
+import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery.CachePolicy;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
 import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
+import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.biju.Interface;
 import com.biju.Interface.FindMultiUserListenner;
+import com.biju.Interface.MyAllfriendsListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.R;
 import com.biju.chatroom.AddChatsActivity;
@@ -70,9 +76,10 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 	private Integer SD_pk_user;
 	private String CurrUserUrl;
-	private List<AVIMConversation> convs=new ArrayList<AVIMConversation>();
+	private List<AVIMConversation> convs=new ArrayList<AVIMConversation>(); 
 	private Interface instance;
 	private HashMap<Integer, String> FromAvaUrlMap=new HashMap<Integer, String>();
+	public static HashMap<Integer, User> AllFriendsMap=new HashMap<Integer, User>();
 
 	public FriendsFragment() {
 		// Required empty public constructor
@@ -87,6 +94,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 			// 获取SD卡中的pk_user
 			SD_pk_user = SdPkUser.getsD_pk_user();
+			
+			
 			ReadUser();
 			Log.e("HomeFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
 
@@ -94,7 +103,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 //			LoginHuanXin();
 //			initInterface();
 			initFindUserlistener();
-			ReadUserAllFriends();
+			ReadUserAllFriends();//暂时没用
+			readAllfriends();//读取我的所有好友
 			mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.friends_swipe_refresh);
 			mFriends_swipe_refresh.setOnRefreshListener(this);
 
@@ -104,36 +114,45 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 					android.R.color.holo_green_light,
 					android.R.color.holo_blue_bright,
 					android.R.color.holo_orange_light);
+			
 		}
+		
+		
 		return mLayout;
+	}
+	
+	private void readAllfriends() {
+		User user=new User();
+		Integer getsD_pk_user = SdPkUser.getsD_pk_user();
+		user.setPk_user(getsD_pk_user);
+		instance.readMyAllfriend(getActivity(), user);
+		instance.setPostListener(new MyAllfriendsListenner() {
+			
+
+			@Override
+			public void success(String A) {
+				Log.e("AddFriends3Activity", "返回结果"+A);
+				Loginback loginbackread = GsonUtils.parseJson(A,
+						Loginback.class);
+				List<User> userList = loginbackread.getReturnData();
+				for (int i = 0; i < userList.size(); i++) {
+					User user2 = userList.get(i);
+					AllFriendsMap.put(user2.getPk_user(), user2);
+				}
+				adapter.notifyDataSetChanged();
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
 	}
 
 	private void initFindUserlistener() {
+		
 		instance = Interface.getInstance();
-//		instance.setPostListener(new findUserListenner() {
-//			
-//			@Override
-//			public void success(String A) {
-//				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,
-//						Loginback.class);
-//				int statusmsg = findfriends_statusmsg.getStatusMsg();
-//				if (statusmsg == 1) {
-//					// 取第一个Users[0]
-//					List<User> Users = findfriends_statusmsg.getReturnData();
-//					if (Users.size() >= 1) {
-//						User user = Users.get(0);
-//						String avatar_path = beginStr+user.getAvatar_path()+endStr+"mini-avatar";
-//						FromAvaUrlMap.put(user.getPk_user(), avatar_path);
-//					}
-//				} 
-//
-//			}
-//			
-//			@Override
-//			public void defail(Object B) {
-//				
-//			}
-//		});
+		
 		instance.setPostListener(new FindMultiUserListenner() {
 			
 			@Override
@@ -149,8 +168,10 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 					String avatar_path = beginStr+user.getAvatar_path()+endStr+"mini-avatar";
 					FromAvaUrlMap.put(user.getPk_user(), avatar_path);
 					}
-					SdPkUser.setUser(Users);//把容器传到成员列表界面
+					SdPkUser.setUser((ArrayList<User>) Users);//把容器传到成员列表界面
 					SdPkUser.setGetSource(true);//传个true说明是聊天室的
+					//查询完毕，异步更新头像
+					ChatActivityLean.fromAvaUrlMapInter.AvaSuccess(FromAvaUrlMap);
 				}
 			}
 			
@@ -164,36 +185,6 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	private void ReadUser() {
 		Interface instance = Interface.getInstance();
 		instance.setPostListener(new readUserListenner() {
-
-	//需要异步？？？？？？？？？？？？？？？？？？？？？？？？？？？
-//	private void LoginHuanXin() {
-//		Log.e("FriendsFragment~~~~~", "调用了LoginHuanXin（）");
-//		String str_pkuser = String.valueOf(SD_pk_user);
-//		
-//		Log.e("FriendsFragment~~~~~", "Integer.valueOf(pk_user)"+SD_pk_user);
-//		
-//		if(!"".equals(str_pkuser)){
-//			
-//			EMChatManager.getInstance().login(str_pkuser,
-//					"paopian",new EMCallBack() {//回调
-//				@Override
-//				public void onSuccess() {
-//					EMGroupManager.getInstance().loadAllGroups();
-//					EMChatManager.getInstance().loadAllConversations();
-//					Log.e("FriendsFragment~~~~~", "登陆聊天服务器成功！~~~~");		
-//				}
-//				
-//				@Override
-//				public void onProgress(int progress, String status) {
-//				}
-//				
-//				@Override
-//				public void onError(int code, String message) {
-//					Log.d("FriendsFragment~~~~~~", "登陆聊天服务器失败！~~~~");
-//				}
-//			});
-//		}
-//	}
 
 			@Override
 			public void success(String A) {
@@ -307,43 +298,6 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 //		addFriends_interface.readFriend(getActivity(), user);
 	}
 
-//	private void initInterface() {
-//		addFriends_interface = Interface.getInstance();
-//		addFriends_interface.setPostListener(new readFriendListenner() {
-//
-//			@Override
-//			public void success(String A) {
-//				AllFriends_List.clear();
-//				ReadUserAllFriendsback readUserAllFriendsback = GsonUtils
-//						.parseJson(A, ReadUserAllFriendsback.class);
-//				int status = readUserAllFriendsback.getStatusMsg();
-//				if (status == 1) {
-//					Log.e("FriendsFragment", "返回用户的所有已添加的好友========" + A);
-//					List<ReadUserAllFriends> readUserAllFriendslist = readUserAllFriendsback
-//							.getReturnData();
-//					if (readUserAllFriendslist.size() > 0) {
-//						for (int i = 0; i < readUserAllFriendslist.size(); i++) {
-//							ReadUserAllFriends userAllFriends = readUserAllFriendslist
-//									.get(i);
-//							AllFriends_List.add(userAllFriends);
-//						}
-//					}
-//					if (AllFriends_List.size() > 0) {
-//						mFriends_add_layout.setVisibility(View.VISIBLE);
-//						mFriends_add_tishi_layout.setVisibility(View.GONE);
-//						mFriends_listview.setAdapter(adapter);
-//					} else {
-//						mFriends_add_layout.setVisibility(View.GONE);
-//						mFriends_add_tishi_layout.setVisibility(View.VISIBLE);
-//					}
-//				}
-//			}
-//
-//			@Override
-//			public void defail(Object B) {
-//			}
-//		});
-//	}
 
 	private void initUI() {
 		mLayout.findViewById(R.id.tab_friends_addbuddy_layout).setOnClickListener(this);
@@ -362,9 +316,13 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		TextView PartyReadUserAllFriends_name;
 		TextView PartyReadUserAllFriendsLine1;
 		TextView PartyReadUserAllFriendsLine2;
+		public TextView tv_menmberNum;
+		public TextView tv_lastmsg;
 	}
 
 	class MyAdapter extends BaseAdapter {
+
+		private String completeURL="路径为空";
 
 		@Override
 		public int getCount() {
@@ -394,6 +352,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 				holder.PartyReadUserAllFriends_name = (TextView) inflater.findViewById(R.id.PartyReadUserAllFriends_name);
 				holder.PartyReadUserAllFriendsLine1=(TextView) inflater.findViewById(R.id.PartyReadUserAllFriendsLine1);
 				holder.PartyReadUserAllFriendsLine2=(TextView) inflater.findViewById(R.id.PartyReadUserAllFriendsLine2);
+				holder.tv_menmberNum = (TextView) inflater.findViewById(R.id.tv_menmberNum); 
+				holder.tv_lastmsg = (TextView) inflater.findViewById(R.id.tv_lastmsg); 
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -401,13 +361,35 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			}
 			
 			AVIMConversation avimConversation = convs.get(position);
+			readMsg(avimConversation,holder.tv_lastmsg);
 			String convName = avimConversation.getName();
 			holder.PartyReadUserAllFriends_name.setText(convName);
 			
-			String avatar_path = "http://ac-x3o016bx.clouddn.com/86O7RAPx2BtTW5zgZTPGNwH9RZD5vNDtPm1YbIcu";
-			String completeURL = beginStr + avatar_path + endStr+"mini-avatar";
-			ImageLoaderUtils.getInstance().LoadImageSquare(getActivity(),
-					"http://ac-x3o016bx.clouddn.com/86O7RAPx2BtTW5zgZTPGNwH9RZD5vNDtPm1YbIcu", holder.PartyReadUserAllFriends_head);
+			List<String> members = avimConversation.getMembers();
+			if(members.size()>2){
+				holder.tv_menmberNum.setVisibility(View.VISIBLE);
+				holder.tv_menmberNum.setText(String.valueOf(members.size()));
+				holder.PartyReadUserAllFriends_head.setImageResource(R.drawable.login_1);
+			}else{
+				holder.tv_menmberNum.setVisibility(View.GONE);
+				for (int i = 0; i < members.size(); i++) {
+					String string = members.get(i);
+					if(!String.valueOf(SD_pk_user).equals(string)){
+						User user = AllFriendsMap.get(Integer.valueOf(string));
+						Log.e("聊天记录头像", "YourFriendsMap.size=="+AllFriendsMap.size());
+						if(user!=null){
+							String avatar_path = user.getAvatar_path();
+							Log.e("聊天记录头像", "avatar_path=="+avatar_path);
+							completeURL = beginStr + avatar_path + endStr+"mini-avatar";
+							
+						}
+						Log.e("聊天记录头像", "completeURL=="+completeURL);
+						ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(),
+								completeURL, holder.PartyReadUserAllFriends_head);
+						
+					}
+				}
+			}
 
 			if(position==convs.size()-1){
 				holder.PartyReadUserAllFriendsLine1.setVisibility(View.VISIBLE);
@@ -433,6 +415,35 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 //					});
 
 			return inflater;
+		}
+
+		private void readMsg(AVIMConversation avimConversation, final TextView tv_lastmsg) {
+			ChatManager.getInstance().queryMessages(avimConversation, null, System.currentTimeMillis(), 1, new AVIMTypedMessagesArrayCallback() {
+				
+				@Override
+				public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
+					if(typedMessages.size()<=0){
+						tv_lastmsg.setText("无消息");
+					}else{
+						
+						AVIMTypedMessage avimTypedMessage = typedMessages.get(0);
+						AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(avimTypedMessage.getMessageType());
+						switch (type) {
+						case TextMessageType:
+							AVIMTextMessage textMsg = (AVIMTextMessage) avimTypedMessage;
+							tv_lastmsg.setText(textMsg.getText());
+							break;
+						case ImageMessageType:
+							tv_lastmsg.setText("["+"图片"+"]");
+							break;
+							
+						default:
+							break;
+						}
+						
+					}
+				}
+			});
 		}
 
 	}

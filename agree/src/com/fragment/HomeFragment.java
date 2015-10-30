@@ -114,6 +114,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private int pk_group;
 	private String group_name;
 	private Group group;
+	public static  User readuser;
 
 	public String getSDPath() {
 		File sdDir = null;
@@ -315,6 +316,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		homeInterface.setPostListener(new readUserListenner() {
 			
 
+
 			@Override
 			public void success(String A) {
 				Loginback loginbackread = GsonUtils.parseJson(A,
@@ -324,7 +326,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					// 取第一个Users[0]
 					List<User> Users = loginbackread.getReturnData();
 					if (Users.size() >= 1) {
-						User readuser = Users.get(0);
+						readuser = Users.get(0);
 						String mAvatar_path = readuser.getAvatar_path();
 						currUserUrl = beginStr + mAvatar_path + endStr+"mini-avatar";
 					}

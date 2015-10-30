@@ -101,6 +101,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private String uUid;
 	private float Pay_amount=0;
 	private Integer type=1;
+	private int reUploadNum=3;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -143,6 +144,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private void initDB() {
 		GraphicDetailsList = new Select().from(ImageText.class).execute();
 		Log.e("AddNewPartyActivity", "GraphicDetailsList的长度======"+GraphicDetailsList.size());
+		ImageDetailsList.clear();//先清空
 		for (int i = 0; i < GraphicDetailsList.size(); i++) {
 			ImageText imageText=GraphicDetailsList.get(i);
 			Integer type=imageText.getType();
@@ -153,7 +155,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		}
 		Log.e("AddNewPartyActivity", "ImageDetailsList的长度======"+ImageDetailsList.size());
 		if(ImageDetailsList.size()>0){
-			ImageOSS();//然后进行图片上传
+			ImageOSSQueue();//然后进行图片上传
+//			ImageOSS();//然后进行图片上传
 		}else {
 			FoundParty();//直接进行聚会的创建
 		}
@@ -164,6 +167,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		PartyComplete(fk_party);
 	}
 
+	
 	private void ImageOSS() {
 		for (int j = 0; j < ImageDetailsList.size(); j++) {
 			ImageText text=ImageDetailsList.get(j);
@@ -177,10 +181,30 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
 				UUID uuid = UUID.randomUUID();
 				uniqueId = uuid.toString();
+				OSSupload(ossData, bitmap2Bytes, uniqueId,imagePath,fk_party);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			OSSupload(ossData, bitmap2Bytes, uniqueId,imagePath,fk_party);
+		}
+	}
+	//队列模式上传
+	private void ImageOSSQueue() {
+		if(ImageDetailsList.size()>0){
+			ImageText text=ImageDetailsList.get(0);
+			String imagePath=text.getImage_path();
+			String fk_party=text.getFk_party();
+			Bitmap convertToBitmap;
+			try {
+				convertToBitmap = Path2Bitmap.convertToBitmap(imagePath);
+				Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
+						convertToBitmap, 1280);// 最长边限制为1280
+				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
+				UUID uuid = UUID.randomUUID();
+				uniqueId = uuid.toString();
+				OSSupload(ossData, bitmap2Bytes, uniqueId,imagePath,fk_party);
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
 		}
 	}
 
@@ -191,13 +215,25 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		ossData.uploadInBackground(new SaveCallback() {
 			@Override
 			public void onSuccess(String objectKey) {
-				Log.e("", "图片上传成功");
-				Log.e("Main", "objectKey==" + objectKey);
+				Log.e("AddNewPartyActivity", "图片上传成功"+ImageDetailsList.size());
+				Log.e("AddNewPartyActivity", "objectKey==" + objectKey);
 					objectKeyList.add(objectKey);
 					ImageText imageText2=new Select().from(ImageText.class).where("image_path=?", imagePath).executeSingle();
 					imageText2.setImage_path(objectKey);
 					imageText2.save();
-					if(objectKeyList.size()==ImageDetailsList.size()){
+//					if(objectKeyList.size()==ImageDetailsList.size()){
+//						//第二次查表
+//						GraphicDetailsList2.clear();
+//						GraphicDetailsList2 = new Select().from(ImageText.class).execute();
+//						PartyComplete(fk_party);
+//					}
+					reUploadNum=3;//如果上传成功,恢复次数为3
+					
+					ImageDetailsList.remove(0);//删除第一个
+					Log.e("AddNewPartyActivity", "成功：ImageDetailsList.size()=="+ImageDetailsList.size());
+					if(ImageDetailsList.size()>0){
+						ImageOSSQueue();//递归模式调用自身
+					}else{
 						//第二次查表
 						GraphicDetailsList2.clear();
 						GraphicDetailsList2 = new Select().from(ImageText.class).execute();
@@ -212,7 +248,16 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
-				Log.e("", "图片上传失败" + ossException.toString());
+				Log.e("AddNewPartyActivity", "图片上传失败" + ossException.toString());
+				Log.e("AddNewPartyActivity", "失败：ImageDetailsList.size()=="+ImageDetailsList.size());
+				Log.e("AddNewPartyActivity", "图片上传失败objectKey==" + objectKey);
+				//失败时候 自动重新上传
+				if(ImageDetailsList.size()>0){
+					if(reUploadNum>0){
+						ImageOSSQueue();//递归模式调用自身
+						reUploadNum--;
+					}
+				}
 			}
 		});
 	

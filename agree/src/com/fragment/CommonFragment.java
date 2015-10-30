@@ -59,6 +59,7 @@ public class CommonFragment extends Fragment implements OnClickListener {
 			initClose();//覆盖色关闭调用接口
 		return mLayout1;
 	}
+	
 
 	private void initClose() {
 		GetClose getClose=new GetClose(){

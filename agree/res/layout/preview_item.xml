@@ -4,53 +4,59 @@
     android:layout_height="match_parent" 
     android:descendantFocusability="blocksDescendants">
 
-    <RelativeLayout
-        android:id="@+id/relativeLayout1"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="10dp" >
 
-        <TextView
-            android:id="@+id/tv_partyname"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
-            android:text="TextView" />
+            android:layout_marginTop="10dp" >
 
-        <TextView
-            android:id="@+id/tv_partytime"
-            android:layout_width="wrap_content"
+            <TextView
+                android:id="@+id/tv_partyname"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="5dp"
+                android:text="TextView" />
+
+            <TextView
+                android:id="@+id/tv_partytime"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/tv_partyname"
+                android:layout_marginLeft="5dp"
+                android:text="Small Text"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <TextView
+                android:id="@+id/tv_partyphotonum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="18dp"
+                android:text="50" />
+        </RelativeLayout>
+
+        <com.BJ.utils.MyGridView
+            android:id="@+id/gv_partypreview"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/relativeLayout1"
+            android:clickable="false"
+            android:numColumns="10" >
+
+        </com.BJ.utils.MyGridView>
+
+        <RelativeLayout
+            android:id="@+id/onclick_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/tv_partyname"
-            android:layout_marginLeft="5dp"
-            android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:layout_alignTop="@+id/relativeLayout1" 
+            android:layout_alignBottom="@+id/gv_partypreview">
 
-        <TextView
-            android:id="@+id/tv_partyphotonum"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="18dp"
-            android:text="50" />
-
-    </RelativeLayout>
-
-    <com.BJ.utils.MyGridView
-        android:id="@+id/gv_partypreview"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/relativeLayout1"
-        android:numColumns="10" 
-        android:clickable="false"
-        >
-
-    </com.BJ.utils.MyGridView>
+        </RelativeLayout>
 
 </RelativeLayout>

@@ -38,7 +38,7 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 	private List<ImageText> GraphicPreviewList=new ArrayList<ImageText>();
 	private MyGraphicPreviewAdapter adapter;
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "@!";
+	private String endStr = "";
 	private String LIGHTGRAYCOLOR = "#C4C4C4";
 	private String DARKGRAYCOLOR = "#43434C";
 	private String BLACKCOLOR = "#040404";
@@ -163,7 +163,7 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				
 				String mPath=imageText.getImage_path();
 				Log.e("GraphicPreviewActivity", "获取到的图片路径======"+mPath);
-				String completeURL = beginStr + mPath + endStr+ "group-front-cover";
+				String completeURL = beginStr + mPath + endStr;
 				Log.e("GraphicPreviewActivity", "获取到的图片路径completeURL======"+completeURL);
 				PreferenceUtils.saveImageCache(GraphicPreviewActivity.this, completeURL);// 存SP
 				GraphicImageLoaderUtils.getInstance().LoadImage(GraphicPreviewActivity.this,completeURL, holder.GraphicPreviewImageView);

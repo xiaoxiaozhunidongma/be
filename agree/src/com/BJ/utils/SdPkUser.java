@@ -1,5 +1,6 @@
 package com.BJ.utils;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import com.BJ.javabean.Group;
@@ -176,12 +177,12 @@ public class SdPkUser {
 	}
 	
 	//聊天室界面传User给成员界面
-	public static List<User> User;
-	public static List<User> getUser() {
+	public static ArrayList<User> User;
+	public static ArrayList<User> getUser() {
 		return User;
 	}
 
-	public static void setUser(List<User> user) {
+	public static void setUser(ArrayList<User> user) {
 		User = user;
 	}
 	//聊天室界面传创建者ID给成员界面

@@ -37,7 +37,7 @@ public class LimitLong {
 	        	  Log.e("", "result对象是否空"+result);
 	        	  Log.e("", "限制图长=="+width);
 	        	  Log.e("", "限制图高=="+height);
-//	        	  bitmap.recycle();
+//	        	  bitmap.recycle();//释放图片对象，这里不能释放，后面的会有Compass对象已经被释放的问题
 	          }
 	          catch(Exception e){
 	           return null;

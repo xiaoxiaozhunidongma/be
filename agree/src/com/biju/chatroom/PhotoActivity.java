@@ -1,4 +1,4 @@
-package com.biju;
+package com.biju.chatroom;
 
 import java.io.File;
 import java.io.IOException;
@@ -22,13 +22,17 @@ import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSData;
+import com.biju.Interface;
+import com.biju.R;
 import com.biju.APP.MyApplication;
 import com.biju.Interface.readPartyPhotosListenner;
 import com.biju.Interface.uploadingPhotoListenner;
-import com.biju.chatroom.MyGalleryActivity;
+import com.biju.R.anim;
+import com.biju.R.id;
+import com.biju.R.layout;
+import com.biju.R.menu;
 import com.biju.function.GroupActivity;
 import com.fragment.PhotoFragment2.GridAdapter;
-import com.fragment.PhotoFragment2.onActivityResultInterface;
 import com.fragment.PhotoFragment2.GridAdapter.ViewHolder;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -93,7 +97,6 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 	private String mFilePath;
 	public static ArrayList<Bitmap> bitmaps=new ArrayList<Bitmap>();
 	private boolean hasloaded;
-	public static onActivityResultInterface onActivityResultInterface;
 	private OSSData ossData;
 	private OSSService ossService;
 	private OSSBucket sampleBucket;

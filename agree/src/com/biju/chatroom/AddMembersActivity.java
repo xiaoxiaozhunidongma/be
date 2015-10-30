@@ -15,6 +15,8 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -38,7 +40,7 @@ import com.example.testleabcloud.ChatActivityLean;
 import com.github.volley_examples.utils.GsonUtils;
 
 @SuppressLint("UseSparseArrays")
-public class AddMembersActivity extends Activity implements OnClickListener {
+public class AddMembersActivity extends Activity implements OnClickListener, OnItemClickListener {
 
 	private ListView listView;
 	private MyAdapter myAdapter;
@@ -48,7 +50,10 @@ public class AddMembersActivity extends Activity implements OnClickListener {
 	final ArrayList<String> members=new ArrayList<String>();
 	@SuppressWarnings("unused")
 	private HashMap<Integer, String> HasKnowFromAvaUrlMap=new HashMap<Integer, String>();
-	private boolean isChoose;
+	private HashMap<Integer, String> AllfriendMap=new HashMap<Integer, String>();
+	final ArrayList<String> NicNameList=new ArrayList<String>();
+	private HashMap<Integer, Boolean> isSelectMap=new HashMap<Integer, Boolean>();
+	private boolean isSelected;
 	
 	
 	@Override
@@ -69,6 +74,7 @@ public class AddMembersActivity extends Activity implements OnClickListener {
 		listView.setDividerHeight(0);
 		myAdapter = new MyAdapter();
 		listView.setAdapter(myAdapter);
+		listView.setOnItemClickListener(this);
 	}
 
 	private void readAllfriends() {
@@ -86,6 +92,11 @@ public class AddMembersActivity extends Activity implements OnClickListener {
 				Loginback loginbackread = GsonUtils.parseJson(A,
 						Loginback.class);
 				userList = loginbackread.getReturnData();
+				AllfriendMap.clear();
+				for (int i = 0; i < userList.size(); i++) {
+					User user2 = userList.get(i);
+					AllfriendMap.put(user2.getPk_user(), user2.getNickname());
+				}
 				myAdapter.notifyDataSetChanged();//刷新
 			}
 			
@@ -157,26 +168,11 @@ public class AddMembersActivity extends Activity implements OnClickListener {
 				holder.ReadUserAllFriendsLine1.setVisibility(View.GONE);
 				holder.ReadUserAllFriendsLine2.setVisibility(View.VISIBLE);
 			}
-			Choose(holder,position,pk_user);
+			
+			isSelectMap.put(position, false);//设置容器默认为false 即未选中
 			return inflater;
 		}
 
-		private void Choose(final ViewHolder holder, final int position, final Integer pk_user) {
-			holder.ReadUserAllFriendsLayout.setOnClickListener(new OnClickListener() {
-				
-				@Override
-				public void onClick(View v) {
-					isChoose=!isChoose;
-					if(isChoose){
-						holder.ReadUserAllFriends_choose.setVisibility(View.VISIBLE);
-						User user1 = userList.get(position);
-						members.add(String.valueOf(user1.getPk_user()));
-					}else {
-						holder.ReadUserAllFriends_choose.setVisibility(View.GONE);
-					}
-				}
-			});
-		}
 	}
 
 	@Override
@@ -208,7 +204,7 @@ public class AddMembersActivity extends Activity implements OnClickListener {
 
 	private void AddFriends3OK() {
 		    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
-			Integer SD_pk_user = SdPkUser.getsD_pk_user();
+			final Integer SD_pk_user = SdPkUser.getsD_pk_user();
 			
 			 AVIMClient currUser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
 			 currUser.open(new AVIMClientCallback() {
@@ -229,14 +225,23 @@ public class AddMembersActivity extends Activity implements OnClickListener {
 			                	  Log.e("AddMembersActivity", "添加成员成功："+members.toString());
 			                	  
 			                	  List<String> list = ChatActivityLean.conversation.getMembers();
+			                	  NicNameList.clear();//先清空
+			                	  for (int i = 0; i < list.size(); i++) {
+			                		  String string = list.get(i);
+			                		  String NicName = AllfriendMap.get(Integer.valueOf(string));
+			                		  NicNameList.add(NicName);
+			                	  }
+			                	  NicNameList.remove(String.valueOf(SD_pk_user));//移除当前用户
+			                	  
 			  					String convName="";
-								for (int i = 0; i < list.size(); i++) {
-									if(i!=list.size()-1){
-										convName=convName+list.get(i)+",";
-									}
-									if(i==list.size()-1){
-										convName=convName+list.get(i)+"的对话";
-									}
+								for (int i = 0; i < NicNameList.size(); i++) {
+										
+										if(i!=NicNameList.size()-1){
+											convName=convName+NicNameList.get(i)+",";
+										}
+										if(i==NicNameList.size()-1){
+											convName=convName+NicNameList.get(i)+"的对话";
+										}
 								}
 								ChatActivityLean.conversation.setName(convName);
 								
@@ -251,4 +256,23 @@ public class AddMembersActivity extends Activity implements OnClickListener {
 			    });
 
 		  }
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position,
+			long id) {
+		isSelected = isSelectMap.get(position);
+		isSelected=!isSelected;
+		isSelectMap.put(position, isSelected);
+		User user1 = userList.get(position);
+		if(isSelected){
+			view.findViewById(R.id.ReadUserAllFriends_choose).setVisibility(View.VISIBLE);
+//			holder.ReadUserAllFriends_choose.setVisibility(View.VISIBLE);
+				members.add(String.valueOf(user1.getPk_user()));
+		}else {
+			view.findViewById(R.id.ReadUserAllFriends_choose).setVisibility(View.GONE);
+//			holder.ReadUserAllFriends_choose.setVisibility(View.GONE);
+			members.remove(String.valueOf(user1.getPk_user()));
+		}
+	
+	}
 }
