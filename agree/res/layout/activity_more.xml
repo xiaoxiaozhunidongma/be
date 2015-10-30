@@ -26,11 +26,12 @@
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
             android:layout_margin="5.0dp"
-            android:background="#e3e3e3"
+            android:background="#efefef"
             android:gravity="center"
             android:text="@string/more_title_cancel"
             android:textColor="#000000"
-            android:textSize="20.0sp" />
+            android:textSize="16.0sp"
+            />
     </RelativeLayout>
 
     <LinearLayout
@@ -92,9 +93,8 @@
                 android:background="#e3e3e3"
                 android:gravity="center"
                 android:text="@string/more_creator_cancel"
-                android:textSize="17.0sp"
                 android:textColor="#535353"
-                 />
+                android:textSize="15.0sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -116,9 +116,8 @@
                 android:background="#e3e3e3"
                 android:gravity="center"
                 android:text="@string/more_member_share"
-                android:textSize="17.0sp" 
                 android:textColor="#535353"
-                />
+                android:textSize="15.0sp" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -136,9 +135,8 @@
                 android:background="#e3e3e3"
                 android:gravity="center"
                 android:text="@string/more_creator_add"
-                android:textSize="17.0sp"
                 android:textColor="#535353"
-                 />
+                android:textSize="15.0sp" />
         </RelativeLayout>
         <!-- android:textColor="#0072e3" -->
     </LinearLayout>
@@ -168,9 +166,8 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:text="@string/more_prompt_1"
-                android:textSize="13.0sp" 
                 android:textColor="#535353"
-                />
+                android:textSize="13.0sp" />
 
             <TextView
                 android:id="@+id/textView10"
@@ -181,7 +178,8 @@
                 android:layout_marginTop="5.0dp"
                 android:text="@string/more_prompt"
                 android:textColor="#000000"
-                android:textSize="15.0sp" />
+                android:textSize="16.0sp"
+                />
         </RelativeLayout>
 
         <RelativeLayout
@@ -198,12 +196,11 @@
                 android:layout_marginLeft="5.0dp"
                 android:layout_marginRight="5.0dp"
                 android:layout_marginTop="5.0dp"
-                android:background="#e3e3e3"
+                android:background="#efefef"
                 android:gravity="center"
                 android:text="@string/more_member_share"
-                android:textSize="17.0sp"
                 android:textColor="#535353"
-                 />
+                android:textSize="15.0sp" />
 
             <!-- android:textColor="#0072e3" -->
 
@@ -221,12 +218,11 @@
                 android:layout_centerHorizontal="true"
                 android:layout_centerVertical="true"
                 android:layout_margin="5.0dp"
-                android:background="#e3e3e3"
+                android:background="#efefef"
                 android:gravity="center"
                 android:text="@string/more_creator_add"
-                android:textSize="17.0sp"
                 android:textColor="#535353"
-                 />
+                android:textSize="15.0sp" />
         </RelativeLayout>
         <!-- android:textColor="#0072e3" -->
     </LinearLayout>

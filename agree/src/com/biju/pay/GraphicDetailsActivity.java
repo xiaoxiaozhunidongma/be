@@ -40,6 +40,7 @@ import android.widget.Toast;
 import com.BJ.javabean.ImageText;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
+import com.BJ.utils.PicCutter;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.biju.R;
@@ -252,7 +253,8 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 				try {
 					convertToBitmap = Path2Bitmap.convertToBitmap(mPath);
 					Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1280);
-					holder.InsertImage.setImageBitmap(limitLongScaleBitmap);
+					Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 1280);// 截取中间正方形
+					holder.InsertImage.setImageBitmap(centerSquareScaleBitmap);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -353,6 +355,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 					String mFilePath=DetailsList.get(i).getImage_path();
 					Integer image_height=DetailsList.get(i).getImage_height();
 					Integer image_width=DetailsList.get(i).getImage_width();
+					Log.e("GraphicDetailsActivity", "当前图片的宽度和高度======="+image_height+"      "+image_width);
 					//存入数据库
 					ImageText text=new ImageText(null, uuid, 2, null, mFilePath, null, null, null, image_height, image_width, 1);
 					text.save();
@@ -545,8 +548,17 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 					return;
 				}
 			}
+			
+			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
+			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1280);// 最长边限制为1280
+//			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 1280);// 截取中间正方形
+			int height=limitLongScaleBitmap.getHeight();
+			int width = limitLongScaleBitmap.getWidth();
+			
 			ImageText imageText=new ImageText();
 			imageText.setType(2);
+			imageText.setImage_height(height);
+			imageText.setImage_width(width);
 			imageText.setImage_path(mFilePath);
 			DetailsList.add(imageText);
 			InputMethodManager();//隐藏键盘

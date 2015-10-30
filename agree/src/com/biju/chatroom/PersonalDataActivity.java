@@ -10,6 +10,8 @@ import com.biju.R;
 import com.biju.function.GroupActivity;
 import com.biju.function.SlidingActivity;
 import com.example.testleabcloud.ChatActivityLean;
+import com.example.testleabcloud.ChatActivityLean.GetClose;
+import com.fragment.CommonFragment;
 
 import android.net.Uri;
 import android.os.Bundle;
@@ -18,7 +20,10 @@ import android.content.Intent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 public class PersonalDataActivity extends Activity implements OnClickListener{
@@ -34,6 +39,8 @@ public class PersonalDataActivity extends Activity implements OnClickListener{
 	private Group_ReadAllUser group_user;
 	private boolean source;
 	private String phone;
+	private RelativeLayout mPersonalDataBackground;
+	public static GetClose getClose;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -41,14 +48,30 @@ public class PersonalDataActivity extends Activity implements OnClickListener{
 		setContentView(R.layout.activity_personal_data);
 		source = SdPkUser.GetSource;
 		if(source){
-			user = SdPkUser.getClickUser();
+			user = SdPkUser.getClickUser();//来源于聊天室
 		}else {
-			group_user = SdPkUser.getGroupChatUser();
+			group_user = SdPkUser.getGroupChatUser();//来源于群聊
 		}
 		initUI();
+		initClose();//覆盖色关闭调用接口
+	}
+	
+	private void initClose() {
+		GetClose getClose=new GetClose(){
+
+			@Override
+			public void Close() {
+				mPersonalDataBackground.setVisibility(View.GONE);
+				Animation animation=new AlphaAnimation(1.0f,0.0f);
+				animation.setDuration(500);
+				mPersonalDataBackground.startAnimation(animation);
+			}
+		};
+		this.getClose=getClose;
 	}
 
 	private void initUI() {
+		mPersonalDataBackground = (RelativeLayout) findViewById(R.id.PersonalDataBackground);
 		findViewById(R.id.PersonalDataNoShowLayout).setOnClickListener(this);
 		findViewById(R.id.PersonalDataShowLayout).setOnClickListener(this);
 		findViewById(R.id.PersonalDataBack).setOnClickListener(this);//返回
@@ -104,20 +127,40 @@ public class PersonalDataActivity extends Activity implements OnClickListener{
 	}
 
 	private void PersonalDataNoShowLayout() {
+		if(source){
+			ChatActivityLean.getClose.Close();
+		}else {
+			CommonFragment.getClose.Close();
+		}
 		finish();
 		overridePendingTransition(R.anim.rightin_item, R.anim.rightout_item);
 	}
 
 	private void PersonalDataOK() {
 		if(source){
+			mPersonalDataBackground.setVisibility(View.VISIBLE);
+			Animation animation=new AlphaAnimation(0.0f,1.0f);
+			animation.setDuration(500);
+			mPersonalDataBackground.startAnimation(animation);
+			
 			ChatActivityLean.chatRoomClickOK.ChatRoomClickOK();
+			
 			Intent intent = new Intent(PersonalDataActivity.this, MembersChatActivity.class);
+			intent.putExtra("PersonalData", true);
 			startActivity(intent);
+			
 			overridePendingTransition(R.anim.in_item, R.anim.out_item);
 		}else {
+			mPersonalDataBackground.setVisibility(View.VISIBLE);
+			Animation animation=new AlphaAnimation(0.0f,1.0f);
+			animation.setDuration(500);
+			mPersonalDataBackground.startAnimation(animation);
+			
 			GroupActivity.clickOK.ClickOK();
+			
 			Intent intent = new Intent(PersonalDataActivity.this, SlidingActivity.class);
 			intent.putExtra("group_group", GroupActivity.getPk_group());
+			intent.putExtra("PersonalData", true);
 			startActivity(intent);
 			overridePendingTransition(R.anim.in_item, R.anim.out_item);
 		}
@@ -147,6 +190,10 @@ public class PersonalDataActivity extends Activity implements OnClickListener{
 		Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:" + phone));
 		intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		startActivity(intent);
+	}
+	
+	public interface GetClose{
+		void Close();
 	}
 
 }

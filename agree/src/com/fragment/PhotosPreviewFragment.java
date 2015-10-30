@@ -45,7 +45,7 @@ import android.widget.TextView;
  */
 public class PhotosPreviewFragment extends Fragment implements OnItemClickListener {
 
-	private View mlayout;
+	private View mLayout;
 	private ListView listpreview;
 	private List<Party4> returnData=new ArrayList<Party4>();
 	private String beginStr = "http://picstyle.beagree.com/";
@@ -61,13 +61,20 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		if(mlayout==null){
-			mlayout = inflater.inflate(R.layout.fragment_photos_preview, container,
+		if(mLayout==null){
+			mLayout = inflater.inflate(R.layout.fragment_photos_preview, container,
 					false);
 			initUI();
 			iniListener();
 		}
-		return mlayout;
+		return mLayout;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
 	}
 
 	private void iniListener() {
@@ -97,7 +104,7 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	}
 
 	private void initUI() {
-		listpreview = (ListView) mlayout.findViewById(R.id.listpreview);
+		listpreview = (ListView) mLayout.findViewById(R.id.listpreview);
 		adapter = new MyAdapter();
 		listpreview.setAdapter(adapter);
 		

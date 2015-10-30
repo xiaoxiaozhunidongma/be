@@ -10,14 +10,11 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
-import android.widget.RelativeLayout.LayoutParams;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -25,6 +22,8 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_ReadAllUserback;
+import com.BJ.javabean.ImageText;
+import com.BJ.javabean.ImageTextBack;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
@@ -35,41 +34,14 @@ import com.BJ.javabean.Relation;
 import com.BJ.javabean.ReturnData;
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
-import com.BJ.utils.DensityUtil;
+import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Weeks;
-import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
-import com.baidu.location.LocationClient;
-import com.baidu.location.LocationClientOption;
-import com.baidu.location.LocationClientOption.LocationMode;
-import com.baidu.mapapi.map.BaiduMap;
-import com.baidu.mapapi.map.BaiduMap.OnMapClickListener;
-import com.baidu.mapapi.map.BaiduMap.OnMapDoubleClickListener;
-import com.baidu.mapapi.map.BaiduMap.OnMapLongClickListener;
-import com.baidu.mapapi.map.BaiduMap.OnMapStatusChangeListener;
-import com.baidu.mapapi.map.BaiduMap.OnMapTouchListener;
-import com.baidu.mapapi.map.BaiduMapOptions;
-import com.baidu.mapapi.map.BitmapDescriptor;
-import com.baidu.mapapi.map.BitmapDescriptorFactory;
-import com.baidu.mapapi.map.MapPoi;
-import com.baidu.mapapi.map.MapStatus;
-import com.baidu.mapapi.map.MapStatusUpdate;
-import com.baidu.mapapi.map.MapStatusUpdateFactory;
-import com.baidu.mapapi.map.MapView;
-import com.baidu.mapapi.map.Marker;
-import com.baidu.mapapi.map.MarkerOptions;
-import com.baidu.mapapi.map.MyLocationData;
-import com.baidu.mapapi.map.OverlayOptions;
-import com.baidu.mapapi.model.LatLng;
-import com.baidu.mapapi.search.core.SearchResult;
-import com.baidu.mapapi.search.geocode.GeoCodeResult;
-import com.baidu.mapapi.search.geocode.GeoCoder;
-import com.baidu.mapapi.search.geocode.OnGetGeoCoderResultListener;
-import com.baidu.mapapi.search.geocode.ReverseGeoCodeResult;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.Interface.ReadGraphicListenner;
 import com.biju.Interface.findUserListenner;
 import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readPartyJoinMsgListenner;
@@ -80,40 +52,24 @@ import com.biju.pay.PayBaseActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
-public class PartyDetailsActivity extends Activity implements
-		OnGetGeoCoderResultListener, OnClickListener {
-	private MapView mMapView;
-	private BaiduMap mBaiduMap;
-	public MyLocationListenner myListener = new MyLocationListenner();
-	private BDLocation mLocation;
-	boolean isFirstLoc = true;// ÊÇ·ñÊ×´Î¶¨Î»
-	private double mLat = 24.497572;
-	private double mLng = 118.17276;
-	private float scale = 15.0f;
-	private LocationClient mLocClient;
-	private LocationMode tempMode = LocationMode.Hight_Accuracy;
-	private ArrayList<BitmapDescriptor> mOverLayList = new ArrayList<BitmapDescriptor>();
+public class PartyDetailsActivity extends Activity implements OnClickListener {
 	private ArrayList<Group_ReadAllUser> PartyDetailsList = new ArrayList<Group_ReadAllUser>();
 	private ArrayList<Relation> partakeNumList = new ArrayList<Relation>();
-	private Marker mMarkerD;
-	private GeoCoder mSearch;
-	private EditText edit_show;
 
 	private Interface readpartyInterface;
 	private Party2 oneParty;
 	private Integer pk_party_user;
 	private UserAllParty allParty;
 	private boolean userAll;
-
 	private Integer sD_pk_user;
 
-	private TextView mPartyDetails_partyaddress;
-	private TextView mPartyDetails_partyname;
-	private TextView mPartyDetails_partytime;
-	private TextView mPartyDetails_partypayment;
-	private TextView mPartyDetails_partake_number;
-	private TextView mPartyDetails_did_not_say_number;
-	private TextView mPartyDetails_party_organizer;
+	private TextView mPartyDetailsPartyAddress;
+	private TextView mPartyDetailsPartyName;
+	private TextView mPartyDetailsPartyStartTime;
+	private TextView mPartyDetailsPayWayText;
+	private TextView mPartyDetailsPartakeNumber;
+	private TextView mPartyDetailsNotSayNumber;
+	private TextView mPartyDetailsPartyOrganizersName;
 	private TextView mPartyDetails_apply;
 	private String pk_party;
 	private Integer fk_group;
@@ -121,102 +77,46 @@ public class PartyDetailsActivity extends Activity implements
 	private Integer current_relationship;
 	private RelativeLayout mPartyDetails_apply_layout;
 	private Integer mPay_type;
-	private Integer mPay_amount;
+	private float mPay_amount;
 	private String mPayName;
 	public static GetWeChatPay getWeChatPay;
 	public static GetAliPay getAliPay;
+	private TextView mPartyDetailsPartyGraphicNumber;
+	private ImageView mPartyDetailsPartyOrganizersHead;
 
-	/**
-	 * ¶¨Î»SDK¼àÌıº¯Êı
-	 */
-	public class MyLocationListenner implements BDLocationListener {
-
-		@Override
-		public void onReceiveLocation(BDLocation location) {
-			mLocation = location;
-			// map view Ïú»Ùºó²»ÔÚ´¦ÀíĞÂ½ÓÊÕµÄÎ»ÖÃ
-			if (location == null || mMapView == null)
-				return;
-			MyLocationData locData = new MyLocationData.Builder()
-					.accuracy(location.getRadius())
-					// ´Ë´¦ÉèÖÃ¿ª·¢Õß»ñÈ¡µ½µÄ·½ÏòĞÅÏ¢£¬Ë³Ê±Õë0-360
-					.direction(100).latitude(location.getLatitude())
-					.longitude(location.getLongitude()).build();
-			mBaiduMap.setMyLocationData(locData);
-			if (isFirstLoc) {
-				// ÉèÖÃ¶¨Î»µÄ×ø±ê
-				isFirstLoc = false;
-				// LatLng ll = new LatLng(location.getLatitude(),
-				// location.getLongitude());
-				LatLng ll = new LatLng(mLat, mLng);
-				MapStatusUpdate u = MapStatusUpdateFactory.newLatLng(ll);
-				// ÉèÖÃ¶¯»­
-				mBaiduMap.animateMapStatus(u);
-			}
-		}
-
-		public void onReceivePoi(BDLocation poiLocation) {
-		}
-	}
+	private String beginStr = "http://picstyle.beagree.com/";
+	private String endStr = "@!";
+	private List<ImageText> GraphicNumberList = new ArrayList<ImageText>();
+	private RelativeLayout mPartyDetailsPartyAddressLayout;
+	private RelativeLayout mPartyDetailsPartyGraphicLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_party_details);
-		// ¼ÓÈëlistÖĞ
+		// åŠ å…¥listä¸­
 		RefreshActivity.activList_1.add(PartyDetailsActivity.this);
-		// »ñÈ¡sd¿¨ÖĞµÄsD_pk_user
+		// è·å–sdå¡ä¸­çš„sD_pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
-
 		initUI();
 		initInterface();
 		initOneParty();
 		returndata();
-			
-		// addview °Ù¶ÈµØÍ¼
-		BaiduMapOptions options = new BaiduMapOptions();
-		options.zoomGesturesEnabled(false);
-
-		options.scaleControlEnabled(false);
-		options.scrollGesturesEnabled(false);
-		mMapView = new MapView(this, options);
-		RelativeLayout.LayoutParams params_map = new RelativeLayout.LayoutParams(
-				LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		RelativeLayout bd_mapView_container = (RelativeLayout) findViewById(R.id.PartyDetails_map_layout);
-		
-		
-		bd_mapView_container.addView(mMapView, params_map);
-		// addview edittext
-		RelativeLayout.LayoutParams params_show = new LayoutParams(
-				LayoutParams.MATCH_PARENT, DensityUtil.dip2px(this, 40));
-		edit_show.setGravity(Gravity.CENTER);
-		params_show.setMargins(0, DensityUtil.dip2px(this, 110), 0, 0);
-		edit_show.setBackgroundColor(android.graphics.Color.parseColor("#aaffffff"));
-		edit_show.setTextColor(android.graphics.Color.parseColor("#535353"));
-		edit_show.setTextSize(15);
-		bd_mapView_container.addView(edit_show, params_show);
-
-		mBaiduMap = mMapView.getMap();
-		// ÊÇ·ñÉèÖÃÏÔÊ¾Ëõ·Å¿Ø¼ş
-		mMapView.showZoomControls(false);
-		MapStatusUpdate msu = MapStatusUpdateFactory.zoomTo(scale);
-		mBaiduMap.setMapStatus(msu);
-
-		initListener();
-		// ³õÊ¼»¯ËÑË÷Ä£¿é£¬×¢²áÊÂ¼ş¼àÌı
-		mSearch = GeoCoder.newInstance();
-		mSearch.setOnGetGeoCodeResultListener(this);
-
-		// ³õÊ¼»¯µØÍ¼
-		initMap();
-		initGetWeChatPay();//Î¢ĞÅÖ§¸¶
-		initAliPay();//Ö§¸¶±¦Ö§¸¶
+		initGraphic();
+		initGetWeChatPay();// å¾®ä¿¡æ”¯ä»˜
+		initAliPay();// æ”¯ä»˜å®æ”¯ä»˜
 	}
-	
+
+	private void initGraphic() {
+		Party party = new Party();
+		party.setPk_party(pk_party);
+		readpartyInterface.ReadGraphic(PartyDetailsActivity.this, party);
+	}
+
 	private void initAliPay() {
-		GetAliPay getAliPay=new GetAliPay() {
-			
+		GetAliPay getAliPay = new GetAliPay() {
+
 			@Override
 			public void AliPay() {
 				Party_User party_user = new Party_User();
@@ -229,13 +129,13 @@ public class PartyDetailsActivity extends Activity implements
 				Toast();
 			}
 		};
-		this.getAliPay=getAliPay;
+		this.getAliPay = getAliPay;
 	}
 
 	@SuppressWarnings("static-access")
 	private void initGetWeChatPay() {
-		GetWeChatPay getWeChatPay=new GetWeChatPay() {
-			
+		GetWeChatPay getWeChatPay = new GetWeChatPay() {
+
 			@Override
 			public void WeChatPay() {
 				Party_User party_user = new Party_User();
@@ -248,35 +148,33 @@ public class PartyDetailsActivity extends Activity implements
 				Toast();
 			}
 		};
-		this.getWeChatPay=getWeChatPay;
+		this.getWeChatPay = getWeChatPay;
 	}
 
 	@Override
 	protected void onRestart() {
 		super.onRestart();
 		initInterface();
-		if(userAll)
-		{
-			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Partyfragmnet, 0);
-			pk_party_user=PartyDetails_sp.getInt(IConstant.Partyfragmnet_Pk_party_user, 0);
-			pk_party=PartyDetails_sp.getString(IConstant.Partyfragmnet_Pk_party, "");
-			fk_group=PartyDetails_sp.getInt(IConstant.Partyfragmnet_fk_group, 0);
-		}else
-		{
-			SharedPreferences PartyDetails_sp=getSharedPreferences(IConstant.Schedule, 0);
-			pk_party_user=PartyDetails_sp.getInt(IConstant.Pk_party_user, 0);
-			pk_party=PartyDetails_sp.getString(IConstant.Pk_party, "");
-			fk_group=PartyDetails_sp.getInt(IConstant.fk_group, 0);
+		if (userAll) {
+			SharedPreferences PartyDetails_sp = getSharedPreferences(IConstant.Partyfragmnet, 0);
+			pk_party_user = PartyDetails_sp.getInt(IConstant.Partyfragmnet_Pk_party_user, 0);
+			pk_party = PartyDetails_sp.getString(IConstant.Partyfragmnet_Pk_party, "");
+			fk_group = PartyDetails_sp.getInt(IConstant.Partyfragmnet_fk_group,0);
+		} else {
+			SharedPreferences PartyDetails_sp = getSharedPreferences(IConstant.Schedule, 0);
+			pk_party_user = PartyDetails_sp.getInt(IConstant.Pk_party_user, 0);
+			pk_party = PartyDetails_sp.getString(IConstant.Pk_party, "");
+			fk_group = PartyDetails_sp.getInt(IConstant.fk_group, 0);
 		}
 	}
-	
+
 	private void returndata() {
 		Group readAllPerRelation_group = new Group();
 		readAllPerRelation_group.setPk_group(fk_group);
 		readpartyInterface.readAllPerRelation(PartyDetailsActivity.this,readAllPerRelation_group);
 	}
-	
-	// ¶ÁÈ¡¾Û»áÏêÇé
+
+	// è¯»å–èšä¼šè¯¦æƒ…
 	private void initReadParty() {
 		Party readparty = new Party();
 		readparty.setPk_party(pk_party);
@@ -290,7 +188,7 @@ public class PartyDetailsActivity extends Activity implements
 			@Override
 			public void success(String A) {
 				returndata();
-				Log.e("PartyDetailsActivity", "·µ»ØµÄÊÇ·ñ¸üĞÂ³É¹¦" + A);
+				Log.e("PartyDetailsActivity", "è¿”å›çš„æ˜¯å¦æ›´æ–°æˆåŠŸ" + A);
 			}
 
 			@Override
@@ -304,17 +202,16 @@ public class PartyDetailsActivity extends Activity implements
 			@Override
 			public void success(String A) {
 				partakeNumList.clear();
-				Log.e("PartyDetailsActivity", "·µ»ØµÄÓÃ»§²ÎÓëĞÅÏ¢" + A);
-				java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
-				}.getType();
+				Log.e("PartyDetailsActivity", "è¿”å›çš„ç”¨æˆ·å‚ä¸ä¿¡æ¯" + A);
+				java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {}.getType();
 				ReadPartyback partyback = GsonUtils.parseJsonArray(A, type);
 				ReturnData returnData = partyback.getReturnData();
-				Log.e("PartyDetailsActivity","µ±Ç°returnData:" + returnData.toString());
+				Log.e("PartyDetailsActivity","å½“å‰returnData:" + returnData.toString());
 				List<Relation> relationList = returnData.getRelation();
 				if (relationList.size() > 0) {
 					for (int i = 0; i < relationList.size(); i++) {
 						Relation relation = relationList.get(i);
-						// ÅĞ¶Ï²ÎÓë¡¢¾Ü¾øÊı
+						// åˆ¤æ–­å‚ä¸ã€æ‹’ç»æ•°
 						Integer relationship = relation.getRelationship();
 						switch (relationship) {
 						case 4:
@@ -323,35 +220,38 @@ public class PartyDetailsActivity extends Activity implements
 						default:
 							break;
 						}
-						//²éÕÒµ±Ç°ÓÃ»§µÄ²ÎÓëĞÅÏ¢
-						Integer pk_user=relation.getPk_user();
-						if(String.valueOf(pk_user).equals(String.valueOf(sD_pk_user))){
+						// æŸ¥æ‰¾å½“å‰ç”¨æˆ·çš„å‚ä¸ä¿¡æ¯
+						Integer pk_user = relation.getPk_user();
+						if (String.valueOf(pk_user).equals(String.valueOf(sD_pk_user))) {
 							current_relationship = relationList.get(i).getRelationship();
-							if(current_relationship==4){
-								mPartyDetails_apply.setText("ÒÑ²ÎÓë");
-								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_noapply_layout_color);//ÒÑ±¨Ãû±³¾°Îªµ­»ÒÉ«
-							}else{
-								mPartyDetails_apply.setText("±¨Ãû");
-								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_apply_layout_color);//Î´±¨Ãû±³¾°ÎªÂÌÉ«
+							if (current_relationship == 4) {
+								mPartyDetails_apply.setText("å·²å‚ä¸");
+								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_noapply_layout_color);// å·²æŠ¥åèƒŒæ™¯ä¸ºæ·¡ç°è‰²
+							} else {
+								if (1 == mPay_type) {
+									mPartyDetails_apply.setText("æŠ¥å");
+								} else if (3 == mPay_type) {
+									mPartyDetails_apply.setText("æŠ¥å:" + " Â¥"+ mPay_amount);
+								}
+								mPartyDetails_apply_layout.setBackgroundResource(R.drawable.PartyDetails_apply_layout_color);// æœªæŠ¥åèƒŒæ™¯ä¸ºç»¿è‰²
 							}
 						}
 					}
-					Log.e("PartyDetailsActivity", "µ±Ç°partakeNumµÄÊıÁ¿"+ partakeNumList.size());
-					Log.e("PartyDetailsActivity", "µ±Ç°not_sayNumµÄÊıÁ¿"+ not_sayNum);
-					mPartyDetails_partake_number.setText(String.valueOf(partakeNumList.size()));// ÏÔÊ¾²ÎÓëÊıÁ¿
-					if(partakeNumList.size()>0){
-						not_sayNum=PartyDetailsList.size()-partakeNumList.size();
-					}else{
-						not_sayNum=PartyDetailsList.size();
+					Log.e("PartyDetailsActivity", "å½“å‰partakeNumçš„æ•°é‡"+ partakeNumList.size());
+					Log.e("PartyDetailsActivity", "å½“å‰not_sayNumçš„æ•°é‡"+ not_sayNum);
+					mPartyDetailsPartakeNumber.setText(String.valueOf(partakeNumList.size()));// æ˜¾ç¤ºå‚ä¸æ•°é‡
+					if (partakeNumList.size() > 0) {
+						not_sayNum = PartyDetailsList.size()- partakeNumList.size();
+					} else {
+						not_sayNum = PartyDetailsList.size();
 					}
-					mPartyDetails_did_not_say_number.setText(String.valueOf(not_sayNum));// ÏÔÊ¾Î´±íÌ¬ÊıÁ¿
-					
-					
-					List<Party3> partylist=returnData.getParty();
-					if(partylist.size()>0){
-						Party3 readparty=partylist.get(0);
-						Integer pk_user=readparty.getFk_user();
-						//²éÕÒ¾Û»á´´½¨Õß
+					mPartyDetailsNotSayNumber.setText(String.valueOf(not_sayNum));// æ˜¾ç¤ºæœªè¡¨æ€æ•°é‡
+
+					List<Party3> partylist = returnData.getParty();
+					if (partylist.size() > 0) {
+						Party3 readparty = partylist.get(0);
+						Integer pk_user = readparty.getFk_user();
+						// æŸ¥æ‰¾èšä¼šåˆ›å»ºè€…
 						User user = new User();
 						user.setPhone(String.valueOf(pk_user));
 						readpartyInterface.findUser(PartyDetailsActivity.this,user);
@@ -364,23 +264,26 @@ public class PartyDetailsActivity extends Activity implements
 
 			}
 		});
-		//²éÕÒ´´½¨Õß¼àÌı
+		// æŸ¥æ‰¾åˆ›å»ºè€…ç›‘å¬
 		readpartyInterface.setPostListener(new findUserListenner() {
 
 			@Override
 			public void success(String A) {
-				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,
-						Loginback.class);
+				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,Loginback.class);
 				int statusmsg = findfriends_statusmsg.getStatusMsg();
 				if (statusmsg == 1) {
-					// È¡µÚÒ»¸öUsers[0]
+					// å–ç¬¬ä¸€ä¸ªUsers[0]
 					List<User> Users = findfriends_statusmsg.getReturnData();
 					if (Users.size() >= 1) {
 						User user = Users.get(0);
-						mPartyDetails_party_organizer.setText("×éÖ¯Õß: "+user.getNickname());
+						mPartyDetailsPartyOrganizersName.setText(user.getNickname() + "  åˆ›å»ºçš„æ´»åŠ¨");
 
+						String useravatar_path = user.getAvatar_path();
+						String completeURL = beginStr + useravatar_path+ endStr + "mini-avatar";
+						PreferenceUtils.saveImageCache(PartyDetailsActivity.this, completeURL);// å­˜SP
+						ImageLoaderUtils.getInstance().LoadImageCricular(PartyDetailsActivity.this, completeURL,mPartyDetailsPartyOrganizersHead);
 					}
-				} 
+				}
 
 			}
 
@@ -389,7 +292,7 @@ public class PartyDetailsActivity extends Activity implements
 
 			}
 		});
-		
+
 		readpartyInterface.setPostListener(new readAllPerRelationListenner() {
 
 			@Override
@@ -398,14 +301,14 @@ public class PartyDetailsActivity extends Activity implements
 				Group_ReadAllUserback group_ReadAllUserback = GsonUtils.parseJson(A, Group_ReadAllUserback.class);
 				int status = group_ReadAllUserback.getStatusMsg();
 				if (status == 1) {
-					Log.e("PartyDetailsActivity", "¶ÁÈ¡³öĞ¡×éÖĞµÄËùÓĞÓÃ»§========" + A);
+					Log.e("PartyDetailsActivity", "è¯»å–å‡ºå°ç»„ä¸­çš„æ‰€æœ‰ç”¨æˆ·========" + A);
 					List<Group_ReadAllUser> allUsers = group_ReadAllUserback.getReturnData();
 					if (allUsers.size() > 0) {
 						for (int i = 0; i < allUsers.size(); i++) {
 							Group_ReadAllUser readAllUser = allUsers.get(i);
 							PartyDetailsList.add(readAllUser);
 						}
-						initReadParty();// ¶ÁÈ¡¾Û»áÏêÇé
+						initReadParty();// è¯»å–èšä¼šè¯¦æƒ…
 					}
 				}
 			}
@@ -415,10 +318,43 @@ public class PartyDetailsActivity extends Activity implements
 
 			}
 		});
-		
+
+		// è·å–å›¾æ–‡ä¿¡æ¯çš„ç›‘å¬
+		readpartyInterface.setPostListener(new ReadGraphicListenner() {
+
+			@Override
+			public void success(String A) {
+				GraphicNumberList.clear();
+				Log.e("PartyDetailsActivity", "è·å–å›æ¥çš„å›¾æ–‡ä¿¡æ¯=========" + A);
+				ImageTextBack imageTextBack = GsonUtils.parseJson(A,ImageTextBack.class);
+				Integer StatusMsg = imageTextBack.getStatusMsg();
+				if (1 == StatusMsg) {
+					List<ImageText> imageTextslist = imageTextBack.getReturnData();
+					if (imageTextslist.size() > 0) {
+						for (int i = 0; i < imageTextslist.size(); i++) {
+							ImageText imageText = imageTextslist.get(i);
+							GraphicNumberList.add(imageText);
+						}
+						if (GraphicNumberList.size() > 0) {
+							mPartyDetailsPartyGraphicLayout.setEnabled(true);
+							mPartyDetailsPartyGraphicNumber.setText(GraphicNumberList.size()+ "  ä¸ªå›¾æ–‡ä¿¡æ¯");
+						} 
+					}
+				}else {
+					mPartyDetailsPartyGraphicNumber.setText("æ— æ›´å¤šè¯¦æƒ…");
+					mPartyDetailsPartyGraphicLayout.setEnabled(false);
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+
 	}
 
-	// Ê×´Î½øÀ´Ê±´«Öµ
+	// é¦–æ¬¡è¿›æ¥æ—¶ä¼ å€¼
 	private void initOneParty() {
 		Intent intent = getIntent();
 		userAll = intent.getBooleanExtra(IConstant.UserAll, false);
@@ -436,38 +372,31 @@ public class PartyDetailsActivity extends Activity implements
 			Integer y = Integer.valueOf(years);
 			Integer m = Integer.valueOf(months);
 			Integer d = Integer.valueOf(days);
-			// µ÷ÓÃ¼ÆËãĞÇÆÚ¼¸µÄ·½·¨
+			// è°ƒç”¨è®¡ç®—æ˜ŸæœŸå‡ çš„æ–¹æ³•
 			Weeks.CaculateWeekDay(y, m, d);
 			String week = Weeks.getweek();
-			mPartyDetails_partyname.setText(allParty.getName());//ÏÔÊ¾¾Û»áÃû³Æ
-			mPartyDetails_partytime.setText(years + "Äê" + months + "ÔÂ" + days + "ÈÕ"
-					+ "  " + week + "  " + hour + ":" + minute);//ÏÔÊ¾¾Û»áÊ±¼ä
-			mPartyDetails_partyaddress.setText(allParty.getLocation());//ÏÔÊ¾¾Û»áµØµã
-			mPay_type = allParty.getPay_type();//Ö§¸¶ÀàĞÍ
-			mPay_amount = allParty.getPay_amount();//Ö§¸¶½ğ¶î
-			mPayName = allParty.getName();//¾Û»áÃû³Æ
-			if(1==mPay_type){
-				mPartyDetails_partypayment.setText("Ãâ·Ñ");
+			mPartyDetailsPartyName.setText(allParty.getName());// æ˜¾ç¤ºèšä¼šåç§°
+			mPartyDetailsPartyStartTime.setText(years + "å¹´" + months + "æœˆ"+ days + "æ—¥" + "  " + week + "  " + hour + ":" + minute);// æ˜¾ç¤ºèšä¼šæ—¶é—´
+			if(allParty.getLocation()==null){
+				mPartyDetailsPartyAddressLayout.setEnabled(false);
+				mPartyDetailsPartyAddress.setText("æ— åœ°å€ä¿¡æ¯");// æ˜¾ç¤ºèšä¼šåœ°ç‚¹
 			}else {
-				mPartyDetails_partypayment.setText("Ô¤Ö§¸¶");
+				mPartyDetailsPartyAddressLayout.setEnabled(true);
+				mPartyDetailsPartyAddress.setText(allParty.getLocation());// æ˜¾ç¤ºèšä¼šåœ°ç‚¹
 			}
-			Double latitude = allParty.getLatitude();
-			Double longitude = allParty.getLongitude();
-			String location = allParty.getLocation();
-			if(latitude!=null&longitude!=null){
-				mLat = latitude;
-				mLng = longitude;
-				edit_show.setText(location);
-			}else{
-				mLat = 24.497572;
-				mLng = 118.17276;
+			mPay_type = allParty.getPay_type();// æ”¯ä»˜ç±»å‹
+			mPay_amount = allParty.getPay_amount();// æ”¯ä»˜é‡‘é¢
+			mPayName = allParty.getName();// èšä¼šåç§°
+			if (1 == mPay_type) {
+				mPartyDetailsPayWayText.setText("è¯¥æ´»åŠ¨ä¸ºå…è´¹æ´»åŠ¨");
+			} else {
+				mPartyDetailsPayWayText.setText("è¯¥æ´»åŠ¨ä¸ºé¢„ä»˜æ¬¾æ´»åŠ¨");
 			}
-			edit_show.setText(location);
 		} else {
 			oneParty = (Party2) intent.getSerializableExtra(IConstant.OneParty);
-			SharedPreferences partydetails_sp=getSharedPreferences(IConstant.Schedule, 0);
+			SharedPreferences partydetails_sp = getSharedPreferences(IConstant.Schedule, 0);
 			pk_party_user = partydetails_sp.getInt(IConstant.Pk_party_user, 0);
-			Log.e("PartyDetailsActivity", "µÃµ½µÄµÚ¶ş¸ögetPk_party_user========="+ pk_party_user);
+			Log.e("PartyDetailsActivity", "å¾—åˆ°çš„ç¬¬äºŒä¸ªgetPk_party_user========="+ pk_party_user);
 			pk_party = oneParty.getPk_party();
 			fk_group = oneParty.getFk_group();
 			String Begin_time = oneParty.getBegin_time();
@@ -479,170 +408,55 @@ public class PartyDetailsActivity extends Activity implements
 			Integer y = Integer.valueOf(years);
 			Integer m = Integer.valueOf(months);
 			Integer d = Integer.valueOf(days);
-			// µ÷ÓÃ¼ÆËãĞÇÆÚ¼¸µÄ·½·¨
+			// è°ƒç”¨è®¡ç®—æ˜ŸæœŸå‡ çš„æ–¹æ³•
 			Weeks.CaculateWeekDay(y, m, d);
 			String week = Weeks.getweek();
-			mPartyDetails_partyname.setText(oneParty.getName());//ÏÔÊ¾¾Û»áÃû³Æ
-			mPartyDetails_partytime.setText(years + "Äê" + months + "ÔÂ" + days + "ÈÕ"
-					+ "  " + week + "  " + hour + ":" + minute);//ÏÔÊ¾¾Û»áÊ±¼ä
-			mPartyDetails_partyaddress.setText(oneParty.getLocation());//ÏÔÊ¾¾Û»áµØµã
-			mPay_type = oneParty.getPay_type();//Ö§¸¶ÀàĞÍ
-			mPay_amount = oneParty.getPay_amount();//Ö§¸¶½ğ¶î
-			mPayName = oneParty.getName();//¾Û»áÃû³Æ
-			if(1==mPay_type){
-				mPartyDetails_partypayment.setText("Ãâ·Ñ");
+			mPartyDetailsPartyName.setText(oneParty.getName());// æ˜¾ç¤ºèšä¼šåç§°
+			mPartyDetailsPartyStartTime.setText(years + "å¹´" + months + "æœˆ"+ days + "æ—¥" + "  " + week + "  " + hour + ":" + minute);// æ˜¾ç¤ºèšä¼šæ—¶é—´
+			Log.e("PartyDetailsActivity", "å¾—åˆ°çš„ç¬¬äºŒä¸ªoneParty.getLocation()========="+ oneParty.getLocation());
+			if(oneParty.getLocation()==null){
+				mPartyDetailsPartyAddressLayout.setEnabled(false);
+				mPartyDetailsPartyAddress.setText("æ— åœ°å€ä¿¡æ¯");// æ˜¾ç¤ºèšä¼šåœ°ç‚¹
 			}else {
-				mPartyDetails_partypayment.setText("Ô¤Ö§¸¶");
+				mPartyDetailsPartyAddressLayout.setEnabled(true);
+				mPartyDetailsPartyAddress.setText(oneParty.getLocation());// æ˜¾ç¤ºèšä¼šåœ°ç‚¹
 			}
-			Double latitude = oneParty.getLatitude();
-			Double longitude = oneParty.getLongitude();
-			String location = oneParty.getLocation();
-			if(longitude!=null){
-				mLng = longitude;
-			}else{
-				mLng=118.17276;
+			mPay_type = oneParty.getPay_type();// æ”¯ä»˜ç±»å‹
+			mPay_amount = oneParty.getPay_amount();// æ”¯ä»˜é‡‘é¢
+			mPayName = oneParty.getName();// èšä¼šåç§°
+			if (1 == mPay_type) {
+				mPartyDetailsPayWayText.setText("è¯¥æ´»åŠ¨ä¸ºå…è´¹æ´»åŠ¨");
+			} else {
+				mPartyDetailsPayWayText.setText("è¯¥æ´»åŠ¨ä¸ºé¢„ä»˜æ¬¾æ´»åŠ¨");
 			}
-			if(latitude!=null){
-				mLat = latitude;
-			}else {
-				mLat = 24.497572;
-			}
-			edit_show.setText(location);
 		}
 	}
 
 	private void initUI() {
-		mPartyDetails_partyaddress = (TextView) findViewById(R.id.PartyDetails_partyaddress);// ¾Û»áµØÖ·
-		mPartyDetails_partyname = (TextView) findViewById(R.id.PartyDetails_partyname);// ¾Û»áÃû³Æ
-		mPartyDetails_partytime = (TextView) findViewById(R.id.PartyDetails_partytime);// ¾Û»áÊ±¼ä
-		mPartyDetails_partypayment = (TextView) findViewById(R.id.PartyDetails_partypayment);// ¸¶¿î·½Ê½
-		findViewById(R.id.PartyDetails_partake).setOnClickListener(this);// ²ÎÓë
-		findViewById(R.id.PartyDetails_partake_layout).setOnClickListener(this);
-		findViewById(R.id.PartyDetails_partake_number_layout).setOnClickListener(this);// ²ÎÓëÊıÁ¿
-		mPartyDetails_partake_number = (TextView) findViewById(R.id.PartyDetails_partake_number);
-		findViewById(R.id.PartyDetails_did_not_say).setOnClickListener(this);// Î´±íÌ¬
-		findViewById(R.id.PartyDetails_did_not_say_layout).setOnClickListener(this);
-		findViewById(R.id.PartyDetails_did_not_say_number_layout).setOnClickListener(this);// Î´±íÌ¬ÊıÁ¿
-		mPartyDetails_did_not_say_number = (TextView) findViewById(R.id.PartyDetails_did_not_say_number);
-		mPartyDetails_party_organizer = (TextView) findViewById(R.id.PartyDetails_party_organizer);// ×éÖ¯Õß
+		mPartyDetailsPayWayText = (TextView) findViewById(R.id.PartyDetailsPayWayText);// ä»˜æ¬¾æ–¹å¼
+		mPartyDetailsPartyName = (TextView) findViewById(R.id.PartyDetailsPartyName);// èšä¼šåç§°
+		mPartyDetailsPartyStartTime = (TextView) findViewById(R.id.PartyDetailsPartyStartTime);// èšä¼šæ—¶é—´
+		mPartyDetailsPartyAddress = (TextView) findViewById(R.id.PartyDetailsPartyAddress);// èšä¼šåœ°å€
+		mPartyDetailsPartyAddressLayout = (RelativeLayout) findViewById(R.id.PartyDetailsPartyAddressLayout);
+		mPartyDetailsPartyAddressLayout.setOnClickListener(this);// è·³è½¬è‡³å¤§åœ°å›¾å¯¼èˆªç•Œé¢
+		mPartyDetailsPartyGraphicLayout = (RelativeLayout) findViewById(R.id.PartyDetailsPartyGraphicLayout);
+		mPartyDetailsPartyGraphicLayout.setOnClickListener(this);// è·³è½¬è‡³å›¾æ–‡è¯¦æƒ…åˆ—è¡¨
+		mPartyDetailsPartyGraphicNumber = (TextView) findViewById(R.id.PartyDetailsPartyGraphicNumber);// æ˜¾ç¤ºå›¾æ–‡ä¸ªæ•°
+		findViewById(R.id.PartyDetailsPartakeLayout).setOnClickListener(this);// å‚ä¸
+		mPartyDetailsPartakeNumber = (TextView) findViewById(R.id.PartyDetailsPartakeNumber);// æ˜¾ç¤ºå‚ä¸æ•°é‡
+		findViewById(R.id.PartyDetailsNotSayLayout).setOnClickListener(this);// æœªè¡¨æ€
+		mPartyDetailsNotSayNumber = (TextView) findViewById(R.id.PartyDetailsNotSayNumber);// æ˜¾ç¤ºæœªè¡¨æ€æ•°é‡
+		mPartyDetailsPartyOrganizersName = (TextView) findViewById(R.id.PartyDetailsPartyOrganizersName);// ç»„ç»‡è€…
+		mPartyDetailsPartyOrganizersHead = (ImageView) findViewById(R.id.PartyDetailsPartyOrganizersHead);// ç»„ç»‡è€…å¤´åƒ
+
 		mPartyDetails_apply_layout = (RelativeLayout) findViewById(R.id.PartyDetails_apply_layout);
-		mPartyDetails_apply_layout.setOnClickListener(this);// ±¨Ãû
-		mPartyDetails_apply = (TextView) findViewById(R.id.PartyDetails_apply);// ±¨ÃûÖ§¸¶½ğ¶î
+		mPartyDetails_apply_layout.setOnClickListener(this);// æŠ¥å
+		mPartyDetails_apply = (TextView) findViewById(R.id.PartyDetails_apply);// æŠ¥åæ”¯ä»˜é‡‘é¢
 
-		edit_show = new EditText(this);
-		edit_show.setFocusable(false);
-		findViewById(R.id.PartyDetails_back_layout).setOnClickListener(this);// ·µ»Ø
+		findViewById(R.id.PartyDetails_back_layout).setOnClickListener(this);// è¿”å›
 		findViewById(R.id.PartyDetails_back).setOnClickListener(this);
-		findViewById(R.id.PartyDetails_more_layout).setOnClickListener(this);// ÉèÖÃ
+		findViewById(R.id.PartyDetails_more_layout).setOnClickListener(this);// è®¾ç½®
 		findViewById(R.id.PartyDetails_more).setOnClickListener(this);
-		
-		
-		findViewById(R.id.PartyDetails_prompt).setOnClickListener(this);//Ìø×ªÍ¼ÎÄĞÅÏ¢½çÃæ
-
-	}
-
-	private void initListener() {
-
-		mBaiduMap.setOnMapTouchListener(new OnMapTouchListener() {
-
-			@Override
-			public void onTouch(MotionEvent event) {
-			}
-		});
-
-		mBaiduMap.setOnMapClickListener(new OnMapClickListener() {
-
-			public void onMapClick(LatLng point) {
-				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
-				intent.putExtra("mLat", mLat);
-				intent.putExtra("mLng", mLng);
-				Log.e("111", "mLat=="+mLat);
-				Log.e("111", "mLng=="+mLng);
-				startActivity(intent);
-			}
-
-			public boolean onMapPoiClick(MapPoi poi) {
-				return false;
-			}
-		});
-		mBaiduMap.setOnMapLongClickListener(new OnMapLongClickListener() {
-			public void onMapLongClick(LatLng point) {
-				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
-				intent.putExtra("mLat", mLat);
-				intent.putExtra("mLng", mLng);
-				Log.e("222", "mLat=="+mLat);
-				Log.e("222", "mLng=="+mLng);
-				startActivity(intent);
-			}
-		});
-		mBaiduMap.setOnMapDoubleClickListener(new OnMapDoubleClickListener() {
-			public void onMapDoubleClick(LatLng point) {
-				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
-				intent.putExtra("mLat", mLat);
-				intent.putExtra("mLng", mLng);
-				Log.e("333", "mLat=="+mLat);
-				Log.e("333", "mLng=="+mLng);
-				startActivity(intent);
-
-			}
-		});
-		mBaiduMap.setOnMapStatusChangeListener(new OnMapStatusChangeListener() {
-			public void onMapStatusChangeStart(MapStatus status) {
-			}
-
-			public void onMapStatusChangeFinish(MapStatus status) {
-			}
-
-			public void onMapStatusChange(MapStatus status) {
-			}
-		});
-
-	}
-
-	private void initMap() {
-		// Ìí¼ÓµØÍ¼±êµã
-		addOverlay(mLat, mLng, R.drawable.iconfont2);
-		Log.e("PartyDetailsActivity", "µØÍ¼±êµãmLat="+mLat+"mLng="+mLng);
-		// ¿ªÆô¶¨Î»Í¼²ã
-		mBaiduMap.setMyLocationEnabled(false);//ÊÇ·ñÏÔÊ¾µ±Ç°Î»ÖÃÄ¬ÈÏÍ¼±ê
-		mLocClient = new LocationClient(this);
-		mLocClient.registerLocationListener(myListener);
-		LocationClientOption option = new LocationClientOption();
-		option.setOpenGps(true);// ´ò¿ªgps
-		option.setCoorType("bd09ll"); // ÉèÖÃ×ø±êÀàĞÍ
-		option.setScanSpan(1000);
-		mLocClient.setLocOption(option);
-		option.setLocationMode(tempMode);// ÉèÖÃ¶¨Î»Ä£Ê½
-		mLocClient.start();
-	}
-
-	private void addOverlay(double lat, double lng, final int drawableRes) {
-		LatLng llA = new LatLng(lat, lng);
-		// ÉèÖÃĞü¸¡µÄÍ¼°¸
-		BitmapDescriptor bdA = BitmapDescriptorFactory.fromResource(drawableRes);
-		mOverLayList.add(bdA);
-		OverlayOptions ooA = new MarkerOptions().position(llA).icon(bdA).zIndex(0).draggable(true);
-		mMarkerD = (Marker) mBaiduMap.addOverlay(ooA);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.party_details, menu);
-		return true;
-	}
-
-	@Override
-	public void onGetGeoCodeResult(GeoCodeResult arg0) {
-
-	}
-
-	@Override
-	public void onGetReverseGeoCodeResult(ReverseGeoCodeResult result) {
-		if (result == null || result.error != SearchResult.ERRORNO.NO_ERROR) {
-			Toast.makeText(PartyDetailsActivity.this, "±§Ç¸£¬Î´ÄÜÕÒµ½½á¹û",Toast.LENGTH_LONG).show();
-			return;
-		}
 	}
 
 	@Override
@@ -656,89 +470,103 @@ public class PartyDetailsActivity extends Activity implements
 		case R.id.PartyDetails_more:
 			PartyDetails_more();
 			break;
-		case R.id.PartyDetails_partake_layout:
-		case R.id.PartyDetails_partake:
-		case R.id.PartyDetails_partake_number_layout:
-		case R.id.PartyDetails_partake_number:
-			PartyDetails_partake_number();
+		case R.id.PartyDetailsPartakeLayout:
+			PartyDetailsPartakeLayout();
 			break;
-		case R.id.PartyDetails_did_not_say:
-		case R.id.PartyDetails_did_not_say_layout:
-		case R.id.PartyDetails_did_not_say_number:
-		case R.id.PartyDetails_did_not_say_number_layout:
-			PartyDetails_did_not_say_number();
+		case R.id.PartyDetailsNotSayLayout:
+			PartyDetailsNotSayLayout();
 			break;
 		case R.id.PartyDetails_apply_layout:
 		case R.id.PartyDetails_apply:
 			PartyDetails_apply_layout();
 			break;
-		case R.id.PartyDetails_prompt:
-			PartyDetails_prompt();
+		case R.id.PartyDetailsPartyGraphicLayout:
+			PartyDetailsPartyGraphicLayout();
+			break;
+		case R.id.PartyDetailsPartyAddressLayout:
+			PartyDetailsPartyAddressLayout();
 			break;
 		default:
 			break;
 		}
 	}
 
-	//Ìø×ªÍ¼ÎÄĞÅÏ¢½çÃæ
-	private void PartyDetails_prompt() {
-		Intent intent=new Intent(PartyDetailsActivity.this, GraphicPreviewActivity.class);
+	// è·³è½¬è‡³å¤§åœ°å›¾è¿›è¡Œå¯¼èˆª
+	private void PartyDetailsPartyAddressLayout() {
+		Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
+		if(userAll){
+			intent.putExtra("BigMap", true);
+			intent.putExtra("AllBigMap", allParty);
+		}else {
+			intent.putExtra("BigMap", false);
+			intent.putExtra("OneBigMap", oneParty);
+		}
+		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
+	}
+
+	// è·³è½¬å›¾æ–‡ä¿¡æ¯ç•Œé¢
+	private void PartyDetailsPartyGraphicLayout() {
+		Intent intent = new Intent(PartyDetailsActivity.this,GraphicPreviewActivity.class);
 		intent.putExtra("Pk_party", pk_party);
 		startActivity(intent);
 		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
-	// Î´±íÌ¬
-	private void PartyDetails_did_not_say_number() {
+	// æœªè¡¨æ€
+	private void PartyDetailsNotSayLayout() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra(IConstant.CommentsList, 3);
 		intent.putExtra(IConstant.Not_Say, pk_party);
 		intent.putExtra(IConstant.All_fk_group, fk_group);
+		intent.putExtra("Pay_amount", mPay_amount);
 		startActivity(intent);
 	}
 
-	// ²ÎÓë
-	private void PartyDetails_partake_number() {
+	// å‚ä¸
+	private void PartyDetailsPartakeLayout() {
 		Intent intent = new Intent(PartyDetailsActivity.this,CommentsListActivity.class);
 		intent.putExtra(IConstant.CommentsList, 4);
 		intent.putExtra(IConstant.ParTake, pk_party);
 		intent.putExtra(IConstant.All_fk_group, fk_group);
+		intent.putExtra("Pay_amount", mPay_amount);
 		startActivity(intent);
 
 	}
 
 	private void PartyDetails_apply_layout() {
-		if(current_relationship==4)
-		{
-			if(1==mPay_type){
+		if (current_relationship == 4) {
+			if (1 == mPay_type) {
 				final SweetAlertDialog sd = new SweetAlertDialog(PartyDetailsActivity.this,SweetAlertDialog.WARNING_TYPE);
-				sd.setTitleText("¾¯¸æ");
-				sd.setContentText("ÄãÈ·¶¨ÒªÈ¡Ïû±¨Ãû£¿");
-				sd.setCancelText("ÎÒÔÙÏëÏë");
-				sd.setConfirmText("ÊÇµÄ");
+				sd.setTitleText("è­¦å‘Š");
+				sd.setContentText("ä½ ç¡®å®šè¦å–æ¶ˆæŠ¥åï¼Ÿ");
+				sd.setCancelText("æˆ‘å†æƒ³æƒ³");
+				sd.setConfirmText("æ˜¯çš„");
 				sd.showCancelButton(true);
-				sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-					@Override
-					public void onClick(SweetAlertDialog sDialog) {
-						sd.cancel();
-					}
-				}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-					@Override
-					public void onClick(SweetAlertDialog sDialog) {
-						sd.cancel();
-						Party_User party_user = new Party_User();
-						party_user.setPk_party_user(pk_party_user);
-						party_user.setRelationship(0);
-						party_user.setStatus(1);
-						party_user.setFk_party(pk_party);
-						party_user.setFk_user(sD_pk_user);
-						readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
-					}
-				}).show();
+				sd.setCancelClickListener(
+						new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(SweetAlertDialog sDialog) {
+								sd.cancel();
+							}
+						})
+						.setConfirmClickListener(
+								new SweetAlertDialog.OnSweetClickListener() {
+									@Override
+									public void onClick(SweetAlertDialog sDialog) {
+										sd.cancel();
+										Party_User party_user = new Party_User();
+										party_user.setPk_party_user(pk_party_user);
+										party_user.setRelationship(0);
+										party_user.setStatus(1);
+										party_user.setFk_party(pk_party);
+										party_user.setFk_user(sD_pk_user);
+										readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
+									}
+								}).show();
 			}
-		}else
-		{
-			if(1==mPay_type){
+		} else {
+			if (1 == mPay_type) {
 				Party_User party_user = new Party_User();
 				party_user.setPk_party_user(pk_party_user);
 				party_user.setRelationship(4);
@@ -746,10 +574,10 @@ public class PartyDetailsActivity extends Activity implements
 				party_user.setFk_party(pk_party);
 				party_user.setFk_user(sD_pk_user);
 				readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
-				Log.e("PartyDetailsActivity", "µÃµ½µÄgetPk_party_user2222222222"+ pk_party_user);
+				Log.e("PartyDetailsActivity", "å¾—åˆ°çš„getPk_party_user2222222222"+ pk_party_user);
 				Toast();
-			}else if (3==mPay_type) {
-				Intent intent=new Intent(PartyDetailsActivity.this, PayBaseActivity.class);
+			} else if (3 == mPay_type) {
+				Intent intent = new Intent(PartyDetailsActivity.this,PayBaseActivity.class);
 				intent.putExtra(IConstant.Paymount, mPay_amount);
 				intent.putExtra(IConstant.Payname, mPayName);
 				startActivity(intent);
@@ -758,14 +586,14 @@ public class PartyDetailsActivity extends Activity implements
 	}
 
 	private void Toast() {
-		//×Ô¶¨ÒåToast
+		// è‡ªå®šä¹‰Toast
 		View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
-		Toast toast=new Toast(getApplicationContext());
+		Toast toast = new Toast(getApplicationContext());
 		toast.setGravity(Gravity.CENTER, 0, 100);
 		toast.setView(toastRoot);
 		toast.setDuration(100);
-		TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
-		tv.setText("±¨Ãû³É¹¦");
+		TextView tv = (TextView) toastRoot.findViewById(R.id.TextViewInfo);
+		tv.setText("æŠ¥åæˆåŠŸ");
 		toast.show();
 	}
 
@@ -776,7 +604,7 @@ public class PartyDetailsActivity extends Activity implements
 			intent.putExtra(IConstant.UserAll, true);
 		} else {
 			intent.putExtra(IConstant.MoreParty, oneParty);
-		}                                                                                                                                                              
+		}
 		startActivity(intent);
 	}
 
@@ -791,14 +619,14 @@ public class PartyDetailsActivity extends Activity implements
 			editor.commit();
 		}
 	}
-	
-	//Î¢ĞÅÖ§¸¶±¨Ãû
-	public interface GetWeChatPay{
+
+	// å¾®ä¿¡æ”¯ä»˜æŠ¥å
+	public interface GetWeChatPay {
 		void WeChatPay();
 	}
-	
-	//Ö§¸¶±¦Ö§¸¶
-	public interface GetAliPay{
+
+	// æ”¯ä»˜å®æ”¯ä»˜
+	public interface GetAliPay {
 		void AliPay();
 	}
 }

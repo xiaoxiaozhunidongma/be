@@ -52,6 +52,8 @@ import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.Window;
 import android.view.WindowManager;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -116,6 +118,9 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	public static GetPersonal getPersonal;
 	public static GetChatRoomClickOK chatRoomClickOK;
 	private HashMap<Integer, String> fromAvaUrlMap;
+	private RelativeLayout mLeanChatBackground;
+	public static GetClose getClose;
+	public static GetOpen getOpen;
 
 	public static ChatActivityLean getChatInstance() {
 		return chatInstance;
@@ -136,6 +141,36 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		initMemberChat();//成员界面调用接口
 		initPersonalData();//好友资料界面调用接口
 		initChatRoomClickOK();//在头像界面点击完成调用接口
+		initClose();//覆盖色关闭调用接口
+		initOpen();//覆盖色打开调用接口
+	}
+	
+	private void initOpen() {
+		GetOpen getOpen=new GetOpen(){
+			
+			@Override
+			public void Open() {
+				mLeanChatBackground.setVisibility(View.VISIBLE);
+				Animation animation=new AlphaAnimation(0.0f,1.0f);
+				animation.setDuration(500);
+				mLeanChatBackground.startAnimation(animation);
+			}
+		};
+		this.getOpen=getOpen;
+	}
+	
+	private void initClose() {
+		GetClose getClose=new GetClose(){
+
+			@Override
+			public void Close() {
+				mLeanChatBackground.setVisibility(View.GONE);
+				Animation animation=new AlphaAnimation(1.0f,0.0f);
+				animation.setDuration(500);
+				mLeanChatBackground.startAnimation(animation);
+			}
+		};
+		this.getClose=getClose;
 	}
 
 	private void initChatRoomClickOK() {
@@ -177,6 +212,8 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	}
 
 	private void findView() {
+		mLeanChatBackground = (RelativeLayout) findViewById(R.id.LeanChatBackground);//覆盖色
+		
 		tochatname = (TextView) findViewById(R.id.name);
 		mTv_detail = (TextView) findViewById(R.id.tv_detail);
 		mTv_detail.setOnClickListener(this);// 详情
@@ -571,6 +608,10 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	//查看成员
 	private void tv_detail() {
 		mTv_detail.setText("关闭");
+		mLeanChatBackground.setVisibility(View.VISIBLE);
+		Animation animation=new AlphaAnimation(0.0f,1.0f);
+		animation.setDuration(500);
+		mLeanChatBackground.startAnimation(animation);
 		Intent intent = new Intent(ChatActivityLean.this, MembersChatActivity.class);
 		startActivity(intent);
 		overridePendingTransition(R.anim.in_item, R.anim.out_item);
@@ -1010,5 +1051,12 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	
 	public interface GetChatRoomClickOK{
 		void ChatRoomClickOK();
+	}
+	
+	public interface GetClose{
+		void Close();
+	}
+	public interface GetOpen{
+		void Open();
 	}
 }

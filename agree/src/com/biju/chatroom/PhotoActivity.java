@@ -33,7 +33,6 @@ import com.biju.R.layout;
 import com.biju.R.menu;
 import com.biju.function.GroupActivity;
 import com.fragment.PhotoFragment2.GridAdapter;
-import com.fragment.PhotoFragment2.onActivityResultInterface;
 import com.fragment.PhotoFragment2.GridAdapter.ViewHolder;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -98,7 +97,6 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 	private String mFilePath;
 	public static ArrayList<Bitmap> bitmaps=new ArrayList<Bitmap>();
 	private boolean hasloaded;
-	public static onActivityResultInterface onActivityResultInterface;
 	private OSSData ossData;
 	private OSSService ossService;
 	private OSSBucket sampleBucket;

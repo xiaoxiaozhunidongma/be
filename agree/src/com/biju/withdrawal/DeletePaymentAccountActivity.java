@@ -15,9 +15,11 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import com.BJ.javabean.Order;
 import com.BJ.javabean.OrderBack;
 import com.BJ.javabean.PaymentAccount;
+import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.DeletePayMentAccountListenner;
 import com.biju.Interface.OrderListenner;
+import com.biju.function.BindingPhoneActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -137,12 +139,29 @@ public class DeletePaymentAccountActivity extends Activity implements OnClickLis
 
 	//删除账户
 	private void DeletePayment_delete() {
-		Integer pk_payment_account=paymentAccount.getPk_payment_account();
-		Integer fk_user=paymentAccount.getFk_user();
-		PaymentAccount account=new PaymentAccount();
-		account.setFk_user(fk_user);
-		account.setPk_payment_account(pk_payment_account);
-		mDeletePaymentInterface.DeletePayMentAccount(DeletePaymentAccountActivity.this, account);
+		final SweetAlertDialog sd = new SweetAlertDialog(DeletePaymentAccountActivity.this,SweetAlertDialog.WARNING_TYPE);
+		sd.setTitleText("提示");
+		sd.setContentText("是否要删除当前账户?");
+		sd.setCancelText("我在想想");
+		sd.setConfirmText("确定");
+		sd.showCancelButton(true);
+		sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+			}
+		}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+				Integer pk_payment_account=paymentAccount.getPk_payment_account();
+				Integer fk_user=paymentAccount.getFk_user();
+				PaymentAccount account=new PaymentAccount();
+				account.setFk_user(fk_user);
+				account.setPk_payment_account(pk_payment_account);
+				mDeletePaymentInterface.DeletePayMentAccount(DeletePaymentAccountActivity.this, account);
+			}
+		}).show();
 	}
 
 	//提现

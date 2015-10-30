@@ -226,6 +226,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 
 	private void group_setting() {
 		mGroup_setting.setText("¹Ø±Õ");
+		CommonFragment.getOpen.Open();
 		Intent intent = new Intent(GroupActivity.this, SlidingActivity.class);
 		intent.putExtra("group_group", pk_group);
 		startActivity(intent);

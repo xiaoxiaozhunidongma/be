@@ -70,23 +70,34 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
-		mLayout = inflater.inflate(R.layout.fragment_schedule, container, false);
-		sD_pk_user = SdPkUser.getsD_pk_user();
-		initInterface();
-		initreadUserGroupParty();
-		initUI();
-		
-		mSchedule_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.schedule_swipe_refresh);
-		mSchedule_swipe_refresh.setOnRefreshListener(this);
-
-		// 顶部刷新的样式
-		mSchedule_swipe_refresh.setColorSchemeResources(
-				android.R.color.holo_red_light,
-				android.R.color.holo_green_light,
-				android.R.color.holo_blue_bright,
-				android.R.color.holo_orange_light);
-		Log.e("ScheduleFragment", "进入了onStart()=========");
+		if(mLayout==null){
+			
+			mLayout = inflater.inflate(R.layout.fragment_schedule, container, false);
+			sD_pk_user = SdPkUser.getsD_pk_user();
+			initInterface();
+			initreadUserGroupParty();
+			initUI();
+			
+			mSchedule_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.schedule_swipe_refresh);
+			mSchedule_swipe_refresh.setOnRefreshListener(this);
+			
+			// 顶部刷新的样式
+			mSchedule_swipe_refresh.setColorSchemeResources(
+					android.R.color.holo_red_light,
+					android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright,
+					android.R.color.holo_orange_light);
+			Log.e("ScheduleFragment", "进入了onStart()=========");
+			
+		}
 		return mLayout;
+	}
+	
+	@Override
+	public void onDestroyView() {
+		super.onDestroyView();
+		ViewGroup parent = (ViewGroup) mLayout.getParent();
+		parent.removeView(mLayout);
 	}
 	
 	@Override

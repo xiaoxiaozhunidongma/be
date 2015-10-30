@@ -237,7 +237,7 @@
     <string name="home_tab_text">小组</string>
 
     <!-- party界面 -->
-    <string name="party_title_text">日程</string>
+    <string name="party_title_text">聚会详情</string>
     <string name="party_title_right_text">新建</string>
     <string name="party_prompt">你还没有参与过日程哦！</string>
     <!-- 好友界面 -->
