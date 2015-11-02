@@ -65,14 +65,15 @@
                 <EditText
                     android:id="@+id/EditText_EditText"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentLeft="true"
                     android:layout_alignParentTop="true"
                     android:layout_margin="10.0dp"
                     android:background="@null"
                     android:ems="10"
                     android:hint=""
-                    android:textSize="11.0sp" >
+                    android:gravity="top"
+                    android:textSize="14.0sp" >
                    
                 </EditText>
             </RelativeLayout>

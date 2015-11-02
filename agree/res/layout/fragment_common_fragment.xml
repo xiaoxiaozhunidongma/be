@@ -109,7 +109,6 @@
         android:id="@+id/CommonBackground"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
         android:background="#cc000000"
         android:visibility="gone" >
     </RelativeLayout>

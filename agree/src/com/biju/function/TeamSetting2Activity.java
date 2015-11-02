@@ -8,6 +8,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -74,6 +75,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private Integer ischat=-1;
 	private Integer ismessage=-1;
 	private Integer isphone=-1;
+	private int toastHeight;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -95,7 +97,16 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		initMessage();
 		initChat();
 		initPhone();
+		DisplayMetrics();
 	}
+	
+	private void DisplayMetrics() {
+		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(metric);
+        int height = metric.heightPixels;   // 屏幕高度（像素）
+        toastHeight = height/4;
+	}
+
 
 	@SuppressWarnings("static-access")
 	private void initPhone() {
@@ -228,6 +239,8 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 						Editor editor=Sliding_sp.edit();
 						editor.putInt(IConstant.Click, 0);
 						editor.commit();
+						
+						Toast();
 					}
 				} else {
 					Teamupdateback teamupdateback = GsonUtils.parseJson(A,Teamupdateback.class);
@@ -239,18 +252,46 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 //						editor.putBoolean("setting", true);
 //						editor.commit();
 //						finish();
+						Toast();
 					} else {
-						Toast.makeText(TeamSetting2Activity.this,"更新设置失败，请重新再试!", Toast.LENGTH_SHORT).show();
+						Toast1();
 					}
 				}
 
 			}
-
 			@Override
 			public void defail(Object B) {
 
 			}
 		});
+	}
+	
+	private void Toast1() {
+		//自定义Toast
+		View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast, null);
+		Toast toast=new Toast(getApplicationContext());
+		toast.setGravity(Gravity.TOP, 0, toastHeight);
+		toast.setView(toastRoot);
+		toast.setDuration(100);
+		TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+		tv.setText("更新设置失败，请重新再试!");
+		toast.show();
+	}
+	
+	private void Toast() {
+		//自定义Toast
+		View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+		Toast toast=new Toast(getApplicationContext());
+		toast.setGravity(Gravity.TOP, 0, toastHeight);
+		toast.setView(toastRoot);
+		toast.setDuration(100);
+		TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+		if(isExit){
+			tv.setText("退出成功");
+		}else {
+			tv.setText("更新成功");
+		}
+		toast.show();
 	}
 
 	//读取用户小组关系

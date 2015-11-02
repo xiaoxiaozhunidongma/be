@@ -7,7 +7,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:background="#ffffff" >
@@ -23,7 +23,7 @@
 
         <RelativeLayout
             android:id="@+id/AddFriends3BackLayout"
-            android:layout_width="60.0dp"
+            android:layout_width="65.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
@@ -41,7 +41,7 @@
 
         <RelativeLayout
             android:id="@+id/AddFriends3OKLayout"
-            android:layout_width="60.0dp"
+            android:layout_width="65.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >

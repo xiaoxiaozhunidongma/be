@@ -137,7 +137,7 @@
         <!-- 数据库 -->
 
 
-        <!-- yGkNOAGTinoQq0oFRuksvUIi -->
+        <!-- yGkNOAGTinoQq0oFRuksvUIi    am4a3xRjopFOrnHsDW7nnlb4 -->
         <meta-data
             android:name="AA_DB_NAME"
             android:value="graphic_details.db" />
@@ -147,7 +147,7 @@
         <!-- 百度签名 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="yGkNOAGTinoQq0oFRuksvUIi" />
+            android:value="am4a3xRjopFOrnHsDW7nnlb4" />
         <!-- 百度签名 -->
         <activity
             android:name="com.biju.MainActivity"
@@ -470,7 +470,8 @@
         </activity>
         <activity
             android:name="com.biju.pay.GraphicDetailsActivity"
-            android:label="@string/title_activity_graphic_details" >
+            android:label="@string/title_activity_graphic_details"
+             >
         </activity>
         <activity
             android:name="com.biju.pay.PayBaseActivity"
@@ -480,12 +481,11 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
                 <data android:scheme="wx2ffba147560de2ff" />
             </intent-filter>
         </activity>
+        
         <activity
             android:name="com.biju.wxapi.WXPayEntryActivity"
             android:exported="true"
@@ -500,6 +500,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" >
         </activity>
+        
         <activity
             android:name="com.biju.pay.PreviewActivity"
             android:label="@string/title_activity_preview" >

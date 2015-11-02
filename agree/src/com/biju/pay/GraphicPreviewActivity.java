@@ -10,8 +10,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewGroup;
+import android.view.ViewGroup.MarginLayoutParams;
 import android.view.Window;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
@@ -24,12 +24,9 @@ import com.BJ.javabean.ImageTextBack;
 import com.BJ.javabean.Party;
 import com.BJ.utils.DensityUtil;
 import com.BJ.utils.GraphicImageLoaderUtils;
-import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
-import com.BJ.utils.homeImageLoaderUtils;
 import com.biju.Interface;
 import com.biju.Interface.ReadGraphicListenner;
-import com.biju.function.TeamSetting2Activity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -135,12 +132,15 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				}else if(GREENCOLOR.equals(SINGCOLOR)){
 					holder.GraphicPreviewText.setTextColor(holder.GraphicPreviewText.getResources().getColor(R.drawable.EditTextGreenColor));
 				}
+				//字体大小
+				Integer fontsize=imageText.getFont_size();
+				holder.GraphicPreviewText.setTextSize(fontsize);
 				holder.GraphicPreviewText.setText(imageText.getText()+"");
 			}else if(2==type){
 				holder.GraphicPreviewText.setVisibility(View.GONE);
 				holder.GraphicPreviewImageView.setVisibility(View.VISIBLE);
-				holder.GraphicPreviewWhiteLayout.setVisibility(View.GONE);
-				holder.GraphicPreviewWhiteLayout1.setVisibility(View.VISIBLE);
+//				holder.GraphicPreviewWhiteLayout.setVisibility(View.GONE);
+//				holder.GraphicPreviewWhiteLayout1.setVisibility(View.VISIBLE);
 				
 				int px2dip_left_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
 				int px2dip_top_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
@@ -149,15 +149,19 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 
 				int columnWidth=imageText.getImage_width();
 				int columnHeight=imageText.getImage_height();
-				Log.e("GraphicPreviewActivity", "高度======"+columnHeight);
-				Log.e("GraphicPreviewActivity", "宽度======"+columnWidth);
+				int Width=DensityUtil.px2dip(GraphicPreviewActivity.this, columnWidth);
+				int Height=DensityUtil.px2dip(GraphicPreviewActivity.this, columnHeight);
+				Log.e("GraphicPreviewActivity", "高度像素======"+columnHeight);
+				Log.e("GraphicPreviewActivity", "宽度像素======"+columnWidth);
+				Log.e("GraphicPreviewActivity", "高度dp======"+Height);
+				Log.e("GraphicPreviewActivity", "宽度dp======"+Width);
 				// 设置图片的位置
+				holder.GraphicPreviewImageView.setAdjustViewBounds(true);
 				MarginLayoutParams margin9 = new MarginLayoutParams(holder.GraphicPreviewImageView.getLayoutParams());
 				margin9.setMargins(px2dip_left_1, 0, px2dip_right_1,0);
 				RelativeLayout.LayoutParams layoutParams9 = new RelativeLayout.LayoutParams(margin9);
 				layoutParams9.height = columnHeight;// 设置图片的高度
 				layoutParams9.width = columnWidth; // 设置图片的宽度
-				holder.GraphicPreviewImageView.setAdjustViewBounds(true);
 				holder.GraphicPreviewImageView.setLayoutParams(layoutParams9);
 				
 				String mPath=imageText.getImage_path();
@@ -172,7 +176,7 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				if(1==type){
 					holder.GraphicPreviewWhiteLayout2.setVisibility(View.VISIBLE);
 				}else if(2==type){
-					holder.GraphicPreviewWhiteLayout.setVisibility(View.VISIBLE);
+//					holder.GraphicPreviewWhiteLayout.setVisibility(View.VISIBLE);
 				}
 			}
 			

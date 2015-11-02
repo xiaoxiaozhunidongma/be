@@ -115,7 +115,6 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 						}
 						if(userAllPartieList.size()>0)
 						{
-							mParty_listView.setAdapter(adapter);
 							mTab_party_prompt_layout.setVisibility(View.GONE);
 							mTab_party_swipe_refresh.setVisibility(View.VISIBLE);
 							mParty_listView.setVisibility(View.VISIBLE);
@@ -165,7 +164,6 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 
 		mParty_listView =(ListView) mLayout.findViewById(R.id.tab_party_listview);
 		mParty_listView.setDividerHeight(0);//设置listview的item直接的间隙为0
-		adapter = new MyAdapter();
 
 		//listview的点击监听
 		mParty_listView.setOnItemClickListener(new OnItemClickListener() {
@@ -204,6 +202,8 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				}
 			}
 		});
+		adapter = new MyAdapter();
+		mParty_listView.setAdapter(adapter);
 	}
 
 	class ViewHolder {
@@ -305,11 +305,13 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_partake_address_color));//参与后地址颜色深灰
 					holder.Party_item_payment.setTextColor(holder.Party_item_payment.getResources().getColor(R.drawable.Party_partake_pay_color));//参与后付款方式变绿色
 				}else{
+					holder.Party_item_background.setBackgroundResource(R.drawable.party_partake_background);//如果参与聚会则背景为绿色
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
 				}
+				
 				holder.years_month.setText(times);
 				holder.name.setText(party.getName());
 				holder.times.setText(datetimes);

@@ -190,7 +190,7 @@
     <RelativeLayout
         android:id="@+id/top_bar"
         android:layout_width="match_parent"
-        android:layout_height="40.0dp"
+        android:layout_height="50.0dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:gravity="center_vertical" >
@@ -243,7 +243,7 @@
 
         <TextView
             android:id="@+id/tv_back"
-            android:layout_width="60.0dp"
+            android:layout_width="65.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
@@ -255,7 +255,7 @@
 
         <TextView
             android:id="@+id/tv_detail"
-            android:layout_width="60.0dp"
+            android:layout_width="65.0dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"

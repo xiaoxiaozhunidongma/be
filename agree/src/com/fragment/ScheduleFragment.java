@@ -61,7 +61,6 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private TextView mSchedule_new_party;
 	private RelativeLayout mSchedule_swipe_refresh_layout;
 	private RelativeLayout mSchedule_prompt_layout;
-	private boolean isrelationshpi;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -71,7 +70,6 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if(mLayout==null){
-			
 			mLayout = inflater.inflate(R.layout.fragment_schedule, container, false);
 			sD_pk_user = SdPkUser.getsD_pk_user();
 			initInterface();
@@ -88,7 +86,6 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					android.R.color.holo_blue_bright,
 					android.R.color.holo_orange_light);
 			Log.e("ScheduleFragment", "进入了onStart()=========");
-			
 		}
 		return mLayout;
 	}
@@ -161,12 +158,15 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					}else if(relatonship==0)
 					{
 						Log.e("ScheduleFragment", "进入到relatonship为0的地方==========");
-						isrelationshpi=true;
 						Party_User party_user = new Party_User();
 						party_user.setPk_party_user(scheduleparty.getPk_party_user());
 						party_user.setRelationship(3);
 						party_user.setType(1);
 						scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
+						
+						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
+						intent.putExtra(IConstant.OneParty, scheduleparty);
+						startActivity(intent);
 						
 						SharedPreferences Schedule_sp=getActivity().getSharedPreferences(IConstant.Schedule, 0);
 						Editor editor=Schedule_sp.edit();
@@ -417,11 +417,6 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			@Override
 			public void success(String A) {
 				Log.e("ScheduleFragment", "返回的是否更新成功" + A);
-				if(isrelationshpi){
-					Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
-					intent.putExtra(IConstant.OneParty, scheduleparty);
-					startActivity(intent);
-				}
 			}
 
 			@Override

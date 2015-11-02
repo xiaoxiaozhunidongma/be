@@ -55,6 +55,20 @@ public class TimeActivity extends Activity implements OnClickListener {
 	private Integer startCurrentMonths_1;
 	private Integer endcurrentDay_2;
 	private Integer startCurrentDay_2;
+	private boolean isNoChoose;
+	private String timeString;
+	private String partytimeString;
+	private String mCurrentYears;
+	private String mCurrentMonth;
+	private String mCurrentDay;
+	private String mCurrentHour;
+	private String mCurrentMinute;
+	private String week;
+	private boolean isTimeChoose;
+	private String mNoyears;
+	private String mNomonth;
+	private String mNoday;
+	private String mNoWeek;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -79,9 +93,9 @@ public class TimeActivity extends Activity implements OnClickListener {
 		boolean date1 = sp.getBoolean("date", false);
 		if (date1) {
 			String dateFormat = sp.getString("dateFormat", "");
-			calendar.setCalendarDayBgColor(dateFormat,R.drawable.yuan_6);//设置背景红色圆圈
+			calendar.setCalendarDayBgColor(dateFormat,R.drawable.yuan_6,false);//设置背景红色圆圈
 			date = dateFormat;// 最后返回给全局 date
-			Log.e("TimeActivity", "进保存后的");
+			Log.e("TimeActivity", "进保存后的"+date);
 			if (null != date) {
 
 				int years = Integer.parseInt(date.substring(0,date.indexOf("-")));
@@ -89,11 +103,88 @@ public class TimeActivity extends Activity implements OnClickListener {
 				popupwindow_calendar_month.setText(years + "年" + month + "月");
 
 				calendar.showCalendar(years, month);
-				calendar.setCalendarDayBgColor(date,R.drawable.yuan_6);//设置背景红色圆圈
+				calendar.setCalendarDayBgColor(date,R.drawable.yuan_6,true);//设置背景红色圆圈
+			}
+			
+			SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
+			boolean IsTimeChoose=time_sp.getBoolean(IConstant.IsTimeChoose, false);
+			if(IsTimeChoose){
+				String date=time_sp.getString(IConstant.IsCalendar, "");
+				String OldYears=date.substring(0, 4);
+				String OldMonth=date.substring(5, 7);
+				String OldDay=date.substring(8, 10);
+				Integer y = Integer.valueOf(OldYears);
+				Integer m = Integer.valueOf(OldMonth);
+				Integer d = Integer.valueOf(OldDay);
+				// 调用计算星期几的方法
+				Weeks.CaculateWeekDay(y, m, d);
+				String week = Weeks.getweek();
+				Integer hour=time_sp.getInt(IConstant.Hour, 0);
+				Integer Minute=time_sp.getInt(IConstant.Minute, 0);
+				
+				mTimePicker.setCurrentHour(hour);
+				mTimePicker.setCurrentMinute(Minute);
+				mTimePicker_Time_show.setText("开始时间:"+OldYears+"年"+OldMonth+"月"+OldDay+"日"+" "+week+" "+hour+":"+Minute);
+			}
+		}else {
+			SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
+			isTimeChoose = time_sp.getBoolean(IConstant.IsTimeChoose, false);
+			if(isTimeChoose){
+				isNoChoose=true;
+				mNoyears = time_sp.getString("mCurrentYears", "");
+				mCurrentYears=mNoyears;
+				mNomonth = time_sp.getString("mCurrentMonth", "");
+				mCurrentMonth=mNomonth;
+				mNoday = time_sp.getString("mCurrentDay", "");
+				mCurrentDay=mNoday;
+				mNoWeek = time_sp.getString("week", "");
+				week=mNoWeek;
+				String timeString=time_sp.getString("TimeString", "");
+				mTimePicker_Time_show.setText("开始时间:"+mNoyears+"年"+timeString);
+			}else {
+				isNoChoose=true;
+				SimpleDateFormat dateFormat=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+				String time=dateFormat.format(new Date());
+				Log.e("TimeActivity", "当前时间========="+time);
+				mCurrentYears = time.substring(0, 4);
+				mCurrentMonth = time.substring(5, 7);
+				mCurrentDay = time.substring(8, 10);
+				mCurrentHour = time.substring(11, 13);
+				mCurrentMinute = time.substring(14, 16);
+				// 计算星期几
+				int y = Integer.valueOf(mCurrentYears);
+				int m = Integer.valueOf(mCurrentMonth);
+				int d = Integer.valueOf(mCurrentHour);
+				// 调用计算星期几的方法
+				Weeks.CaculateWeekDay(y, m, d);
+				week = Weeks.getweek();
+				mTimePicker_Time_show.setText("开始时间: "+mCurrentYears + "年" + mCurrentMonth + "月"
+						+ mCurrentDay + "日" + " " + week + " " +(Integer.valueOf(mCurrentHour)+3) + ":" +mCurrentMinute);
+				timeString = mCurrentMonth + "月"+ mCurrentDay + "日" + " " + week + " " +(Integer.valueOf(mCurrentHour)+3) + ":" +mCurrentMinute;
+				partytimeString = mCurrentYears+"-"+mCurrentMonth+"-"+mCurrentDay+"  "+(Integer.valueOf(mCurrentHour)+3)+":"+mCurrentMinute;
 			}
 		}
 	}
 
+	private void NoChoose() {
+		SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
+		Editor editor = time_sp.edit();
+		editor.putBoolean(IConstant.IsTimeChoose, true);
+		editor.putBoolean("isNoChoose", true);
+		editor.putString("TimeString", timeString);
+		editor.putString("partytimeString", partytimeString);
+		editor.putInt(IConstant.Hour, chooseCurrentHour);
+		editor.putInt(IConstant.Minute, chooseCurrentMinute);
+		editor.putString("mCurrentYears", mCurrentYears);
+		editor.putString("mCurrentMonth", mCurrentMonth);
+		editor.putString("mCurrentDay", mCurrentDay);
+		editor.putString("week", week);
+		editor.commit();
+		
+		
+		finish();
+	}
+	
 	private void initUI() {
 		mTimePicker_Time_show = (TextView) findViewById(R.id.TimePicker_Time_show);
 		mTimePicker_Time_show.setText("聚会开始时间");
@@ -118,10 +209,18 @@ public class TimeActivity extends Activity implements OnClickListener {
 		mTimePicker.setIs24HourView(false);
 		if(istimechoose)
 		{
-			Integer hour = time_sp.getInt(IConstant.Hour, 0);
-			Integer minute = time_sp.getInt(IConstant.Minute, 0);
-			mTimePicker.setCurrentHour(hour);
-			mTimePicker.setCurrentMinute(minute);
+			boolean isNoChoose = time_sp.getBoolean("isNoChoose", false);
+			if(isNoChoose){
+				Integer hour = time_sp.getInt(IConstant.Hour, 0);
+				Integer minute = time_sp.getInt(IConstant.Minute, 0);
+				mTimePicker.setCurrentHour(hour);
+				mTimePicker.setCurrentMinute(minute);
+			}else {
+				Integer hour = time_sp.getInt(IConstant.Hour, 0);
+				Integer minute = time_sp.getInt(IConstant.Minute, 0);
+				mTimePicker.setCurrentHour(hour);
+				mTimePicker.setCurrentMinute(minute);
+			}
 		}
 		
 		TimeListener times = new TimeListener();
@@ -164,7 +263,17 @@ public class TimeActivity extends Activity implements OnClickListener {
 				}
 			}else
 			{
-				mTimePicker_Time_show.setText("开始时间:(null)");
+				if(isTimeChoose){
+					mTimePicker_Time_show.setText("开始时间: "+mNoyears + "年" + mNomonth + "月"
+							+ mNoday + "日" + " " + mNoWeek + " " +chooseCurrentHour + ":" +chooseCurrentMinute);
+					timeString = mNomonth + "月"+ mNoday + "日" + " " + mNoWeek + " " +chooseCurrentHour + ":" +chooseCurrentMinute;
+					partytimeString = mNoyears+"-"+mNomonth+"-"+mNoday+"  "+chooseCurrentHour+":"+chooseCurrentMinute;
+				}else {
+					mTimePicker_Time_show.setText("开始时间: "+mCurrentYears + "年" + mCurrentMonth + "月"
+							+ mCurrentDay + "日" + " " + week + " " +chooseCurrentHour + ":" +chooseCurrentMinute);
+					timeString = mCurrentMonth + "月"+ mCurrentDay + "日" + " " + week + " " +chooseCurrentHour + ":" +chooseCurrentMinute;
+					partytimeString = mCurrentYears+"-"+mCurrentMonth+"-"+mCurrentDay+"  "+chooseCurrentHour+":"+chooseCurrentMinute;
+				}
 			}
 		}
 
@@ -195,13 +304,18 @@ public class TimeActivity extends Activity implements OnClickListener {
 
 	private void Time_OK() {
 		if(IConstant.StartTimeChoose.equals(currentChoose)){
-			StartTimeChoose();
+			if(isNoChoose){
+				NoChoose();
+			}else {
+				StartTimeChoose();
+			}
 		}else if(IConstant.EndTimeChoose.equals(currentChoose)){
 			EndTimeChoose();
 		}else if(IConstant.DeadlineTimeChoose.equals(currentChoose)){
 			
 		}
 	}
+
 	//选择结束时间的判断过程
 	private void EndTimeChoose() {
 		String StartMonths=intent.getStringExtra(IConstant.StartMonths);
@@ -428,10 +542,18 @@ public class TimeActivity extends Activity implements OnClickListener {
 		SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
 		Editor editor = time_sp.edit();
 		editor.putBoolean(IConstant.IsTimeChoose, true);
+		editor.putBoolean("isNoChoose", false);
 		editor.putInt(IConstant.Hour, chooseCurrentHour);
 		editor.putInt(IConstant.Minute, chooseCurrentMinute);
 		editor.putString(IConstant.IsCalendar, date);
 		editor.commit();
+		
+		SharedPreferences sp = getSharedPreferences("isdate", 0);
+		Editor editor1 = sp.edit();
+		editor1.putString("dateFormat", date);
+		editor1.putBoolean("date", true);
+		editor1.commit();
+		
 		finish();
 	}
 
@@ -474,13 +596,12 @@ public class TimeActivity extends Activity implements OnClickListener {
 		popupwindow_calendar_month.setText(calendar.getCalendarYear() + "年"+ calendar.getCalendarMonth() + "月");
 
 		if (null != date) {
-
 			int years = Integer.parseInt(date.substring(0, date.indexOf("-")));
 			int month = Integer.parseInt(date.substring(date.indexOf("-") + 1,date.lastIndexOf("-")));
 			popupwindow_calendar_month.setText(years + "年" + month + "月");
 
 			calendar.showCalendar(years, month);
-			calendar.setCalendarDayBgColor(date,R.drawable.yuan_6);
+			calendar.setCalendarDayBgColor(date,R.drawable.yuan_6,true);
 		}
 
 		List<String> list = new ArrayList<String>(); // 设置标记列表
@@ -506,7 +627,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 
 				} else {
 					calendar.removeAllBgColor();
-					calendar.setCalendarDayBgColor(dateFormat,R.drawable.yuan_6);
+					calendar.setCalendarDayBgColor(dateFormat,R.drawable.yuan_6,true);
 					date = dateFormat;// 最后返回给全局 date
 					// Log.e("date", "date=========" + date);
 					Log.e("date", "date=========" + date);
@@ -521,9 +642,11 @@ public class TimeActivity extends Activity implements OnClickListener {
 					Weeks.CaculateWeekDay(y, m, d);
 					String week = Weeks.getweek();
 					if(IConstant.StartTimeChoose.equals(currentChoose)){
+						mTimePicker.setCurrentHour(chooseCurrentHour);
+						mTimePicker.setCurrentMinute(chooseCurrentMinute);
 						mTimePicker_Time_show.setText("开始时间:"+OldYears+"年"+OldMonth+"月"+OldDay+"日"+" "+week+" "+chooseCurrentHour+":"+chooseCurrentMinute);
 					}
-					
+					isNoChoose=false;
 					SharedPreferences sp = getSharedPreferences("isdate", 0);
 					Editor editor = sp.edit();
 					editor.putString("dateFormat", dateFormat);

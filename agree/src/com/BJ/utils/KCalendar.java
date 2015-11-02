@@ -298,8 +298,15 @@ public class KCalendar extends ViewFlipper implements
 								&& thisday.getMonth() == calendarday.getMonth()
 								&& thisday.getYear() == calendarday.getYear()) {
 //							view.setText("今天");
-							view.setTextColor(COLOR_DAY_CALENDAR);//设置字体颜色为白色
-							view.setBackgroundResource(R.drawable.yuan_gray_1);//今天日期设置背景颜色Color.TRANSPARENT
+							if(check){
+								view.setTextColor(COLOR_DAY_CALENDAR);//设置字体颜色为白色
+								view.setBackgroundResource(R.drawable.yuan_gray_1);//今天日期设置背景颜色Color.TRANSPARENT
+							}else {
+								view.setTextColor(COLOR_DAY_CALENDAR);//设置字体颜色为白色
+								view.setBackgroundResource(R.drawable.yuan_6);//今天日期设置背景颜色Color.TRANSPARENT
+							}
+							Log.e("上面首先设置了一下默认的背景色", "=========="+day);
+							Log.e("", "==================33333333333"+check);
 						} else {
 							view.setTextColor(COLOR_TX_THIS_MONTH_DAY);
 							view.setBackgroundColor(Color.TRANSPARENT);
@@ -540,8 +547,10 @@ public class KCalendar extends ViewFlipper implements
 	 * @param date
 	 * @param color
 	 */
-	public void setCalendarDayBgColor(Date date, int color) {
-		setCalendarDayBgColor(format(date), color);
+	public void setCalendarDayBgColor(Date date, int color,boolean ischeck) {
+		setCalendarDayBgColor(format(date), color,ischeck);
+		check=ischeck;
+		Log.e("", "==================2222222222"+ischeck);
 	}
 
 	/**
@@ -550,8 +559,11 @@ public class KCalendar extends ViewFlipper implements
 	 * @param date
 	 * @param color
 	 */
-	public void setCalendarDayBgColor(String date, int color) {
+	private boolean check;
+	public void setCalendarDayBgColor(String date, int color,boolean ischeck) {
 		dayBgColorMap.put(date, color);
+		Log.e("", "==================11111111111111"+ischeck);
+		check=ischeck;
 		setCalendarDate();
 	}
 

@@ -309,7 +309,11 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			}
 			Log.e("CommentsListActivity","这时候的commentsList_msg2222222222222============"+ commentsList_msg);
 			Relation relation = partackList.get(position);
-			holder.commentslist_item_status.setText("已报名-"+"已支付"+mPay_amount+"元");
+			if(mPay_amount==0){
+				holder.commentslist_item_status.setText("已经报名");
+			}else {
+				holder.commentslist_item_status.setText("已报名-"+"已支付"+mPay_amount+"元");
+			}
 			String useravatar_path1 = relation.getAvatar_path();
 			completeURL = beginStr + useravatar_path1 + endStr;
 			PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP

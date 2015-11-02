@@ -130,6 +130,9 @@ public class PreviewActivity extends Activity implements OnClickListener {
 				}else if(GREENCOLOR.equals(SINGCOLOR)){
 					holder.PreviewTextShow.setTextColor(holder.PreviewTextShow.getResources().getColor(R.drawable.EditTextGreenColor));
 				}
+				//×ÖÌå´óÐ¡
+				Integer fontsize=imageText.getFont_size();
+				holder.PreviewTextShow.setTextSize(fontsize);
 				holder.PreviewTextShow.setText(imageText.getText() + "");
 			} else if (2 == type) {
 				holder.PreviewTextLayout.setVisibility(View.GONE);

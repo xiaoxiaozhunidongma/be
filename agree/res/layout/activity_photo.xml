@@ -9,13 +9,13 @@
         <RelativeLayout
         android:id="@+id/PhotoActivity_title_layout"
         android:layout_width="match_parent"
-        android:layout_height="40dp"
+        android:layout_height="50dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true" >
 
         <RelativeLayout
             android:id="@+id/PhotoActivity_back_layout"
-            android:layout_width="60dp"
+            android:layout_width="65dp"
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true" >
@@ -33,7 +33,7 @@
 
         <RelativeLayout
             android:id="@+id/PhotoActivity_detail_layout"
-            android:layout_width="60dp"
+            android:layout_width="65dp"
             android:layout_height="match_parent"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true" >
@@ -115,7 +115,7 @@
     <RelativeLayout
         android:id="@+id/relativeLayout1"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50.0dp"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/PhotoActivity_title_layout" >
 
@@ -125,8 +125,12 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:layout_marginLeft="5dp"
-            android:text="TextView" />
+            android:layout_marginLeft="10.0dp"
+            android:layout_marginTop="10.0dp"
+            android:text="办公室"
+            android:textSize="15.0sp"
+            android:textColor="#535353"
+             />
 
         <TextView
             android:id="@+id/tv_partytime"
@@ -134,9 +138,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_below="@+id/tv_partyname"
-            android:layout_marginLeft="5dp"
+            android:layout_marginLeft="10.0dp"
             android:text="Small Text"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:textSize="12.0sp"
+            android:textColor="#959595"
+             />
 
         <TextView
             android:id="@+id/tv_partyphotonum"
@@ -144,8 +150,11 @@
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="18dp"
-            android:text="50" />
+            android:layout_marginRight="25.0dp"
+            android:text="8" 
+            android:textSize="15.0sp"
+            android:textColor="#959595"
+            />
     </RelativeLayout>
 
 </RelativeLayout>

@@ -138,6 +138,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	}
 
 	private String uniqueId;
+	private String partytimeString;
+	private boolean isNoChoose;
 	//查表
 	private void initDB() {
 		GraphicDetailsList = new Select().from(ImageText.class).execute();
@@ -314,6 +316,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 						Intent intent=new Intent(AddNewPartyActivity.this, GroupActivity.class);
 						startActivity(intent);
 					}
+					mAdd_New_Party_OK_layout.setEnabled(true);
+					mAdd_New_Party_OK.setEnabled(true);
 				}
 			}
 
@@ -388,45 +392,52 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
 		boolean istimechoose = time_sp.getBoolean(IConstant.IsTimeChoose, false);
 		if (istimechoose) {
-			isCalendar = time_sp.getString(IConstant.IsCalendar, "");
-			String years = isCalendar.substring(0, 4);
-			months = isCalendar.substring(5, 7);
-			days = isCalendar.substring(8, 10);
-			// String times = years + "年" + months + "月" + days + "日";
-			// 计算星期几
-			int y = Integer.valueOf(years);
-			int m = Integer.valueOf(months);
-			int d = Integer.valueOf(days);
-			// 调用计算星期几的方法
-			Weeks.CaculateWeekDay(y, m, d);
-			String week = Weeks.getweek();
-			hour = time_sp.getInt(IConstant.Hour, 0);
-			Log.e("AddNewPartyActivity", "所得到的时间==========="+hour);
-			minute = time_sp.getInt(IConstant.Minute, 0);
-			if(hour<10)
-			{
-				if(minute<10)
+			isNoChoose = time_sp.getBoolean("isNoChoose", false);
+			if(isNoChoose){
+				String timeString=time_sp.getString("TimeString", "");
+				partytimeString = time_sp.getString("partytimeString", "");
+				mAdd_New_Party_time_details.setText(timeString);
+			}else {
+				isCalendar = time_sp.getString(IConstant.IsCalendar, "");
+				String years = isCalendar.substring(0, 4);
+				months = isCalendar.substring(5, 7);
+				days = isCalendar.substring(8, 10);
+				// String times = years + "年" + months + "月" + days + "日";
+				// 计算星期几
+				int y = Integer.valueOf(years);
+				int m = Integer.valueOf(months);
+				int d = Integer.valueOf(days);
+				// 调用计算星期几的方法
+				Weeks.CaculateWeekDay(y, m, d);
+				String week = Weeks.getweek();
+				hour = time_sp.getInt(IConstant.Hour, 0);
+				Log.e("AddNewPartyActivity", "所得到的时间==========="+hour);
+				minute = time_sp.getInt(IConstant.Minute, 0);
+				if(hour<10)
 				{
-					mAdd_New_Party_time_details.setText(months + "月"
-							+ days + "日" + " " + week + " " +"0"+hour + ":" +"0"+minute);
+					if(minute<10)
+					{
+						mAdd_New_Party_time_details.setText(months + "月"
+								+ days + "日" + " " + week + " " +"0"+hour + ":" +"0"+minute);
+					}else
+					{
+						mAdd_New_Party_time_details.setText(months + "月"
+								+ days + "日" + " " + week + " " +"0"+hour + ":" + minute);
+					}
 				}else
 				{
-					mAdd_New_Party_time_details.setText(months + "月"
-							+ days + "日" + " " + week + " " +"0"+hour + ":" + minute);
+					if(minute<10)
+					{
+						mAdd_New_Party_time_details.setText(months + "月"
+								+ days + "日" + " " + week + " " + hour + ":" +"0"+minute);
+					}else
+					{
+						mAdd_New_Party_time_details.setText(months + "月"
+								+ days + "日" + " " + week + " " + hour + ":" + minute);
+					}
 				}
-			}else
-			{
-				if(minute<10)
-				{
-					mAdd_New_Party_time_details.setText(months + "月"
-							+ days + "日" + " " + week + " " + hour + ":" +"0"+minute);
-				}else
-				{
-					mAdd_New_Party_time_details.setText(months + "月"
-							+ days + "日" + " " + week + " " + hour + ":" + minute);
-				}
+				startTime = years + "年" + months + "月"+ days + "日" + " " + week + " " + hour + ":" + minute;
 			}
-			startTime = years + "年" + months + "月"+ days + "日" + " " + week + " " + hour + ":" + minute;
 		}
 	}
 
@@ -449,11 +460,15 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		mAdd_New_Party_back = (TextView) findViewById(R.id.Add_New_Party_back);// 返回
 		mAdd_New_Party_OK_layout = (RelativeLayout) findViewById(R.id.Add_New_Party_OK_layout);
 		mAdd_New_Party_OK = (TextView) findViewById(R.id.Add_New_Party_OK);// 完成
+		
 		mAdd_New_Party_back_layout.setOnClickListener(this);
 		mAdd_New_Party_back.setOnClickListener(this);
 		mAdd_New_Party_OK_layout.setOnClickListener(this);
 		mAdd_New_Party_OK.setOnClickListener(this);
 		mAdd_New_Party_OK.setEnabled(true);
+		mAdd_New_Party_OK_layout.setEnabled(true);
+		mAdd_New_Party_OK.setEnabled(true);
+		
 		mAdd_New_Party_name = (EditText) findViewById(R.id.Add_New_Party_name);// 聚会名称
 		mAdd_New_Party_time = (RelativeLayout) findViewById(R.id.Add_New_Party_time);// 聚会时间
 		mAdd_New_Party_address = (RelativeLayout) findViewById(R.id.Add_New_Party_address);// 聚会地点
@@ -614,6 +629,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	// 完成
 	private void Add_New_Party_OK() {
 		initDB();
+		mAdd_New_Party_OK_layout.setEnabled(false);
+		mAdd_New_Party_OK.setEnabled(false);
 		
 	}
 
@@ -640,7 +657,12 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			party.setFk_user(sD_pk_user);
 			party.setName(party_name);
 			party.setRemark("sd");
-			party.setBegin_time(isCalendar + "   " + hour + ":" + minute);
+			if(isNoChoose){
+				party.setBegin_time(partytimeString);
+			}else {
+				party.setBegin_time(isCalendar + "   " + hour + ":" + minute);
+			}
+			
 			party.setLongitude(mLng);
 			party.setLatitude(mLat);
 			party.setLocation(address);
@@ -671,6 +693,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	// 返回
 	private void Add_New_Party_back() {
 		finish();
+		//清楚数据库,无条件全部删除
+		new Delete().from(ImageText.class).execute();
 	}
 
 	@Override
@@ -705,14 +729,17 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		Limit_editor.putBoolean(IConstant.IsNumber, false);
 		Limit_editor.commit();
 		
-		//清楚数据库,无条件全部删除
-		new Delete().from(ImageText.class).execute();
-		
 		//是否进入过金额界面
 		SharedPreferences CostSp=getSharedPreferences(IConstant.Cost, 0);
 		Editor Costeditor=CostSp.edit();
 		Costeditor.putBoolean(IConstant.IsCost, false);
 		Costeditor.commit();
+		
+		//是否进入过图文信息界面
+		SharedPreferences GraphicDetails_sp=getSharedPreferences("GraphicDetails", 0);
+		Editor GraphicDetails_editor=GraphicDetails_sp.edit();
+		GraphicDetails_editor.putBoolean("IsGraphicDetails", false);
+		GraphicDetails_editor.commit();
 		super.onStop();
 	}
 	
