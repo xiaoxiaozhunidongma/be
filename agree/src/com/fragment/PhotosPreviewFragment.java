@@ -53,6 +53,7 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	private MyAdapter adapter;
 	ArrayList<MyAdapter2> MyAdapterList=new ArrayList<PhotosPreviewFragment.MyAdapter2>();
 	HashMap<Integer, ListAdapter> MyAdapter2Map=new HashMap<Integer, ListAdapter>();
+	private Interface instance;
 
 	public PhotosPreviewFragment() {
 		// Required empty public constructor
@@ -71,6 +72,19 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	}
 	
 	@Override
+	public void onStart() {
+		// TODO Auto-generated method stub
+		readGroupParty();
+		super.onStart();
+	}
+	
+	private void readGroupParty() {
+		Group group=new Group();
+		group.setPk_group(GroupActivity.getPk_group());
+		instance.readUserGroupPartyAll(getActivity(), group);
+	}
+
+	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
@@ -78,7 +92,7 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	}
 
 	private void iniListener() {
-		Interface instance = Interface.getInstance();
+		instance = Interface.getInstance();
 		Group group=new Group();
 		group.setPk_group(GroupActivity.getPk_group());
 		instance.readUserGroupPartyAll(getActivity(), group);

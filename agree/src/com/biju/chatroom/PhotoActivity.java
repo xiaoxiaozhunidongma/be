@@ -193,6 +193,9 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 	}
 
 	private void Init() {
+		
+		findViewById(R.id.PhotoActivity_back_layout).setOnClickListener(this);;
+		findViewById(R.id.PhotoActivity_back).setOnClickListener(this);;
 		mPhoto_upload_layout = (RelativeLayout) findViewById(R.id.photo_upload_layout);
 		mPhoto_upload_layout.setOnClickListener(this);
 		findViewById(R.id.photo_upload).setOnClickListener(this);
@@ -380,6 +383,10 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		case R.id.photo_upload_layout:
 		case R.id.photo_upload:
 			checkphoto();
+			break;
+		case R.id.PhotoActivity_back_layout:
+		case R.id.PhotoActivity_back:
+			finish();
 			break;
 
 		default:
