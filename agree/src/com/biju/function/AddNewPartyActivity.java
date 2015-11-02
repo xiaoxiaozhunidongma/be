@@ -693,6 +693,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	// 返回
 	private void Add_New_Party_back() {
 		finish();
+		//清楚数据库,无条件全部删除
+		new Delete().from(ImageText.class).execute();
 	}
 
 	@Override
@@ -726,9 +728,6 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		Editor Limit_editor=Limit_sp.edit();
 		Limit_editor.putBoolean(IConstant.IsNumber, false);
 		Limit_editor.commit();
-		
-		//清楚数据库,无条件全部删除
-		new Delete().from(ImageText.class).execute();
 		
 		//是否进入过金额界面
 		SharedPreferences CostSp=getSharedPreferences(IConstant.Cost, 0);

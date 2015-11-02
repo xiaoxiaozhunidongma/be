@@ -88,8 +88,8 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	private String uuid;
 	private boolean TextCLICKONE;
 	private boolean IsOKClick;
-	private RelativeLayout mEditTextHeightLayout;
 	private int width;
+	private RelativeLayout mGraphicDetailsKeyboardHeightLayout;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -133,6 +133,8 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	}
 
 	private void initUI() {
+		mGraphicDetailsKeyboardHeightLayout = (RelativeLayout) findViewById(R.id.GraphicDetailsKeyboardHeightLayout);
+		
 		mGraphicDetailsPreviewLayout = (RelativeLayout) findViewById(R.id.GraphicDetailsPreviewLayout);//预览
 		mGraphicDetailsPreviewLayout.setOnClickListener(this);//预览
 		findViewById(R.id.GraphicDetailsPreview).setOnClickListener(this);
@@ -155,7 +157,6 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 		mEditImageTextLayout = (RelativeLayout) mFooterView.findViewById(R.id.EditImageTextLayout);//显示图文编辑栏
 		mEditText_EditText = (EditText) mFooterView.findViewById(R.id.EditText_EditText);//文字编辑框
 		mFooterView.findViewById(R.id.EditTextBoldLayout).setOnClickListener(this);//字体加粗
-		mEditTextHeightLayout = (RelativeLayout) findViewById(R.id.EditTextHeightLayout);//上移布局
 		
 		InputMethodManager();//隐藏键盘
 		
@@ -521,14 +522,14 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 			//做保存
 			isEdit=!isEdit;
 			ImageTextSave1();
-			EditTextClick();//保存完后再弹出编辑框
+			EditTextClick1();//保存完后再弹出编辑框
 			Log.e("GraphicDetailsActivity", "点击了编辑文字的保存========");
 		}
 	}
 
 	private void EditTextClick() {
 		TextCLICKONE=true;
-		mEditTextHeightLayout.setVisibility(View.VISIBLE);//移动布局现在
+		mGraphicDetailsKeyboardHeightLayout.setVisibility(View.VISIBLE);//移动布局现在
 		mEditTextEditLayout.setVisibility(View.VISIBLE);
 		mGraphicDetailsPreviewLayout.setVisibility(View.GONE);
 		mGraphicDetailsOKLayout.setVisibility(View.VISIBLE);
@@ -559,10 +560,10 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	                if(heightDifference>0){
 	                	RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(width,heightDifference);
 	                	param.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1);
-	                	mEditTextHeightLayout.setLayoutParams(param);
+	                	mGraphicDetailsKeyboardHeightLayout.setLayoutParams(param);
 	                	
 	                }else {
-	                	mEditTextHeightLayout.setVisibility(View.GONE);
+	                	mGraphicDetailsKeyboardHeightLayout.setVisibility(View.GONE);
 	                }
 	    			// 设置图片的位置
 	                Log.e("GraphicDetailsActivity", "获取到的键盘的高度33333333========"+heightDifference);
@@ -570,10 +571,27 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	            
 	        });
 	}
+	private void EditTextClick1() {
+		TextCLICKONE=true;
+		mGraphicDetailsKeyboardHeightLayout.setVisibility(View.GONE);
+		mEditTextEditLayout.setVisibility(View.VISIBLE);
+		mGraphicDetailsPreviewLayout.setVisibility(View.GONE);
+		mGraphicDetailsOKLayout.setVisibility(View.VISIBLE);
+		
+		mEditText_EditText.setFocusable(true);
+		mEditText_EditText.setFocusableInTouchMode(true);
+		mEditText_EditText.requestFocus();
+		
+		mEditText_EditText.setText("");
+		FONTSIZE=14;
+		mEditText_EditText.setTextSize(FONTSIZE);
+		EditTextDarkGrayLayout();//每次打开时初始化字体颜色
+	}
 
 	//隐藏键盘保存
 	private void ImageTextSave() {
 		TextCLICKONE=false;
+		mGraphicDetailsKeyboardHeightLayout.setVisibility(View.GONE);
 		String mEditText = mEditText_EditText.getText().toString().trim();
 		ImageText imageText=new ImageText();
 		imageText.setType(1);

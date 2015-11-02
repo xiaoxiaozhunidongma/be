@@ -152,11 +152,10 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					Integer relatonship = scheduleparty.getRelationship();
 					String pk_party = scheduleparty.getPk_party();
 					Log.e("ScheduleFragment", "获取到的pk_party ========="+pk_party);
-//					if (relatonship == null) {
-//						initcreatePartyRelation(sD_pk_user,pk_party);
-//						Log.e("ScheduleFragment", "进入到relatonship为null的地方==========");
-//					}else 
-					if(relatonship==0)
+					if (relatonship == null) {
+						initcreatePartyRelation(sD_pk_user,pk_party);
+						Log.e("ScheduleFragment", "进入到relatonship为null的地方==========");
+					}else if(relatonship==0)
 					{
 						Log.e("ScheduleFragment", "进入到relatonship为0的地方==========");
 						Party_User party_user = new Party_User();
@@ -195,12 +194,12 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 
 	}
 
-//	private void initcreatePartyRelation(Integer pk_user, String pk_party) {
-//		Party_User readuserparty = new Party_User();
-//		readuserparty.setFk_party(pk_party);
-//		readuserparty.setFk_user(pk_user);
-//		scheduleInterface.createPartyRelation(getActivity(), readuserparty);
-//	}
+	private void initcreatePartyRelation(Integer pk_user, String pk_party) {
+		Party_User readuserparty = new Party_User();
+		readuserparty.setFk_party(pk_party);
+		readuserparty.setFk_user(pk_user);
+		scheduleInterface.createPartyRelation(getActivity(), readuserparty);
+	}
 
 	class ViewHolder {
 		TextView years_month;
@@ -374,44 +373,44 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			}
 		});
 
-//		scheduleInterface.setPostListener(new createPartyRelationListenner() {
-//
-//			@Override
-//			public void success(String A) {
-//				PartyRelationshipback partyRelationshipback = GsonUtils
-//						.parseJson(A, PartyRelationshipback.class);
-//				Integer statusMsg = partyRelationshipback.getStatusMsg();
-//				if (statusMsg == 1) {
-//					Log.e("ScheduleFragment", "得到的关系结果===="+A);
-//					Integer pk_party_user = partyRelationshipback.getReturnData();
-//					Log.e("ScheduleFragment", "得到的pk_party_user111111===="+pk_party_user);
-//					if(pk_party_user!=null){
-//						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
-//						intent.putExtra(IConstant.IsRelationship, true);
-//						intent.putExtra(IConstant.OneParty, scheduleparty);
-//						startActivity(intent);
-//						
-//						SharedPreferences Schedule_sp=getActivity().getSharedPreferences(IConstant.Schedule, 0);
-//						Editor editor=Schedule_sp.edit();
-//						editor.putInt(IConstant.Pk_party_user, pk_party_user);
-//						editor.putString(IConstant.Pk_party, scheduleparty.getPk_party());
-//						editor.putInt(IConstant.fk_group, scheduleparty.getFk_group());
-//						editor.commit();
-//						Log.e("ScheduleFragment", "得到的第一个pk_party_user======="+pk_party_user);
-//					}
-//					Party_User party_user = new Party_User();
-//					party_user.setPk_party_user(pk_party_user);
-//					party_user.setRelationship(3);
-//					party_user.setType(1);
-//					scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
-//				}
-//			}
-//
-//			@Override
-//			public void defail(Object B) {
-//
-//			}
-//		});
+		scheduleInterface.setPostListener(new createPartyRelationListenner() {
+
+			@Override
+			public void success(String A) {
+				PartyRelationshipback partyRelationshipback = GsonUtils
+						.parseJson(A, PartyRelationshipback.class);
+				Integer statusMsg = partyRelationshipback.getStatusMsg();
+				if (statusMsg == 1) {
+					Log.e("ScheduleFragment", "得到的关系结果===="+A);
+					Integer pk_party_user = partyRelationshipback.getReturnData();
+					Log.e("ScheduleFragment", "得到的pk_party_user111111===="+pk_party_user);
+					if(pk_party_user!=null){
+						Intent intent = new Intent(getActivity(),PartyDetailsActivity.class);
+						intent.putExtra(IConstant.IsRelationship, true);
+						intent.putExtra(IConstant.OneParty, scheduleparty);
+						startActivity(intent);
+						
+						SharedPreferences Schedule_sp=getActivity().getSharedPreferences(IConstant.Schedule, 0);
+						Editor editor=Schedule_sp.edit();
+						editor.putInt(IConstant.Pk_party_user, pk_party_user);
+						editor.putString(IConstant.Pk_party, scheduleparty.getPk_party());
+						editor.putInt(IConstant.fk_group, scheduleparty.getFk_group());
+						editor.commit();
+						Log.e("ScheduleFragment", "得到的第一个pk_party_user======="+pk_party_user);
+					}
+					Party_User party_user = new Party_User();
+					party_user.setPk_party_user(pk_party_user);
+					party_user.setRelationship(3);
+					party_user.setType(1);
+					scheduleInterface.updateUserJoinMsg(getActivity(),party_user);
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
 		
 		scheduleInterface.setPostListener(new updateUserJoinMsgListenner() {
 

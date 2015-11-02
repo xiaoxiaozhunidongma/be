@@ -85,31 +85,32 @@
         android:id="@+id/GraphicDetailsListLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_above="@+id/GraphicDetailsKeyboardHeightLayout"
         android:layout_below="@+id/GraphicDetailsTitleLayout"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="50.0dp"
-        >
+        android:layout_centerHorizontal="true" >
 
         <ListView
             android:id="@+id/GraphicDetailsListview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" 
+            android:layout_centerHorizontal="true"
             android:background="#ffffff"
             android:cacheColorHint="#00000000"
-            android:listSelector="#00000000"
-            >
+            android:listSelector="#00000000" >
 
         </ListView>
 <!-- android:transcriptMode="normal"  -->
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/GraphicDetailsKeyboardHeightLayout"
         android:layout_width="match_parent"
         android:layout_height="5.0dp"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:background="#efefef"
+        android:visibility="gone"
         >
     </RelativeLayout>
 
