@@ -85,7 +85,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 	private String mch_id;
 	private String partner_id;
 	private String mPayName;
-	private String mWeChatPayMount;
+	private Integer mWeChatPayMount;
 	StringBuffer sb;
 	PayReq req;
 	public static GetApply getApply;
@@ -134,7 +134,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		
 		Intent intent = getIntent();
 		mPaymount = intent.getFloatExtra(IConstant.Paymount, 0);
-		mWeChatPayMount = String.valueOf(mPaymount * 100);// 微信支付金额// 测试完要*100，单位是分
+		mWeChatPayMount = (int) (mPaymount* 100);// 微信支付金额// 测试完要*100，单位是分
 		mAliPayMount = String.valueOf(mPaymount);// 支付宝金额
 		mUnionPayMount = mPaymount;
 		mPayName = intent.getStringExtra(IConstant.Payname);
@@ -306,9 +306,6 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 			sb.append("prepay_id\n" + result.get("prepay_id") + "\n\n");
 			resultunifiedorder = result;
 			Log.e("PayActivity", "第3步========");
-//			Log.e("PayActivity", "所得到的结果result1111111========"+ resultunifiedorder);
-//			Log.e("PayActivity", "所得到的结果result2222222========" + sb.toString());
-//			Log.e("PayActivity","所得到的结果result3333333========"+ result.get("prepay_id").toString());
 			if (result.get("prepay_id").toString() != null) {
 				genPayReq();
 				Log.e("PayActivity", "第4步========");
@@ -360,22 +357,59 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 
 	}
 
+//	private String genProductArgs() {
+//		StringBuffer xml = new StringBuffer();
+//
+//		try {
+//			String	nonceStr = genNonceStr();
+//
+//			Log.e("PayActivity", "所要支付的金额mWeChatPayMount======="+mWeChatPayMount);
+//
+//			xml.append("</xml>");
+//            List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
+//			packageParams.add(new BasicNameValuePair("appid", app_id));
+//			packageParams.add(new BasicNameValuePair("body", "weixin"));
+//			packageParams.add(new BasicNameValuePair("mch_id", mch_id));
+//			packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));
+//			packageParams.add(new BasicNameValuePair("notify_url", "http://121.40.35.3/test"));
+//			packageParams.add(new BasicNameValuePair("out_trade_no",genOutTradNo()));
+//			packageParams.add(new BasicNameValuePair("spbill_create_ip","127.0.0.1"));
+//			packageParams.add(new BasicNameValuePair("total_fee", mWeChatPayMount+""));
+//			packageParams.add(new BasicNameValuePair("trade_type", "APP"));
+//
+//
+//			String sign = genPackageSign(packageParams);
+//			packageParams.add(new BasicNameValuePair("sign", sign));
+//
+//
+//		   String xmlstring =toXml(packageParams);
+//
+//			return xmlstring;
+//
+//		} catch (Exception e) {
+//			return null;
+//		}
+//		
+//
+//	}
+	
+	
 	private String genProductArgs() {
 		StringBuffer xml = new StringBuffer();
 		try {
+			Log.e("PayActivity", "所要支付的金额mWeChatPayMount======="+mWeChatPayMount);
 			String nonceStr = genNonceStr();
 			xml.append("</xml>");
 			List<NameValuePair> packageParams = new LinkedList<NameValuePair>();//device_info=APP-001
 			packageParams.add(new BasicNameValuePair("appid", app_id));
-			packageParams.add(new BasicNameValuePair("body", "asd"));
-			packageParams.add(new BasicNameValuePair("device_info", "APP-001"));
+			packageParams.add(new BasicNameValuePair("body", mPayName));
 			packageParams.add(new BasicNameValuePair("input_charset", "UTF-8"));
 			packageParams.add(new BasicNameValuePair("mch_id", mch_id));
 			packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));
 			packageParams.add(new BasicNameValuePair("notify_url","http://121.40.35.3/test"));
 			packageParams.add(new BasicNameValuePair("out_trade_no",genOutTradNo()));
 			packageParams.add(new BasicNameValuePair("spbill_create_ip","127.0.0.1"));
-			packageParams.add(new BasicNameValuePair("total_fee","0.01"));
+			packageParams.add(new BasicNameValuePair("total_fee",mWeChatPayMount+""));
 			packageParams.add(new BasicNameValuePair("trade_type", "APP"));
 
 			String sign = genPackageSign(packageParams);

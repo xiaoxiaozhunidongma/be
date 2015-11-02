@@ -132,12 +132,15 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				}else if(GREENCOLOR.equals(SINGCOLOR)){
 					holder.GraphicPreviewText.setTextColor(holder.GraphicPreviewText.getResources().getColor(R.drawable.EditTextGreenColor));
 				}
+				//×ÖÌå´óÐ¡
+				Integer fontsize=imageText.getFont_size();
+				holder.GraphicPreviewText.setTextSize(fontsize);
 				holder.GraphicPreviewText.setText(imageText.getText()+"");
 			}else if(2==type){
 				holder.GraphicPreviewText.setVisibility(View.GONE);
 				holder.GraphicPreviewImageView.setVisibility(View.VISIBLE);
-				holder.GraphicPreviewWhiteLayout.setVisibility(View.GONE);
-				holder.GraphicPreviewWhiteLayout1.setVisibility(View.VISIBLE);
+//				holder.GraphicPreviewWhiteLayout.setVisibility(View.GONE);
+//				holder.GraphicPreviewWhiteLayout1.setVisibility(View.VISIBLE);
 				
 				int px2dip_left_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
 				int px2dip_top_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
@@ -173,7 +176,7 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				if(1==type){
 					holder.GraphicPreviewWhiteLayout2.setVisibility(View.VISIBLE);
 				}else if(2==type){
-					holder.GraphicPreviewWhiteLayout.setVisibility(View.VISIBLE);
+//					holder.GraphicPreviewWhiteLayout.setVisibility(View.VISIBLE);
 				}
 			}
 			

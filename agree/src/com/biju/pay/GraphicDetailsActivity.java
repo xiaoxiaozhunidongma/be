@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -18,6 +19,8 @@ import android.graphics.Rect;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.MediaStore;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.KeyEvent;
@@ -26,6 +29,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup.MarginLayoutParams;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AbsListView;
@@ -38,6 +42,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BJ.javabean.ImageText;
+import com.BJ.utils.DensityUtil;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.PicCutter;
@@ -46,6 +51,7 @@ import com.activeandroid.query.Select;
 import com.biju.R;
 import com.biju.function.AddNewPartyActivity;
 
+@SuppressLint("NewApi")
 public class GraphicDetailsActivity extends Activity implements OnClickListener{
 
 	private ListView mGraphicDetailsListview;
@@ -59,6 +65,10 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	private String REDCOLOR = "#B6000A";
 	private String BLUECOLOR = "#2B61D5";
 	private String GREENCOLOR = "#6FCE1B";
+	
+	private Integer FONTSIZE= 14;
+	private boolean FONTSIZE_CHOOSE;
+	
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
 	protected String mFilePath = null;
@@ -76,6 +86,10 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	private ImageView mEditTextGreenImage;
 	private ImageText imageText;
 	private String uuid;
+	private boolean TextCLICKONE;
+	private boolean IsOKClick;
+	private RelativeLayout mEditTextHeightLayout;
+	private int width;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -100,8 +114,9 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 				if(1==Type){
 					String mEditText=DetailsList.get(i).getText();
 					String SINGCOLOR=DetailsList.get(i).getFont_color();
+					Integer font_size=DetailsList.get(i).getFont_size();
 					//存入数据库
-					ImageText text=new ImageText(null, uuid, 1, mEditText, null, null, 13, SINGCOLOR, null, null, 1);
+					ImageText text=new ImageText(null, uuid, 1, mEditText, null, null, font_size, SINGCOLOR, null, null, 1);
 					text.save();
 				}else if (2==Type){
 					String mFilePath=DetailsList.get(i).getImage_path();
@@ -129,7 +144,8 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 		
 		mGraphicDetailsListview = (ListView) findViewById(R.id.GraphicDetailsListview);
 		mGraphicDetailsListview.setDividerHeight(0);
-		mGraphicDetailsListview.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);
+		mGraphicDetailsListview.setTranscriptMode(AbsListView.TRANSCRIPT_MODE_NORMAL);//让键盘在listview底部
+		mGraphicDetailsListview.smoothScrollToPosition(mGraphicDetailsListview.getCount()+1);//移动到尾部- 1
 		
 		View mFooterView=View.inflate(GraphicDetailsActivity.this, R.layout.edit_image_text_item, null);
 		mGraphicDetailsListview.addFooterView(mFooterView);
@@ -138,12 +154,13 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 		mEditTextEditLayout = (RelativeLayout) mFooterView.findViewById(R.id.EditTextEditLayout);//弹出文字编辑
 		mEditImageTextLayout = (RelativeLayout) mFooterView.findViewById(R.id.EditImageTextLayout);//显示图文编辑栏
 		mEditText_EditText = (EditText) mFooterView.findViewById(R.id.EditText_EditText);//文字编辑框
+		mFooterView.findViewById(R.id.EditTextBoldLayout).setOnClickListener(this);//字体加粗
+		mEditTextHeightLayout = (RelativeLayout) findViewById(R.id.EditTextHeightLayout);//上移布局
 		
 		InputMethodManager();//隐藏键盘
 		
 		myGraphicDetailsAdapter = new MyGraphicDetailsAdapter();
 		mGraphicDetailsListview.setAdapter(myGraphicDetailsAdapter);
-		
 		initTextColorUI();
 		
 	}
@@ -222,6 +239,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 			if(1 == type){
 				holder.EditText_TextLayout.setVisibility(View.VISIBLE);
 				holder.EditText_ImageLayout.setVisibility(View.GONE);
+				//字体颜色
 				String SINGCOLOR=imageText.getFont_color();
 				if(LIGHTGRAYCOLOR.equals(SINGCOLOR)){
 					holder.Text_show.setTextColor(holder.Text_show.getResources().getColor(R.drawable.EditTextLightGrayColor));
@@ -236,7 +254,13 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 				}else if(GREENCOLOR.equals(SINGCOLOR)){
 					holder.Text_show.setTextColor(holder.Text_show.getResources().getColor(R.drawable.EditTextGreenColor));
 				}
+				
+				//字体大小
+				Integer fontsize=imageText.getFont_size();
+				holder.Text_show.setTextSize(fontsize);
+				//内容
 				holder.Text_show.setText(imageText.getText()+"");
+				//删除
 				holder.TextMinusLayout.setOnClickListener(new OnClickListener() {
 					
 					@Override
@@ -316,11 +340,25 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 		case R.id.GraphicDetailsPreview:
 			GraphicDetailsPreviewLayout();
 			break;
+		case R.id.EditTextBoldLayout:
+			EditTextBoldLayout();
+			break;
 		default:
 			break;
 		}
 	}
 	
+	private void EditTextBoldLayout() {
+		FONTSIZE_CHOOSE=!FONTSIZE_CHOOSE;
+		if(FONTSIZE_CHOOSE){
+			FONTSIZE=20;
+			mEditText_EditText.setTextSize(FONTSIZE);
+		}else {
+			FONTSIZE=14;
+			mEditText_EditText.setTextSize(FONTSIZE);
+		}
+	}
+
 	//预览
 	private void GraphicDetailsPreviewLayout() {
 		GraphicDetailsPreview2();
@@ -348,8 +386,10 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 				if(1==Type){
 					String mEditText=DetailsList.get(i).getText();
 					String SINGCOLOR=DetailsList.get(i).getFont_color();
+					Integer font_size=DetailsList.get(i).getFont_size();
+					Log.e("GraphicDetailsActivity", " 获取到的font_size========"+font_size);
 					//存入数据库
-					ImageText text=new ImageText(null, uuid, 1, mEditText, null, null, 13, SINGCOLOR, null, null, 1);
+					ImageText text=new ImageText(null, uuid, 1, mEditText, null, null, font_size, SINGCOLOR, null, null, 1);
 					text.save();
 				}else if (2==Type){
 					String mFilePath=DetailsList.get(i).getImage_path();
@@ -454,22 +494,17 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	//保存
 	private void GraphicDetailsOK() {
 		isEdit=!isEdit;
-		String mEditText = mEditText_EditText.getText().toString().trim();
-		ImageText imageText=new ImageText();
-		imageText.setType(1);
-		imageText.setText(mEditText);
-		imageText.setFont_color(SINGCOLOR);
-		DetailsList.add(imageText);
-		mEditTextEditLayout.setVisibility(View.GONE);
-		mGraphicDetailsPreviewLayout.setVisibility(View.VISIBLE);
-		mGraphicDetailsOKLayout.setVisibility(View.GONE);
-		InputMethodManager();//隐藏键盘
-		myGraphicDetailsAdapter.notifyDataSetChanged();
+		ImageTextSave();
 		Log.e("GraphicDetailsActivity", "点击了保存========");
 	}
 
 	//编辑图片
 	private void EditImageLayout() {
+		//做保存
+		if(TextCLICKONE){
+			isEdit=!isEdit;
+			ImageTextSave();
+		}
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
 		getAlbum.setType(IMAGE_TYPE);
@@ -481,38 +516,91 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 	private void EditImageAndTextLayout() {
 		isEdit=!isEdit;
 		if(isEdit){
-			mEditTextEditLayout.setVisibility(View.VISIBLE);
-			mGraphicDetailsPreviewLayout.setVisibility(View.GONE);
-			mGraphicDetailsOKLayout.setVisibility(View.VISIBLE);
-			mEditText_EditText.setFocusable(true);
-			mEditText_EditText.setFocusableInTouchMode(true);
-			mEditText_EditText.requestFocus();
-			Timer timer = new Timer();
-			timer.schedule(new TimerTask() {
-				public void run() {
-					InputMethodManager inputManager = (InputMethodManager) mEditText_EditText
-							.getContext().getSystemService(GraphicDetailsActivity.INPUT_METHOD_SERVICE);
-					inputManager.showSoftInput(mEditText_EditText, 0);
-				}
-			}, 10);
-			mEditText_EditText.setText("");
-			EditTextDarkGrayLayout();//每次打开时初始化字体颜色
-			Log.e("GraphicDetailsActivity", "点击了编辑文字========");
+			EditTextClick();
 		}else {
 			//做保存
-			String mEditText = mEditText_EditText.getText().toString().trim();
-			ImageText imageText=new ImageText();
-			imageText.setType(1);
-			imageText.setText(mEditText);
-			imageText.setFont_color(SINGCOLOR);
-			DetailsList.add(imageText);
-			mEditTextEditLayout.setVisibility(View.GONE);
-			mGraphicDetailsPreviewLayout.setVisibility(View.VISIBLE);
-			mGraphicDetailsOKLayout.setVisibility(View.GONE);
-			InputMethodManager();//隐藏键盘
-			myGraphicDetailsAdapter.notifyDataSetChanged();
+			isEdit=!isEdit;
+			ImageTextSave1();
+			EditTextClick();//保存完后再弹出编辑框
 			Log.e("GraphicDetailsActivity", "点击了编辑文字的保存========");
 		}
+	}
+
+	private void EditTextClick() {
+		TextCLICKONE=true;
+		mEditTextHeightLayout.setVisibility(View.VISIBLE);//移动布局现在
+		mEditTextEditLayout.setVisibility(View.VISIBLE);
+		mGraphicDetailsPreviewLayout.setVisibility(View.GONE);
+		mGraphicDetailsOKLayout.setVisibility(View.VISIBLE);
+		
+		mEditText_EditText.setFocusable(true);
+		mEditText_EditText.setFocusableInTouchMode(true);
+		mEditText_EditText.requestFocus();
+		
+		mEditText_EditText.setText("");
+		FONTSIZE=14;
+		mEditText_EditText.setTextSize(FONTSIZE);
+		EditTextDarkGrayLayout();//每次打开时初始化字体颜色
+		mEditText_EditText.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener(){
+
+	            //当键盘弹出隐藏的时候会 调用此方法。
+	            @Override
+	            public void onGlobalLayout() {
+	            	android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
+	            	GraphicDetailsActivity.this.getWindowManager().getDefaultDisplay().getMetrics(metric);
+	        		width = metric.widthPixels;
+	                Rect r = new Rect();
+	                //获取当前界面可视部分
+	                GraphicDetailsActivity.this.getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+	                //获取屏幕的高度
+	                int screenHeight =  GraphicDetailsActivity.this.getWindow().getDecorView().getRootView().getHeight();
+	                //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
+	                int heightDifference = screenHeight - r.bottom;
+	                if(heightDifference>0){
+	                	RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(width,heightDifference);
+	                	param.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1);
+	                	mEditTextHeightLayout.setLayoutParams(param);
+	                	
+	                }else {
+	                	mEditTextHeightLayout.setVisibility(View.GONE);
+	                }
+	    			// 设置图片的位置
+	                Log.e("GraphicDetailsActivity", "获取到的键盘的高度33333333========"+heightDifference);
+	            }
+	            
+	        });
+	}
+
+	//隐藏键盘保存
+	private void ImageTextSave() {
+		TextCLICKONE=false;
+		String mEditText = mEditText_EditText.getText().toString().trim();
+		ImageText imageText=new ImageText();
+		imageText.setType(1);
+		imageText.setText(mEditText);
+		imageText.setFont_size(FONTSIZE);
+		imageText.setFont_color(SINGCOLOR);
+		DetailsList.add(imageText);
+		mEditTextEditLayout.setVisibility(View.GONE);
+		mGraphicDetailsPreviewLayout.setVisibility(View.VISIBLE);
+		mGraphicDetailsOKLayout.setVisibility(View.GONE);
+		InputMethodManager();//隐藏键盘
+		myGraphicDetailsAdapter.notifyDataSetChanged();
+	}
+	//不隐藏键盘保存
+	private void ImageTextSave1() {
+		TextCLICKONE=false;
+		String mEditText = mEditText_EditText.getText().toString().trim();
+		ImageText imageText=new ImageText();
+		imageText.setType(1);
+		imageText.setText(mEditText);
+		imageText.setFont_size(FONTSIZE);
+		imageText.setFont_color(SINGCOLOR);
+		DetailsList.add(imageText);
+		mEditTextEditLayout.setVisibility(View.GONE);
+		mGraphicDetailsPreviewLayout.setVisibility(View.VISIBLE);
+		mGraphicDetailsOKLayout.setVisibility(View.GONE);
+		myGraphicDetailsAdapter.notifyDataSetChanged();
 	}
 
 	//隐藏键盘

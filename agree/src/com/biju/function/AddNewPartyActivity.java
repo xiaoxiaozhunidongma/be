@@ -316,6 +316,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 						Intent intent=new Intent(AddNewPartyActivity.this, GroupActivity.class);
 						startActivity(intent);
 					}
+					mAdd_New_Party_OK_layout.setEnabled(true);
+					mAdd_New_Party_OK.setEnabled(true);
 				}
 			}
 
@@ -458,11 +460,15 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		mAdd_New_Party_back = (TextView) findViewById(R.id.Add_New_Party_back);// 返回
 		mAdd_New_Party_OK_layout = (RelativeLayout) findViewById(R.id.Add_New_Party_OK_layout);
 		mAdd_New_Party_OK = (TextView) findViewById(R.id.Add_New_Party_OK);// 完成
+		
 		mAdd_New_Party_back_layout.setOnClickListener(this);
 		mAdd_New_Party_back.setOnClickListener(this);
 		mAdd_New_Party_OK_layout.setOnClickListener(this);
 		mAdd_New_Party_OK.setOnClickListener(this);
 		mAdd_New_Party_OK.setEnabled(true);
+		mAdd_New_Party_OK_layout.setEnabled(true);
+		mAdd_New_Party_OK.setEnabled(true);
+		
 		mAdd_New_Party_name = (EditText) findViewById(R.id.Add_New_Party_name);// 聚会名称
 		mAdd_New_Party_time = (RelativeLayout) findViewById(R.id.Add_New_Party_time);// 聚会时间
 		mAdd_New_Party_address = (RelativeLayout) findViewById(R.id.Add_New_Party_address);// 聚会地点
@@ -623,6 +629,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	// 完成
 	private void Add_New_Party_OK() {
 		initDB();
+		mAdd_New_Party_OK_layout.setEnabled(false);
+		mAdd_New_Party_OK.setEnabled(false);
 		
 	}
 
@@ -727,6 +735,12 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		Editor Costeditor=CostSp.edit();
 		Costeditor.putBoolean(IConstant.IsCost, false);
 		Costeditor.commit();
+		
+		//是否进入过图文信息界面
+		SharedPreferences GraphicDetails_sp=getSharedPreferences("GraphicDetails", 0);
+		Editor GraphicDetails_editor=GraphicDetails_sp.edit();
+		GraphicDetails_editor.putBoolean("IsGraphicDetails", false);
+		GraphicDetails_editor.commit();
 		super.onStop();
 	}
 	
