@@ -65,9 +65,9 @@ public class MainActivity extends FragmentActivity  {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_tabs);
 
-		homeImageLoaderUtils.clearCache();
-		ImageLoaderUtils4Photos.clearCache();
-		ImageLoaderUtils.clearCache();
+//		homeImageLoaderUtils.clearCache();
+//		ImageLoaderUtils4Photos.clearCache();
+//		ImageLoaderUtils.clearCache();
 		
 		// 关闭之前的界面
 		for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {

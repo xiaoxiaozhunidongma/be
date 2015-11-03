@@ -111,7 +111,7 @@ public class MyApplication extends Application {
 
 		// ≥ı ºªØimageloader
 		DisplayImageOptions defaultOptions = new DisplayImageOptions.Builder()
-				.cacheInMemory(false).imageScaleType(ImageScaleType.EXACTLY)
+				.cacheInMemory(true).imageScaleType(ImageScaleType.EXACTLY)
 				.cacheOnDisk(true).build();
 
 		ImageLoaderConfiguration config = new ImageLoaderConfiguration.Builder(

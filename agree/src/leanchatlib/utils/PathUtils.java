@@ -1,6 +1,8 @@
 package leanchatlib.utils;
 
+import android.annotation.SuppressLint;
 import android.os.Environment;
+import android.util.Log;
 
 import java.io.File;
 
@@ -31,11 +33,24 @@ public class PathUtils {
 	 */
 	private static File getAvailableCacheDir() {
 		if (isExternalStorageWritable()) {
-			return new File("/storage/sdcard0/Android/data/com.example.testleabcloud/cache/");
+			//这里路径以后不能写死要修改
+			return new File(getSDPath());
 		} else {
 			// 只有此应用才能访问。拍照的时候有问题，因为拍照的应用写入不了该文件
 			return ChatManager.getContext().getCacheDir();
 		}
+	}
+	//获取路径
+	public static String getSDPath() {
+		File sdDir = null;
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
+		// 判断sd卡是否存在
+		if (sdCardExist) {
+			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
+		}
+		return sdDir.toString();
+
 	}
 
 	/**
@@ -47,6 +62,7 @@ public class PathUtils {
 	public static String getChatFilePath(String id) {
 		String path = new File(getAvailableCacheDir(), id).getAbsolutePath();
 		// LogUtils.d("path = ", path);
+//		Log.e("path = ", path);
 		return path;
 	}
 
@@ -68,7 +84,8 @@ public class PathUtils {
 	public static String getPicturePathByCurrentTime() {
 		String path = new File(getAvailableCacheDir(), "picture_"
 				+ System.currentTimeMillis()).getAbsolutePath();
-		// LogUtils.d("picture path ", path);
+//		 LogUtils.d("picture path ", path);
+		 Log.e("picture path ", path);
 		return path;
 	}
 }

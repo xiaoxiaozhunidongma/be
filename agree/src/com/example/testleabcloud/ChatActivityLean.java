@@ -106,8 +106,8 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	protected RefreshableView refreshableView;
 	protected ListView messageListView;
 	protected RecordButton recordBtn;
-	protected String localCameraPath = PathUtils.getPicturePathByCurrentTime()
-			+ "/zzy/pictures";
+	//拍照保存的地址
+	protected String localCameraPath = PathUtils.getPicturePathByCurrentTime();
 	protected View addCameraBtn;
 	private RelativeLayout picture_source_rela;
 	private Button send;
@@ -680,6 +680,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	}
 
 	public void selectImageFromLocal() {
+		//很久的版本
 		// if (Build.VERSION.SDK_INT < Build.VERSION_CODES.KITKAT) {
 		// Intent intent = new Intent();
 		// intent.setType("image/*");
@@ -760,6 +761,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 				if (requestCode == GALLERY_REQUEST) {
 					uri = intent.getData();
 				} else {
+					//这个进入会死。
 					Log.e("", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
 					// for Android 4.4
 					uri = intent.getData();
@@ -770,10 +772,12 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 				}
 				String localSelectPath = ProviderPathUtils.getPath(this, uri);
 				messageAgent.sendImage(localSelectPath, this);
+				Log.e("ChatActivityLean", "localSelectPath = "+localSelectPath);
 				hideBottomLayout();
 				break;
 			case TAKE_CAMERA_REQUEST:
 				messageAgent.sendImage(localCameraPath, this);
+				Log.e("ChatActivityLean", "localCameraPath = "+localCameraPath);
 				hideBottomLayout();
 				break;
 			}

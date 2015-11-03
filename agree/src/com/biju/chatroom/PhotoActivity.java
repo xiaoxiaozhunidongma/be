@@ -128,46 +128,46 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		sampleBucket = MyApplication.getSampleBucket();
 	}
 
-	private void initGroupPhotoListen() {
-		instance.setPostListener(new readPartyPhotosListenner() {
-			
-
-			@Override
-			public void success(String A) {
-				Log.e("PhotoFragment2", "返回的图片数组："+A);
-
-				Photosback photosback = GsonUtils.parseJsonArray(A, Photosback.class);
-				listphotos = photosback.getReturnData();
-				
-				//先清空
-				bitmaps.clear();
-				//先清空
-				MyGalleryActivity.netpath.clear();
-				
-				for (int i = 0; i < listphotos.size(); i++) {
-					String path = listphotos.get(i).getPath();
-					String pk_photo = listphotos.get(i).getPk_photo();
-					final String completeUrl=beginStr+pk_photo+endStr+"album-thumbnail";
-					Log.e("PhotoFragment2", "completeUrl"+completeUrl);
-					//将路径全部加入容器
-					MyGalleryActivity.netpath.add(completeUrl);
-				}
-				
-				
-				if(listphotos!=null&&listphotos.size()>0){
-					String pk_photo = listphotos.get(0).getPk_photo();
-					Log.e("PhotoFragment2", "第一个图片路径："+pk_photo);
-				}
-				//刷新
-				adapter.notifyDataSetChanged();
-			}
-			
-			@Override
-			public void defail(Object B) {
-				
-			}
-		});
-	}
+//	private void initGroupPhotoListen() {
+//		instance.setPostListener(new readPartyPhotosListenner() {
+//			
+//
+//			@Override
+//			public void success(String A) {
+//				Log.e("PhotoFragment2", "返回的图片数组："+A);
+//
+//				Photosback photosback = GsonUtils.parseJsonArray(A, Photosback.class);
+//				listphotos = photosback.getReturnData();
+//				
+//				//先清空
+//				bitmaps.clear();
+//				//先清空
+//				MyGalleryActivity.netpath.clear();
+//				
+//				for (int i = 0; i < listphotos.size(); i++) {
+//					String path = listphotos.get(i).getPath();
+//					String pk_photo = listphotos.get(i).getPk_photo();
+//					final String completeUrl=beginStr+pk_photo+endStr+"album-thumbnail";
+//					Log.e("PhotoFragment2", "completeUrl"+completeUrl);
+//					//将路径全部加入容器
+//					MyGalleryActivity.netpath.add(completeUrl);
+//				}
+//				
+//				
+//				if(listphotos!=null&&listphotos.size()>0){
+//					String pk_photo = listphotos.get(0).getPk_photo();
+//					Log.e("PhotoFragment2", "第一个图片路径："+pk_photo);
+//				}
+//				//刷新
+//				adapter.notifyDataSetChanged();
+//			}
+//			
+//			@Override
+//			public void defail(Object B) {
+//				
+//			}
+//		});
+//	}
 
 	private void initPhotoUplisten() {
 		 instance = Interface.getInstance();
