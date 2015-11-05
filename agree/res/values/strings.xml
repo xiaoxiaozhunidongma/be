@@ -384,5 +384,6 @@
     <string name="title_activity_history_list">HistoryListActivity</string>
     <string name="title_activity_delete_payment_account">DeletePaymentAccountActivity</string>
     <string name="title_activity_graphic_preview">GraphicPreviewActivity</string>
+    <string name="title_activity_wechat_shaer">WEChatShaerActivity</string>
 
 </resources>

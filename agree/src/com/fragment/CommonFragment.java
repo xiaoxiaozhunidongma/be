@@ -105,6 +105,7 @@ public class CommonFragment extends Fragment implements OnClickListener {
 		tv_1.setTextColor(tv_1.getResources().getColor(R.drawable.Common_text_color_green));// 给字设置绿颜色
 		tv_2.setTextColor(tv_2.getResources().getColor(R.drawable.Common_text_color_gray));// 给字设置灰颜色
 		tv_3.setTextColor(tv_3.getResources().getColor(R.drawable.Common_text_color_gray));// 给字设置灰颜色
+		//设置红色小圆点
 		Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
 		/** 这一步必须要做,否则不会显示. */
 		drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
@@ -124,19 +125,24 @@ public class CommonFragment extends Fragment implements OnClickListener {
 			for (int i = 0; i < mTextviewResIds.length; i++) {
 				TextView textView = (TextView) mLayout1.findViewById(mTextviewResIds[i]);
 				if (position == i) { // 当position==i时显示红色
+					//设置字体颜色
 					textView.setTextColor(textView.getResources().getColor(R.drawable.Common_text_color_green));
+					//设置红色小圆点
 					Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
 					/** 这一步必须要做,否则不会显示. */
 					drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
 					/** 设置图片位置，四个参数分别方位是左上右下，都设置为null就表示不显示图片 */
 					textView.setCompoundDrawables(drawable, null, null, null);
+					//设置滑块滑动
 					Animation animation = new TranslateAnimation((current_realwidth / 3) * currIndex,(current_realwidth / 3) * (position), 0, 0);
 					currIndex = position;
 					animation.setFillAfter(true);
 					animation.setDuration(200);
 					mCommon_ArticleIndicates.startAnimation(animation);
 				} else {
+					//设置字体颜色
 					textView.setTextColor(textView.getResources().getColor(R.drawable.Common_text_color_gray));
+					//设置红色小圆点
 					Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
 					/** 这一步必须要做,否则不会显示. */
 					drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩

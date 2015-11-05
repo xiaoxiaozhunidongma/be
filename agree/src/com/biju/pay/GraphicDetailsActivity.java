@@ -157,6 +157,7 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 		mEditImageTextLayout = (RelativeLayout) mFooterView.findViewById(R.id.EditImageTextLayout);//ÏÔÊ¾Í¼ÎÄ±à¼­À¸
 		mEditText_EditText = (EditText) mFooterView.findViewById(R.id.EditText_EditText);//ÎÄ×Ö±à¼­¿ò
 		mFooterView.findViewById(R.id.EditTextBoldLayout).setOnClickListener(this);//×ÖÌå¼Ó´Ö
+		mFooterView.findViewById(R.id.EditTextMinusLayout).setOnClickListener(this);
 		
 		InputMethodManager();//Òþ²Ø¼üÅÌ
 		
@@ -344,11 +345,22 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 		case R.id.EditTextBoldLayout:
 			EditTextBoldLayout();
 			break;
+		case R.id.EditTextMinusLayout:
+			EditTextMinusLayout();
+			break;
 		default:
 			break;
 		}
 	}
 	
+	//µã»÷Ö®ºó°Ñ±à¼­²¼¾ÖÒþ²Ø
+	private void EditTextMinusLayout() {
+		isEdit=!isEdit;
+		TextCLICKONE=false;
+		mEditTextEditLayout.setVisibility(View.GONE);
+		InputMethodManager();//Òþ²Ø¼üÅÌ
+	}
+
 	private void EditTextBoldLayout() {
 		FONTSIZE_CHOOSE=!FONTSIZE_CHOOSE;
 		if(FONTSIZE_CHOOSE){

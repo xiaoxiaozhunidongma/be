@@ -105,6 +105,7 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 			api.sendReq(req);
 			
 			SdPkUser.setWeixinRegistered(true);
+			SdPkUser.setGetWeSource(false);//说明是微信注册过去的
 		}else
 		{
 			Log.e("LoginJumpActivity", "有进入点击微信的按钮");
@@ -130,6 +131,7 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 //			Log.e("LoginJumpActivity", "这时候的返回值sendReq========"+sendReq);
 			SdPkUser.setGetweixinBinding(false);
 			SdPkUser.setWeixinRegistered(true);
+			SdPkUser.setGetWeSource(false);//说明是微信登录过去的
 		}
 	}
 

@@ -46,7 +46,7 @@
             android:layout_below="@+id/commentslist_item_nickname"
             android:gravity="left|center"
             android:text="TextView"
-            android:textColor="#d3d3d3"
+            android:textColor="#808080"
             android:textSize="12.0sp" />
 
         <TextView

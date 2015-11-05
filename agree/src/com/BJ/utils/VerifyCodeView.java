@@ -84,7 +84,7 @@ public class VerifyCodeView extends View {
 //	@Override
 //	public InputConnection onCreateInputConnection(EditorInfo outAttrs) {
 //		// 定义软键盘样式为数字键盘
-//		outAttrs.inputType = InputType.TYPE_CLASS_NUMBER;
+//		outAttrs.inputType = InputType.TYPE_CLASS_TEXT;
 //		return super.onCreateInputConnection(outAttrs);
 //	}
 

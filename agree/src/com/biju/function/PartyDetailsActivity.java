@@ -55,6 +55,7 @@ import com.google.gson.reflect.TypeToken;
 public class PartyDetailsActivity extends Activity implements OnClickListener {
 	private ArrayList<Group_ReadAllUser> PartyDetailsList = new ArrayList<Group_ReadAllUser>();
 	private ArrayList<Relation> partakeNumList = new ArrayList<Relation>();
+	private ArrayList<Relation> OtherList = new ArrayList<Relation>();
 
 	private Interface readpartyInterface;
 	private Party2 oneParty;
@@ -202,6 +203,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				partakeNumList.clear();
+				OtherList.clear();
 				Log.e("PartyDetailsActivity", "返回的用户参与信息" + A);
 				java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {}.getType();
 				ReadPartyback partyback = GsonUtils.parseJsonArray(A, type);
@@ -213,12 +215,12 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 						Relation relation = relationList.get(i);
 						// 判断参与、拒绝数
 						Integer relationship = relation.getRelationship();
-						switch (relationship) {
-						case 4:
+						if(4==relationship){
 							partakeNumList.add(relation);
-							break;
-						default:
-							break;
+						}else if(0==relationship){
+							OtherList.add(relation);
+						}else if(3==relationship){
+							OtherList.add(relation);
 						}
 						// 查找当前用户的参与信息
 						Integer pk_user = relation.getPk_user();
@@ -240,12 +242,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 					Log.e("PartyDetailsActivity", "当前partakeNum的数量"+ partakeNumList.size());
 					Log.e("PartyDetailsActivity", "当前not_sayNum的数量"+ not_sayNum);
 					mPartyDetailsPartakeNumber.setText(String.valueOf(partakeNumList.size()));// 显示参与数量
-					if (partakeNumList.size() > 0) {
-						not_sayNum = PartyDetailsList.size()- partakeNumList.size();
-					} else {
-						not_sayNum = PartyDetailsList.size();
-					}
-					mPartyDetailsNotSayNumber.setText(String.valueOf(not_sayNum));// 显示未表态数量
+					mPartyDetailsNotSayNumber.setText(String.valueOf(OtherList.size()));// 显示未表态数量
 
 					List<Party3> partylist = returnData.getParty();
 					if (partylist.size() > 0) {
@@ -253,7 +250,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 						Integer pk_user = readparty.getFk_user();
 						// 查找聚会创建者
 						User user = new User();
-						user.setPhone(String.valueOf(pk_user));
+						user.setPhone(String.valueOf(pk_user));//String.valueOf(pk_user)
 						readpartyInterface.findUser(PartyDetailsActivity.this,user);
 					}
 				}
@@ -269,6 +266,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void success(String A) {
+				Log.e("PartyDetailsActivity", "返回的创建者信息" + A);
 				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,Loginback.class);
 				int statusmsg = findfriends_statusmsg.getStatusMsg();
 				if (statusmsg == 1) {
@@ -493,16 +491,31 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 
 	// 跳转至大地图进行导航
 	private void PartyDetailsPartyAddressLayout() {
-		Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
 		if(userAll){
-			intent.putExtra("BigMap", true);
-			intent.putExtra("AllBigMap", allParty);
+			Double mLat=allParty.getLatitude();
+			Log.e("PartyDetailsActivity", "当前的mLat======"+mLat);
+			Double mLng=allParty.getLongitude();
+			Log.e("PartyDetailsActivity", "当前的mLng======"+mLng);
+			if(mLat!=null&&mLng!=null){
+				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
+				intent.putExtra("BigMap", true);
+				intent.putExtra("AllBigMap", allParty);
+				startActivity(intent);
+				overridePendingTransition(R.anim.in_item, R.anim.out_item);
+			}
 		}else {
-			intent.putExtra("BigMap", false);
-			intent.putExtra("OneBigMap", oneParty);
+			Double mLat=oneParty.getLatitude();
+			Log.e("PartyDetailsActivity", "当前的mLat111111======"+mLat);
+			Double mLng=oneParty.getLongitude();
+			Log.e("PartyDetailsActivity", "当前的mLng111111======"+mLng);
+			if(mLat!=null&&mLng!=null){
+				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
+				intent.putExtra("BigMap", false);
+				intent.putExtra("OneBigMap", oneParty);
+				startActivity(intent);
+				overridePendingTransition(R.anim.in_item, R.anim.out_item);
+			}
 		}
-		startActivity(intent);
-		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	// 跳转图文信息界面

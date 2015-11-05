@@ -395,13 +395,14 @@
         </activity>
         <activity
             android:name="com.biju.wxapi.WXEntryActivity"
-            android:label="@string/title_activity_wxentry" >
+            android:label="@string/title_activity_wxentry" 
+            android:exported="true"
+            android:screenOrientation="portrait"
+            >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
-
-                <data android:scheme="sdksample" />
+                <data android:scheme="wx2ffba147560de2ff" />
             </intent-filter>
         </activity>
         <activity
@@ -470,8 +471,7 @@
         </activity>
         <activity
             android:name="com.biju.pay.GraphicDetailsActivity"
-            android:label="@string/title_activity_graphic_details"
-             >
+            android:label="@string/title_activity_graphic_details" >
         </activity>
         <activity
             android:name="com.biju.pay.PayBaseActivity"
@@ -485,7 +485,6 @@
                 <data android:scheme="wx2ffba147560de2ff" />
             </intent-filter>
         </activity>
-        
         <activity
             android:name="com.biju.wxapi.WXPayEntryActivity"
             android:exported="true"
@@ -500,7 +499,6 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize" >
         </activity>
-        
         <activity
             android:name="com.biju.pay.PreviewActivity"
             android:label="@string/title_activity_preview" >
@@ -511,9 +509,7 @@
             android:name="com.biju.chatroom.AddChatsActivity"
             android:label="@string/title_activity_add_friends3" >
         </activity>
-        <activity
-            android:name="com.biju.chatroom.AddMembersActivity"
-             >
+        <activity android:name="com.biju.chatroom.AddMembersActivity" >
         </activity>
         <activity
             android:name="com.biju.chatroom.MembersChatActivity"
@@ -552,6 +548,16 @@
         <activity
             android:name="com.biju.pay.GraphicPreviewActivity"
             android:label="@string/title_activity_graphic_preview" >
+        </activity>
+        <activity
+            android:name="com.biju.wechatshare.WEChatShaerActivity"
+            android:label="@string/title_activity_wechat_shaer" 
+            >
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW"/>
+                <category android:name="android.intent.category.DEFAULT"/>
+                <data android:scheme="wx2ffba147560de2ff"/>
+            </intent-filter>
         </activity>
     </application>
 

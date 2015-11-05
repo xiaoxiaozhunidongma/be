@@ -70,9 +70,8 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 	class ViewHolder{
 		ImageView GraphicPreviewImageView;
 		TextView GraphicPreviewText;
-		RelativeLayout GraphicPreviewWhiteLayout;
-		RelativeLayout GraphicPreviewWhiteLayout1;
-		RelativeLayout GraphicPreviewWhiteLayout2;
+		RelativeLayout GraphicPreviewTextLayout;
+		RelativeLayout GraphicPreviewImageViewLayout;
 	}
 	
 	class MyGraphicPreviewAdapter extends BaseAdapter{
@@ -102,9 +101,8 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				inflater = layoutInflater.inflate(R.layout.graphicpreview_item, null);
 				holder.GraphicPreviewImageView=(ImageView) inflater.findViewById(R.id.GraphicPreviewImageView);
 				holder.GraphicPreviewText=(TextView) inflater.findViewById(R.id.GraphicPreviewText);
-				holder.GraphicPreviewWhiteLayout=(RelativeLayout) inflater.findViewById(R.id.GraphicPreviewWhiteLayout);
-				holder.GraphicPreviewWhiteLayout1=(RelativeLayout) inflater.findViewById(R.id.GraphicPreviewWhiteLayout1);
-				holder.GraphicPreviewWhiteLayout2=(RelativeLayout) inflater.findViewById(R.id.GraphicPreviewWhiteLayout2);
+				holder.GraphicPreviewTextLayout=(RelativeLayout) inflater.findViewById(R.id.GraphicPreviewTextLayout);
+				holder.GraphicPreviewImageViewLayout=(RelativeLayout) inflater.findViewById(R.id.GraphicPreviewImageViewLayout);
 				inflater.setTag(holder);
 			}else {
 				inflater=convertView;
@@ -114,10 +112,8 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 			ImageText imageText = GraphicPreviewList.get(position);
 			Integer type=imageText.getType();
 			if(1==type){
-				holder.GraphicPreviewText.setVisibility(View.VISIBLE);
-				holder.GraphicPreviewImageView.setVisibility(View.GONE);
-				holder.GraphicPreviewWhiteLayout.setVisibility(View.VISIBLE);
-				holder.GraphicPreviewWhiteLayout1.setVisibility(View.GONE);
+				holder.GraphicPreviewTextLayout.setVisibility(View.VISIBLE);
+				holder.GraphicPreviewImageViewLayout.setVisibility(View.GONE);
 				String SINGCOLOR=imageText.getFont_color();
 				if(LIGHTGRAYCOLOR.equals(SINGCOLOR)){
 					holder.GraphicPreviewText.setTextColor(holder.GraphicPreviewText.getResources().getColor(R.drawable.EditTextLightGrayColor));
@@ -137,32 +133,36 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				holder.GraphicPreviewText.setTextSize(fontsize);
 				holder.GraphicPreviewText.setText(imageText.getText()+"");
 			}else if(2==type){
-				holder.GraphicPreviewText.setVisibility(View.GONE);
-				holder.GraphicPreviewImageView.setVisibility(View.VISIBLE);
-//				holder.GraphicPreviewWhiteLayout.setVisibility(View.GONE);
-//				holder.GraphicPreviewWhiteLayout1.setVisibility(View.VISIBLE);
+				holder.GraphicPreviewTextLayout.setVisibility(View.GONE);
+				holder.GraphicPreviewImageViewLayout.setVisibility(View.VISIBLE);
 				
-				int px2dip_left_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
-				int px2dip_top_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
-				int px2dip_right_1 = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
-				int px2dip_bottom = DensityUtil.dip2px(GraphicPreviewActivity.this, 20);
-
-				int columnWidth=imageText.getImage_width();
-				int columnHeight=imageText.getImage_height();
-				int Width=DensityUtil.px2dip(GraphicPreviewActivity.this, columnWidth);
-				int Height=DensityUtil.px2dip(GraphicPreviewActivity.this, columnHeight);
-				Log.e("GraphicPreviewActivity", "高度像素======"+columnHeight);
-				Log.e("GraphicPreviewActivity", "宽度像素======"+columnWidth);
-				Log.e("GraphicPreviewActivity", "高度dp======"+Height);
-				Log.e("GraphicPreviewActivity", "宽度dp======"+Width);
+//				int px2dip_left = DensityUtil.dip2px(GraphicPreviewActivity.this, 15);
+//				int px2dip_right = DensityUtil.dip2px(GraphicPreviewActivity.this, 15);
+//				int px2dip_top = DensityUtil.dip2px(GraphicPreviewActivity.this, 10);
+//				int px2dip_bottom = DensityUtil.dip2px(GraphicPreviewActivity.this, 10);
+//				Log.e("GraphicPreviewActivity", "px2dip_left======"+px2dip_left);
+//				Log.e("GraphicPreviewActivity", " px2dip_right ======"+ px2dip_right );
+//				int columnWidth=imageText.getImage_width();
+//				int columnHeight=imageText.getImage_height();
+//				int Width=DensityUtil.px2dip(GraphicPreviewActivity.this, columnWidth);
+//				int height=DensityUtil.px2dip(GraphicPreviewActivity.this, columnHeight);
+//				Log.e("GraphicPreviewActivity", " height ======"+ height );
+//				Log.e("GraphicPreviewActivity", " columnHeight ======"+ columnHeight );
 				// 设置图片的位置
-				holder.GraphicPreviewImageView.setAdjustViewBounds(true);
-				MarginLayoutParams margin9 = new MarginLayoutParams(holder.GraphicPreviewImageView.getLayoutParams());
-				margin9.setMargins(px2dip_left_1, 0, px2dip_right_1,0);
-				RelativeLayout.LayoutParams layoutParams9 = new RelativeLayout.LayoutParams(margin9);
-				layoutParams9.height = columnHeight;// 设置图片的高度
-				layoutParams9.width = columnWidth; // 设置图片的宽度
-				holder.GraphicPreviewImageView.setLayoutParams(layoutParams9);
+//				MarginLayoutParams margin9 = new MarginLayoutParams(holder.GraphicPreviewImageView.getLayoutParams());
+//				margin9.setMargins(px2dip_left, px2dip_top, px2dip_right,px2dip_bottom);
+//				RelativeLayout.LayoutParams layoutParams9 = new RelativeLayout.LayoutParams(margin9);
+//				layoutParams9.height = columnHeight;// 设置图片的高度
+//				layoutParams9.width = columnWidth; // 设置图片的宽度
+////				holder.GraphicPreviewImageView.setAdjustViewBounds(true);
+//				holder.GraphicPreviewImageView.setLayoutParams(layoutParams9);
+				
+//				RelativeLayout.LayoutParams param = new RelativeLayout.LayoutParams(Width,height);
+////            	param.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM, 1);
+//				param.addRule(RelativeLayout.ALIGN_PARENT_RIGHT, RelativeLayout.TRUE); 
+//				param.addRule(RelativeLayout.ALIGN_PARENT_TOP, RelativeLayout.TRUE); 
+//            	param.setMargins(px2dip_left, px2dip_top, px2dip_right, px2dip_bottom);
+//            	holder.GraphicPreviewImageViewLayout.setLayoutParams(param);
 				
 				String mPath=imageText.getImage_path();
 				Log.e("GraphicPreviewActivity", "获取到的图片路径======"+mPath);
@@ -170,14 +170,6 @@ public class GraphicPreviewActivity extends Activity implements OnClickListener{
 				Log.e("GraphicPreviewActivity", "获取到的图片路径completeURL======"+completeURL);
 				PreferenceUtils.saveImageCache(GraphicPreviewActivity.this, completeURL);// 存SP
 				GraphicImageLoaderUtils.getInstance().LoadImage(GraphicPreviewActivity.this,completeURL, holder.GraphicPreviewImageView);
-			}
-			
-			if(position==GraphicPreviewList.size()-1){
-				if(1==type){
-					holder.GraphicPreviewWhiteLayout2.setVisibility(View.VISIBLE);
-				}else if(2==type){
-//					holder.GraphicPreviewWhiteLayout.setVisibility(View.VISIBLE);
-				}
 			}
 			
 			return inflater;

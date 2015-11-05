@@ -1,0 +1,137 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WEChatShaerActivity" >
+
+    <RelativeLayout
+        android:id="@+id/WEChatShaerTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            />
+
+        <Button
+            android:id="@+id/WEChatShaerOK"
+            android:layout_width="65.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@null"
+            android:text="完成"
+            android:textSize="@dimen/title_right_size"
+            android:textColor="@drawable/title_right_color"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/WEChatShaerTitleLayout"
+        android:layout_centerHorizontal="true"
+        android:background="#7afec6" >
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="130.0dp"
+            android:text="完成"
+            android:textColor="#808080"
+            android:textSize="30.0sp" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/textView2"
+            android:layout_below="@+id/textView2"
+            android:gravity="center"
+            android:text=" Done!"
+            android:textColor="#88d4cc"
+            android:textSize="20.0sp" />
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="50.0dp"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="100.0dp"
+            android:layout_marginLeft="40.0dp"
+            android:layout_marginRight="40.0dp"
+            android:background="#ffffff" >
+
+            <RelativeLayout
+                android:id="@+id/WEChatShaerCircleFriends"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="0.8" >
+
+                <TextView
+                    android:id="@+id/textView5"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="朋友圈" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/WEChatShaerFriends"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/textView6"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="好友" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/WEChatShaerCollection"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_weight="1" >
+
+                <TextView
+                    android:id="@+id/textView7"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:text="收藏" />
+
+            </RelativeLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/linearLayout1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="20.0dp"
+            android:text="将聚会信息分享给更多好友"
+            android:textColor="#88d4cc"
+            android:textSize="12.0sp" />
+
+    </RelativeLayout>
+
+</RelativeLayout>

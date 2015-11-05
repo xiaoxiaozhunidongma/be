@@ -13,8 +13,11 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
+import android.view.View;
 import android.view.Window;
+import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
@@ -51,7 +54,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	@SuppressWarnings("unused")
 	private Context context = WXEntryActivity.this;
-	private String code;
+	private int code;
 	private Interface mWeiXinInterface;
 
 	private Integer pk_user;
@@ -282,31 +285,60 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	public void onReq(BaseReq arg0) {
 		finish();
 	}
-
+	
 	@Override
 	public void onResp(BaseResp resp) {
-		switch (resp.errCode) {
-		case BaseResp.ErrCode.ERR_OK:
-			code = ((SendAuth.Resp) resp).code;
-			Log.e("WXEntryActivity", "获取的code======" + code);
-			initdata();
-			break;
-		case BaseResp.ErrCode.ERR_USER_CANCEL:
-			finish();
-			break;
-		case BaseResp.ErrCode.ERR_AUTH_DENIED:
-			finish();
-			break;
-		default:
-			break;
-		}
-		boolean Binding_weixin = SdPkUser.isGetweixinBinding();
-		if(Binding_weixin)
-		{
-			finish();
-			overridePendingTransition(0, 0);
-		}
 		Log.e("WXEntryActivity", "获取的resp.errCode======" + resp.errCode);
+		boolean  wesource=SdPkUser.GetWeSource;
+		if(wesource){
+			switch (resp.errCode) {
+			case BaseResp.ErrCode.ERR_OK:
+				Log.e("WXEntryActivity", "发送成功======"+resp.errCode);
+				//自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+				Toast toast=new Toast(getApplicationContext());
+				toast.setGravity(Gravity.CENTER, 0, 0);
+				toast.setView(toastRoot);
+				toast.setDuration(100);
+				TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+				tv.setText("分享成功");
+				toast.show();
+				finish();
+				break;
+			case BaseResp.ErrCode.ERR_USER_CANCEL:
+				Log.e("WXEntryActivity", "发送取消======"+resp.errCode);
+				finish();
+				break;
+			case BaseResp.ErrCode.ERR_AUTH_DENIED:
+				Log.e("WXEntryActivity", "发送被拒绝======"+resp.errCode);
+				finish();
+				break;
+			default:
+				break;
+			}
+		}else {
+			switch (resp.errCode) {
+			case BaseResp.ErrCode.ERR_OK:
+				code = ((SendAuth.Resp) resp).errCode;
+				Log.e("WXEntryActivity", "获取的code======" + code);
+				initdata();
+				break;
+			case BaseResp.ErrCode.ERR_USER_CANCEL:
+				finish();
+				break;
+			case BaseResp.ErrCode.ERR_AUTH_DENIED:
+				finish();
+				break;
+			default:
+				break;
+			}
+			boolean Binding_weixin = SdPkUser.isGetweixinBinding();
+			if(Binding_weixin)
+			{
+				finish();
+				overridePendingTransition(0, 0);
+			}
+		}
 	}
 
 	private void initdata() {
@@ -354,8 +386,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 							usersetting.setLast_login_time(user.getLast_login_time());
 							usersetting.setAvatar_path(user.getAvatar_path());
 							usersetting.setWechat_id(openid);// 微信的唯一识别码
-							Log.e("WXEntryActivity",
-									"第二次得到的用户信息2222222====" + sD_pk_user + "\n"
+							Log.e("WXEntryActivity","第二次得到的用户信息2222222====" + sD_pk_user + "\n"
 											+ user.getJpush_id() + "\n"
 											+ user.getNickname() + "\n"
 											+ user.getPassword() + "\n"

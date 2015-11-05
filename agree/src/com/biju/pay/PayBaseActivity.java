@@ -39,6 +39,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
@@ -356,43 +357,6 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		return null;
 
 	}
-
-//	private String genProductArgs() {
-//		StringBuffer xml = new StringBuffer();
-//
-//		try {
-//			String	nonceStr = genNonceStr();
-//
-//			Log.e("PayActivity", "所要支付的金额mWeChatPayMount======="+mWeChatPayMount);
-//
-//			xml.append("</xml>");
-//            List<NameValuePair> packageParams = new LinkedList<NameValuePair>();
-//			packageParams.add(new BasicNameValuePair("appid", app_id));
-//			packageParams.add(new BasicNameValuePair("body", "weixin"));
-//			packageParams.add(new BasicNameValuePair("mch_id", mch_id));
-//			packageParams.add(new BasicNameValuePair("nonce_str", nonceStr));
-//			packageParams.add(new BasicNameValuePair("notify_url", "http://121.40.35.3/test"));
-//			packageParams.add(new BasicNameValuePair("out_trade_no",genOutTradNo()));
-//			packageParams.add(new BasicNameValuePair("spbill_create_ip","127.0.0.1"));
-//			packageParams.add(new BasicNameValuePair("total_fee", mWeChatPayMount+""));
-//			packageParams.add(new BasicNameValuePair("trade_type", "APP"));
-//
-//
-//			String sign = genPackageSign(packageParams);
-//			packageParams.add(new BasicNameValuePair("sign", sign));
-//
-//
-//		   String xmlstring =toXml(packageParams);
-//
-//			return xmlstring;
-//
-//		} catch (Exception e) {
-//			return null;
-//		}
-//		
-//
-//	}
-	
 	
 	private String genProductArgs() {
 		StringBuffer xml = new StringBuffer();
