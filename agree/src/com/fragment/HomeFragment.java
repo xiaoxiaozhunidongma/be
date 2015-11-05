@@ -108,7 +108,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private TextView home_item_name;
 	private RelativeLayout mHome_NoTeam_prompt_layout;
 	private int columnWidth;
-	private Typeface tf;
 	private String currUserUrl;
 	private HashMap<Integer, String> FromAvaUrlMap=new HashMap<Integer, String>();
 	private int pk_group;
@@ -138,7 +137,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			mLayout = inflater.inflate(R.layout.fragment_home, container, false);
 			
 			DisplayMetrics();// 获取屏幕的高度和宽度
-			tf = Typeface.createFromAsset(getActivity().getAssets(), "font/weiruanyahei.ttf");
 			
 			Intent intent = getActivity().getIntent();
 			sdcard = intent.getBooleanExtra(IConstant.Sdcard, false);
@@ -521,9 +519,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			inflater = layoutInflater.inflate(R.layout.home_gridview_item, null);
 			home_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
 			home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
-			home_item_name.setTypeface(tf);//修改字体
-//			TextPaint tp = home_item_name.getPaint(); 
-//			tp.setFakeBoldText(true);
 			home_item_name_layout = (RelativeLayout) inflater.findViewById(R.id.home_item_name_layout);
 			if (position == PhoneLoginActivity.list.size()) {
 				home_item_head.setVisibility(View.INVISIBLE);

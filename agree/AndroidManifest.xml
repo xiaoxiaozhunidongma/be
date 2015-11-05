@@ -10,6 +10,20 @@
     <!-- 解析xml -->
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
+    
+<!--     相册选择器权限 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.android.browser.permission.WRITE_HISTORY_BOOKMARKS" />
+    <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <!-- 银联权限 -->
     <uses-permission android:name="android.permission.INTERNET" />
@@ -553,6 +567,11 @@
             android:name="com.biju.pay.GraphicPreviewActivity"
             android:label="@string/title_activity_graphic_preview" >
         </activity>
+        <activity
+            android:name="com.example.imageselected.photo.SelectPhotoActivity"
+            >
+        </activity>
+        
     </application>
 
 </manifest>

@@ -22,12 +22,8 @@ public class Path2Bitmap {
 		options.inInputShareable = true;// 以上options的两个属性必须联合使用才会有效果
 		options.inDither=false;   
 		options.inTempStorage=new byte[32 * 1024]; 
-
-
-
 		
 		BitmapFactory.decodeStream(in, null, options);
-		//decodeStream这个为空！
 		
 		in.close();
 		Bitmap bitmap = null;

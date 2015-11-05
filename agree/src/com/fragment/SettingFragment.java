@@ -1,14 +1,12 @@
 package com.fragment;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
-import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -49,10 +47,10 @@ import com.biju.function.AboutUsActivity;
 import com.biju.function.BindingPhoneActivity;
 import com.biju.function.FeedbackActivity;
 import com.biju.function.NicknameActivity;
-import com.biju.function.RequestCode3Activity.findTeamInterface;
 import com.biju.function.SexActivity;
 import com.biju.login.BeforeLoginActivity;
 import com.biju.withdrawal.TouchBalanceActivity;
+import com.example.imageselected.photo.SelectPhotoActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.mm.sdk.modelmsg.SendAuth;
 import com.tencent.mm.sdk.openapi.IWXAPI;
@@ -81,6 +79,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public static String APPID = "201139";
 	public static String USERID = "";
 	public static String SIGN;
+	
+	public ArrayList<Bitmap> recycleBitmaps=new ArrayList<Bitmap>();
 
 	public static String getSIGN() {
 		return SIGN;
@@ -129,6 +129,10 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private String uUid;
 	private TextView mSetting_Binding_balance_show;
 	private float mUserAmount;
+	int loadnum=0;
+	private Bitmap convertToBitmap;
+	private Bitmap limitLongScaleBitmap;
+	private Bitmap centerSquareScaleBitmap;
 
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 
@@ -142,6 +146,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		if (mLayout == null) {
 			mLayout = inflater.inflate(R.layout.fragment_setting, container,false);
 			Log.e("SettingFragment", "进入了onCreateView()====================");
+			SD_pk_user = SdPkUser.getsD_pk_user();
 		}
 		// 获取ossService和sampleBucket
 		ossService = MyApplication.getOssService();
@@ -189,25 +194,38 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			usersetting.setLast_login_time(mUserLast_login_time);
 			//上传
 			String mFilePath = SdPkUser.getFilePath;//回调SD卡路径
-			Bitmap convertToBitmap = null;
 			try {
 				convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
-			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-					convertToBitmap, 1080);// 最长边限制为1080
-			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-					limitLongScaleBitmap, 180);// 截取中间正方形
+			limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
+					convertToBitmap, 1080);
+			centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
+					limitLongScaleBitmap, 180);
 			bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
+			recycleBitmaps.add(convertToBitmap);
+			recycleBitmaps.add(limitLongScaleBitmap);
+			recycleBitmaps.add(centerSquareScaleBitmap);
 			UUID randomUUID = UUID.randomUUID();
 			uUid = randomUUID.toString();
 			OSSupload(ossData, bitmap2Bytes, uUid,usersetting);
 		}
 		super.onResume();
 	}
-
+	
+	@Override
+	public void onStop() {
+		for (int i = 0; i < recycleBitmaps.size(); i++) {
+			Bitmap bitmap = recycleBitmaps.get(i);
+			bitmap.recycle();
+		}
+		recycleBitmaps.clear();
+		super.onStop();
+	}
+	
 	private void returndata() {
+		SD_pk_user = SdPkUser.getsD_pk_user();
 		ReadUser(SD_pk_user);
 	}
 
@@ -412,10 +430,15 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 	private void Setting_head() {
 		isShow = true;
-		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
-		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
-		getAlbum.setType(IMAGE_TYPE);
+//		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
+//		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
+//		getAlbum.setType(IMAGE_TYPE);
+//		startActivityForResult(getAlbum, IMAGE_CODE);
+		
+		Intent getAlbum = new Intent(getActivity(), SelectPhotoActivity.class);
+		getAlbum.putExtra("SelectType", 0);
 		startActivityForResult(getAlbum, IMAGE_CODE);
+		
 		mSetting_head.setVisibility(View.GONE);
 		mSetting_head_1.setVisibility(View.VISIBLE);
 	}
@@ -588,6 +611,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			@Override
 			public void onSuccess(String objectKey) {
 				Log.e("", "图片上传成功");
+				loadnum=0;//初始化为0
 				Log.e("Main", "objectKey==" + objectKey);
 				//上传完成后注册
 				user.setAvatar_path(objectKey);
@@ -618,6 +642,31 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
 				Log.e("", "图片上传失败" + ossException.toString());
+				loadnum++;
+				if(loadnum<=3){
+					
+					if (isShow) {
+						User usersetting = new User();
+						usersetting.setPk_user(SD_pk_user);
+						usersetting.setJpush_id(mUserJpush_id);
+						usersetting.setNickname(mUserNickname);
+						usersetting.setPassword(mUserPassword);
+						usersetting.setSex(mUserSex);
+						usersetting.setStatus(1);
+						usersetting.setPhone(mUserPhone);
+						usersetting.setWechat_id(mUserWechat_id);
+						usersetting.setSetup_time(mUserSetup_time);
+						usersetting.setLast_login_time(mUserLast_login_time);
+						recycleBitmaps.add(convertToBitmap);
+						recycleBitmaps.add(limitLongScaleBitmap);
+						recycleBitmaps.add(centerSquareScaleBitmap);
+						UUID randomUUID = UUID.randomUUID();
+						uUid = randomUUID.toString();
+						OSSupload(SettingFragment.this.ossData, bitmap2Bytes, uUid,usersetting);
+					}
+					
+				}
+				
 			}
 		});
 	}

@@ -180,6 +180,7 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 					Intent intent=new Intent(getActivity(), PhotoActivity.class);
 					intent.putExtra("pk_party", pk_party);
 					intent.putExtra("photos", photos);
+					intent.putExtra("party4", party4);
 					startActivity(intent);
 				}
 			});

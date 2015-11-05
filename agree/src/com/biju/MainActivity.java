@@ -1,6 +1,8 @@
 package com.biju;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 import leanchatlib.controller.ChatManager;
 import leanchatlib.utils.LogUtils;
@@ -206,33 +208,37 @@ public class MainActivity extends FragmentActivity  {
 		if (resultCode != Activity.RESULT_OK || data == null)
 			return;
 		try {
-			Uri selectedImage = data.getData();
-//			long parseId = ContentUris.parseId(selectedImage);
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Cursor cursor = MainActivity.this.getContentResolver().query(
-					selectedImage, filePathColumn, null, null, null);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-				mFilePath = cursor.getString(columnIndex);
-				cursor.close();
-				cursor = null;
-
-			} else {
-				
-				File file = new File(selectedImage.getPath());
-				mFilePath = file.getAbsolutePath();
-				if (!file.exists()) {
-					Toast toast = Toast.makeText(this, "’“≤ªµΩÕº∆¨",Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
-					return;
-				}
-			}
+//			Uri selectedImage = data.getData();
+////			long parseId = ContentUris.parseId(selectedImage);
+//			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//			Cursor cursor = MainActivity.this.getContentResolver().query(
+//					selectedImage, filePathColumn, null, null, null);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//				mFilePath = cursor.getString(columnIndex);
+//				cursor.close();
+//				cursor = null;
+//
+//			} else {
+//				
+//				File file = new File(selectedImage.getPath());
+//				mFilePath = file.getAbsolutePath();
+//				if (!file.exists()) {
+//					Toast toast = Toast.makeText(this, "’“≤ªµΩÕº∆¨",Toast.LENGTH_SHORT);
+//					toast.setGravity(Gravity.CENTER, 0, 0);
+//					toast.show();
+//					return;
+//				}
+//			}
 //			//Àı¬‘Õº¬∑æ∂
 //			        Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(MainActivity.this.getContentResolver(), parseId, Images.Thumbnails.MICRO_KIND,  
 //					                null); 
 			        
+			@SuppressWarnings("unchecked")
+			ArrayList<String> mSelectedImageList = (ArrayList<String>) data.getSerializableExtra("mSelectedImageList");
+			mFilePath=mSelectedImageList.get(0);
+			Log.e("MainActivity", "mSelectedImageList.size()======" + mSelectedImageList.size());
 			Log.e("MainActivity", "mFilePath======" + mFilePath);
 			// Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
 			// Bitmap bmp = Bimp.revitionImageSize(mFilePath);
