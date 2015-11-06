@@ -53,7 +53,6 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private String TestcompleteURL = beginStr+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private int commentsList_msg = -1;
 	private MyPartakeAdapter partakeadapter;
-	private int partakeNum;
 	private RelativeLayout mCommentslist_partake_list_layout;
 	private TextView mCommentslist_partake_list_number;
 	private RelativeLayout mCommentslist_not_say_layout;
@@ -61,13 +60,12 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private TextView mCommentslist_partake_list_prompt;
 	private TextView mCommentslist_not_say_prompt;
 	private ArrayList<Group_ReadAllUser> commentslist = new ArrayList<Group_ReadAllUser>();
-	private int not_sayNum;
 	private ListView mCommentslist_not_say_listview;
 	private boolean isNotsay;
 	private MyNotsayAdapter notsayAdapter;
 	private Integer fk_group;
 	private float mPay_amount;
-
+	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -104,20 +102,12 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 						Relation relation = relationList.get(i);
 						// 判断参与、拒绝数
 						Integer relationship = relation.getRelationship();
-						switch (relationship) {
-						case 0:
-							not_sayList.add(relationList.get(i));
-							break;
-						case 3:
-							not_sayList.add(relationList.get(i));
-							break;
-						case 4:
-							partakeNum++;
-							Log.e("CommentsListActivity", "当前partakeNum的数量"+ partakeNum + "=======" + i);
-							partackList.add(relationList.get(i));
-							break;
-						default:
-							break;
+						if(4==relationship){
+							partackList.add(relation);
+						}else if(0==relationship){
+							not_sayList.add(relation);
+						}else if(3==relationship){
+							not_sayList.add(relation);
 						}
 					}
 					if (isNotsay) {
@@ -138,20 +128,17 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 						}
 					}
 
-					mCommentslist_partake_list_number.setText(String.valueOf(partakeNum));
-					partakeNum = 0;
+					mCommentslist_partake_list_number.setText(partackList.size()+"");//参与数量
 					if (isNotsay) {
 						mComments_list_listview.setVisibility(View.GONE);
 						mCommentslist_not_say_listview.setVisibility(View.VISIBLE);
-						not_sayNum = commentslist.size();
 						mCommentslist_not_say_listview.setAdapter(notsayAdapter);
 						notsayAdapter.notifyDataSetChanged();
 					} else {
 						mComments_list_listview.setVisibility(View.VISIBLE);
 						mCommentslist_not_say_listview.setVisibility(View.GONE);
-						not_sayNum = commentslist.size() - partackList.size();
 					}
-					mCommentslist_not_say_number.setText(String.valueOf(not_sayNum));
+					mCommentslist_not_say_number.setText(not_sayList.size()+"");//未表态数量
 				}
 			}
 

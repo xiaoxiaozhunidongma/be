@@ -225,6 +225,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 	
 	private void returndata() {
+		// 获取SD卡中的pk_user
 		SD_pk_user = SdPkUser.getsD_pk_user();
 		ReadUser(SD_pk_user);
 	}
@@ -468,6 +469,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			SdPkUser.setGetUser(Setting_readuser);
 			SdPkUser.setGetweixinBinding(true);
 			SdPkUser.setWeixinRegistered(true);
+			SdPkUser.setGetWeSource(false);//说明是绑定微信过去的
 		}
 	}
 

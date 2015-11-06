@@ -216,8 +216,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		readCurUser();//读取当前用户
 		readAlluserOfgroup();
 		super.onResume();
-		readCurUser();//读取当前用户
-		readAlluserOfgroup();
 	}
 
 	private void ReadTeamInterface(int pk_user) {
@@ -333,7 +331,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			
 			@Override
 			public void defail(Object B) {
-				// TODO Auto-generated method stub
 				
 			}
 		});
@@ -353,10 +350,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		// 是否滑动时候暂停加载
 		home_gridview.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
 		home_gridview.setOnItemClickListener(new OnItemClickListener() {
-
-
-
-
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
@@ -412,8 +405,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 				final Integer SD_pk_user = SdPkUser.getsD_pk_user();
 				AVIMClient curUser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
 				curUser.open(new AVIMClientCallback(){
-
-
 					@Override
 					public void done(AVIMClient client, AVIMException e) {
 					      if(e==null){
@@ -478,9 +469,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 				if (position == PhoneLoginActivity.list.size()) {
 					if (footerView == null) {
 						footerView = new FooterView(parent.getContext());
-						GridView.LayoutParams pl = new GridView.LayoutParams(
-								getDisplayWidth((getActivity())),
-								LayoutParams.WRAP_CONTENT);
+						GridView.LayoutParams pl = new GridView.LayoutParams(getDisplayWidth((getActivity())),LayoutParams.WRAP_CONTENT);
 						footerView.setLayoutParams(pl);
 						footerView.setOnClickListener(new OnClickListener() {
 
@@ -497,9 +486,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 				if (position == PhoneLoginActivity.list.size() + 1) {
 					if (footerView == null) {
 						footerView = new FooterView(parent.getContext());
-						GridView.LayoutParams pl = new GridView.LayoutParams(
-								getDisplayWidth((getActivity())),
-								LayoutParams.WRAP_CONTENT);
+						GridView.LayoutParams pl = new GridView.LayoutParams(getDisplayWidth((getActivity())),LayoutParams.WRAP_CONTENT);
 						footerView.setLayoutParams(pl);
 						footerView.setOnClickListener(new OnClickListener() {
 
@@ -542,7 +529,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			case 1:
 				margin9.setMargins(px2dip_left_2, px2dip_top_2, px2dip_right_2,0);
 				break;
-
 			default:
 				break;
 			}

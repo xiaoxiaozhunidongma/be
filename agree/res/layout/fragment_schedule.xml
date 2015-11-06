@@ -44,8 +44,7 @@
             <android.support.v4.widget.SwipeRefreshLayout
                 android:id="@+id/schedule_swipe_refresh"
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                 >
+                android:layout_height="match_parent" >
 
                 <ListView
                     android:id="@+id/schedule_listview"
@@ -66,14 +65,43 @@
             android:layout_centerHorizontal="true"
             android:visibility="gone" >
 
-            <ImageView
-                android:id="@+id/imageView1"
+            <RelativeLayout
+                android:id="@+id/Schedule_prompt"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_marginTop="215dp"
-                android:src="@drawable/chat_default_user_avatar" />
+                android:layout_centerVertical="true" >
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="50.0dp"
+                    android:layout_height="50.0dp"
+                    android:layout_centerHorizontal="true"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/file" />
+
+                <TextView
+                    android:id="@+id/textView1"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/imageView1"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="70.0dp"
+                    android:text="这个小组还没有任何的活动 点"
+                    android:textColor="#c9c9c9"
+                    android:textSize="14.0sp" />
+
+                <TextView
+                    android:id="@+id/textView2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/textView1"
+                    android:layout_centerHorizontal="true"
+                    android:gravity="center"
+                    android:text="击这里来创建一个活动吧"
+                    android:textColor="#c9c9c9"
+                    android:textSize="14.0sp" />
+            </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>
 

@@ -128,6 +128,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		super.onResume();
 	}
 	private void initUI() {
+		mLayout.findViewById(R.id.Schedule_prompt).setOnClickListener(this);//点击进行创建新活动
 		mSchedule_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_prompt_layout);//没有聚会时候进行提示
 		mSchedule_swipe_refresh_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_swipe_refresh_layout);//有聚会时候显示
 		mSchedule_new_party_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_new_party_layout);//添加新的聚会
@@ -458,10 +459,18 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		case R.id.Schedule_new_party_layout:
 			Schedule_new_party();
 			break;
+		case R.id.Schedule_prompt:
+			Schedule_prompt();
+			break;
 
 		default:
 			break;
 		}
+	}
+
+	//做新建聚会的步骤
+	private void Schedule_prompt() {
+		Schedule_new_party();
 	}
 
 	//新建聚会

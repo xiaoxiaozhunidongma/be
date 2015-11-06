@@ -238,4 +238,24 @@ public class SdPkUser {
 	public static void setGetSource(boolean getSource) {
 		GetSource = getSource;
 	}
+	
+	//新建聚会传pk_party
+	public static String Getpk_party;
+	public static String getGetpk_party() {
+		return Getpk_party;
+	}
+
+	public static void setGetpk_party(String getpk_party) {
+		Getpk_party = getpk_party;
+	}
+	
+	//判断是分享的回调还是登陆的回调
+	public static boolean GetWeSource;
+	public static boolean isGetWeSource() {
+		return GetWeSource;
+	}
+
+	public static void setGetWeSource(boolean getWeSource) {
+		GetWeSource = getWeSource;
+	}
 }

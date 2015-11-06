@@ -14,6 +14,7 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -21,6 +22,7 @@ import android.view.Window;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.ImageText;
@@ -48,6 +50,7 @@ import com.biju.APP.MyApplication;
 import com.biju.pay.CostActivity;
 import com.biju.pay.GraphicDetailsActivity;
 import com.biju.pay.LimitNumberActivity;
+import com.biju.wechatshare.WEChatShaerActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class AddNewPartyActivity extends Activity implements OnClickListener {
@@ -140,6 +143,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private String uniqueId;
 	private String partytimeString;
 	private boolean isNoChoose;
+	private String party_name;
 	//查表
 	private void initDB() {
 		GraphicDetailsList = new Select().from(ImageText.class).execute();
@@ -156,7 +160,6 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		Log.e("AddNewPartyActivity", "ImageDetailsList的长度======"+ImageDetailsList.size());
 		if(ImageDetailsList.size()>0){
 			ImageOSSQueue();//然后进行图片上传
-//			ImageOSS();//然后进行图片上传
 		}else {
 			FoundParty();//直接进行聚会的创建
 		}
@@ -166,33 +169,12 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		String fk_party=AddNewPartyActivity.getMyUUID();
 		PartyComplete(fk_party);
 	}
-
-	
-	private void ImageOSS() {
-		for (int j = 0; j < ImageDetailsList.size(); j++) {
-			ImageText text=ImageDetailsList.get(j);
-			String imagePath=text.getImage_path();
-			String fk_party=text.getFk_party();
-			Bitmap convertToBitmap;
-			try {
-				convertToBitmap = Path2Bitmap.convertToBitmap(imagePath);
-				Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-						convertToBitmap, 1280);// 最长边限制为1280
-				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
-				UUID uuid = UUID.randomUUID();
-				uniqueId = uuid.toString();
-				OSSupload(ossData, bitmap2Bytes, uniqueId,imagePath,fk_party);
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		}
-	}
 	//队列模式上传
 	private void ImageOSSQueue() {
 		if(ImageDetailsList.size()>0){
 			ImageText text=ImageDetailsList.get(0);
 			String imagePath=text.getImage_path();
-			String fk_party=text.getFk_party();
+			String fk_party = text.getFk_party();
 			Bitmap convertToBitmap;
 			try {
 				convertToBitmap = Path2Bitmap.convertToBitmap(imagePath);
@@ -221,12 +203,6 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 					ImageText imageText2=new Select().from(ImageText.class).where("image_path=?", imagePath).executeSingle();
 					imageText2.setImage_path(objectKey);
 					imageText2.save();
-//					if(objectKeyList.size()==ImageDetailsList.size()){
-//						//第二次查表
-//						GraphicDetailsList2.clear();
-//						GraphicDetailsList2 = new Select().from(ImageText.class).execute();
-//						PartyComplete(fk_party);
-//					}
 					reUploadNum=3;//如果上传成功,恢复次数为3
 					
 					ImageDetailsList.remove(0);//删除第一个
@@ -308,16 +284,14 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 					Editor editor2=refresh_sp.edit();
 					editor2.putBoolean(IConstant.IsAddRefresh, true);
 					editor2.commit();
-					finish();
-					if(!source){
-						Intent intent=new Intent(AddNewPartyActivity.this, MainActivity.class);
-						startActivity(intent);
-					}else {
-						Intent intent=new Intent(AddNewPartyActivity.this, GroupActivity.class);
-						startActivity(intent);
-					}
+					Intent intent=new Intent(AddNewPartyActivity.this, WEChatShaerActivity.class);
+					intent.putExtra("Source", source);
+					intent.putExtra("Party_name", party_name);
+					startActivity(intent);
 					mAdd_New_Party_OK_layout.setEnabled(true);
 					mAdd_New_Party_OK.setEnabled(true);
+					OKToast();
+					finish();
 				}
 			}
 
@@ -328,6 +302,18 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		});
 	}
 
+	private void OKToast() {
+		//自定义Toast
+		View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+		Toast toast=new Toast(getApplicationContext());
+		toast.setGravity(Gravity.CENTER, 0, 0);
+		toast.setView(toastRoot);
+		toast.setDuration(100);
+		TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+		tv.setText("创建成功");
+		toast.show();
+	}
+	
 	@Override
 	protected void onStart() {
 		initAddress();
@@ -650,7 +636,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		if(TotalCount<2){
 			SweetAlerDialog();
 		}else{
-			String party_name = mAdd_New_Party_name.getText().toString().trim();
+			party_name = mAdd_New_Party_name.getText().toString().trim();
 			Party party = new Party();
 			party.setPk_party(fk_party);
 			party.setFk_group(fk_group);
@@ -680,6 +666,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			Log.e("AddNewPartyActivity", "新建日程的地址=====" + address);
 			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(GraphicDetailsList2, party));
 			Log.e("PartyComplete~", "GraphicDetailsList.size="+GraphicDetailsList.size());
+			SdPkUser.setGetpk_party(fk_party);
 		}
 	}
 

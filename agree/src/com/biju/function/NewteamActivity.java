@@ -32,6 +32,7 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -101,6 +102,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private String uUid;
 	private boolean isreaduser;
 	private int toastHeight;
+	private RelativeLayout mNewTeam_OK_layout;
+	private TextView mNewTeam_OK;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -121,12 +124,12 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		format1 = sdf.format(new Date());
 		DisplayMetrics();
 	}
-	
+
 	private void DisplayMetrics() {
 		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metric);
-        int height = metric.heightPixels;   // 屏幕高度（像素）
-        toastHeight = height/4;
+		getWindowManager().getDefaultDisplay().getMetrics(metric);
+		int height = metric.heightPixels; // 屏幕高度（像素）
+		toastHeight = height / 4;
 	}
 
 	private void Interface() {
@@ -139,6 +142,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				int newteamStatusMsg = newteamback.getStatusMsg();
 				if (newteamStatusMsg == 1) {
 					Log.e("NewteamActivity", "小组ID" + A);
+					mNewTeam_OK_layout.setEnabled(true);
+					mNewTeam_OK.setEnabled(true);
 					SdPkUser.setRefreshTeam(true);
 					finish();
 					toast();
@@ -146,13 +151,13 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			}
 
 			private void toast() {
-				//自定义Toast
-				View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
-				Toast toast=new Toast(getApplicationContext());
+				// 自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_toast,null);
+				Toast toast = new Toast(getApplicationContext());
 				toast.setGravity(Gravity.TOP, 0, toastHeight);
 				toast.setView(toastRoot);
 				toast.setDuration(100);
-				TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+				TextView tv = (TextView) toastRoot.findViewById(R.id.TextViewInfo);
 				tv.setText("创建成功");
 				toast.show();
 			}
@@ -172,7 +177,14 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		mNewTeam_tv_head.setOnClickListener(this);// 选择小组头像
 		findViewById(R.id.NewTeam_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.NewTeam_back).setOnClickListener(this);// 返回
-		findViewById(R.id.NewTeam_OK_layout).setOnClickListener(this);// 完成
+		mNewTeam_OK_layout = (RelativeLayout) findViewById(R.id.NewTeam_OK_layout);
+		mNewTeam_OK_layout.setOnClickListener(this);// 完成
+		mNewTeam_OK = (TextView) findViewById(R.id.NewTeam_OK);
+		mNewTeam_OK.setOnClickListener(this);
+		
+		mNewTeam_OK_layout.setEnabled(true);
+		mNewTeam_OK.setEnabled(true);
+		
 		mNewteam_name.setFocusable(true);
 		mNewteam_name.setFocusableInTouchMode(true);
 		mNewteam_name.requestFocus();
@@ -185,7 +197,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			}
 		}, 998);
 	}
-
 
 	@Override
 	public void onClick(View v) {
@@ -207,43 +218,43 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		}
 	}
 
+	public void sendMessageToJerryFromTom() {
+		final ArrayList<String> strings = new ArrayList<String>();
+		// Tom 用自己的名字作为clientId，获取AVIMClient对象实例
+		Integer SD_pk_user = SdPkUser.getsD_pk_user();
+		strings.add(String.valueOf(SD_pk_user));// 添加当前用户
+		AVIMClient curuser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
+		// 与服务器连接
+		curuser.open(new AVIMClientCallback() {
+			@Override
+			public void done(AVIMClient client, AVIMException e) {
+				if (e == null) {
+					// 创建与 Jerry，Bob,Harry,William 之间的会话
+					HashMap<String, Object> attr = new HashMap<String, Object>();
 
+					attr.put("type", 1);// 1是群聊 ，3是聊天室
 
-		public void sendMessageToJerryFromTom() {
-			 final ArrayList<String> strings=new ArrayList<String>();
-			    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
-				Integer SD_pk_user = SdPkUser.getsD_pk_user();
-				strings.add(String.valueOf(SD_pk_user));//添加当前用户
-			    AVIMClient curuser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
-			    // 与服务器连接
-			    curuser.open(new AVIMClientCallback() {
-			      @Override
-			      public void done(AVIMClient client, AVIMException e) {
-			        if (e == null) {
-			          // 创建与 Jerry，Bob,Harry,William 之间的会话
-			            HashMap<String,Object> attr = new HashMap<String,Object>();
-			            
-			            attr.put("type",1);//1是群聊 ，3是聊天室
+					client.createConversation(strings, "Tom & Jerry & friedns",
+							attr, new AVIMConversationCreatedCallback() {
 
-			          client.createConversation(strings, "Tom & Jerry & friedns", attr,
-			              new AVIMConversationCreatedCallback() {
+								@Override
+								public void done(AVIMConversation conversation,
+										AVIMException e) {
+									if (e == null) {
+										Log.e("NewteamActivity", "对话创建成功！");
+										final ChatManager chatManager = ChatManager.getInstance();
+										chatManager.registerConversation(conversation);// 注册对话
+										group.setEm_id(conversation.getConversationId());// Em_id赋值传服务器
+										// 上传OSS
+										OSSupload(ossData, bitmap2Bytes, uUid);
+									}
+								}
+							});
+				}
+			}
+		});
+	}
 
-			                @Override
-			                public void done(AVIMConversation conversation, AVIMException e) {
-			                  if (e == null) {
-			                	  Log.e("NewteamActivity", "对话创建成功！");
-			          			final ChatManager chatManager = ChatManager.getInstance();
-									 chatManager.registerConversation(conversation);//注册对话
-			                	  group.setEm_id(conversation.getConversationId());//Em_id赋值传服务器
-			              		//上传OSS
-			              		OSSupload(ossData, bitmap2Bytes,uUid);
-			                  }
-			                }
-			              });
-			        }
-			      }
-			    });
-			  }
 	private void NewTeam_head() {
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
 		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
@@ -252,6 +263,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private void NewTeam_OK() {
+		mNewTeam_OK_layout.setEnabled(false);
+		mNewTeam_OK.setEnabled(false);
+
 		newteam_name = mNewteam_name.getText().toString().trim();
 		group = new Group();
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-m-d HH:MM:ss");
@@ -262,11 +276,12 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		group.setStatus(1);
 		group.setName(newteam_name);
 		group.setLast_post_time(format2);
-		
-//		//上传OSS
-//		OSSupload(ossData, bitmap2Bytes,uUid);
+
+		// //上传OSS
+		// OSSupload(ossData, bitmap2Bytes,uUid);
 
 	}
+
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		if (resultCode != Activity.RESULT_OK || data == null)
@@ -293,9 +308,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					return;
 				}
 			}
-			Log.e("NewteamActivity", "mFilePath======"+mFilePath);
-			//OSS上传~
-//			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
+			Log.e("NewteamActivity", "mFilePath======" + mFilePath);
+			// OSS上传~
+			// Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
 			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1080);// 最长边限制为1080
 			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 600);// 截取中间正方形
@@ -343,7 +358,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			public void onProgress(String objectKey, int byteCount,
 					int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
-		    }
+			}
 
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {

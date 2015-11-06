@@ -21,7 +21,6 @@ public class GraphicImageLoaderUtils {
 	}
 
 	public static void clearCache() {
-		Log.e("homeImageLoaderUtils", "有调用到这个来==============================");
 		ImageLoader.getInstance().clearDiskCache();
 		ImageLoader.getInstance().clearMemoryCache();
 	}

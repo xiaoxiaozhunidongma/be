@@ -369,7 +369,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			if(members.size()>2){
 				holder.tv_menmberNum.setVisibility(View.VISIBLE);
 				holder.tv_menmberNum.setText(String.valueOf(members.size()));
-				holder.PartyReadUserAllFriends_head.setImageResource(R.drawable.login_1);
+				holder.PartyReadUserAllFriends_head.setImageResource(R.drawable.chatroomhead);
 			}else{
 				holder.tv_menmberNum.setVisibility(View.GONE);
 				for (int i = 0; i < members.size(); i++) {
