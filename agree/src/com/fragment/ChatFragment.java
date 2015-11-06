@@ -111,6 +111,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 	//private PasteEditText input;
 
 	private View mLayout;
+	public static onActivityResultInterface onActivityResultInterface;
 
 	public ChatFragment() {
 		// Required empty public constructor
@@ -176,10 +177,54 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 //
 		    Intent intent = getActivity().getIntent();
 			initByIntent(intent);
+			initOnActivityResult();
 		}
 		return mLayout;
 	}
 	
+	private void initOnActivityResult() {
+	onActivityResultInterface onActivityResultInterface = new onActivityResultInterface() {
+		
+		@SuppressLint("NewApi")
+		@Override
+		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+			// TODO Auto-generated method stub
+			Log.e("群聊的onActivityResult", "");
+		    if (resultCode == getActivity().RESULT_OK) {
+		      switch (requestCode) {
+		        case GALLERY_REQUEST:
+		        case GALLERY_KITKAT_REQUEST:
+		          if (data == null) {
+		            toast("return intent is null");
+		            return;
+		          }
+		          Uri uri;
+		          if (requestCode == GALLERY_REQUEST) {
+		            uri = data.getData();
+		          } else {
+		        	  Log.e("", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+		            //for Android 4.4
+		            uri = data.getData();
+		            final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+		                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+		            getActivity().getContentResolver().takePersistableUriPermission(uri, takeFlags);
+		          }
+		          String localSelectPath = ProviderPathUtils.getPath(getActivity(), uri);
+		          messageAgent.sendImage(localSelectPath,getActivity());
+		          hideBottomLayout();
+		          break;
+		        case TAKE_CAMERA_REQUEST:
+		          messageAgent.sendImage(localCameraPath,getActivity());
+		          hideBottomLayout();
+		          break;
+		      }
+		    }
+		}
+	};
+	
+	this.onActivityResultInterface=onActivityResultInterface;
+	}
+
 //	  public void onNewIntent(Intent intent) {
 ////	    super.onNewIntent(intent);
 //	    initByIntent(intent);
@@ -746,12 +791,14 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 				if (Build.VERSION.SDK_INT < 19) {
 					intent = new Intent(Intent.ACTION_GET_CONTENT);
 					intent.setType("image/*");
-					startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.chat_activity_select_picture)),
+					//片段中的
+					getActivity().startActivityForResult(Intent.createChooser(intent, getResources().getString(R.string.chat_activity_select_picture)),
 		          GALLERY_REQUEST);
 				} else {
 					intent = new Intent(Intent.ACTION_PICK, android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
 					intent.setType("image/*");
-					startActivityForResult(intent, GALLERY_REQUEST);
+					//片段中的
+					getActivity().startActivityForResult(intent, GALLERY_REQUEST);
 					Log.e("", "BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB");
 				}
 		  }
@@ -761,7 +808,8 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		    Uri imageUri = Uri.fromFile(new File(localCameraPath));
 		    takePictureIntent.putExtra(android.provider.MediaStore.EXTRA_OUTPUT, imageUri);
 		    if (takePictureIntent.resolveActivity(getActivity().getPackageManager()) != null) {
-		      startActivityForResult(takePictureIntent, TAKE_CAMERA_REQUEST);
+		    	//片段中的
+		      getActivity().startActivityForResult(takePictureIntent, TAKE_CAMERA_REQUEST);
 		    }
 		  }
 
@@ -795,40 +843,47 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		
 	}
 	
-	@SuppressLint("NewApi")
-	@Override
-	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-	    super.onActivityResult(requestCode, resultCode, intent);
-	    if (resultCode == getActivity().RESULT_OK) {
-	      switch (requestCode) {
-	        case GALLERY_REQUEST:
-	        case GALLERY_KITKAT_REQUEST:
-	          if (intent == null) {
-	            toast("return intent is null");
-	            return;
-	          }
-	          Uri uri;
-	          if (requestCode == GALLERY_REQUEST) {
-	            uri = intent.getData();
-	          } else {
-	        	  Log.e("", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-	            //for Android 4.4
-	            uri = intent.getData();
-	            final int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-	                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-	            getActivity().getContentResolver().takePersistableUriPermission(uri, takeFlags);
-	          }
-	          String localSelectPath = ProviderPathUtils.getPath(getActivity(), uri);
-	          messageAgent.sendImage(localSelectPath,getActivity());
-	          hideBottomLayout();
-	          break;
-	        case TAKE_CAMERA_REQUEST:
-	          messageAgent.sendImage(localCameraPath,getActivity());
-	          hideBottomLayout();
-	          break;
-	      }
-	    }
-	  }
+	
+	public interface onActivityResultInterface{
+		void onActivityResult(int requestCode, int resultCode, Intent data);
+	}
+	
+//	@SuppressLint("NewApi")
+//	@Override
+//	public void onActivityResult(int requestCode, int resultCode, Intent intent) {
+//		// TODO Auto-generated method stub
+//		super.onActivityResult(requestCode, resultCode, intent);
+//		Log.e("群聊的onActivityResult", "");
+//	    if (resultCode == getActivity().RESULT_OK) {
+//	      switch (requestCode) {
+//	        case GALLERY_REQUEST:
+//	        case GALLERY_KITKAT_REQUEST:
+//	          if (intent == null) {
+//	            toast("return intent is null");
+//	            return;
+//	          }
+//	          Uri uri;
+//	          if (requestCode == GALLERY_REQUEST) {
+//	            uri = intent.getData();
+//	          } else {
+//	        	  Log.e("", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+//	            //for Android 4.4
+//	            uri = intent.getData();
+//	            final int takeFlags = intent.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+//	                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+//	            getActivity().getContentResolver().takePersistableUriPermission(uri, takeFlags);
+//	          }
+//	          String localSelectPath = ProviderPathUtils.getPath(getActivity(), uri);
+//	          messageAgent.sendImage(localSelectPath,getActivity());
+//	          hideBottomLayout();
+//	          break;
+//	        case TAKE_CAMERA_REQUEST:
+//	          messageAgent.sendImage(localCameraPath,getActivity());
+//	          hideBottomLayout();
+//	          break;
+//	      }
+//	    }
+//	}
 	
 	  @Override
 	public void onDestroy() {

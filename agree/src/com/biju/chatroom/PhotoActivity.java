@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.UUID;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.Party4;
 import com.BJ.javabean.Photo;
 import com.BJ.javabean.Photosback;
 import com.BJ.photo.AlbumActivity;
@@ -104,6 +105,10 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 	private String uUid;
 	private String pk_party;
 	private Photo photo;
+	private Party4 party4;
+	private TextView tv_partyname;
+	private TextView tv_partytime;
+	private TextView tv_partyphotonum;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -117,9 +122,10 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		
 		Intent intent = getIntent();
 		pk_party = intent.getStringExtra("pk_party");
+		party4 = (Party4)intent.getSerializableExtra("party4");
 		listphotos = (ArrayList<Photo>) intent.getSerializableExtra("photos");
 		
-		Init();
+		InitUI();
 		initPhotoUplisten();
 //		initGroupPhotoListen();
 //		initOnActivityResult();
@@ -128,46 +134,46 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		sampleBucket = MyApplication.getSampleBucket();
 	}
 
-	private void initGroupPhotoListen() {
-		instance.setPostListener(new readPartyPhotosListenner() {
-			
-
-			@Override
-			public void success(String A) {
-				Log.e("PhotoFragment2", "返回的图片数组："+A);
-
-				Photosback photosback = GsonUtils.parseJsonArray(A, Photosback.class);
-				listphotos = photosback.getReturnData();
-				
-				//先清空
-				bitmaps.clear();
-				//先清空
-				MyGalleryActivity.netpath.clear();
-				
-				for (int i = 0; i < listphotos.size(); i++) {
-					String path = listphotos.get(i).getPath();
-					String pk_photo = listphotos.get(i).getPk_photo();
-					final String completeUrl=beginStr+pk_photo+endStr+"album-thumbnail";
-					Log.e("PhotoFragment2", "completeUrl"+completeUrl);
-					//将路径全部加入容器
-					MyGalleryActivity.netpath.add(completeUrl);
-				}
-				
-				
-				if(listphotos!=null&&listphotos.size()>0){
-					String pk_photo = listphotos.get(0).getPk_photo();
-					Log.e("PhotoFragment2", "第一个图片路径："+pk_photo);
-				}
-				//刷新
-				adapter.notifyDataSetChanged();
-			}
-			
-			@Override
-			public void defail(Object B) {
-				
-			}
-		});
-	}
+//	private void initGroupPhotoListen() {
+//		instance.setPostListener(new readPartyPhotosListenner() {
+//			
+//
+//			@Override
+//			public void success(String A) {
+//				Log.e("PhotoFragment2", "返回的图片数组："+A);
+//
+//				Photosback photosback = GsonUtils.parseJsonArray(A, Photosback.class);
+//				listphotos = photosback.getReturnData();
+//				
+//				//先清空
+//				bitmaps.clear();
+//				//先清空
+//				MyGalleryActivity.netpath.clear();
+//				
+//				for (int i = 0; i < listphotos.size(); i++) {
+//					String path = listphotos.get(i).getPath();
+//					String pk_photo = listphotos.get(i).getPk_photo();
+//					final String completeUrl=beginStr+pk_photo+endStr+"album-thumbnail";
+//					Log.e("PhotoFragment2", "completeUrl"+completeUrl);
+//					//将路径全部加入容器
+//					MyGalleryActivity.netpath.add(completeUrl);
+//				}
+//				
+//				
+//				if(listphotos!=null&&listphotos.size()>0){
+//					String pk_photo = listphotos.get(0).getPk_photo();
+//					Log.e("PhotoFragment2", "第一个图片路径："+pk_photo);
+//				}
+//				//刷新
+//				adapter.notifyDataSetChanged();
+//			}
+//			
+//			@Override
+//			public void defail(Object B) {
+//				
+//			}
+//		});
+//	}
 
 	private void initPhotoUplisten() {
 		 instance = Interface.getInstance();
@@ -181,9 +187,14 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 				group.setPk_group(GroupActivity.getPk_group());
 				group.setStatus(1);
 				listphotos.add(photo);
+				runOnUiThread( new Runnable() {
+					public void run() {
+						tv_partyphotonum.setText(String.valueOf(listphotos.size()));
+					}
+				});
 				adapter.notifyDataSetChanged();
 //				instance.readPartyPhotos(PhotoActivity.this, group);
-			}
+			} 
 			
 			@Override
 			public void defail(Object B) {
@@ -192,7 +203,12 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		});
 	}
 
-	private void Init() {
+	private void InitUI() {
+		tv_partyname = (TextView) findViewById(R.id.tv_partyname);
+		tv_partytime = (TextView) findViewById(R.id.tv_partytime);
+		tv_partyphotonum = (TextView) findViewById(R.id.tv_partyphotonum);
+		findViewById(R.id.PhotoActivity_back_layout).setOnClickListener(this);;
+		findViewById(R.id.PhotoActivity_back).setOnClickListener(this);;
 		mPhoto_upload_layout = (RelativeLayout) findViewById(R.id.photo_upload_layout);
 		mPhoto_upload_layout.setOnClickListener(this);
 		findViewById(R.id.photo_upload).setOnClickListener(this);
@@ -353,6 +369,9 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 			//将路径全部加入容器
 			MyGalleryActivity.netpath.add(completeUrl);
 		}
+		tv_partyname.setText(party4.getName());
+		tv_partytime.setText(party4.getBegin_time());
+		tv_partyphotonum.setText(String.valueOf(party4.getPhotos().size()));
 		
 	}
 
@@ -380,6 +399,10 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		case R.id.photo_upload_layout:
 		case R.id.photo_upload:
 			checkphoto();
+			break;
+		case R.id.PhotoActivity_back_layout:
+		case R.id.PhotoActivity_back:
+			finish();
 			break;
 
 		default:

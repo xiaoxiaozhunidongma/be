@@ -1,6 +1,8 @@
 package com.biju;
 
 import java.io.File;
+import java.io.Serializable;
+import java.util.ArrayList;
 
 import leanchatlib.controller.ChatManager;
 import leanchatlib.utils.LogUtils;
@@ -65,9 +67,9 @@ public class MainActivity extends FragmentActivity  {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.fragment_tabs);
 
-		homeImageLoaderUtils.clearCache();
-		ImageLoaderUtils4Photos.clearCache();
-		ImageLoaderUtils.clearCache();
+//		homeImageLoaderUtils.clearCache();
+//		ImageLoaderUtils4Photos.clearCache();
+//		ImageLoaderUtils.clearCache();
 		
 		// 关闭之前的界面
 		for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
@@ -206,33 +208,37 @@ public class MainActivity extends FragmentActivity  {
 		if (resultCode != Activity.RESULT_OK || data == null)
 			return;
 		try {
-			Uri selectedImage = data.getData();
-//			long parseId = ContentUris.parseId(selectedImage);
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Cursor cursor = MainActivity.this.getContentResolver().query(
-					selectedImage, filePathColumn, null, null, null);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-				mFilePath = cursor.getString(columnIndex);
-				cursor.close();
-				cursor = null;
-
-			} else {
-				
-				File file = new File(selectedImage.getPath());
-				mFilePath = file.getAbsolutePath();
-				if (!file.exists()) {
-					Toast toast = Toast.makeText(this, "找不到图片",Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
-					return;
-				}
-			}
+//			Uri selectedImage = data.getData();
+////			long parseId = ContentUris.parseId(selectedImage);
+//			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//			Cursor cursor = MainActivity.this.getContentResolver().query(
+//					selectedImage, filePathColumn, null, null, null);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//				mFilePath = cursor.getString(columnIndex);
+//				cursor.close();
+//				cursor = null;
+//
+//			} else {
+//				
+//				File file = new File(selectedImage.getPath());
+//				mFilePath = file.getAbsolutePath();
+//				if (!file.exists()) {
+//					Toast toast = Toast.makeText(this, "找不到图片",Toast.LENGTH_SHORT);
+//					toast.setGravity(Gravity.CENTER, 0, 0);
+//					toast.show();
+//					return;
+//				}
+//			}
 //			//缩略图路径
 //			        Bitmap bitmap = MediaStore.Images.Thumbnails.getThumbnail(MainActivity.this.getContentResolver(), parseId, Images.Thumbnails.MICRO_KIND,  
 //					                null); 
 			        
+			@SuppressWarnings("unchecked")
+			ArrayList<String> mSelectedImageList = (ArrayList<String>) data.getSerializableExtra("mSelectedImageList");
+			mFilePath=mSelectedImageList.get(0);
+			Log.e("MainActivity", "mSelectedImageList.size()======" + mSelectedImageList.size());
 			Log.e("MainActivity", "mFilePath======" + mFilePath);
 			// Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
 			// Bitmap bmp = Bimp.revitionImageSize(mFilePath);

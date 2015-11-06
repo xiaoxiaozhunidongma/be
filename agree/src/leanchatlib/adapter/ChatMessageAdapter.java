@@ -214,7 +214,7 @@ public class ChatMessageAdapter extends BaseAdapter {
     if(avatarView!=null){
     	if(isComMsg==false){
     		ImageLoader.getInstance().displayImage(CurrUserUrl, avatarView, PhotoUtils.avatarImageOptions);
-    		Log.e("", "completeURL==="+CurrUserUrl);
+//    		Log.e("ChatMessageAdapter", "completeURL==="+CurrUserUrl);
     	}else{
     		String from = msg.getFrom();
     		String FriendUrl = otherAvaurl.get(Integer.valueOf(from));
@@ -277,7 +277,7 @@ public class ChatMessageAdapter extends BaseAdapter {
         break;
       case ImageMessageType:
         AVIMImageMessage imageMsg = (AVIMImageMessage) msg;
-        Log.e("ChatmessageAdapter", "imageView对象=="+imageView);
+//        Log.e("ChatmessageAdapter", "imageView对象=="+imageView);
         PhotoUtils.displayImageCacheElseNetwork(imageView, MessageHelper.getFilePath(imageMsg),
             imageMsg.getFileUrl());
         setImageOnClickListener(imageView, imageMsg);

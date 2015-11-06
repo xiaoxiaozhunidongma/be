@@ -32,6 +32,7 @@ import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
 import com.biju.chatroom.PersonalDataActivity;
 import com.biju.function.SlidingActivity.MyMemBerAdapter;
+import com.fragment.ChatFragment;
 import com.fragment.CommonFragment;
 import com.fragment.PhotoFragment2;
 import com.github.volley_examples.utils.GsonUtils;
@@ -268,6 +269,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Log.e("GroupActivity", "调用了这个requestCode=="+requestCode);
 		Log.e("GroupActivity", "调用了这个data=="+data);
 //		PhotoFragment2.onActivityResultInterface.onActivityResult(requestCode, resultCode, data);
+		ChatFragment.onActivityResultInterface.onActivityResult(requestCode, resultCode, data);
 	}
 
 	public interface GetSliding {

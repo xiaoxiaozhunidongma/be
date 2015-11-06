@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="orange_text">#F78A00</color>
     <color name="lightgray">#939393</color>
  <!-- 浅灰色 -->
 

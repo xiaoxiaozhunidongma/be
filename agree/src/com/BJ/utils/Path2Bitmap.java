@@ -19,14 +19,11 @@ public class Path2Bitmap {
 		options.inPreferredConfig = Bitmap.Config.RGB_565;//颜色模式
 		options.inJustDecodeBounds = true;
 		options.inPurgeable = true;  
+		options.inInputShareable = true;// 以上options的两个属性必须联合使用才会有效果
 		options.inDither=false;   
 		options.inTempStorage=new byte[32 * 1024]; 
-
-
-
 		
 		BitmapFactory.decodeStream(in, null, options);
-		//decodeStream这个为空！
 		
 		in.close();
 		Bitmap bitmap = null;
@@ -38,6 +35,8 @@ public class Path2Bitmap {
 		SoftReference<Bitmap> weak = new SoftReference<Bitmap>(bitmap);//软引用会自动释放
 		Bitmap createBitmap = Bitmap.createBitmap(weak.get());
 //		bitmap.recycle();//不能立马回收，byteorbitmap会问题
+		System.gc(); //提醒系统及时回收
+		in.close();
 		return createBitmap ;
 	}
 
