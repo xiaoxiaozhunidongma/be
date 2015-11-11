@@ -54,6 +54,9 @@ public class MainActivity extends FragmentActivity  {
 
 	private String mFilePath;
 	private Integer SD_pk_user;
+	private Bitmap convertToBitmap;
+	private Bitmap limitLongScaleBitmap;
+	private Bitmap centerSquareScaleBitmap;
 
 //	@SuppressWarnings("unused")//滑动
 //	private GestureDetector mGestureDetector;
@@ -240,17 +243,13 @@ public class MainActivity extends FragmentActivity  {
 			mFilePath=mSelectedImageList.get(0);
 			Log.e("MainActivity", "mSelectedImageList.size()======" + mSelectedImageList.size());
 			Log.e("MainActivity", "mFilePath======" + mFilePath);
-			// Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-			// Bitmap bmp = Bimp.revitionImageSize(mFilePath);
-			// 这个mFilePath不可以用缩略图路径
 			
-			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
-//			Log.e("bitmap"+bitmap.getWidth()+"和"+bitmap.getHeight(), "convertToBitmap"+convertToBitmap.getWidth()+"和"+convertToBitmap.getHeight());
+			convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
 			
-			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-					convertToBitmap, 1080);// 最长边限制为1080
-			Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-					limitLongScaleBitmap, 600);// 截取中间正方形
+			limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
+					convertToBitmap, 1080);
+			centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
+					limitLongScaleBitmap, 600);
 			
 //			Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 			InitHead.initHead(centerSquareScaleBitmap);
@@ -259,6 +258,16 @@ public class MainActivity extends FragmentActivity  {
 		} catch (Exception e) {
 			Log.e("", "catch:" + e.getMessage());
 		}
+	}
+	
+	@Override
+	protected void onDestroy() {
+		// TODO Auto-generated method stub
+		convertToBitmap.recycle();
+		limitLongScaleBitmap.recycle();
+		centerSquareScaleBitmap.recycle();
+	       System.gc();  //提醒系统及时回收
+		super.onDestroy();
 	}
 
 	// 滑动过程

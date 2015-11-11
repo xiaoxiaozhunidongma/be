@@ -33,7 +33,6 @@ import com.biju.R.id;
 import com.biju.R.layout;
 import com.biju.R.menu;
 import com.biju.function.GroupActivity;
-import com.fragment.PhotoFragment2.GridAdapter;
 import com.fragment.PhotoFragment2.GridAdapter.ViewHolder;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -181,11 +180,7 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 			
 			@Override
 			public void success(String A) {
-				Log.e("PhotoFragment2", "图片是否上传："+A);
-				//读取小组相册
-				Group group=new Group();
-				group.setPk_group(GroupActivity.getPk_group());
-				group.setStatus(1);
+				Log.e("PhotoActivity", "图片是否上传："+A);
 				listphotos.add(photo);
 				runOnUiThread( new Runnable() {
 					public void run() {
@@ -193,7 +188,17 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 					}
 				});
 				adapter.notifyDataSetChanged();
-//				instance.readPartyPhotos(PhotoActivity.this, group);
+				
+				//先清空
+				MyGalleryActivity.netFullpath.clear();
+				
+				for (int i = 0; i < listphotos.size(); i++) {
+					String pk_photo = listphotos.get(i).getPk_photo();
+					final String completeUrl=beginStr+pk_photo;	//原图路径
+					Log.e("PhotoActivity", "completeUrl"+completeUrl);
+					//将路径全部加入容器
+					MyGalleryActivity.netFullpath.add(completeUrl);
+				}
 			} 
 			
 			@Override
@@ -352,26 +357,20 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 	@Override
 	public void onStart() {
 		super.onStart();
-//		//读取小组相册
-//		Group group=new Group();
-//		group.setPk_group(GroupActivity.getPk_group());
-//		group.setStatus(1);
-//		instance.readPartyPhotos(PhotoActivity.this, group);
 		
 		//先清空
-		MyGalleryActivity.netpath.clear();
+		MyGalleryActivity.netFullpath.clear();
 		
 		for (int i = 0; i < listphotos.size(); i++) {
-			String path = listphotos.get(i).getPath();
 			String pk_photo = listphotos.get(i).getPk_photo();
-			final String completeUrl=beginStr+pk_photo+endStr+"album-thumbnail";
-			Log.e("PhotoFragment2", "completeUrl"+completeUrl);
+			final String completeUrl=beginStr+pk_photo;	//原图路径
+			Log.e("PhotoActivity", "completeUrl"+completeUrl);
 			//将路径全部加入容器
-			MyGalleryActivity.netpath.add(completeUrl);
+			MyGalleryActivity.netFullpath.add(completeUrl);
 		}
 		tv_partyname.setText(party4.getName());
 		tv_partytime.setText(party4.getBegin_time());
-		tv_partyphotonum.setText(String.valueOf(party4.getPhotos().size()));
+		tv_partyphotonum.setText(String.valueOf(listphotos.size()));
 		
 	}
 
@@ -468,19 +467,14 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
+				//上传原图
 				Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
 						convertToBitmap, 1080);// 最长边限制为1080
-				Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-						limitLongScaleBitmap, 180);// 截取中间正方形
-				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
+				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
 				UUID randomUUID = UUID.randomUUID();
 				uUid = randomUUID.toString();
 				OSSupload(ossData, bitmap2Bytes, uUid,mFilePath);
 				
-				byte[] bitmap2Bytes2 = ByteOrBitmap.Bitmap2Bytes(convertToBitmap);//原图
-				UUID randomUUID2 = UUID.randomUUID();
-				String uUid2 = randomUUID2.toString();
-				OSSuploadFull(ossData, bitmap2Bytes2, uUid2, mFilePath);
 			}else{
 				hasloaded=false;//默认没有上传
 				for (int i = 0; i < listphotos.size(); i++) {
@@ -501,19 +495,14 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 						// TODO Auto-generated catch block
 						e.printStackTrace();
 					}
+					//上传原图
 					Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
 							convertToBitmap, 1080);// 最长边限制为1080
-					Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-							limitLongScaleBitmap, 180);// 截取中间正方形
-					bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
+					bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
 					UUID randomUUID = UUID.randomUUID();
 					uUid = randomUUID.toString();
 					OSSupload(ossData, bitmap2Bytes, uUid,mFilePath);
 					
-					byte[] bitmap2Bytes2 = ByteOrBitmap.Bitmap2Bytes(convertToBitmap);//原图
-					UUID randomUUID2 = UUID.randomUUID();
-					String uUid2 = randomUUID2.toString();
-					OSSuploadFull(ossData, bitmap2Bytes2, uUid2, mFilePath);
 				}
 			}
 		
@@ -568,33 +557,5 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		});
 	}
 	
-	private void OSSuploadFull(OSSData ossData, byte[] data, String UUid, final String imagePath) {
-		ossData = ossService.getOssData(sampleBucket, UUid);
-		ossData.setData(data, "jpg"); // 指定需要上传的数据和它的类型
-		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
-		ossData.uploadInBackground(new SaveCallback() {
-			@Override
-			public void onSuccess(String objectKey) {
-				Log.e("PhotoActivity.this", "完整原图片上传成功2");
-				Log.e("PhotoActivity.this", "objectKey2==" + objectKey);
-				
-				final String completeUrl=beginStr+objectKey;
-				MyGalleryActivity.netFullpath.add(completeUrl);
-				
-			}
-			
-			@Override
-			public void onProgress(String objectKey, int byteCount,
-					int totalSize) {
-			}
-			
-			@Override
-			public void onFailure(String objectKey, OSSException ossException) {
-				Log.e("PhotoActivity.this", "图片上传失败2" + ossException.toString());
-				Toast.makeText(PhotoActivity.this, "上传失败，请重新上传2",Toast.LENGTH_SHORT).show();
-				MyGalleryActivity.netFullpath.add("失败");
-			}
-		});
-	}
 
 }

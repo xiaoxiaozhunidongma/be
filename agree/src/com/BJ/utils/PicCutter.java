@@ -20,8 +20,8 @@ public class PicCutter {
 	   Bitmap result = bitmap;
 	   int widthOrg = bitmap.getWidth();
 	   int heightOrg = bitmap.getHeight();
-	   Log.e("", "原图长=="+widthOrg);
-	   Log.e("", "原图高=="+heightOrg);
+	   Log.e("PicCutter", "原图长=="+widthOrg);
+	   Log.e("PicCutter", "原图高=="+heightOrg);
 	                                                                                
 	   if(widthOrg > edgeLength && heightOrg > edgeLength)
 	   {
@@ -46,9 +46,9 @@ public class PicCutter {
 	        result = Bitmap.createBitmap(scaledBitmap, xTopLeft, yTopLeft, edgeLength, edgeLength);
       	  int width = result.getWidth();
       	  int height = result.getHeight();
-      	  Log.e("", "result对象是否空"+result);
-      	  Log.e("", "限制图长=="+width);
-      	  Log.e("", "限制图高=="+height);
+      	  Log.e("PicCutter", "result对象是否空"+result);
+      	  Log.e("PicCutter", "限制图长=="+width);
+      	  Log.e("PicCutter", "限制图高=="+height);
 	        scaledBitmap.recycle();
 	       }
 	       catch(Exception e){

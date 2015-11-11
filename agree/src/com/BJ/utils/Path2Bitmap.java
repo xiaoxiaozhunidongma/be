@@ -9,6 +9,7 @@ import java.lang.ref.SoftReference;
 
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.util.Log;
 
 public class Path2Bitmap {
 	public static Bitmap convertToBitmap(String path) throws IOException {
@@ -26,18 +27,18 @@ public class Path2Bitmap {
 		BitmapFactory.decodeStream(in, null, options);
 		
 		in.close();
-		Bitmap bitmap = null;
+//		Bitmap bitmap = null;
 		
 		in = new BufferedInputStream(new FileInputStream(new File(path)));
-		options.inSampleSize = 1;
+		options.inSampleSize = computeSampleSize(options, 768, 768*1280);
+		Log.e("~convertToBitmap", "inSampleSize==="+computeSampleSize(options, 768, 1280*760));
 		options.inJustDecodeBounds = false;
-		bitmap = BitmapFactory.decodeStream(in, null, options);
-		SoftReference<Bitmap> weak = new SoftReference<Bitmap>(bitmap);//软引用会自动释放
-		Bitmap createBitmap = Bitmap.createBitmap(weak.get());
+		Bitmap bitmap = BitmapFactory.decodeStream(in, null, options);
+//		SoftReference<Bitmap> weak = new SoftReference<Bitmap>(bitmap);//软引用会自动释放
+//		Bitmap createBitmap = Bitmap.createBitmap(weak.get());
 //		bitmap.recycle();//不能立马回收，byteorbitmap会问题
-		System.gc(); //提醒系统及时回收
 		in.close();
-		return createBitmap ;
+		return bitmap ;
 	}
 
 	public static int computeSampleSize(BitmapFactory.Options options,

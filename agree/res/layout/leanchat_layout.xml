@@ -108,12 +108,12 @@
                 android:layout_toLeftOf="@+id/send"
                 android:background="@drawable/edit_back_shape"
                 android:maxLines="2"
-                android:minHeight="40dp"
+                android:minHeight="30dp"
                 android:paddingBottom="3dp"
                 android:paddingLeft="1dp"
                 android:paddingRight="1dp"
                 android:paddingTop="3dp"
-                android:textSize="18sp" />
+                android:textSize="14sp" />
 
             <ImageView
                 android:id="@+id/send_expression"
