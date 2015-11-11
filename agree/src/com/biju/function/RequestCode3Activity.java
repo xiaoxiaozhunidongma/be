@@ -45,6 +45,11 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 	private String endStr = "@!";
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
+	private int number;
+	private TextView mRequestcode2_txet;
+	private boolean isPublic;
+	private ImageView mRequestcode2_public_choose;
+	private Integer public_phone=0;
 	
 	
 	@Override
@@ -57,6 +62,7 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 		Log.e("RequestCodeActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 		Intent intent = getIntent();
 		readhomeuser=(Group) intent.getSerializableExtra(IConstant.Requestcode_readhomeuser);
+		number = intent.getIntExtra("RequestCodeNumber", 0);
 		initInterface();
 		initUI();
 		initData();
@@ -98,6 +104,8 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 	}
 
 	private void initUI() {
+		mRequestcode2_public_choose = (ImageView) findViewById(R.id.requestcode2_public_choose);
+		mRequestcode2_txet = (TextView) findViewById(R.id.Requestcode2_txet);
 		findViewById(R.id.Requestcode3_back).setOnClickListener(this);
 		findViewById(R.id.RequestCode3_back_layout).setOnClickListener(this);
 		mRequestcode2_head = (ImageView) findViewById(R.id.Requestcode3_head);// 查找小组的头像
@@ -105,8 +113,10 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 		mRequestcode2_number = (RelativeLayout) findViewById(R.id.Requestcode3_number);// 小组人数
 		mRequestcode2_introduce = (RelativeLayout) findViewById(R.id.Requestcode3_introduce);// 小组介绍
 		mRequestcode2_public_phone = (RelativeLayout) findViewById(R.id.Requestcode3_public_phone);// 是否公开手机号码
+		mRequestcode2_public_phone.setOnClickListener(this);
 		mRequestcode2_add_team = (RelativeLayout) findViewById(R.id.Requestcode3_add_team);// 加入小组
 		mRequestcode2_add_team.setOnClickListener(this);
+		mRequestcode2_txet.setText(number+"");
 	}
 
 	
@@ -127,8 +137,22 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 		case R.id.RequestCode3_back_layout:
 			Requestcode3_back();
 			break;
+		case R.id.Requestcode3_public_phone:
+			Requestcode3_public_phone();
+			break;
 		default:
 			break;
+		}
+	}
+
+	private void Requestcode3_public_phone() {
+		isPublic=!isPublic;
+		if(isPublic){
+			public_phone=1;
+			mRequestcode2_public_choose.setVisibility(View.VISIBLE);
+		}else {
+			public_phone=0;
+			mRequestcode2_public_choose.setVisibility(View.GONE);
 		}
 	}
 
@@ -143,6 +167,7 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 		group_User.setFk_user(sD_pk_user);
 		group_User.setRole(2);
 		group_User.setStatus(1);
+		group_User.setPublic_phone(public_phone);
 		requestcode3_interface.userJoin2gourp(RequestCode3Activity.this,group_User);
 	}
 

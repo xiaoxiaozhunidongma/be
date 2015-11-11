@@ -21,13 +21,16 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import com.BJ.javabean.Exitback;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
+import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Groupuserback;
 import com.BJ.javabean.Teamupdateback;
+import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.Interface.updateGroupSetListenner;
 import com.biju.MainActivity;
@@ -44,7 +47,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private TextView mTeamSetting2_Tean_name;
 	private Integer sD_pk_user;
 	private Interface teamSetting2_interface;
-	private Group teamsetting_group;
+//	private Group teamsetting_group;
 	
 	private String beginStr = "http://picstyle.beagree.com/";
 	private String endStr = "@!";
@@ -76,30 +79,39 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private Integer ismessage=-1;
 	private Integer isphone=-1;
 	private int toastHeight;
+	private Integer mGroupManager;
+	private Integer pk_user;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_team_setting2);
-		teamsetting_group = SdPkUser.getTeamSettinggroup();
-		
 		initUI();
 		initInterFace();
+		
+		//获取小组号
+		Intent intent = getIntent();
+		pk_group = intent.getIntExtra(IConstant.Group, 0);
+		mGroupManager = intent.getIntExtra("GroupManager", 0);
 		
 		//获取sd卡中的pk_user
 		sD_pk_user = SdPkUser.getsD_pk_user();
 				
-		//获取小组号
-		Intent intent = getIntent();
-		pk_group = intent.getIntExtra(IConstant.Group, 0);
 		initreadUserGroupRelation(pk_group);
 		initMessage();
 		initChat();
 		initPhone();
 		DisplayMetrics();
+		initGroup();
 	}
 	
+	private void initGroup() {
+		User homeuser = new User();
+		homeuser.setPk_user(sD_pk_user);
+		teamSetting2_interface.readUserGroupMsg(TeamSetting2Activity.this, homeuser);
+	}
+
 	private void DisplayMetrics() {
 		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
         getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -107,6 +119,15 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
         toastHeight = height/4;
 	}
 
+	@Override
+	protected void onRestart() {
+		SharedPreferences ChangeName_sp=getSharedPreferences("ChangeGroupName", 0);
+		boolean changeName = ChangeName_sp.getBoolean("ChangeName", false);
+		if(changeName){
+			initGroup();
+		}
+		super.onRestart();
+	}
 
 	@SuppressWarnings("static-access")
 	private void initPhone() {
@@ -165,6 +186,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 					List<Group_User> groupuser_returnData = groupuserback.getReturnData();
 					if (groupuser_returnData.size() > 0) {
 						Group_User group_user = groupuser_returnData.get(0);
+						pk_user = group_user.getFk_user();
 						ischat = group_user.getMessage_warn();
 						ismessage = group_user.getParty_warn();
 						isphone = group_user.getPublic_phone();
@@ -247,11 +269,6 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 					int statusmsg = teamupdateback.getStatusMsg();
 					if (statusmsg == 1) {
 						Log.e("TeamSettingActivity", "更新完的返回结果" + A);
-//						SharedPreferences teamsetting_sp = getSharedPreferences("Setting", 0);
-//						Editor editor = teamsetting_sp.edit();
-//						editor.putBoolean("setting", true);
-//						editor.commit();
-//						finish();
 						Toast();
 					} else {
 						Toast1();
@@ -264,6 +281,41 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 
 			}
 		});
+		
+		teamSetting2_interface.setPostListener(new readUserGroupMsgListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("TeamSettingActivity", "读取所有小组=====" + A);
+				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
+				int homeStatusMsg = homeback.getStatusMsg();
+				if (homeStatusMsg == 1) {
+					List<Group> users = homeback.getReturnData();
+					if (users.size() > 0) {
+						for (int i = 0; i < users.size(); i++) {
+							Group readhomeuser_1 = users.get(i);
+							Integer rea_pk_group=readhomeuser_1.getPk_group();
+							if(String.valueOf(rea_pk_group).equals(String.valueOf(pk_group))){
+								//初始化显示头像和小组名称
+								String name=readhomeuser_1.getName();
+								mTeamSetting2_User_nickname.setText(name);
+								mTeamSetting2_Tean_name.setText(name);
+								String useravatar_path = readhomeuser_1.getAvatar_path();
+								completeURL = beginStr + useravatar_path + endStr+"avatar";
+								PreferenceUtils.saveImageCache(TeamSetting2Activity.this, completeURL);// 存SP
+								ImageLoaderUtils.getInstance().LoadImageSquare(TeamSetting2Activity.this,completeURL, mTeamSetting2_head);
+							}
+						}
+					}
+				}
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
+		
 	}
 	
 	private void Toast1() {
@@ -324,13 +376,6 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		
 		findViewById(R.id.TeamSetting2_Exit_layout).setOnClickListener(this);//退出小组
 		
-		//初始化显示头像和小组名称
-		mTeamSetting2_User_nickname.setText(teamsetting_group.getName());
-		mTeamSetting2_Tean_name.setText(teamsetting_group.getName());
-		String useravatar_path = teamsetting_group.getAvatar_path();
-		completeURL = beginStr + useravatar_path + endStr+"avatar";
-		PreferenceUtils.saveImageCache(TeamSetting2Activity.this, completeURL);// 存SP
-		ImageLoaderUtils.getInstance().LoadImageSquare(TeamSetting2Activity.this,completeURL, mTeamSetting2_head);
 	}
 
 	@Override
@@ -354,10 +399,38 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		case R.id.TeamSetting2_save:
 			TeamSetting2_save();
 			break;
+		case R.id.TeamSetting2_Tean_name_layout:
+			TeamSetting2_Tean_name_layout();
+			break;
+		case R.id.TeamSetting2_invite_friends_layout:
+			TeamSetting2_invite_friends_layout();
+			break;
 		default:
 			break;
 		}
 	}
+	private void TeamSetting2_invite_friends_layout() {
+		Intent intent=new Intent(TeamSetting2Activity.this, AddTeamFriendsActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
+	}
+
+	private void TeamSetting2_Tean_name_layout() {
+		Log.e("TeamSettingActivity", "群主的ID=====" +mGroupManager);
+		Log.e("TeamSettingActivity", "获取当前账户的ID=====" +pk_user);
+		
+		if(String.valueOf(mGroupManager).equals(String.valueOf(pk_user))){
+			Intent intent=new Intent(TeamSetting2Activity.this, ChangeGroupNameActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.in_item, R.anim.out_item);
+		}else {
+			SweetAlertDialog sd=new SweetAlertDialog(TeamSetting2Activity.this);
+			sd.setTitleText("提示");
+			sd.setContentText("只有小组的创建者才能更改小组名称哦~");
+			sd.show();
+		}
+	}
+
 	//修改小组资料
 	private void TeamSetting2_save() {
 		Group_User group_user = new Group_User();
@@ -452,6 +525,4 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	{
 		void Phone(int phone,boolean clickphone);
 	}
-	
-	
 }

@@ -1,0 +1,138 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ChangeGroupNameActivity" >
+
+    <RelativeLayout
+        android:id="@+id/ChangeGroupNameTitleLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/ChangeGroupNameBack"
+            android:layout_width="65.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="返回" 
+            android:gravity="center"
+            android:textSize="13.0sp"
+            android:textColor="@drawable/title_left_color"
+            />
+
+        <TextView
+            android:id="@+id/textView2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            />
+
+        <TextView
+            android:id="@+id/ChangeGroupNameOK"
+            android:layout_width="65.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignBaseline="@+id/ChangeGroupNameBack"
+            android:layout_alignBottom="@+id/ChangeGroupNameBack"
+            android:layout_alignParentRight="true"
+            android:text="完成" 
+            android:textSize="13.0sp"
+            android:textColor="@drawable/title_right_color"
+            android:gravity="center"
+            />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/ChangeGroupNameTitleLayout"
+        android:layout_centerHorizontal="true"
+        android:background="#efefef" >
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout1"
+            android:layout_width="match_parent"
+            android:layout_height="50.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/textView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginTop="25.0dp"
+                android:text="请输入你想要更改的小组名称"
+                android:textColor="#808080"
+                android:textSize="14.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="match_parent"
+            android:layout_height="44.0dp"
+            android:layout_below="@+id/relativeLayout1"
+            android:layout_centerHorizontal="true"
+            android:background="#ffffff" >
+
+            <TextView
+                android:id="@+id/textView3"
+                android:layout_width="match_parent"
+                android:layout_height="0.50dp"
+                android:layout_alignParentTop="true"
+                android:background="#aaaaaa" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="match_parent"
+                android:layout_height="0.50dp"
+                android:layout_alignParentBottom="true"
+                android:background="#aaaaaa" />
+
+            <EditText
+                android:id="@+id/ChangeGroupNameEdit"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_alignParentTop="true"
+                android:layout_centerHorizontal="true"
+                android:layout_marginBottom="7.0dp"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginRight="20.0dp"
+                android:layout_marginTop="7.0dp"
+                android:background="@null"
+                android:ems="10"
+                android:hint="小组名"
+                android:textColorHint="#c9c9c9"
+                android:textSize="15.0sp" >
+
+                <requestFocus />
+            </EditText>
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="200.0dp"
+            android:layout_below="@+id/relativeLayout2"
+            android:layout_centerHorizontal="true" >
+
+            <TextView
+                android:id="@+id/ChangeGroupNamePrompt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginLeft="20.0dp"
+                android:layout_marginTop="10.0dp"
+                android:text="TextView" 
+                android:textSize="14.0sp"
+                android:textColor="#808080"
+                />
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</RelativeLayout>

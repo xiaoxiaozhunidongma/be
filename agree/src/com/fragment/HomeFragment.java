@@ -6,10 +6,8 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.StreamCorruptedException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import leanchatlib.controller.ChatManager;
 import android.annotation.SuppressLint;
@@ -19,7 +17,6 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -27,7 +24,6 @@ import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
-import android.text.TextPaint;
 import android.util.Log;
 import android.view.Display;
 import android.view.LayoutInflater;
@@ -61,13 +57,12 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
+import com.biju.Interface.readUserListenner;
 import com.biju.R;
-import com.biju.function.CommentsListActivity;
 import com.biju.function.GroupActivity;
 import com.biju.function.NewteamActivity;
 import com.biju.function.RequestCodeActivity;
@@ -75,7 +70,6 @@ import com.biju.login.PhoneLoginActivity;
 import com.github.volley_examples.utils.GsonUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
-import com.biju.Interface.readUserListenner;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
@@ -114,6 +108,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private String group_name;
 	private Group group;
 	public static  User readuser;
+	private boolean changeName;
 
 	public String getSDPath() {
 		File sdDir = null;
@@ -212,6 +207,16 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			SD_pk_user = SdPkUser.getsD_pk_user();
 			ReadTeamInterface(SD_pk_user);
 		}
+		
+		SharedPreferences ChangeName_sp=getActivity().getSharedPreferences("ChangeGroupName", 0);
+		changeName = ChangeName_sp.getBoolean("ChangeName", false);
+		Log.e("HomeFragment", "得到的changeName====="+changeName);
+		if(changeName){
+			// 获取SD卡中的pk_user
+			SD_pk_user = SdPkUser.getsD_pk_user();
+			ReadTeamInterface(SD_pk_user);
+		}
+		
 		
 		readCurUser();//读取当前用户
 		readAlluserOfgroup();
@@ -366,7 +371,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
 						
 						group_name = group.getName();
-						SdPkUser.setTeamSettinggroup(group);// 传小组对象
 //						Intent intent = new Intent(getActivity(),GroupActivity.class);
 //						intent.putExtra(IConstant.HomePk_group, pk_group);
 //						intent.putExtra(IConstant.HomeGroupName, group_name);
@@ -387,7 +391,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
 						
 						group_name = group.getName();
-						SdPkUser.setTeamSettinggroup(group);// 传小组对象
 //						Intent intent = new Intent(getActivity(),GroupActivity.class);
 //						intent.putExtra(IConstant.HomePk_group, pk_group);
 //						intent.putExtra(IConstant.HomeGroupName, group_name);
@@ -595,6 +598,11 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		editor.putBoolean(IConstant.Refresh, false);
 		editor.commit();
 
+		SharedPreferences ChangeName_sp=getActivity().getSharedPreferences("ChangeGroupName", 0);
+		Editor ChangeName_editor=ChangeName_sp.edit();
+		ChangeName_editor.putBoolean("ChangeName", false);
+		ChangeName_editor.commit();
+		
 		// 清除缓存
 		if (PhoneLoginActivity.list.size() > 0) {
 			Drawable d = home_item_head.getDrawable();

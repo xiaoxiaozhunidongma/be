@@ -66,8 +66,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private TextView mAdd_New_Party_time_details;
 	private TextView mAdd_New_Party_address_details;
 
-	private double mLng;
-	private double mLat;
+	private Double mLng=null;
+	private Double mLat=null;
 	private Integer fk_group;
 	private Integer sD_pk_user;
 	private String isCalendar;
@@ -144,6 +144,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private String partytimeString;
 	private boolean isNoChoose;
 	private String party_name;
+	private boolean ischoose;
 	//查表
 	private void initDB() {
 		GraphicDetailsList = new Select().from(ImageText.class).execute();
@@ -430,13 +431,13 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	// 获取返回来的地址
 	private void initAddress() {
 		SharedPreferences map_sp = getSharedPreferences(IConstant.IsMap, 0);
-		boolean ischoose = map_sp.getBoolean(IConstant.IsMapChoose, false);
+		ischoose = map_sp.getBoolean(IConstant.IsMapChoose, false);
 		if (ischoose) {
 			address = map_sp.getString(IConstant.IsAddress, "");
 			float mLng_1 = map_sp.getFloat(IConstant.MLng, 0);
 			float mLat_1 = map_sp.getFloat(IConstant.MLat, 0);
-			mLng = mLng_1;
-			mLat = mLat_1;
+			mLng = Double.valueOf(mLng_1);
+			mLat = Double.valueOf(mLat_1);
 			mAdd_New_Party_address_details.setText(address);
 		}
 	}
@@ -648,9 +649,13 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			}else {
 				party.setBegin_time(isCalendar + "   " + hour + ":" + minute);
 			}
-			
-			party.setLongitude(mLng);
-			party.setLatitude(mLat);
+			if(ischoose){
+				party.setLongitude(mLng);
+				party.setLatitude(mLat);
+			}else {
+				party.setLongitude(null);
+				party.setLatitude(null);
+			}
 			party.setLocation(address);
 			party.setStatus(1);
 			party.setPay_type(type);

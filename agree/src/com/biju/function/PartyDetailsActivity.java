@@ -41,8 +41,8 @@ import com.BJ.utils.SdPkUser;
 import com.BJ.utils.Weeks;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.Interface.FindMultiUserListenner;
 import com.biju.Interface.ReadGraphicListenner;
-import com.biju.Interface.findUserListenner;
 import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readPartyJoinMsgListenner;
 import com.biju.Interface.updateUserJoinMsgListenner;
@@ -205,7 +205,8 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 				partakeNumList.clear();
 				OtherList.clear();
 				Log.e("PartyDetailsActivity", "返回的用户参与信息" + A);
-				java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {}.getType();
+				java.lang.reflect.Type type = new TypeToken<ReadPartyback>() {
+				}.getType();
 				ReadPartyback partyback = GsonUtils.parseJsonArray(A, type);
 				ReturnData returnData = partyback.getReturnData();
 				Log.e("PartyDetailsActivity","当前returnData:" + returnData.toString());
@@ -215,11 +216,11 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 						Relation relation = relationList.get(i);
 						// 判断参与、拒绝数
 						Integer relationship = relation.getRelationship();
-						if(4==relationship){
+						if (4 == relationship) {
 							partakeNumList.add(relation);
-						}else if(0==relationship){
+						} else if (0 == relationship) {
 							OtherList.add(relation);
-						}else if(3==relationship){
+						} else if (3 == relationship) {
 							OtherList.add(relation);
 						}
 						// 查找当前用户的参与信息
@@ -248,10 +249,11 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 					if (partylist.size() > 0) {
 						Party3 readparty = partylist.get(0);
 						Integer pk_user = readparty.getFk_user();
+
 						// 查找聚会创建者
-						User user = new User();
-						user.setPhone(String.valueOf(pk_user));//String.valueOf(pk_user)
-						readpartyInterface.findUser(PartyDetailsActivity.this,user);
+						List<String> list = new ArrayList<String>();
+						list.add(String.valueOf(pk_user));
+						readpartyInterface.findMultiUsers(PartyDetailsActivity.this, list);
 					}
 				}
 			}
@@ -262,7 +264,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 			}
 		});
 		// 查找创建者监听
-		readpartyInterface.setPostListener(new findUserListenner() {
+		readpartyInterface.setPostListener(new FindMultiUserListenner() {
 
 			@Override
 			public void success(String A) {
@@ -279,10 +281,10 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 						String useravatar_path = user.getAvatar_path();
 						String completeURL = beginStr + useravatar_path+ endStr + "mini-avatar";
 						PreferenceUtils.saveImageCache(PartyDetailsActivity.this, completeURL);// 存SP
-						ImageLoaderUtils.getInstance().LoadImageCricular(PartyDetailsActivity.this, completeURL,mPartyDetailsPartyOrganizersHead);
+						ImageLoaderUtils.getInstance().LoadImageCricular(PartyDetailsActivity.this, completeURL,
+								mPartyDetailsPartyOrganizersHead);
 					}
 				}
-
 			}
 
 			@Override
@@ -336,9 +338,9 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 						if (GraphicNumberList.size() > 0) {
 							mPartyDetailsPartyGraphicLayout.setEnabled(true);
 							mPartyDetailsPartyGraphicNumber.setText(GraphicNumberList.size()+ "  个图文信息");
-						} 
+						}
 					}
-				}else {
+				} else {
 					mPartyDetailsPartyGraphicNumber.setText("无更多详情");
 					mPartyDetailsPartyGraphicLayout.setEnabled(false);
 				}
@@ -374,11 +376,12 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 			Weeks.CaculateWeekDay(y, m, d);
 			String week = Weeks.getweek();
 			mPartyDetailsPartyName.setText(allParty.getName());// 显示聚会名称
-			mPartyDetailsPartyStartTime.setText(years + "年" + months + "月"+ days + "日" + "  " + week + "  " + hour + ":" + minute);// 显示聚会时间
-			if(allParty.getLocation()==null){
+			mPartyDetailsPartyStartTime.setText(years + "年" + months + "月"
+					+ days + "日" + "  " + week + "  " + hour + ":" + minute);// 显示聚会时间
+			if (allParty.getLocation() == null) {
 				mPartyDetailsPartyAddressLayout.setEnabled(false);
 				mPartyDetailsPartyAddress.setText("无地址信息");// 显示聚会地点
-			}else {
+			} else {
 				mPartyDetailsPartyAddressLayout.setEnabled(true);
 				mPartyDetailsPartyAddress.setText(allParty.getLocation());// 显示聚会地点
 			}
@@ -411,11 +414,11 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 			String week = Weeks.getweek();
 			mPartyDetailsPartyName.setText(oneParty.getName());// 显示聚会名称
 			mPartyDetailsPartyStartTime.setText(years + "年" + months + "月"+ days + "日" + "  " + week + "  " + hour + ":" + minute);// 显示聚会时间
-			Log.e("PartyDetailsActivity", "得到的第二个oneParty.getLocation()========="+ oneParty.getLocation());
-			if(oneParty.getLocation()==null){
+			Log.e("PartyDetailsActivity","得到的第二个oneParty.getLocation()========="+ oneParty.getLocation());
+			if (oneParty.getLocation() == null) {
 				mPartyDetailsPartyAddressLayout.setEnabled(false);
 				mPartyDetailsPartyAddress.setText("无地址信息");// 显示聚会地点
-			}else {
+			} else {
 				mPartyDetailsPartyAddressLayout.setEnabled(true);
 				mPartyDetailsPartyAddress.setText(oneParty.getLocation());// 显示聚会地点
 			}
@@ -491,29 +494,35 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 
 	// 跳转至大地图进行导航
 	private void PartyDetailsPartyAddressLayout() {
-		if(userAll){
-			Double mLat=allParty.getLatitude();
-			Log.e("PartyDetailsActivity", "当前的mLat======"+mLat);
-			Double mLng=allParty.getLongitude();
-			Log.e("PartyDetailsActivity", "当前的mLng======"+mLng);
-			if(mLat!=null&&mLng!=null){
-				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
-				intent.putExtra("BigMap", true);
-				intent.putExtra("AllBigMap", allParty);
-				startActivity(intent);
-				overridePendingTransition(R.anim.in_item, R.anim.out_item);
+		if (userAll) {
+			Double mLat = allParty.getLatitude();
+			Log.e("PartyDetailsActivity", "当前的mLat======" + mLat);
+			Double mLng = allParty.getLongitude();
+			Log.e("PartyDetailsActivity", "当前的mLng======" + mLng);
+			if (mLat != null && mLng != null) {
+				String address = allParty.getLocation();
+				if (!("".equals(address))) {
+					Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
+					intent.putExtra("BigMap", true);
+					intent.putExtra("AllBigMap", allParty);
+					startActivity(intent);
+					overridePendingTransition(R.anim.in_item, R.anim.out_item);
+				}
 			}
-		}else {
-			Double mLat=oneParty.getLatitude();
-			Log.e("PartyDetailsActivity", "当前的mLat111111======"+mLat);
-			Double mLng=oneParty.getLongitude();
-			Log.e("PartyDetailsActivity", "当前的mLng111111======"+mLng);
-			if(mLat!=null&&mLng!=null){
-				Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
-				intent.putExtra("BigMap", false);
-				intent.putExtra("OneBigMap", oneParty);
-				startActivity(intent);
-				overridePendingTransition(R.anim.in_item, R.anim.out_item);
+		} else {
+			Double mLat = oneParty.getLatitude();
+			Log.e("PartyDetailsActivity", "当前的mLat111111======" + mLat);
+			Double mLng = oneParty.getLongitude();
+			Log.e("PartyDetailsActivity", "当前的mLng111111======" + mLng);
+			if (mLat != null && mLng != null) {
+				String address = oneParty.getLocation();
+				if (!("".equals(address))) {
+					Intent intent = new Intent(PartyDetailsActivity.this,BigMapActivity.class);
+					intent.putExtra("BigMap", false);
+					intent.putExtra("OneBigMap", oneParty);
+					startActivity(intent);
+					overridePendingTransition(R.anim.in_item, R.anim.out_item);
+				}
 			}
 		}
 	}

@@ -17,6 +17,7 @@ import leanchatlib.controller.ChatManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -104,6 +105,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private int toastHeight;
 	private RelativeLayout mNewTeam_OK_layout;
 	private TextView mNewTeam_OK;
+	private List<Group_User> Group_UserList=new ArrayList<Group_User>();
+	private List<String> mTeamFriendsList=new ArrayList<String>();
+	private boolean addTeamFriends;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -125,6 +129,18 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		DisplayMetrics();
 	}
 
+	@SuppressWarnings("unchecked")
+	@Override
+	protected void onRestart() {
+		SharedPreferences TeamFriends_sp=getSharedPreferences("TeamFriends", 0);
+		addTeamFriends = TeamFriends_sp.getBoolean("AddTeamFriends", false);
+		if(addTeamFriends){
+			mTeamFriendsList = SdPkUser.getTeamFriendsList();
+			Log.e("NewteamActivity", "mTeamFriendsList的长度====" + mTeamFriendsList.size());
+		}
+		super.onRestart();
+	}
+	
 	private void DisplayMetrics() {
 		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -170,6 +186,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI() {
+		findViewById(R.id.NewTeam_friends).setOnClickListener(this);
 		mNewteam_name = (EditText) findViewById(R.id.NewTeam_teamname);// 小组名称
 		mNewteam_head = (ImageButton) findViewById(R.id.NewTeam_head);// 显示小组头像
 		mNewteam_head.setOnClickListener(this);
@@ -213,9 +230,20 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		case R.id.NewTeam_head:
 		case R.id.NewTeam_tv_head:
 			NewTeam_head();
+			break;
+		case R.id.NewTeam_friends:
+			NewTeam_friends();
+			break;
 		default:
 			break;
 		}
+	}
+
+	//添加好友
+	private void NewTeam_friends() {
+		Intent intent=new Intent(NewteamActivity.this, TeamFriendsActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	public void sendMessageToJerryFromTom() {
@@ -347,8 +375,22 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				Group_User group_User = new Group_User();
 				group_User.setFk_user(sD_pk_user);
 				group_User.setRole(1);
+				Group_UserList.add(group_User);
+				for (int i = 0; i < mTeamFriendsList.size(); i++) {
+					String pk_user=mTeamFriendsList.get(i);
+					Group_User group_User1 = new Group_User();
+					group_User1.setFk_user(Integer.valueOf(pk_user));
+					group_User1.setRole(2);
+					Group_UserList.add(group_User1);
+				}
+				Log.e("NewteamActivity", "Group_UserList的长度====" + Group_UserList.size());
 				group.setStatus(1);
-				Group_User[] members = { group_User };
+//				Group_User[] members = { group_User };
+				Group_User[] members=new Group_User[Group_UserList.size()];
+				for (int i = 0; i < Group_UserList.size(); i++) {
+					members[i]=Group_UserList.get(i);
+				}
+				
 				CreateGroup creatGroup = new CreateGroup(members, group);
 				Log.e("NewteamActivity", "group:" + group.toString());
 				cregrouInter.createGroup(NewteamActivity.this, creatGroup);// 测试
@@ -411,4 +453,11 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		finish();
 	}
 
+	@Override
+	protected void onStop() {
+		mNewTeam_OK_layout.setEnabled(true);
+		mNewTeam_OK.setEnabled(true);
+		super.onStop();
+	}
+	
 }

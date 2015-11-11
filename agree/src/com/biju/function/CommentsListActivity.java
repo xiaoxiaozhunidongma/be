@@ -24,16 +24,19 @@ import android.widget.TextView;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_ReadAllUserback;
+import com.BJ.javabean.Loginback;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.ReadPartyback;
 import com.BJ.javabean.Relation;
 import com.BJ.javabean.ReturnData;
+import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readPartyJoinMsgListenner;
+import com.biju.Interface.FindMultiUserListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
@@ -65,6 +68,9 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private MyNotsayAdapter notsayAdapter;
 	private Integer fk_group;
 	private float mPay_amount;
+	
+	private List<String>  WeChatList = new ArrayList<String>();
+	private List<User>  List = new ArrayList<User>();
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -139,6 +145,17 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 						mCommentslist_not_say_listview.setVisibility(View.GONE);
 					}
 					mCommentslist_not_say_number.setText(not_sayList.size()+"");//未表态数量
+					
+					if(partackList.size()>0){
+						for (int i = 0; i < partackList.size(); i++) {
+							Integer pk_user=partackList.get(i).getPk_user();
+							WeChatList.add(String.valueOf(pk_user));//加入容器中，
+						}
+						if(WeChatList.size()>0){
+							mCommentInterface.findMultiUsers(CommentsListActivity.this, WeChatList);
+						}
+					}
+					
 				}
 			}
 
@@ -171,6 +188,32 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			@Override
 			public void defail(Object B) {
 
+			}
+		});
+		
+		mCommentInterface.setPostListener(new FindMultiUserListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("CommentsListActivity", "来自微信的用户在小组中的信息========" + A);
+				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,Loginback.class);
+				int statusmsg = findfriends_statusmsg.getStatusMsg();
+				if (statusmsg == 1) {
+					// 取第一个Users[0]
+					List<User> Users = findfriends_statusmsg.getReturnData();
+					if(Users.size()>0){
+						for (int i = 0; i < Users.size(); i++) {
+							User user=Users.get(i);
+							List.add(user);
+						}
+						partakeadapter.notifyDataSetChanged();
+					}
+				}
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
 			}
 		});
 
@@ -296,17 +339,48 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 			}
 			Log.e("CommentsListActivity","这时候的commentsList_msg2222222222222============"+ commentsList_msg);
 			Relation relation = partackList.get(position);
-			if(mPay_amount==0){
-				holder.commentslist_item_status.setText("已经报名");
+			
+			String status=relation.getStatus();
+			if("3".equals(status)){
+				if(mPay_amount==0){
+					holder.commentslist_item_status.setText("微信用户 - 已经报名");
+				}else {
+					holder.commentslist_item_status.setText("微信用户 - 已报名 -"+"已支付"+mPay_amount+"元");
+				}
+				
+				String WeChatPath=relation.getAvatar_path();
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,WeChatPath);// 存SP
+				ImageLoaderUtils.getInstance().LoadImageCricular(CommentsListActivity.this,
+						WeChatPath, holder.commentslist_item_head);
+				
+				Integer pk_user=relation.getPk_user();
+				Log.e("CommentsListActivity", "已经报名的用户======"+pk_user);
+				for (int i = 0; i < List.size(); i++) {
+					User user=List.get(i);
+					Integer WeChatUser=user.getPk_user();
+					Log.e("CommentsListActivity", "已经报名的微信用户======"+WeChatUser);
+					if(String.valueOf(pk_user).equals(String.valueOf(WeChatUser))){
+						String name=user.getReal_name();
+						holder.commentslist_item_nickname.setText(name+"("+relation.getNickname()+")");
+					}
+				}
+				
 			}else {
-				holder.commentslist_item_status.setText("已报名-"+"已支付"+mPay_amount+"元");
+				if(mPay_amount==0){
+					holder.commentslist_item_status.setText("已经报名");
+				}else {
+					holder.commentslist_item_status.setText("已报名 -"+"已支付"+mPay_amount+"元");
+				}
+				
+				String useravatar_path1 = relation.getAvatar_path();
+				completeURL = beginStr + useravatar_path1 + endStr;
+				PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
+				ImageLoaderUtils.getInstance().LoadImageCricular(CommentsListActivity.this,
+						completeURL, holder.commentslist_item_head);
+				
+				holder.commentslist_item_nickname.setText(relation.getNickname());
 			}
-			String useravatar_path1 = relation.getAvatar_path();
-			completeURL = beginStr + useravatar_path1 + endStr;
-			PreferenceUtils.saveImageCache(CommentsListActivity.this,completeURL);// 存SP
-			ImageLoaderUtils.getInstance().LoadImageCricular(CommentsListActivity.this,
-					completeURL, holder.commentslist_item_head);
-			holder.commentslist_item_nickname.setText(relation.getNickname());
+			
 			if(position==partackList.size()-1){
 				holder.commentslist_item_prompt_2.setVisibility(View.VISIBLE);
 				holder.commentslist_item_prompt_1.setVisibility(View.GONE);

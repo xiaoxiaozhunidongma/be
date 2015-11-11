@@ -260,6 +260,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		Editor Sliding_editor=Sliding_sp.edit();
 		Sliding_editor.putInt(IConstant.Click, 0);
 		Sliding_editor.commit();
+		
 	}
 	
 	@Override

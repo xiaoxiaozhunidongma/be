@@ -58,6 +58,8 @@ public class Interface {
 		return Thisinterface;
 	}
 
+	//更改小组名称
+	String kChangeGroupName = "312";
 	// 获取聚会的图文详情
 	String KReadGraphic = "418";
 	// 用户的提现
@@ -95,7 +97,7 @@ public class Interface {
 	// 请求服务器发送验证码
 	String kRequestVerCode = "18";
 	// 根据手机号或者账户ID查找用户
-	String kFindUser = "19";
+	String kFindUser = "19";//19
 	// 新建小组
 	String kCreateGroup = "31";
 	// 读取用户小组信息
@@ -345,6 +347,24 @@ public class Interface {
 	// });
 	// }
 
+	// 更改小组的名称
+	private void ChangeGroupNamePost(Context context, Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError51(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone51(response);
+			}
+		});
+	}
+	
 	// 获取聚会的图文详情
 	private void ReadGraphicPost(Context context, Map<String, String> params) {
 
@@ -1201,6 +1221,11 @@ public class Interface {
 	// volleyPost(context,per);
 	// }
 
+	// 更改小组名称
+	public void ChangeGroupName(Context context, Group group) {
+		ChangeGroupNamePost(context, packParams(group, kChangeGroupName));
+	}
+	
 	// 获取聚会的图文详情
 	public void ReadGraphic(Context context, Party party) {
 		ReadGraphicPost(context, packParams(party, KReadGraphic));
@@ -1473,6 +1498,8 @@ public class Interface {
 	// 接口部分
 	// private static UserInterface listener;
 
+	// 更改小组名称
+	private static ChangeGroupNameListenner changegroupnamelistenner;
 	// 读取小组中所有聚会包含过期
 	private static ReadGroupPartyAlllistenner readGroupPartyAlllistenner;
 	// 查询多个用户
@@ -1542,12 +1569,20 @@ public class Interface {
 	// void defail(Object B);
 	// }
 
+	// 更改小组名称
+	public interface ChangeGroupNameListenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
+	
 	// 读取小组中所有聚会包含过期
 	public interface ReadGroupPartyAlllistenner {
 		void success(String A);
 		
 		void defail(Object B);
 	}
+	
 	// 获取聚会的图文详情
 	public interface ReadGraphicListenner {
 		void success(String A);
@@ -1847,6 +1882,11 @@ public class Interface {
 	// this.listener=listener;
 	// }
 
+	// 更改小组名称
+	public void setPostListener(ChangeGroupNameListenner listener) {
+		this.changegroupnamelistenner = listener;
+	}
+	
 	// 获取聚会的图文详情
 	public void setPostListener(ReadGraphicListenner listener) {
 		this.readgraphicListenner = listener;
@@ -2528,5 +2568,14 @@ public class Interface {
 
 	public static void requestError50(VolleyError error) {
 		readgraphicListenner.defail(error);
+	}
+	
+	// 更改小组名称
+	public static void requestDone51(String theObject) {
+		changegroupnamelistenner.success(theObject);
+	}
+	
+	public static void requestError51(VolleyError error) {
+		changegroupnamelistenner.defail(error);
 	}
 }
