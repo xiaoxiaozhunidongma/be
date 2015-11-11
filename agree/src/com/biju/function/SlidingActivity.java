@@ -34,6 +34,7 @@ import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_ReadAllUserback;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
+import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.produceRequestCodeListenner;
@@ -67,6 +68,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 	private boolean MainClikc;
 	private RelativeLayout mSliding_OK_layout;
 	private boolean source;
+	private Integer mGroupManager;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +168,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 							Group_ReadAllUser readAllUser = allUsers.get(i);
 							Group_Readalluser_List.add(readAllUser);
 						}
+						SdPkUser.setGetGroup_ReadAllUser(Group_Readalluser_List);//把小组中的所有成员List传给小组添加成员界面
 					}
 					adapter.notifyDataSetChanged();
 				}
@@ -250,6 +253,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 				Integer role = group_ReadAllUser.getRole();
 				if (role == 1) {
 					holder.Member_role.setText("群主");
+					mGroupManager = group_ReadAllUser.getFk_user();
 				} else {
 					holder.Member_role.setText("成员");
 				}
@@ -338,6 +342,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 		mSlidingMenu_Team_Setting.setBackgroundResource(R.drawable.Sliding_choose_color);
 		mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
 		Intent intent = new Intent(SlidingActivity.this,TeamSetting2Activity.class);
+		intent.putExtra("GroupManager", mGroupManager);
 		intent.putExtra(IConstant.Group, pk_group);
 		startActivity(intent);
 	}

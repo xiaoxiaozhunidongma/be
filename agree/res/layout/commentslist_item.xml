@@ -60,7 +60,7 @@
             android:layout_marginTop="10.0dp"
             android:text="TextView"
             android:textColor="#000000"
-            android:textSize="18.0sp" />
+            android:textSize="15.0sp" />
 
         <TextView
             android:id="@+id/commentslist_item_prompt_1"

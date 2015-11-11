@@ -39,6 +39,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 	private ArrayList<Group> requestcode_readuesrlist = new ArrayList<Group>();
 	private Group requestcode_readhomeuser;
 	private int toastHeight;
+	private Integer group_count;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -73,6 +74,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 							List<Group> users = requestcode.getReturnData();
 							if (users.size() > 0) {
 								requestcode_readhomeuser = users.get(0);
+								group_count = requestcode_readhomeuser.getGroup_count();
 								// 查找是否已添加过该小组
 								User homeuser = new User();
 								homeuser.setPk_user(sD_pk_user);
@@ -145,6 +147,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 					} else {
 						Intent intent=new Intent(RequestCodeActivity.this, RequestCode3Activity.class);
 						intent.putExtra(IConstant.Requestcode_readhomeuser, requestcode_readhomeuser);
+						intent.putExtra("RequestCodeNumber", group_count);
 						RequestCodeActivity.this.startActivity(intent);
 						//自定义Toast
 						View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);

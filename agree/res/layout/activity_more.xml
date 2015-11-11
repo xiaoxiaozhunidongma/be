@@ -30,8 +30,7 @@
             android:gravity="center"
             android:text="@string/more_title_cancel"
             android:textColor="#000000"
-            android:textSize="16.0sp"
-            />
+            android:textSize="16.0sp" />
     </RelativeLayout>
 
     <LinearLayout
@@ -126,7 +125,7 @@
             android:layout_height="50.0dp" >
 
             <TextView
-                android:id="@+id/textView8"
+                android:id="@+id/More_member_add_1"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_centerHorizontal="true"
@@ -178,8 +177,7 @@
                 android:layout_marginTop="5.0dp"
                 android:text="@string/more_prompt"
                 android:textColor="#000000"
-                android:textSize="16.0sp"
-                />
+                android:textSize="16.0sp" />
         </RelativeLayout>
 
         <RelativeLayout

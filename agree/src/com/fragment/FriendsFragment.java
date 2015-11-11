@@ -465,8 +465,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 //		Integer size = AllFriends_List.size();
 		Intent intent = new Intent(getActivity(), AddChatsActivity.class);
 //		intent.putExtra(IConstant.Size, size);
-		getActivity().overridePendingTransition(R.anim.tab_left_in_item,
-				R.anim.tab_left_out_item);
+		getActivity().overridePendingTransition(R.anim.tab_left_in_item,R.anim.tab_left_out_item);
 		startActivity(intent);
 	}
 

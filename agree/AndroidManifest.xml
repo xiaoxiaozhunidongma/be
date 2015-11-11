@@ -7,11 +7,18 @@
     <uses-sdk
         android:minSdkVersion="8"
         android:targetSdkVersion="18" />
+
+    <!-- 添加系统日历权限 -->
+    <uses-permission android:name="android.permission.READ_CALENDAR" >
+    </uses-permission>
+    <uses-permission android:name="android.permission.WRITE_CALENDAR" >
+    </uses-permission>
+
     <!-- 解析xml -->
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
-    
-<!--     相册选择器权限 -->
+
+    <!-- 相册选择器权限 -->
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="com.android.browser.permission.WRITE_HISTORY_BOOKMARKS" />
     <uses-permission android:name="com.android.browser.permission.READ_HISTORY_BOOKMARKS" />
@@ -161,7 +168,7 @@
         <!-- 百度签名 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="yGkNOAGTinoQq0oFRuksvUIi" />
+            android:value="am4a3xRjopFOrnHsDW7nnlb4" />
         <!-- 百度签名 -->
         <activity
             android:name="com.biju.MainActivity"
@@ -409,13 +416,14 @@
         </activity>
         <activity
             android:name="com.biju.wxapi.WXEntryActivity"
-            android:label="@string/title_activity_wxentry" 
             android:exported="true"
-            android:screenOrientation="portrait"
-            >
+            android:label="@string/title_activity_wxentry"
+            android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="wx2ffba147560de2ff" />
             </intent-filter>
         </activity>
@@ -495,7 +503,9 @@
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
+
                 <category android:name="android.intent.category.DEFAULT" />
+
                 <data android:scheme="wx2ffba147560de2ff" />
             </intent-filter>
         </activity>
@@ -563,20 +573,30 @@
             android:name="com.biju.pay.GraphicPreviewActivity"
             android:label="@string/title_activity_graphic_preview" >
         </activity>
-        <activity
-            android:name="com.example.imageselected.photo.SelectPhotoActivity"
-            >
+        <activity android:name="com.example.imageselected.photo.SelectPhotoActivity" >
         </activity>
-        
-          <activity
+        <activity
             android:name="com.biju.wechatshare.WEChatShaerActivity"
-            android:label="@string/title_activity_wechat_shaer" 
-            >
+            android:label="@string/title_activity_wechat_shaer" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW"/>
-                <category android:name="android.intent.category.DEFAULT"/>
-                <data android:scheme="wx2ffba147560de2ff"/>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data android:scheme="wx2ffba147560de2ff" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.biju.function.TeamFriendsActivity"
+            android:label="@string/title_activity_team_friends" >
+        </activity>
+        <activity
+            android:name="com.biju.function.ChangeGroupNameActivity"
+            android:label="@string/title_activity_change_group_name" >
+        </activity>
+        <activity
+            android:name="com.biju.function.AddTeamFriendsActivity"
+            android:label="@string/title_activity_add_team_friends" >
         </activity>
     </application>
 

@@ -151,6 +151,7 @@
                     android:src="@drawable/jiantou" />
 
                 <TextView
+                    android:id="@+id/Requestcode2_txet"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_alignBottom="@+id/Requestcode2_next_1"
@@ -260,6 +261,18 @@
                     android:layout_height="0.50dp"
                     android:layout_alignParentBottom="true"
                     android:background="#aaaaaa" />
+
+                <ImageView
+                    android:id="@+id/requestcode2_public_choose"
+                    android:layout_width="13.0dp"
+                    android:layout_height="13.0dp"
+                    android:layout_alignParentRight="true"
+                    android:layout_centerVertical="true"
+                    android:layout_marginRight="20.0dp"
+                    android:src="@drawable/gou_3" 
+                    android:visibility="gone"
+                    />
+
             </RelativeLayout>
         </RelativeLayout>
 

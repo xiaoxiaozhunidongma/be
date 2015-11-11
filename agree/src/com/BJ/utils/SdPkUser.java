@@ -127,16 +127,6 @@ public class SdPkUser {
 		SdPkUser.openid = openid;
 	}
 	
-	//传home中的小组对象
-	public static Group TeamSettinggroup;
-	public static Group getTeamSettinggroup() {
-		return TeamSettinggroup;
-	}
-
-	public static void setTeamSettinggroup(Group teamSettinggroup) {
-		TeamSettinggroup = teamSettinggroup;
-	}
-	
 	//退出登录
 	public static boolean Exit;
 	public static boolean isExit() {
@@ -257,5 +247,26 @@ public class SdPkUser {
 
 	public static void setGetWeSource(boolean getWeSource) {
 		GetWeSource = getWeSource;
+	}
+	
+	//新建小组添加好友传list
+	public static List<String> TeamFriendsList;
+	public static List<String> getTeamFriendsList() {
+		return TeamFriendsList;
+	}
+
+	public static void setTeamFriendsList(List<String> teamFriendsList) {
+		TeamFriendsList = teamFriendsList;
+	}
+	
+	//传一个小组中的所有成员list
+	public static List<Group_ReadAllUser> GetGroup_ReadAllUser;
+	public static List<Group_ReadAllUser> getGetGroup_ReadAllUser() {
+		return GetGroup_ReadAllUser;
+	}
+
+	public static void setGetGroup_ReadAllUser(
+			List<Group_ReadAllUser> getGroup_ReadAllUser) {
+		GetGroup_ReadAllUser = getGroup_ReadAllUser;
 	}
 }
