@@ -1,5 +1,10 @@
 package com.example.imageselected.photo;
 
+import java.io.BufferedInputStream;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.LinkedList;
 import java.util.concurrent.ExecutorService;
@@ -379,17 +384,36 @@ public class ImageLoader
 	private Bitmap decodeSampledBitmapFromResource(String pathName,
 			int reqWidth, int reqHeight)
 	{
+		Bitmap bitmap = null;
+		try {
+			BufferedInputStream in = new BufferedInputStream(new FileInputStream(
+					new File(pathName)));
 		// 第一次解析将inJustDecodeBounds设置为true，来获取图片大小
 		final BitmapFactory.Options options = new BitmapFactory.Options();
 		options.inJustDecodeBounds = true;
-		BitmapFactory.decodeFile(pathName, options);
-		// 调用上面定义的方法计算inSampleSize值
+		options.inPreferredConfig = Bitmap.Config.RGB_565;//颜色模式
+		options.inPurgeable = true;  
+		options.inInputShareable = true;// 以上options的两个属性必须联合使用才会有效果
+		options.inDither=false;  
+//		BitmapFactory.decodeFile(pathName, options);
+		BitmapFactory.decodeStream(in, null, options);
+		in.close();
+		in = new BufferedInputStream(new FileInputStream(new File(pathName)));
+		// 调用上面定义的方法计算inSampleSize值(会根据每个图片选择不同的size！！)
 		options.inSampleSize = calculateInSampleSize(options, reqWidth,
 				reqHeight);
 		// 使用获取到的inSampleSize值再次解析图片
 		options.inJustDecodeBounds = false;
-		Bitmap bitmap = BitmapFactory.decodeFile(pathName, options);
+//		 bitmap = BitmapFactory.decodeFile(pathName, options);
+		 bitmap = BitmapFactory.decodeStream(in, null, options);
 
+		} catch (FileNotFoundException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 		return bitmap;
 	}
 

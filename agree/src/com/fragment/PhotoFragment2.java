@@ -235,9 +235,7 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 							}
 							Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
 									convertToBitmap, 1080);// 最长边限制为1080
-							Bitmap centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-									limitLongScaleBitmap, 180);// 截取中间正方形
-							bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
+							bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
 							UUID randomUUID = UUID.randomUUID();
 							uUid = randomUUID.toString();
 							OSSupload(ossData, bitmap2Bytes, uUid,mFilePath);
@@ -273,7 +271,7 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 				//先清空
 				bitmaps.clear();
 				//先清空
-				MyGalleryActivity.netpath.clear();
+				MyGalleryActivity.netFullpath.clear();
 				
 				for (int i = 0; i < listphotos.size(); i++) {
 					String path = listphotos.get(i).getPath();
@@ -281,7 +279,7 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 					final String completeUrl=beginStr+pk_photo+endStr+"album-thumbnail";
 					Log.e("PhotoFragment2", "completeUrl"+completeUrl);
 					//将路径全部加入容器
-					MyGalleryActivity.netpath.add(completeUrl);
+					MyGalleryActivity.netFullpath.add(completeUrl);
 				}
 				
 				

@@ -61,6 +61,10 @@ public class Interface {
 	//更改小组名称
 	String kChangeGroupName = "312";
 	// 获取聚会的图文详情
+	String KCheckPicReview = "66";
+	// 获取聚会的图文详情
+	String KAddPicReview = "65";
+	// 获取聚会的图文详情
 	String KReadGraphic = "418";
 	// 用户的提现
 	String KOrder = "116";

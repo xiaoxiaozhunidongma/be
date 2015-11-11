@@ -34,7 +34,6 @@ import com.biju.chatroom.PersonalDataActivity;
 import com.biju.function.SlidingActivity.MyMemBerAdapter;
 import com.fragment.ChatFragment;
 import com.fragment.CommonFragment;
-import com.fragment.PhotoFragment2;
 import com.github.volley_examples.utils.GsonUtils;
 
 @SuppressWarnings("unused")

@@ -20,8 +20,8 @@ public class LimitLong {
 	   Bitmap result = bitmap;
 	   int widthOrg = bitmap.getWidth();
 	   int heightOrg = bitmap.getHeight();
-	   Log.e("", "原图长=="+widthOrg);
-	   Log.e("", "原图高=="+heightOrg);
+	   Log.e("LimitLong", "原图长=="+widthOrg);
+	   Log.e("LimitLong", "原图高=="+heightOrg);
 	                                                                                
 	   if(widthOrg > edgeLength || heightOrg > edgeLength)
 	   {
@@ -34,9 +34,9 @@ public class LimitLong {
 	        	  result = Bitmap.createScaledBitmap(bitmap, scaledWidth, scaledHeight, true);
 	        	  int width = result.getWidth();
 	        	  int height = result.getHeight();
-	        	  Log.e("", "result对象是否空"+result);
-	        	  Log.e("", "限制图长=="+width);
-	        	  Log.e("", "限制图高=="+height);
+	        	  Log.e("LimitLong", "result对象是否空"+result);
+	        	  Log.e("LimitLong", "限制图长=="+width);
+	        	  Log.e("LimitLong", "限制图高=="+height);
 //	        	  bitmap.recycle();//释放图片对象，这里不能释放，后面的会有Compass对象已经被释放的问题
 	          }
 	          catch(Exception e){
