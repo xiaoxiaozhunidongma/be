@@ -80,7 +80,7 @@ public class MyApplication extends Application {
 		// leanchat
 		 AVOSCloud.initialize(this,"n5wu1wotc8hhyu6x87hktwzfzd2o3ptvpe6cvhkwnwl50a0f","at9f7qy4fp02ajzzmem1ybnp8lehjb27plh902h76lw562le");
 //		 AVIMMessageManager.registerDefaultMessageHandler(new CustomMessageHandler());
-		 
+		 Log.e("MyApplication", " AVOSCloud.initialize有调用~");
 		    ChatManager.setDebugEnabled(true);// tag leanchatlib
 		    AVOSCloud.setDebugLogEnabled(true);  // set false when release
 		    ChatManager.getInstance().init(this);
@@ -100,7 +100,7 @@ public class MyApplication extends Application {
 		    //鍏充簬杩欎釜鏂规硶璇疯 leanchat 搴旂敤涓殑 ChatManagerAdapterImpl.java
 		      @Override
 		      public void shouldShowNotification(Context context, String selfId, AVIMConversation conversation, AVIMTypedMessage message) {
-		    	  Toast.makeText(context, "收到了一条消息但并未打开相应的对话。可以触发系统通知。", Toast.LENGTH_LONG).show();
+//		    	  Toast.makeText(context, "收到了一条消息但并未打开相应的对话。可以触发系统通知。", Toast.LENGTH_LONG).show();
 		      }
 		    });
 		

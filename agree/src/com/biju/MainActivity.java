@@ -85,6 +85,7 @@ public class MainActivity extends FragmentActivity  {
 	}
 	
 	private void chatUserlogin() {
+		Log.e("MainActivity", "SD_pk_user=="+SD_pk_user);
 		ChatManager chatManager = ChatManager.getInstance();
 		chatManager.setupManagerWithUserId(String.valueOf(SD_pk_user));
 		chatManager.openClient(new AVIMClientCallback() {
@@ -263,9 +264,15 @@ public class MainActivity extends FragmentActivity  {
 	@Override
 	protected void onDestroy() {
 		// TODO Auto-generated method stub
-//		convertToBitmap.recycle();
-//		limitLongScaleBitmap.recycle();
-//		centerSquareScaleBitmap.recycle();
+		if(convertToBitmap!=null){
+			convertToBitmap.recycle();
+		}
+		if(limitLongScaleBitmap!=null){
+			limitLongScaleBitmap.recycle();
+		}
+		if(centerSquareScaleBitmap!=null){
+			centerSquareScaleBitmap.recycle();
+		}
 	       System.gc();  //提醒系统及时回收
 		super.onDestroy();
 	}
