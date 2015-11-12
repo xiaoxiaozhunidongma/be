@@ -179,8 +179,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			Bitmap convertToBitmap;
 			try {
 				convertToBitmap = Path2Bitmap.convertToBitmap(imagePath);
-				Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-						convertToBitmap, 1280);// 最长边限制为1280
+				Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1280);// 最长边限制为1280
 				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
 				UUID uuid = UUID.randomUUID();
 				uniqueId = uuid.toString();

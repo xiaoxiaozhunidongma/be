@@ -8,7 +8,7 @@
     <RelativeLayout
         android:id="@+id/PreviewTitleLayout"
         android:layout_width="match_parent"
-        android:layout_height="40.0dp"
+        android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:background="#ffffff" >
@@ -31,24 +31,6 @@
                 android:textSize="@dimen/title_left_size" />
         </RelativeLayout>
 
-        <RelativeLayout
-            android:id="@+id/PreviewOKLayout"
-            android:layout_width="60.0dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" >
-
-            <TextView
-                android:id="@+id/PreviewOK"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="完成编辑"
-                android:textColor="@drawable/title_right_color"
-                android:textSize="@dimen/title_right_size" />
-        </RelativeLayout>
-
         <TextView
             android:id="@+id/textView3"
             android:layout_width="wrap_content"
@@ -57,35 +39,39 @@
             android:layout_marginLeft="20dp"
             android:layout_toRightOf="@+id/PreviewBackLayout"
             android:text="图文预览"
-            android:textSize="15.0sp"
-             />
+            android:textSize="15.0sp" />
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
-            android:background="#aaaaaa"
-            />
+            android:background="#aaaaaa" />
 
+        <TextView
+            android:id="@+id/PreviewOK"
+            android:layout_width="65.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:gravity="center"
+            android:text="完成编辑"
+            android:textColor="@drawable/title_right_color"
+            android:textSize="@dimen/title_right_size" />
     </RelativeLayout>
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/PreviewTitleLayout"
-        android:layout_centerHorizontal="true"
-        >
+        android:layout_centerHorizontal="true" >
 
         <ListView
             android:id="@+id/PreviewListView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
-            >
-
+            android:background="#ffffff" >
         </ListView>
-
     </RelativeLayout>
 
 </RelativeLayout>

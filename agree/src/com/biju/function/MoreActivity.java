@@ -13,6 +13,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -25,6 +27,7 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Moreback;
@@ -37,7 +40,14 @@ import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.userCanclePartyListenner;
 import com.biju.R;
+import com.biju.wechatshare.Util;
+import com.biju.wechatshare.WEChatShaerActivity;
 import com.github.volley_examples.utils.GsonUtils;
+import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
+import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
+import com.tencent.mm.sdk.modelmsg.WXWebpageObject;
+import com.tencent.mm.sdk.openapi.IWXAPI;
+import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 @SuppressLint("NewApi")
 public class MoreActivity extends Activity implements OnClickListener {
@@ -60,6 +70,10 @@ public class MoreActivity extends Activity implements OnClickListener {
 	private String hour_2;
 	private String minute_2;
 	private String fk_party;
+	private RelativeLayout mMoreLayout;
+	
+	private String app_id="wx2ffba147560de2ff";
+	private IWXAPI api;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -67,6 +81,7 @@ public class MoreActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_more);
 		sD_pk_user = SdPkUser.getsD_pk_user();
+		api = WXAPIFactory.createWXAPI(MoreActivity.this, "wx2ffba147560de2ff",false); 
 		
 		Intent intent = getIntent();
 		userAll = intent.getBooleanExtra(IConstant.UserAll, false);
@@ -130,8 +145,13 @@ public class MoreActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI() {
-		findViewById(R.id.More_member_share).setOnClickListener(this);//分享聚会
-		findViewById(R.id.More_creator_share).setOnClickListener(this);//分享聚会
+		mMoreLayout = (RelativeLayout) findViewById(R.id.MoreLayout);
+		findViewById(R.id.More_member_sharecircle).setOnClickListener(this);//分享到朋友圈
+		findViewById(R.id.More_member_sharefriends).setOnClickListener(this);//分享给朋友
+		
+		findViewById(R.id.More_creator_shareCircle).setOnClickListener(this);//分享到朋友圈
+		findViewById(R.id.More_creator_sharefriends).setOnClickListener(this);//分享给朋友
+		
 		findViewById(R.id.More_member_add_1).setOnClickListener(this);//添加到系统日历
 		findViewById(R.id.More_member_add).setOnClickListener(this);//添加到系统日历
 		findViewById(R.id.More_creator_cancel_layout).setOnClickListener(this);//取消聚会
@@ -174,29 +194,79 @@ public class MoreActivity extends Activity implements OnClickListener {
 		case R.id.More_member_add_1:
 			More_member_add();
 			break;
-		case R.id.More_member_share:
-		case R.id.More_creator_share:
-			More_creator_share();
+		case R.id.More_member_sharecircle:
+		case R.id.More_creator_shareCircle:
+			More_creator_shareCircle();
+			break;
+		case R.id.More_member_sharefriends:
+		case R.id.More_creator_sharefriends:
+			More_creator_sharefriends();
 			break;
 		default:
 			break;
 		}
 	}
 
-	//将聚会链接复制到黏贴板上
-	@SuppressWarnings("deprecation")
-	private void More_creator_share() {
-		String Url="http://www.beagree.com/biju/party.html?party="+fk_party;
-		ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
-		cm.setText(Url);//s就是要复制的内容
-		
-		SweetAlertDialog sd=new SweetAlertDialog(MoreActivity.this);
-		sd.setTitleText("提示");
-		sd.setContentText("聚会链接已经复制到了黏贴板上啦~");
-		sd.show();
-		
+	//分享给朋友
+	private void More_creator_sharefriends() {
+		SdPkUser.setGetWeSource(true);//说明是微信分享过去的
+		WEChatShaerCircleFriends(0);
 		finish();
 	}
+
+	//分享到朋友圈
+	private void More_creator_shareCircle() {
+		SdPkUser.setGetWeSource(true);//说明是微信分享过去的
+		WEChatShaerCircleFriends(1);
+		finish();
+	}
+
+	private void WEChatShaerCircleFriends(int flag) {
+		WXWebpageObject webpage = new WXWebpageObject();
+		webpage.webpageUrl = "http://www.beagree.com/biju/party.html?party="+fk_party;
+		WXMediaMessage msg = new WXMediaMessage(webpage);
+		msg.title = "来自必聚的聚会";
+		msg.description = name;
+		try{
+			Bitmap bmp = BitmapFactory.decodeResource(getResources(), R.drawable.about_us);
+			Bitmap thumbBmp = Bitmap.createScaledBitmap(bmp, 150, 150, true);
+			bmp.recycle();
+//			msg.setThumbImage(thumbBmp);
+			msg.thumbData=Util.bmpToByteArray(thumbBmp, true);
+		}catch (Exception e){
+			e.printStackTrace();
+		}
+		
+		SendMessageToWX.Req req = new SendMessageToWX.Req();
+		req.transaction = buildTransaction("biju");//webpage
+		req.message = msg;
+		if (flag == 0) { 
+               // 分享到微信会话 
+               req.scene = SendMessageToWX.Req.WXSceneSession;  
+		} else { 
+               // 分享到微信朋友圈 
+               req.scene = SendMessageToWX.Req.WXSceneTimeline;  
+		} 
+		api.sendReq(req);
+	}
+
+	private String buildTransaction(final String type) {
+		return (type == null) ? String.valueOf(System.currentTimeMillis()) : type + System.currentTimeMillis();
+	}
+	//将聚会链接复制到黏贴板上
+//	@SuppressWarnings("deprecation")
+//	private void More_creator_share() {
+//		String Url="http://www.beagree.com/biju/party.html?party="+fk_party;
+//		ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+//		cm.setText(Url);//s就是要复制的内容
+//		
+//		SweetAlertDialog sd=new SweetAlertDialog(MoreActivity.this);
+//		sd.setTitleText("提示");
+//		sd.setContentText("聚会链接已经复制到了黏贴板上啦~");
+//		sd.show();
+//		
+//		finish();
+//	}
 
 	private void More_member_add() {
 		String calanderURL;  
@@ -295,12 +365,19 @@ public class MoreActivity extends Activity implements OnClickListener {
         ContentResolver cr1 = getContentResolver(); // 为刚才新添加的event添加reminder  
         cr1.insert(Reminders.CONTENT_URI, values); 
         
-        SweetAlertDialog sd=new SweetAlertDialog(MoreActivity.this);
+        mMoreLayout.setVisibility(View.GONE);
+		final SweetAlertDialog sd = new SweetAlertDialog(MoreActivity.this);
 		sd.setTitleText("提示");
 		sd.setContentText("聚会已经成功添加到日程~");
-		sd.show();
-		
-		finish();
+		sd.setConfirmText("好的");
+		sd.showCancelButton(true);
+		sd.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+				finish();
+			}
+		}).show();
 	}
 	
 	private void More_title_cancel() {

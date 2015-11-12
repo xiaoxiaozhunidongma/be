@@ -330,7 +330,8 @@
     <!-- 小组更多界面 -->
     <string name="more_prompt">提示</string>
     <string name="more_prompt_1">选择想要对聚会做的操作类型</string>
-    <string name="more_member_share">分享聚会</string>
+    <string name="more_member_share_1">分享到朋友圈</string>
+    <string name="more_member_share_2">分享给朋友</string>
     <string name="more_creator_add">添加到系统日历</string>
     <string name="more_title_cancel">取消</string>
     <string name="more_creator_cancel">取消聚会</string>

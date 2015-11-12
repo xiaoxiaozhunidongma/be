@@ -12,12 +12,10 @@
 
         <ImageView
             android:id="@+id/PreviewImage"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="10.0dp"
-            android:layout_marginBottom="20.0dp"
             android:adjustViewBounds="true"
-            android:scaleType="fitCenter"
             android:src="@drawable/about_us" />
 
         <RelativeLayout
