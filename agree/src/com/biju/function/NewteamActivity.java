@@ -136,7 +136,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		addTeamFriends = TeamFriends_sp.getBoolean("AddTeamFriends", false);
 		if(addTeamFriends){
 			mTeamFriendsList = SdPkUser.getTeamFriendsList();
-			Log.e("NewteamActivity", "mTeamFriendsList的长度====" + mTeamFriendsList.size());
+//			Log.e("NewteamActivity", "mTeamFriendsList的长度====" + mTeamFriendsList.size());
 		}
 		super.onRestart();
 	}
@@ -404,7 +404,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
-				Log.e("", "图片上传失败" + ossException.toString());
+				Log.e("NewteamActivity", "图片上传失败" + ossException.toString());
 			}
 		});
 	}
