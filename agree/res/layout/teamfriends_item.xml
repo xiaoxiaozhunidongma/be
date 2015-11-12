@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content" >
+
+    <RelativeLayout
+        android:id="@+id/TeamFriendsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="60.0dp"
+        android:layout_alignParentLeft="true"
+         >
+
+        <TextView
+            android:id="@+id/TeamFriendsLine1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            android:visibility="gone" />
+
+        <ImageView
+            android:id="@+id/TeamFriends_head"
+            android:layout_width="50.0dp"
+            android:layout_height="50.0dp"
+            android:layout_marginLeft="10.0dp"
+            android:layout_marginTop="5.0dp"
+            android:src="@drawable/login_1" />
+
+        <TextView
+            android:id="@+id/TeamFriendsLine2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:layout_marginLeft="20.0dp"
+            android:background="#aaaaaa" />
+
+        <ImageView
+            android:id="@+id/TeamFriends_choose"
+            android:layout_width="13.0dp"
+            android:layout_height="13.0dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp"
+            android:src="@drawable/gou_3" 
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/TeamFriends_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="15.0dp"
+            android:layout_toRightOf="@+id/TeamFriends_head"
+            android:gravity="left|center"
+            android:singleLine="true"
+            android:text="15614"
+            android:textSize="17.0sp" />
+
+    </RelativeLayout>
+    <!-- android:textAppearance="?android:textAppearanceLarge" -->
+
+</RelativeLayout>

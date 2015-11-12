@@ -6,12 +6,11 @@ import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table(name = "group_team")
-public class Group implements Serializable {
+public class GroupNumber implements Serializable{
 
 	/**
 	 * extends Model
 	 */
-	// private static final long serialVersionUID = -938676103940439001L;
 	@Column
 	private Integer pk_group;
 	@Column
@@ -30,8 +29,10 @@ public class Group implements Serializable {
 	private String remark;
 	@Column
 	private Integer status;
+	@Column
+	private Integer group_count;
 
-	public Group() {
+	public GroupNumber() {
 	}
 
 	public Integer getPk_group() {
@@ -106,6 +107,14 @@ public class Group implements Serializable {
 		this.status = status;
 	}
 
+	public Integer getGroup_count() {
+		return group_count;
+	}
+
+	public void setGroup_count(Integer group_count) {
+		this.group_count = group_count;
+	}
+
 	@Override
 	public String toString() {
 		return "{" + "\"pk_group\":" + pk_group + ",\"em_id\":" + em_id
@@ -113,12 +122,14 @@ public class Group implements Serializable {
 				+ ",\"last_post_time\":" + last_post_time
 				+ ",\"last_post_message\":" + last_post_message
 				+ ",\"avatar_path\":" + avatar_path + ",\"remark\":" + remark
-				+ ",\"status\":" + status + "}";
+				+ ",\"status\":" + status + ",\"group_count\":" + group_count
+				+ "}";
 	}
 
-	public Group(Integer pk_group, String em_id, String name,
+	public GroupNumber(Integer pk_group, String em_id, String name,
 			String setup_time, String last_post_time, String last_post_message,
-			String avatar_path, String remark, Integer status) {
+			String avatar_path, String remark, Integer status,
+			Integer group_count) {
 		super();
 		this.pk_group = pk_group;
 		this.em_id = em_id;
@@ -129,6 +140,7 @@ public class Group implements Serializable {
 		this.avatar_path = avatar_path;
 		this.remark = remark;
 		this.status = status;
+		this.group_count = group_count;
 	}
 
 }

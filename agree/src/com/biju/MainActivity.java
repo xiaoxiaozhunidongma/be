@@ -85,6 +85,7 @@ public class MainActivity extends FragmentActivity  {
 	}
 	
 	private void chatUserlogin() {
+		Log.e("MainActivity", "SD_pk_user=="+SD_pk_user);
 		ChatManager chatManager = ChatManager.getInstance();
 		chatManager.setupManagerWithUserId(String.valueOf(SD_pk_user));
 		chatManager.openClient(new AVIMClientCallback() {
