@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.GroupNumber;
+import com.BJ.javabean.GroupNumberback;
 import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
@@ -37,7 +39,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 	private Interface requestcode_interface;
 	private Integer sD_pk_user;
 	private ArrayList<Group> requestcode_readuesrlist = new ArrayList<Group>();
-	private Group requestcode_readhomeuser;
+	private GroupNumber requestcode_readhomeuser;
 	private int toastHeight;
 	private Integer group_count;
 
@@ -68,10 +70,10 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 					@Override
 					public void success(String A) {
 						Log.e("RequestCodeActivity", "使用邀请码加入的小组" + A);
-						Groupback requestcode = GsonUtils.parseJson(A,Groupback.class);
+						GroupNumberback requestcode = GsonUtils.parseJson(A,GroupNumberback.class);
 						int StatusMsg = requestcode.getStatusMsg();
 						if (StatusMsg == 1) {
-							List<Group> users = requestcode.getReturnData();
+							List<GroupNumber> users = requestcode.getReturnData();
 							if (users.size() > 0) {
 								requestcode_readhomeuser = users.get(0);
 								group_count = requestcode_readhomeuser.getGroup_count();

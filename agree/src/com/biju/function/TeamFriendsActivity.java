@@ -89,10 +89,10 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 	}
 
 	class ViewHolder {
-		ImageView ReadUserAllFriends_head;
-		TextView ReadUserAllFriends_name;
-		TextView ReadUserAllFriendsLine1;
-		TextView ReadUserAllFriendsLine2;
+		ImageView TeamFriends_head;
+		TextView TeamFriends_name;
+		TextView TeamFriendsLine1;
+		TextView TeamFriendsLine2;
 	}
 
 	class MyTeamFriendsAdapter extends BaseAdapter {
@@ -119,11 +119,11 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 			if (convertView == null) {
 				holder = new ViewHolder();
 				LayoutInflater layoutInflater = getLayoutInflater();
-				inflater = layoutInflater.inflate(R.layout.readuserallfriends_item, null);
-				holder.ReadUserAllFriends_head = (ImageView) inflater.findViewById(R.id.ReadUserAllFriends_head);
-				holder.ReadUserAllFriends_name = (TextView) inflater.findViewById(R.id.ReadUserAllFriends_name);
-				holder.ReadUserAllFriendsLine1 = (TextView) inflater.findViewById(R.id.ReadUserAllFriendsLine1);
-				holder.ReadUserAllFriendsLine2 = (TextView) inflater.findViewById(R.id.ReadUserAllFriendsLine2);
+				inflater = layoutInflater.inflate(R.layout.teamfriends_item, null);
+				holder.TeamFriends_head = (ImageView) inflater.findViewById(R.id.TeamFriends_head);
+				holder.TeamFriends_name = (TextView) inflater.findViewById(R.id.TeamFriends_name);
+				holder.TeamFriendsLine1 = (TextView) inflater.findViewById(R.id.TeamFriendsLine1);
+				holder.TeamFriendsLine2 = (TextView) inflater.findViewById(R.id.TeamFriendsLine2);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -135,16 +135,16 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 			Integer pk_user = user.getPk_user();
 			String nickname = user.getNickname();
 			String avatar_path = user.getAvatar_path();
-			holder.ReadUserAllFriends_name.setText(nickname);
+			holder.TeamFriends_name.setText(nickname);
 			String completeURL = beginStr + avatar_path + endStr+ "mini-avatar";
 			ImageLoaderUtils.getInstance().LoadImageCricular(TeamFriendsActivity.this, completeURL,
-					holder.ReadUserAllFriends_head);
+					holder.TeamFriends_head);
 			if (position == userList.size() - 1) {
-				holder.ReadUserAllFriendsLine1.setVisibility(View.VISIBLE);
-				holder.ReadUserAllFriendsLine2.setVisibility(View.GONE);
+				holder.TeamFriendsLine1.setVisibility(View.VISIBLE);
+				holder.TeamFriendsLine2.setVisibility(View.GONE);
 			} else {
-				holder.ReadUserAllFriendsLine1.setVisibility(View.GONE);
-				holder.ReadUserAllFriendsLine2.setVisibility(View.VISIBLE);
+				holder.TeamFriendsLine1.setVisibility(View.GONE);
+				holder.TeamFriendsLine2.setVisibility(View.VISIBLE);
 			}
 			return inflater;
 		}
@@ -186,11 +186,11 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 		isSelectMap.put(position, isSelected);
 		User user=userList.get(position);
 		if(isSelected){
-			view.findViewById(R.id.ReadUserAllFriends_choose).setVisibility(View.VISIBLE);
+			view.findViewById(R.id.TeamFriends_choose).setVisibility(View.VISIBLE);
 			UserList.add(String.valueOf(user.getPk_user()));
 			Log.e("TeamFriendsActivity", "添加的成员===="+user.getPk_user());
 		}else {
-			view.findViewById(R.id.ReadUserAllFriends_choose).setVisibility(View.GONE);
+			view.findViewById(R.id.TeamFriends_choose).setVisibility(View.GONE);
 			UserList.remove(String.valueOf(user.getPk_user()));
 			Log.e("TeamFriendsActivity", "删除的成员===="+user.getPk_user());
 		}

@@ -26,7 +26,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -40,10 +39,7 @@ import android.widget.Toast;
 import com.BJ.javabean.CreateGroup;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
-import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Newteamback;
-import com.BJ.javabean.RequestCodeback;
-import com.BJ.javabean.User;
 import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
@@ -61,8 +57,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.biju.Interface;
 import com.biju.Interface.createGroupListenner;
-import com.biju.Interface.readUserGroupMsgListenner;
-import com.biju.Interface.userJoin2gourpListenner;
 import com.biju.R;
 import com.biju.APP.MyApplication;
 import com.github.volley_examples.utils.GsonUtils;
@@ -83,31 +77,21 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private TextView mNewTeam_tv_head;
 	private Interface cregrouInter;
 	private String format1;
-	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
-	// 完整路径completeURL=beginStr+result.filepath+endStr;
-	private String completeURL = "";
-	private boolean read_requestcode2;
-	private Group readhomeuser;
-	private ArrayList<Group> readuesrlist = new ArrayList<Group>();
 
 	private String newteam_name;
 	private String sDpath;
 	private Group group;
 	private Integer sD_pk_user;
-	private Integer pk_group;
 	private OSSData ossData;
 	private OSSService ossService;
 	private OSSBucket sampleBucket;
 	private byte[] bitmap2Bytes;
 	private String uUid;
-	private boolean isreaduser;
 	private int toastHeight;
 	private RelativeLayout mNewTeam_OK_layout;
 	private TextView mNewTeam_OK;
-	private List<Group_User> Group_UserList=new ArrayList<Group_User>();
-	private List<String> mTeamFriendsList=new ArrayList<String>();
-	private boolean addTeamFriends;
+	private List<Group_User> Group_UserList = new ArrayList<Group_User>();
+	private List<String> mTeamFriendsList = new ArrayList<String>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -132,15 +116,15 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	@SuppressWarnings("unchecked")
 	@Override
 	protected void onRestart() {
-		SharedPreferences TeamFriends_sp=getSharedPreferences("TeamFriends", 0);
-		addTeamFriends = TeamFriends_sp.getBoolean("AddTeamFriends", false);
-		if(addTeamFriends){
+		Interface();
+		SharedPreferences TeamFriends_sp = getSharedPreferences("TeamFriends",0);
+		boolean addTeamFriends = TeamFriends_sp.getBoolean("AddTeamFriends",false);
+		if (addTeamFriends) {
 			mTeamFriendsList = SdPkUser.getTeamFriendsList();
-			Log.e("NewteamActivity", "mTeamFriendsList的长度====" + mTeamFriendsList.size());
 		}
 		super.onRestart();
 	}
-	
+
 	private void DisplayMetrics() {
 		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metric);
@@ -198,18 +182,18 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		mNewTeam_OK_layout.setOnClickListener(this);// 完成
 		mNewTeam_OK = (TextView) findViewById(R.id.NewTeam_OK);
 		mNewTeam_OK.setOnClickListener(this);
-		
+
 		mNewTeam_OK_layout.setEnabled(true);
 		mNewTeam_OK.setEnabled(true);
-		
+
 		mNewteam_name.setFocusable(true);
 		mNewteam_name.setFocusableInTouchMode(true);
 		mNewteam_name.requestFocus();
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			public void run() {
-				InputMethodManager inputManager = (InputMethodManager) mNewteam_name
-						.getContext().getSystemService(NewteamActivity.INPUT_METHOD_SERVICE);
+				InputMethodManager inputManager = (InputMethodManager) mNewteam_name.getContext().getSystemService(
+								NewteamActivity.INPUT_METHOD_SERVICE);
 				inputManager.showSoftInput(mNewteam_name, 0);
 			}
 		}, 998);
@@ -239,9 +223,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		}
 	}
 
-	//添加好友
+	// 添加好友
 	private void NewTeam_friends() {
-		Intent intent=new Intent(NewteamActivity.this, TeamFriendsActivity.class);
+		Intent intent = new Intent(NewteamActivity.this,TeamFriendsActivity.class);
 		startActivity(intent);
 		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
@@ -259,9 +243,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				if (e == null) {
 					// 创建与 Jerry，Bob,Harry,William 之间的会话
 					HashMap<String, Object> attr = new HashMap<String, Object>();
-
 					attr.put("type", 1);// 1是群聊 ，3是聊天室
-
 					client.createConversation(strings, "Tom & Jerry & friedns",
 							attr, new AVIMConversationCreatedCallback() {
 
@@ -317,8 +299,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		try {
 			Uri selectedImage = data.getData();
 			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Cursor cursor = NewteamActivity.this.getContentResolver().query(
-					selectedImage, filePathColumn, null, null, null);
+			Cursor cursor = NewteamActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
 			if (cursor != null) {
 				cursor.moveToFirst();
 				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
@@ -376,29 +357,35 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				group_User.setFk_user(sD_pk_user);
 				group_User.setRole(1);
 				Group_UserList.add(group_User);
-				for (int i = 0; i < mTeamFriendsList.size(); i++) {
-					String pk_user=mTeamFriendsList.get(i);
-					Group_User group_User1 = new Group_User();
-					group_User1.setFk_user(Integer.valueOf(pk_user));
-					group_User1.setRole(2);
-					Group_UserList.add(group_User1);
+				if (mTeamFriendsList.size() > 0) {
+					for (int i = 0; i < mTeamFriendsList.size(); i++) {
+						String pk_user = mTeamFriendsList.get(i);
+						Group_User group_User1 = new Group_User();
+						group_User1.setFk_user(Integer.valueOf(pk_user));
+						group_User1.setRole(2);
+						Group_UserList.add(group_User1);
+					}
+					Log.e("NewteamActivity", "Group_UserList的长度===="+ Group_UserList.size());
+					group.setStatus(1);
+					// Group_User[] members = { group_User };
+					Group_User[] members = new Group_User[Group_UserList.size()];
+					for (int i = 0; i < Group_UserList.size(); i++) {
+						members[i] = Group_UserList.get(i);
+					}
+					CreateGroup creatGroup = new CreateGroup(members, group);
+					Log.e("NewteamActivity", "group:" + group.toString());
+					cregrouInter.createGroup(NewteamActivity.this, creatGroup);// 测试
+				} else {
+					Group_User[] members = { group_User };
+					CreateGroup creatGroup = new CreateGroup(members, group);
+					Log.e("NewteamActivity", "group:" + group.toString());
+					cregrouInter.createGroup(NewteamActivity.this, creatGroup);// 测试
 				}
-				Log.e("NewteamActivity", "Group_UserList的长度====" + Group_UserList.size());
-				group.setStatus(1);
-//				Group_User[] members = { group_User };
-				Group_User[] members=new Group_User[Group_UserList.size()];
-				for (int i = 0; i < Group_UserList.size(); i++) {
-					members[i]=Group_UserList.get(i);
-				}
-				
-				CreateGroup creatGroup = new CreateGroup(members, group);
-				Log.e("NewteamActivity", "group:" + group.toString());
-				cregrouInter.createGroup(NewteamActivity.this, creatGroup);// 测试
+
 			}
 
 			@Override
-			public void onProgress(String objectKey, int byteCount,
-					int totalSize) {
+			public void onProgress(String objectKey, int byteCount,int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
 			}
 
@@ -411,8 +398,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	public String getSDPath() {
 		File sdDir = null;
-		boolean sdCardExist = Environment.getExternalStorageState().equals(
-				android.os.Environment.MEDIA_MOUNTED);
+		boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
 		// 判断sd卡是否存在
 		if (sdCardExist) {
 			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
@@ -459,5 +445,5 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		mNewTeam_OK.setEnabled(true);
 		super.onStop();
 	}
-	
+
 }

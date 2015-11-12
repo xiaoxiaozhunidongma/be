@@ -14,6 +14,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.GroupNumber;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.RequestCodeback;
 import com.BJ.utils.PreferenceUtils;
@@ -33,7 +34,7 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 	private TextView mRequest_OK;
 	private Interface requestcode3_interface;
 	private Integer sD_pk_user;
-	private Group readhomeuser;
+	private GroupNumber readhomeuser;
 	private ImageView mRequestcode2_head;
 	private TextView mRequestcode2_User_nickname;
 	private RelativeLayout mRequestcode2_number;
@@ -61,7 +62,7 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 		sD_pk_user = SdPkUser.getsD_pk_user();
 		Log.e("RequestCodeActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
 		Intent intent = getIntent();
-		readhomeuser=(Group) intent.getSerializableExtra(IConstant.Requestcode_readhomeuser);
+		readhomeuser=(GroupNumber) intent.getSerializableExtra(IConstant.Requestcode_readhomeuser);
 		number = intent.getIntExtra("RequestCodeNumber", 0);
 		initInterface();
 		initUI();
