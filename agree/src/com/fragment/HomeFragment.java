@@ -584,6 +584,10 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	}
 
 	private void tab_home_new_layout() {
+		SharedPreferences TeamFriends_sp=getActivity().getSharedPreferences("TeamFriends", 0);
+		Editor editor=TeamFriends_sp.edit();
+		editor.putBoolean("AddTeamFriends", false);
+		editor.commit();
 		Intent intent = new Intent(getActivity(), NewteamActivity.class);
 		startActivity(intent);
 	}

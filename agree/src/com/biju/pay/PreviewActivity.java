@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
@@ -24,6 +27,7 @@ import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.activeandroid.query.Select;
 import com.biju.R;
+import com.biju.function.AddNewPartyActivity;
 
 public class PreviewActivity extends Activity implements OnClickListener {
 
@@ -60,7 +64,6 @@ public class PreviewActivity extends Activity implements OnClickListener {
 	private void initUI() {
 		findViewById(R.id.PreviewBackLayout).setOnClickListener(this);
 		findViewById(R.id.PreviewBack).setOnClickListener(this);// ·µ»Ø
-		findViewById(R.id.PreviewOKLayout).setOnClickListener(this);
 		findViewById(R.id.PreviewOK).setOnClickListener(this);// Íê³É
 		mPreviewListView = (ListView) findViewById(R.id.PreviewListView);
 		mPreviewListView.setDividerHeight(0);
@@ -160,10 +163,23 @@ public class PreviewActivity extends Activity implements OnClickListener {
 		case R.id.PreviewBackLayout:
 			PreviewBack();
 			break;
-
+		case R.id.PreviewOK:
+			PreviewOK();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void PreviewOK() {
+		SharedPreferences GraphicDetails_sp=getSharedPreferences("GraphicDetails", 0);
+		Editor editor=GraphicDetails_sp.edit();
+		editor.putBoolean("IsGraphicDetails", true);
+		editor.putInt("GraphicDetailsNumber", PreviewList.size());
+		editor.commit();
+		finish();
+		Intent intent=new Intent(PreviewActivity.this, AddNewPartyActivity.class);
+		startActivity(intent);
 	}
 
 	private void PreviewBack() {

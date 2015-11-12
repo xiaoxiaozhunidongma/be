@@ -50,6 +50,7 @@ import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.biju.R;
 import com.biju.function.AddNewPartyActivity;
+import com.example.imageselected.photo.SelectPhotoActivity;
 
 @SuppressLint("NewApi")
 public class GraphicDetailsActivity extends Activity implements OnClickListener{
@@ -518,9 +519,13 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 			isEdit=!isEdit;
 			ImageTextSave();
 		}
-		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
-		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
-		getAlbum.setType(IMAGE_TYPE);
+//		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
+//		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
+//		getAlbum.setType(IMAGE_TYPE);
+//		startActivityForResult(getAlbum, IMAGE_CODE);
+		
+		Intent getAlbum = new Intent(this, SelectPhotoActivity.class);
+		getAlbum.putExtra("SelectType", 0);
 		startActivityForResult(getAlbum, IMAGE_CODE);
 		Log.e("GraphicDetailsActivity", "点击了编辑图片========");
 	}
@@ -644,28 +649,36 @@ public class GraphicDetailsActivity extends Activity implements OnClickListener{
 		if (resultCode != Activity.RESULT_OK || data == null)
 			return;
 		try {
-			Uri selectedImage = data.getData();
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Cursor cursor = GraphicDetailsActivity.this.getContentResolver().query(
-					selectedImage, filePathColumn, null, null, null);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-				mFilePath = cursor.getString(columnIndex);
-				cursor.close();
-				cursor = null;
-
-			} else {
-				File file = new File(selectedImage.getPath());
-				mFilePath = file.getAbsolutePath();
-				if (!file.exists()) {
-					Toast toast = Toast.makeText(this, "找不到图片",
-							Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
-					return;
-				}
-			}
+//			Uri selectedImage = data.getData();
+//			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//			Cursor cursor = GraphicDetailsActivity.this.getContentResolver().query(
+//					selectedImage, filePathColumn, null, null, null);
+//			if (cursor != null) {
+//				cursor.moveToFirst();
+//				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//				mFilePath = cursor.getString(columnIndex);
+//				cursor.close();
+//				cursor = null;
+//
+//			} else {
+//				File file = new File(selectedImage.getPath());
+//				mFilePath = file.getAbsolutePath();
+//				if (!file.exists()) {
+//					Toast toast = Toast.makeText(this, "找不到图片",
+//							Toast.LENGTH_SHORT);
+//					toast.setGravity(Gravity.CENTER, 0, 0);
+//					toast.show();
+//					return;
+//				}
+//			}
+			
+			@SuppressWarnings("unchecked")
+			ArrayList<String> mSelectedImageList = (ArrayList<String>) data.getSerializableExtra("mSelectedImageList");
+			mFilePath=mSelectedImageList.get(0);
+			Log.e("GraphicDetailsActivity", "mSelectedImageList.size()======" + mSelectedImageList.size());
+			Log.e("GraphicDetailsActivity", "mFilePath======" + mFilePath);
+			
+			Log.e("GraphicDetailsActivity", "mFilePath======" + mFilePath);
 			
 			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
 			Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1280);// 最长边限制为1280

@@ -437,7 +437,9 @@
         </activity>
         <activity
             android:name="com.biju.function.AddNewPartyActivity"
-            android:label="@string/title_activity_add_new_party" >
+            android:label="@string/title_activity_add_new_party" 
+            android:launchMode="singleTask"
+            >
         </activity>
         <activity
             android:name="com.biju.function.AddFriends2Activity"

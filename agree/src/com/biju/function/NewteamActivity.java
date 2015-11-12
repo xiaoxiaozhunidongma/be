@@ -18,6 +18,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -92,7 +93,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private RelativeLayout mNewTeam_OK_layout;
 	private TextView mNewTeam_OK;
 	private List<Group_User> Group_UserList = new ArrayList<Group_User>();
-	private List<String> mTeamFriendsList = new ArrayList<String>();
+	private List<String> mTeamFriendsList=new ArrayList<String>();
+	private int reUploadNum=3;
+	private int reUploadNum1=3;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -114,17 +117,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		DisplayMetrics();
 	}
 
-	@SuppressWarnings("unchecked")
-	@Override
-	protected void onRestart() {
-		Interface();
-		SharedPreferences TeamFriends_sp = getSharedPreferences("TeamFriends",0);
-		boolean addTeamFriends = TeamFriends_sp.getBoolean("AddTeamFriends",false);
-		if (addTeamFriends) {
-			mTeamFriendsList = SdPkUser.getTeamFriendsList();
-		}
-		super.onRestart();
-	}
 
 	private void DisplayMetrics() {
 		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
@@ -146,6 +138,12 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					mNewTeam_OK_layout.setEnabled(true);
 					mNewTeam_OK.setEnabled(true);
 					SdPkUser.setRefreshTeam(true);
+					
+					SharedPreferences TeamFriends_sp=getSharedPreferences("TeamFriends", 0);
+					Editor editor=TeamFriends_sp.edit();
+					editor.putBoolean("AddTeamFriends", false);
+					editor.commit();
+					
 					finish();
 					toast();
 				}
@@ -256,10 +254,18 @@ public class NewteamActivity extends Activity implements OnClickListener {
 										final ChatManager chatManager = ChatManager.getInstance();
 										chatManager.registerConversation(conversation);// 注册对话
 										group.setEm_id(conversation.getConversationId());// Em_id赋值传服务器
-										// 上传OSS
-										OSSupload(ossData, bitmap2Bytes, uUid);
+										SharedPreferences TeamFriends_sp=getSharedPreferences("TeamFriends", 0);
+										boolean addteam=TeamFriends_sp.getBoolean("AddTeamFriends", false);
+										if(addteam){
+											// 上传OSS
+											OSSupload(ossData, bitmap2Bytes, uUid);
+										}else {
+											// 上传OSS
+											OSSupload1(ossData, bitmap2Bytes, uUid);
+										}
 									}
 								}
+
 							});
 				}
 			}
@@ -346,12 +352,13 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			Log.e("Demo", "choose file error!", e);
 		}
 	}
-
-	private void OSSupload(OSSData ossData, byte[] data, String UUid) {
-		ossData = ossService.getOssData(sampleBucket, UUid);
-		ossData.setData(data, "jpg"); // 指定需要上传的数据和它的类型
+	
+	private void OSSupload1(OSSData ossData,byte[] bitmap2Bytes, String uUid) {
+		ossData = ossService.getOssData(sampleBucket, uUid);
+		ossData.setData(bitmap2Bytes, "jpg"); // 指定需要上传的数据和它的类型
 		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
 		ossData.uploadInBackground(new SaveCallback() {
+
 			@Override
 			public void onSuccess(String objectKey) {
 				Log.e("NewteamActivity", "图片上传成功");
@@ -362,14 +369,63 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						// myAdapter.notifyDataSetChanged();
 					}
 				});
-
+				reUploadNum=3;
 				group.setAvatar_path(objectKey);
 				// 创建CreatGroup
 				Group_User group_User = new Group_User();
 				group_User.setFk_user(sD_pk_user);
 				group_User.setRole(1);
-				Group_UserList.add(group_User);
-				if (mTeamFriendsList.size() > 0) {
+				group.setStatus(1);
+				Group_User[] members = { group_User };
+				CreateGroup creatGroup = new CreateGroup(members, group);
+				Log.e("NewteamActivity", "group:" + group.toString());
+				cregrouInter.createGroup(NewteamActivity.this, creatGroup);// 测试
+			}
+
+			@Override
+			public void onProgress(String objectKey, int byteCount,int totalSize) {
+				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
+			}
+
+			@Override
+			public void onFailure(String objectKey, OSSException ossException) {
+				Log.e("NewteamActivity", "图片上传失败" + ossException.toString());
+				if(reUploadNum>0){
+					sendMessageToJerryFromTom();//递归模式调用自身
+					Log.e("NewteamActivity", "没有好友的图片上传失败,进行第" + reUploadNum+"次上传图片");
+					reUploadNum--;
+				}
+			}
+		});
+	}
+
+	private void OSSupload(OSSData ossData, byte[] data, String UUid) {
+		ossData = ossService.getOssData(sampleBucket, UUid);
+		ossData.setData(data, "jpg"); // 指定需要上传的数据和它的类型
+		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
+		ossData.uploadInBackground(new SaveCallback() {
+
+			@Override
+			public void onSuccess(String objectKey) {
+				Log.e("NewteamActivity", "图片上传成功");
+				Log.e("NewteamActivity", "objectKey==" + objectKey);
+				// list.add("http://picstyle.beagree.com/"+objectKey);
+				runOnUiThread(new Runnable() {
+					public void run() {
+						// myAdapter.notifyDataSetChanged();
+					}
+				});
+				reUploadNum1=3;
+				mTeamFriendsList = SdPkUser.getTeamFriendsList();
+				Log.e("NewteamActivity", "mTeamFriendsList的长度222222222===="+ mTeamFriendsList.size());
+				if(mTeamFriendsList.size()>0){
+					group.setAvatar_path(objectKey);
+					Log.e("NewteamActivity", "进入1111111111======" );
+					// 创建CreatGroup
+					Group_User group_User = new Group_User();
+					group_User.setFk_user(sD_pk_user);
+					group_User.setRole(1);
+					Group_UserList.add(group_User);
 					for (int i = 0; i < mTeamFriendsList.size(); i++) {
 						String pk_user = mTeamFriendsList.get(i);
 						Group_User group_User1 = new Group_User();
@@ -387,13 +443,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					CreateGroup creatGroup = new CreateGroup(members, group);
 					Log.e("NewteamActivity", "group:" + group.toString());
 					cregrouInter.createGroup(NewteamActivity.this, creatGroup);// 测试
-				} else {
-					Group_User[] members = { group_User };
-					CreateGroup creatGroup = new CreateGroup(members, group);
-					Log.e("NewteamActivity", "group:" + group.toString());
-					cregrouInter.createGroup(NewteamActivity.this, creatGroup);// 测试
 				}
-
 			}
 
 			@Override
@@ -404,6 +454,11 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
 				Log.e("NewteamActivity", "图片上传失败" + ossException.toString());
+				if(reUploadNum1>0){
+					sendMessageToJerryFromTom();//递归模式调用自身
+					Log.e("NewteamActivity", "有好友的图片上传失败,进行第" + reUploadNum1+"次上传图片");
+					reUploadNum1--;
+				}
 			}
 		});
 	}
