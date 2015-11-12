@@ -577,14 +577,14 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
 				Log.e("PhotoActivity.this", "上传失败，请重新上传" + ossException.toString());
-				new Handler().post(new Runnable() {
-					
-					@Override
-					public void run() {
-						Toast.makeText(PhotoActivity.this, "上传失败，请重新上传",Toast.LENGTH_SHORT).show();
-					}
-				});
-				
+//				new Handler().post(new Runnable() {
+//					
+//					@Override
+//					public void run() {
+//						Toast.makeText(PhotoActivity.this, "上传失败，请重新上传",Toast.LENGTH_SHORT).show();
+//					}
+//				});
+//				
 			}
 		});
 	}
