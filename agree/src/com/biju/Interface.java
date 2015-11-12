@@ -60,9 +60,9 @@ public class Interface {
 
 	//更改小组名称
 	String kChangeGroupName = "312";
-	// 获取聚会的图文详情
+	// 查看图片评论列表接口
 	String KCheckPicReview = "66";
-	// 获取聚会的图文详情
+	// 添加图片评论接口
 	String KAddPicReview = "65";
 	// 获取聚会的图文详情
 	String KReadGraphic = "418";
@@ -351,6 +351,40 @@ public class Interface {
 	// });
 	// }
 
+	//添加图片评论接口	
+	private void AddPicReviewPost(Context context, Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError52(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone52(response);
+			}
+		});
+	}
+	//查看图片评论列表接口
+	private void CheckPicReviewPost(Context context, Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError53(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone53(response);
+			}
+		});
+	}
 	// 更改小组的名称
 	private void ChangeGroupNamePost(Context context, Map<String, String> params) {
 		
@@ -1225,6 +1259,14 @@ public class Interface {
 	// volleyPost(context,per);
 	// }
 
+	// 添加图片评论接口
+	public void AddPicReview(Context context, Photo photo) {
+		AddPicReviewPost(context, packParams(photo, KAddPicReview));
+	}
+	// 查看图片评论列表接口
+	public void CheckPicReview(Context context, Photo Photo) {
+		CheckPicReviewPost(context, packParams(Photo, KCheckPicReview));
+	}
 	// 更改小组名称
 	public void ChangeGroupName(Context context, Group group) {
 		ChangeGroupNamePost(context, packParams(group, kChangeGroupName));
@@ -1502,6 +1544,10 @@ public class Interface {
 	// 接口部分
 	// private static UserInterface listener;
 
+	// 添加图片评论接口
+	private static AddPicReviewListenner addPicReviewListenner;
+	// 查看图片评论列表接口
+	private static CheckPicReviewListenner checkPicReviewListenner;
 	// 更改小组名称
 	private static ChangeGroupNameListenner changegroupnamelistenner;
 	// 读取小组中所有聚会包含过期
@@ -1573,6 +1619,18 @@ public class Interface {
 	// void defail(Object B);
 	// }
 
+	// 添加图片评论接口
+	public interface AddPicReviewListenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
+	// 查看图片评论列表接口
+	public interface CheckPicReviewListenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
 	// 更改小组名称
 	public interface ChangeGroupNameListenner {
 		void success(String A);
@@ -1886,6 +1944,14 @@ public class Interface {
 	// this.listener=listener;
 	// }
 
+	//添加图片评论接口
+	public void setPostListener(AddPicReviewListenner listener) {
+		this.addPicReviewListenner = listener;
+	}
+	//查看图片评论列表接口
+	public void setPostListener(CheckPicReviewListenner listener) {
+		this.checkPicReviewListenner = listener;
+	}
 	// 更改小组名称
 	public void setPostListener(ChangeGroupNameListenner listener) {
 		this.changegroupnamelistenner = listener;
@@ -2581,5 +2647,21 @@ public class Interface {
 	
 	public static void requestError51(VolleyError error) {
 		changegroupnamelistenner.defail(error);
+	}
+	// 添加图片评论接口
+	public static void requestDone52(String theObject) {
+		addPicReviewListenner.success(theObject);
+	}
+	
+	public static void requestError52(VolleyError error) {
+		addPicReviewListenner.defail(error);
+	}
+	//查看图片评论列表接口
+	public static void requestDone53(String theObject) {
+		checkPicReviewListenner.success(theObject);
+	}
+	
+	public static void requestError53(VolleyError error) {
+		checkPicReviewListenner.defail(error);
 	}
 }

@@ -33,11 +33,13 @@ import com.biju.R.id;
 import com.biju.R.layout;
 import com.biju.R.menu;
 import com.biju.function.GroupActivity;
+import com.example.imageselected.photo.SelectPhotoActivity;
 import com.fragment.PhotoFragment2.GridAdapter.ViewHolder;
 import com.github.volley_examples.utils.GsonUtils;
 
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Context;
@@ -108,6 +110,8 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 	private TextView tv_partyname;
 	private TextView tv_partytime;
 	private TextView tv_partyphotonum;
+	private Bitmap convertToBitmap;
+	private Bitmap limitLongScaleBitmap;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -410,11 +414,14 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 	}
 	
 	private void checkphoto() {
-		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
-		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
-		getAlbum.setType(IMAGE_TYPE);
-		startActivityForResult(getAlbum, IMAGE_CODE);
+//		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
+//		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
+//		getAlbum.setType(IMAGE_TYPE);
 //		startActivityForResult(getAlbum, IMAGE_CODE);
+		
+		Intent getAlbum = new Intent(this, SelectPhotoActivity.class);
+		getAlbum.putExtra("SelectType", 0);
+		startActivityForResult(getAlbum, IMAGE_CODE);
 	}
 
 	@Override
@@ -423,53 +430,55 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		Log.e("PhotoActivity.this", "onActivityResult");
 		Log.e("PhotoActivity.this", "requestCode==="+requestCode);
 		Log.e("PhotoActivity.this", "data==="+data);
-		if (requestCode != 110 || data == null){
-			return;
-		}
-			Uri selectedImage = data.getData();
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Cursor cursor = PhotoActivity.this.getContentResolver().query(
-					selectedImage, filePathColumn, null, null, null);
-			if(cursor!=null){
-				cursor.moveToFirst();
-				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-				mFilePath = cursor.getString(columnIndex);
-				cursor.close();
-				cursor = null;
-				
-			}else{
-				File file = new File(selectedImage.getPath());
-				mFilePath=file.getAbsolutePath();
-				if (!file.exists()) {
-					Toast toast = Toast.makeText(PhotoActivity.this, "找不到图片", Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
-					return;
-				}
-			}
-			Log.e("PhotoActivity.this", "mFilePath======"+mFilePath);
-//				Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
-//				Bitmap bmp = Bimp.revitionImageSize(mFilePath);
-			//这个mFilePath不可以用缩略图路径
-//				Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
+//		if (requestCode != 110 || data == null){
+//			return;
+//		}
+//			Uri selectedImage = data.getData();
+//			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//			Cursor cursor = PhotoActivity.this.getContentResolver().query(
+//					selectedImage, filePathColumn, null, null, null);
+//			if(cursor!=null){
+//				cursor.moveToFirst();
+//				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//				mFilePath = cursor.getString(columnIndex);
+//				cursor.close();
+//				cursor = null;
+//				
+//			}else{
+//				File file = new File(selectedImage.getPath());
+//				mFilePath=file.getAbsolutePath();
+//				if (!file.exists()) {
+//					Toast toast = Toast.makeText(PhotoActivity.this, "找不到图片", Toast.LENGTH_SHORT);
+//					toast.setGravity(Gravity.CENTER, 0, 0);
+//					toast.show();
+//					return;
+//				}
+//			}
+//			Log.e("PhotoActivity.this", "mFilePath======"+mFilePath);
+////				Bitmap bmp = Utils.decodeSampledBitmap(mFilePath, 2);
+////				Bitmap bmp = Bimp.revitionImageSize(mFilePath);
+//			//这个mFilePath不可以用缩略图路径
+////				Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
+		
+		@SuppressWarnings("unchecked")
+		ArrayList<String> mSelectedImageList = (ArrayList<String>) data.getSerializableExtra("mSelectedImageList");
+		mFilePath=mSelectedImageList.get(0);
+		Log.e("PhotoActivity", "mSelectedImageList.size()======" + mSelectedImageList.size());
+		Log.e("PhotoActivity", "mFilePath======" + mFilePath);
+		
+		Log.e("PhotoActivity", "mFilePath======" + mFilePath);
 			
-		switch (requestCode) {
-		case 110:
 			
 			if(listphotos.size()==0){
 				Log.e("PhotoActivity.this", "上传第一张图片");
-//				upload(mFilePath);
-				//开始Oss上传
-				Bitmap convertToBitmap = null;
 				try {
 					convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
 				} catch (IOException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//上传原图
-				Bitmap limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-						convertToBitmap, 1080);// 最长边限制为1080
+				limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
+						convertToBitmap, 1080);
 				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(limitLongScaleBitmap);
 				UUID randomUUID = UUID.randomUUID();
 				uUid = randomUUID.toString();
@@ -506,10 +515,26 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 				}
 			}
 		
-			break;
-		}
 	
 	}
+	
+//	@Override
+//	protected void onDestroy() {
+//		// TODO Auto-generated method stub
+//		Log.e("PhotoActivity", "onDestroy()方法被调用");
+//		if(convertToBitmap!=null){
+//			if(!convertToBitmap.isRecycled()){
+//				convertToBitmap.recycle();
+//			}
+//		}
+//		if(limitLongScaleBitmap!=null){
+//			if(!limitLongScaleBitmap.isRecycled()){
+//				limitLongScaleBitmap.recycle();
+//			}
+//		}
+//	       System.gc();  //提醒系统及时回收
+//		super.onDestroy();
+//	}
 	
 	public String getString(String s) {
 		String path = null;
@@ -551,8 +576,15 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
-				Log.e("PhotoActivity.this", "图片上传失败" + ossException.toString());
-				Toast.makeText(PhotoActivity.this, "上传失败，请重新上传",Toast.LENGTH_SHORT).show();
+				Log.e("PhotoActivity.this", "上传失败，请重新上传" + ossException.toString());
+				new Handler().post(new Runnable() {
+					
+					@Override
+					public void run() {
+						Toast.makeText(PhotoActivity.this, "上传失败，请重新上传",Toast.LENGTH_SHORT).show();
+					}
+				});
+				
 			}
 		});
 	}
