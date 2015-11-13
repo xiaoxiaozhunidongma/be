@@ -584,7 +584,6 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 //						Toast.makeText(PhotoActivity.this, "上传失败，请重新上传",Toast.LENGTH_SHORT).show();
 //					}
 //				});
-//				
 			}
 		});
 	}
