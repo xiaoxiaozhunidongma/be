@@ -63,6 +63,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
@@ -216,7 +217,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		
 		tochatname = (TextView) findViewById(R.id.name);
 		mTv_detail = (TextView) findViewById(R.id.tv_detail);
-		mTv_detail.setOnClickListener(this);// 详情
+		mTv_detail.setOnClickListener(this);// 成员
 		findViewById(R.id.rela_more).setOnClickListener(this);
 		findViewById(R.id.tv_back).setOnClickListener(this);
 		picture_source_rela = (RelativeLayout) findViewById(R.id.picture_source_rela);
@@ -607,6 +608,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 
 	//查看成员
 	private void tv_detail() {
+		SdPkUser.setGetChatRoomOpen(false);//点击聊天室成员列表时传false
 		mTv_detail.setText("关闭");
 		mLeanChatBackground.setVisibility(View.VISIBLE);
 		Animation animation=new AlphaAnimation(0.0f,1.0f);
@@ -843,6 +845,8 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 			return;
 		}
 		ChatManager.setCurrentChattingConvid(conversation.getConversationId());
+		SdPkUser.setGetSource(2);//当好友界面销毁时从新传当前的标签
+		 Log.e("ChatActivityLean", "进入了onResume()========");
 	}
 
 	@Override

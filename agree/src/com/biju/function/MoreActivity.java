@@ -18,9 +18,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.provider.CalendarContract.Reminders;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
+import android.view.animation.TranslateAnimation;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -159,13 +163,6 @@ public class MoreActivity extends Activity implements OnClickListener {
 
 		findViewById(R.id.More_title_cancel_layout).setOnClickListener(this);
 		findViewById(R.id.More_title_cancel).setOnClickListener(this);// È¡Ïû
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.more, menu);
-		return true;
 	}
 
 	@Override
@@ -375,7 +372,11 @@ public class MoreActivity extends Activity implements OnClickListener {
 	}
 
 	private void More_title_cancel() {
+		PartyDetailsActivity.partyDetailsBackground.PartyDetailsBackground();
 		finish();
+		Intent intent=new Intent(MoreActivity.this, PartyDetailsActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.top_1_item, R.anim.bottom_1_item);
 	}
 
 	private void more_cancel_layout() {
@@ -388,5 +389,16 @@ public class MoreActivity extends Activity implements OnClickListener {
 			moreinterface.userCancleParty(MoreActivity.this, more_party);
 		}
 	}
-
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			More_title_cancel();
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

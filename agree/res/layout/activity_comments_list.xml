@@ -76,7 +76,7 @@
         android:layout_height="70.0dp"
         android:layout_below="@+id/Comments_list_title_layout"
         android:layout_centerHorizontal="true"
-        android:background="#ffffff"
+        android:background="#88ffffff"
         android:orientation="horizontal" >
 
         <RelativeLayout

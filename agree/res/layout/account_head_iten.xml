@@ -52,6 +52,20 @@
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
             android:background="#aaaaaa" />
+
+        <TextView
+            android:id="@+id/TouchBalanceUnArr_money"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/TouchBalanceMoney"
+            android:layout_centerHorizontal="true"
+            android:text="TextView"
+            android:gravity="center"
+            android:textSize="13.0sp"
+            android:textColor="#959595"
+            android:layout_marginTop="10.0dp"
+             />
+
     </RelativeLayout>
 
 </RelativeLayout>

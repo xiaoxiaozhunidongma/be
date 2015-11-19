@@ -9,7 +9,6 @@ import leanchatlib.model.UserInfo;
 import android.app.Application;
 import android.content.Context;
 import android.util.Log;
-import android.widget.Toast;
 import cn.jpush.android.api.JPushInterface;
 
 import com.BJ.photo.Res;
@@ -36,8 +35,6 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.ImageScaleType;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
-import com.tencent.mm.sdk.openapi.IWXAPI;
-import com.tencent.mm.sdk.openapi.WXAPIFactory;
 
 public class MyApplication extends Application {
 
@@ -138,7 +135,7 @@ public class MyApplication extends Application {
 				.build();
 		ImageLoader.getInstance().init(config);
 		// 地图初始化
-		SDKInitializer.initialize(this);
+//		SDKInitializer.initialize(this);
 		// 极光推送
 		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
 		JPushInterface.init(this); // 初始化 JPush

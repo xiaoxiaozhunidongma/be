@@ -1,8 +1,6 @@
 package com.biju.chatroom;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-import java.util.List;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -13,6 +11,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -30,11 +30,10 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.biju.function.SlidingActivity;
 import com.example.testleabcloud.ChatActivityLean;
-import com.fragment.FriendsFragment;
-import com.fragment.HomeFragment;
 
-public class MembersChatActivity extends Activity implements OnClickListener{
+public class MembersChatActivity extends Activity implements OnClickListener,OnItemClickListener{
 
 	private ListView mMembersChatListview;
 	private String beginStr = "http://picstyle.beagree.com/";
@@ -85,6 +84,7 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 		mMembersChatListview = (ListView) findViewById(R.id.MembersChatListview);
 		adapter = new MyMemberChatAdapter();
 		mMembersChatListview.setAdapter(adapter);
+		mMembersChatListview.setOnItemClickListener(this);
 	}
 
 	class ViewHolder{
@@ -269,11 +269,29 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			MembersChatBackLayout();
+			MembersChatOKLayout();
 			break;
 		default:
 			break;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		SdPkUser.setGetSource(4);
+		User user = membersChatList.get(position);
+		boolean isOpen=SdPkUser.GetChatRoomOpen;
+		if(isOpen){
+			PersonalDataActivity.getClose.Close();
+			PersonalDataActivity.chatRoomRefreshData.ChatRoomRefreshData(user);
+		}else {
+			ChatActivityLean.memberChat.MemberChat();//打开好友信息界面时改变字
+			SdPkUser.setChatRoomUser(user);
+			Intent intent=new Intent(MembersChatActivity.this, PersonalDataActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.leftin_item, R.anim.leftout_item);
+		}
+		finish();
 	}
 }

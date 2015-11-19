@@ -12,6 +12,8 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.animation.AlphaAnimation;
+import android.view.animation.Animation;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
@@ -90,6 +92,10 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 	private List<ImageText> GraphicNumberList = new ArrayList<ImageText>();
 	private RelativeLayout mPartyDetailsPartyAddressLayout;
 	private RelativeLayout mPartyDetailsPartyGraphicLayout;
+	private ImageView mPartyDetailsPartyAddressImage;
+	private ImageView mPartyDetailsPartyGraphicImage;
+	private RelativeLayout mPartyDetailsBackground;
+	public static GetPartyDetailsBackground partyDetailsBackground;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -107,6 +113,22 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 		initGraphic();
 		initGetWeChatPay();// 微信支付
 		initAliPay();// 支付宝支付
+		initPartyDetailsBackground();//覆盖色回调
+	}
+
+	private void initPartyDetailsBackground() {
+		GetPartyDetailsBackground partyDetailsBackground=new GetPartyDetailsBackground(){
+
+			@Override
+			public void PartyDetailsBackground() {
+				mPartyDetailsBackground.setVisibility(View.GONE);
+				Animation animation=new AlphaAnimation(1.0f,0.0f);
+				animation.setDuration(500);
+				mPartyDetailsBackground.startAnimation(animation);
+			}
+			
+		};
+		this.partyDetailsBackground=partyDetailsBackground;
 	}
 
 	private void initGraphic() {
@@ -343,6 +365,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 				} else {
 					mPartyDetailsPartyGraphicNumber.setText("无更多详情");
 					mPartyDetailsPartyGraphicLayout.setEnabled(false);
+					mPartyDetailsPartyGraphicImage.setVisibility(View.GONE);
 				}
 			}
 
@@ -381,6 +404,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 			if (allParty.getLocation() == null) {
 				mPartyDetailsPartyAddressLayout.setEnabled(false);
 				mPartyDetailsPartyAddress.setText("无地址信息");// 显示聚会地点
+				mPartyDetailsPartyAddressImage.setVisibility(View.GONE);//没有地址则隐藏箭头
 			} else {
 				mPartyDetailsPartyAddressLayout.setEnabled(true);
 				mPartyDetailsPartyAddress.setText(allParty.getLocation());// 显示聚会地点
@@ -418,6 +442,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 			if (oneParty.getLocation() == null) {
 				mPartyDetailsPartyAddressLayout.setEnabled(false);
 				mPartyDetailsPartyAddress.setText("无地址信息");// 显示聚会地点
+				mPartyDetailsPartyAddressImage.setVisibility(View.GONE);//没有地址则隐藏箭头
 			} else {
 				mPartyDetailsPartyAddressLayout.setEnabled(true);
 				mPartyDetailsPartyAddress.setText(oneParty.getLocation());// 显示聚会地点
@@ -434,6 +459,10 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 	}
 
 	private void initUI() {
+		mPartyDetailsBackground = (RelativeLayout) findViewById(R.id.PartyDetailsBackground);//覆盖色布局
+		
+		mPartyDetailsPartyGraphicImage = (ImageView) findViewById(R.id.PartyDetailsPartyGraphicImage);//有图文信息传时候才出现的箭头
+		mPartyDetailsPartyAddressImage = (ImageView) findViewById(R.id.PartyDetailsPartyAddressImage);//有地址信息才出现的箭头
 		mPartyDetailsPayWayText = (TextView) findViewById(R.id.PartyDetailsPayWayText);// 付款方式
 		mPartyDetailsPartyName = (TextView) findViewById(R.id.PartyDetailsPartyName);// 聚会名称
 		mPartyDetailsPartyStartTime = (TextView) findViewById(R.id.PartyDetailsPartyStartTime);// 聚会时间
@@ -598,10 +627,23 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 				readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 				Toast();
 			} else if (3 == mPay_type) {
+				//覆盖色渐变
+				mPartyDetailsBackground.setVisibility(View.VISIBLE);
+				Animation animation=new AlphaAnimation(0.0f,1.0f);
+				animation.setDuration(500);
+				mPartyDetailsBackground.startAnimation(animation);
+				
 				Intent intent = new Intent(PartyDetailsActivity.this,PayBaseActivity.class);
 				intent.putExtra(IConstant.Paymount, mPay_amount);
 				intent.putExtra(IConstant.Payname, mPayName);
+				if (userAll) {
+					intent.putExtra(IConstant.UserAllUoreParty, allParty);
+					intent.putExtra(IConstant.UserAll, true);
+				} else {
+					intent.putExtra(IConstant.MoreParty, oneParty);
+				}
 				startActivity(intent);
+				overridePendingTransition(R.anim.top_item, R.anim.bottom_item);//从下往上动画
 			}
 		}
 	}
@@ -619,6 +661,12 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 	}
 
 	private void PartyDetails_more() {
+		//覆盖色渐变
+		mPartyDetailsBackground.setVisibility(View.VISIBLE);
+		Animation animation=new AlphaAnimation(0.0f,1.0f);
+		animation.setDuration(500);
+		mPartyDetailsBackground.startAnimation(animation);
+		
 		Intent intent = new Intent(PartyDetailsActivity.this,MoreActivity.class);
 		if (userAll) {
 			intent.putExtra(IConstant.UserAllUoreParty, allParty);
@@ -627,6 +675,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 			intent.putExtra(IConstant.MoreParty, oneParty);
 		}
 		startActivity(intent);
+		overridePendingTransition(R.anim.top_item, R.anim.bottom_item);//从下往上动画
 	}
 
 	private void PartyDetails_back() {
@@ -650,4 +699,10 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 	public interface GetAliPay {
 		void AliPay();
 	}
+	
+	//覆盖色接口
+	public interface GetPartyDetailsBackground{
+		void PartyDetailsBackground();
+	}
+	
 }

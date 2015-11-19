@@ -62,8 +62,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_above="@+id/Schedule_new_party_layout"
-            android:layout_centerHorizontal="true"
-            android:visibility="gone" >
+            android:layout_centerHorizontal="true" >
 
             <RelativeLayout
                 android:id="@+id/Schedule_prompt"
@@ -78,7 +77,7 @@
                     android:layout_height="50.0dp"
                     android:layout_centerHorizontal="true"
                     android:layout_centerVertical="true"
-                    android:src="@drawable/file" />
+                    android:src="@drawable/calender" />
 
                 <TextView
                     android:id="@+id/textView1"
@@ -88,7 +87,7 @@
                     android:layout_centerHorizontal="true"
                     android:layout_marginTop="70.0dp"
                     android:text="这个小组还没有任何的活动 点"
-                    android:textColor="#c9c9c9"
+                    android:textColor="#b9b9b9"
                     android:textSize="14.0sp" />
 
                 <TextView
@@ -99,7 +98,7 @@
                     android:layout_centerHorizontal="true"
                     android:gravity="center"
                     android:text="击这里来创建一个活动吧"
-                    android:textColor="#c9c9c9"
+                    android:textColor="#b9b9b9"
                     android:textSize="14.0sp" />
             </RelativeLayout>
         </RelativeLayout>

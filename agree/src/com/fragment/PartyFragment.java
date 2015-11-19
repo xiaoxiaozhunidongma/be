@@ -87,7 +87,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 	public void onResume() {
 		SharedPreferences refresh_sp=getActivity().getSharedPreferences(IConstant.AddRefresh, 0);
 		boolean isaddrefresh=refresh_sp.getBoolean(IConstant.IsAddRefresh, false);
-		Log.e("PartyFragment", "进入了onCreateView========"+isaddrefresh);
+		Log.e("PartyFragment", "进入了onResume========"+isaddrefresh);
 		if(isaddrefresh)
 		{
 			initParty();
@@ -102,11 +102,11 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 
 			@Override
 			public void success(String A) {
+				Log.e("PartyFragment", "读取出用户的所有日程====" + A);
 				userAllPartieList.clear();
 				UserAllPartyback allPartyback = GsonUtils.parseJson(A,UserAllPartyback.class);
 				int status = allPartyback.getStatusMsg();
 				if (status == 1) {
-					Log.e("PartyFragment", "读取出用户的所有日程====" + A);
 					List<UserAllParty> AllList = allPartyback.getReturnData();
 					if (AllList.size() > 0) {
 						for (int i = 0; i < AllList.size(); i++) {
@@ -119,13 +119,12 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 							mTab_party_swipe_refresh.setVisibility(View.VISIBLE);
 							mParty_listView.setVisibility(View.VISIBLE);
 							adapter.notifyDataSetChanged();
-						} else {
-							mTab_party_prompt_layout.setVisibility(View.VISIBLE);
-							mTab_party_swipe_refresh.setVisibility(View.GONE);
-							mParty_listView.setVisibility(View.GONE);
-						}
+						} 
 					}
 					Log.e("PartyFragment", "userAllPartieList.size()====="+userAllPartieList.size());
+				}else if(status==0){
+					mTab_party_prompt_layout.setVisibility(View.VISIBLE);
+					mParty_listView.setVisibility(View.GONE);
 				}
 			}
 

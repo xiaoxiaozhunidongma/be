@@ -2,15 +2,14 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#55000000"
     tools:context=".MoreActivity" >
 
     <RelativeLayout
         android:id="@+id/MoreLayout"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" >
+        android:layout_height="300.0dp"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true" >
 
         <RelativeLayout
             android:id="@+id/More_title_cancel_layout"
@@ -22,9 +21,6 @@
             android:layout_marginLeft="10.0dp"
             android:layout_marginRight="10.0dp"
             android:background="#ffffff" >
-
-            <!-- android:background="@drawable/more_corners" -->
-            <!-- 圆角 -->
 
             <TextView
                 android:id="@+id/More_title_cancel"
@@ -51,10 +47,7 @@
             android:layout_marginRight="10.0dp"
             android:background="#ffffff"
             android:orientation="vertical"
-            android:visibility="gone"
-             >
-
-            <!-- android:background="@drawable/more_corners" -->
+            android:visibility="gone" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -86,8 +79,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="45.0dp" >
 
-                <!-- android:textColor="#ff0000" -->
-
                 <TextView
                     android:id="@+id/More_creator_cancel"
                     android:layout_width="match_parent"
@@ -108,8 +99,6 @@
                 android:id="@+id/More_creator_share_layout"
                 android:layout_width="match_parent"
                 android:layout_height="45.0dp" >
-
-                <!-- android:textColor="#0072e3" -->
 
                 <TextView
                     android:id="@+id/More_creator_shareCircle"
@@ -177,10 +166,7 @@
             android:layout_marginLeft="10.0dp"
             android:layout_marginRight="10.0dp"
             android:background="#ffffff"
-            android:orientation="vertical"
-             >
-
-            <!-- android:background="@drawable/more_corners" -->
+            android:orientation="vertical" >
 
             <RelativeLayout
                 android:layout_width="match_parent"
@@ -211,7 +197,8 @@
             <RelativeLayout
                 android:id="@+id/More_member_sharecircle_layout"
                 android:layout_width="match_parent"
-                android:layout_height="45.0dp" >
+                android:layout_height="45.0dp"
+                 >
 
                 <TextView
                     android:id="@+id/More_member_sharecircle"
@@ -228,8 +215,6 @@
                     android:textColor="#535353"
                     android:textSize="15.0sp" />
             </RelativeLayout>
-
-            <!-- android:textColor="#0072e3" -->
 
             <RelativeLayout
                 android:layout_width="match_parent"

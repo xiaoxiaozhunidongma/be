@@ -226,8 +226,25 @@ public class ChatMessageAdapter extends BaseAdapter {
 			@Override
 			public void onClick(View v) {
 				String Click_user=user.getUsername();
-				boolean source=SdPkUser.GetSource;
-				if(source){
+				int source=SdPkUser.GetSource;
+				switch (source) {
+				case 1:
+					//群聊来的
+					List<Group_ReadAllUser> Group_AllUser=SdPkUser.getHomeClickUser();
+					for (int i = 0; i < Group_AllUser.size(); i++) {
+						Group_ReadAllUser Group_user=Group_AllUser.get(i);
+						Integer pk_user=Group_user.getPk_user();
+						if(Click_user.equals(String.valueOf(pk_user))){
+							Integer sd_pk_user=SdPkUser.getsD_pk_user();
+							if(!(Click_user.equals(String.valueOf(sd_pk_user)))){
+								SdPkUser.setGroupChatUser(Group_user);
+								CommonFragment.getOpen.Open();
+								GroupActivity.getGroupChat.GroupChat();
+							}
+						}
+					}
+					break;
+				case 2:
 					//聊天室来的
 					List<User> AllUser=SdPkUser.getUser();
 					for (int i = 0; i < AllUser.size(); i++) {
@@ -244,21 +261,9 @@ public class ChatMessageAdapter extends BaseAdapter {
 							}
 						}
 					}
-				}else {
-					//群聊来的
-					List<Group_ReadAllUser> Group_AllUser=SdPkUser.getHomeClickUser();
-					for (int i = 0; i < Group_AllUser.size(); i++) {
-						Group_ReadAllUser Group_user=Group_AllUser.get(i);
-						Integer pk_user=Group_user.getPk_user();
-						if(Click_user.equals(String.valueOf(pk_user))){
-							Integer sd_pk_user=SdPkUser.getsD_pk_user();
-							if(!(Click_user.equals(String.valueOf(sd_pk_user)))){
-								SdPkUser.setGroupChatUser(Group_user);
-								CommonFragment.getOpen.Open();
-								GroupActivity.getGroupChat.GroupChat();
-							}
-						}
-					}
+					break;
+				default:
+					break;
 				}
 				Log.e("============", " 获取到当前的头像ID==="+user.getUsername());
 			}

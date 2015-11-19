@@ -220,15 +220,16 @@ public class SdPkUser {
 	}
 
 	//判断是从群聊来的还是聊天室来的
-	public static boolean GetSource;
-	public static boolean isGetSource() {
+	public static int GetSource;
+	
+	public static int getGetSource() {
 		return GetSource;
 	}
 
-	public static void setGetSource(boolean getSource) {
+	public static void setGetSource(int getSource) {
 		GetSource = getSource;
 	}
-	
+
 	//新建聚会传pk_party
 	public static String Getpk_party;
 	public static String getGetpk_party() {
@@ -268,5 +269,45 @@ public class SdPkUser {
 	public static void setGetGroup_ReadAllUser(
 			List<Group_ReadAllUser> getGroup_ReadAllUser) {
 		GetGroup_ReadAllUser = getGroup_ReadAllUser;
+	}
+	
+	//群聊好友信息界面传是否打开信息
+	public static boolean GetOpen;
+	public static boolean isGetOpen() {
+		return GetOpen;
+	}
+
+	public static void setGetOpen(boolean getOpen) {
+		GetOpen = getOpen;
+	}
+	
+	//群聊传对象给好友信息界面
+	public static Group_ReadAllUser group_ReadAllUser;
+	public static Group_ReadAllUser getGroup_ReadAllUser() {
+		return group_ReadAllUser;
+	}
+
+	public static void setGroup_ReadAllUser(Group_ReadAllUser group_ReadAllUser) {
+		SdPkUser.group_ReadAllUser = group_ReadAllUser;
+	}
+	
+	//聊天室好友信息界面传是否打开信息
+	public static boolean GetChatRoomOpen;
+	public static boolean isGetChatRoomOpen() {
+		return GetChatRoomOpen;
+	}
+
+	public static void setGetChatRoomOpen(boolean getChatRoomOpen) {
+		GetChatRoomOpen = getChatRoomOpen;
+	}
+	
+	//聊天室传对象给好友信息界面
+	public static User ChatRoomUser;
+	public static User getChatRoomUser() {
+		return ChatRoomUser;
+	}
+
+	public static void setChatRoomUser(User chatRoomUser) {
+		ChatRoomUser = chatRoomUser;
 	}
 }

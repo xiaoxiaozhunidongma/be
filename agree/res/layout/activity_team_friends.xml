@@ -2,14 +2,18 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TeamFriendsActivity" >
+    tools:context=".TeamFriendsActivity" 
+    android:background="#efefef"
+    >
 
     <RelativeLayout
         android:id="@+id/TeamFriendsTitleLayout"
         android:layout_width="match_parent"
         android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" >
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+         >
 
         <TextView
             android:id="@+id/textView1"
@@ -50,12 +54,10 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/TeamFriendsOK"
             android:layout_alignBottom="@+id/TeamFriendsOK"
-            android:layout_marginRight="25.0dp"
-            android:layout_toLeftOf="@+id/TeamFriendsOK"
+            android:layout_centerHorizontal="true"
             android:text="选择好友"
-            android:textSize="15.0sp"
             android:textColor="@drawable/title_text_color"
-             />
+            android:textSize="15.0sp" />
 
     </RelativeLayout>
 
@@ -72,7 +74,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true" >
+            android:layout_centerHorizontal="true"
+            android:background="#ffffff"
+             >
 
         </ListView>
 

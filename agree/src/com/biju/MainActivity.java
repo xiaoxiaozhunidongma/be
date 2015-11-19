@@ -1,7 +1,5 @@
 package com.biju;
 
-import java.io.File;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 import leanchatlib.controller.ChatManager;
@@ -10,32 +8,24 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.app.FragmentTabHost;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.TabHost.TabSpec;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.BJ.utils.ImageLoaderUtils;
-import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.PicCutter;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
-import com.BJ.utils.homeImageLoaderUtils;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;

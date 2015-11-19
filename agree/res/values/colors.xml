@@ -314,7 +314,7 @@
     <color name="btn_blue_pressed">#0066FF</color>
     <color name="btn_blue_normal">#1e90ff</color>
     
-    <color name="green_2">#0ff3f3</color><!--  00e3e3-->
+    <color name="green_2">#88d4cc</color><!--  00e3e3  0ff3f3-->
     <color name="white">#FFFFFF</color>
     <color name="blue">#0066FF</color>
     <color name="no_color">#00000000</color>

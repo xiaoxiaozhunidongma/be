@@ -28,11 +28,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            android:background="#f0f0f0"
+            android:background="#ffffff"
             android:divider="@null"
             android:orientation="horizontal" >
         </TabWidget>
-        <!-- #dcdcdc -->
+        <!-- #dcdcdc f0f0f0-->
     </LinearLayout>
 
 </android.support.v4.app.FragmentTabHost>

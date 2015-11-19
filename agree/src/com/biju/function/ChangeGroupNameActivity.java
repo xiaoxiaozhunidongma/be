@@ -10,6 +10,7 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -91,6 +92,19 @@ public class ChangeGroupNameActivity extends Activity implements OnClickListener
 
 	private void ChangeGroupNameBack() {
 		finish();
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			ChangeGroupNameBack();
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 }

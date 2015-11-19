@@ -1,10 +1,12 @@
 package com.BJ.javabean;
 
+import java.io.Serializable;
+
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table (name="tre_group_user")
-public class Group_ReadAllUser{
+public class Group_ReadAllUser implements Serializable{
 	@Column
 	private Integer pk_group_user;
 	@Column

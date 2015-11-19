@@ -231,6 +231,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		intent.putExtra("group_group", pk_group);
 		startActivity(intent);
 		overridePendingTransition(R.anim.in_item, R.anim.out_item);
+		SdPkUser.setGetOpen(false);//传值用来判断好友信息界面是否打开
 	}
 
 	public void group_back() {

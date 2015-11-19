@@ -141,7 +141,7 @@
                         android:layout_alignBottom="@+id/PartyDetailsPartyName"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="40.0dp"
-                        android:src="@drawable/groupname" />
+                        android:src="@drawable/grouppartyname" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -179,7 +179,7 @@
                         android:layout_alignBottom="@+id/PartyDetailsPartyStartTime"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="40.0dp"
-                        android:src="@drawable/time" />
+                        android:src="@drawable/partytime" />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -204,7 +204,7 @@
                         android:layout_alignParentLeft="true"
                         android:layout_marginBottom="15.0dp"
                         android:layout_marginLeft="70.0dp"
-                        android:layout_marginRight="35.0dp"
+                        android:layout_marginRight="40.0dp"
                         android:gravity="left|center"
                         android:singleLine="true"
                         android:textColor="#535353"
@@ -217,10 +217,10 @@
                         android:layout_alignBottom="@+id/PartyDetailsPartyAddress"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="40.0dp"
-                        android:src="@drawable/map" />
+                        android:src="@drawable/partyaddress" />
 
                     <ImageView
-                        android:id="@+id/imageView6"
+                        android:id="@+id/PartyDetailsPartyAddressImage"
                         android:layout_width="15.0dp"
                         android:layout_height="15.0dp"
                         android:layout_alignParentRight="true"
@@ -257,10 +257,10 @@
                         android:layout_alignBottom="@+id/PartyDetailsPartyGraphic"
                         android:layout_alignParentLeft="true"
                         android:layout_marginLeft="40.0dp"
-                        android:src="@drawable/oldparty" />
+                        android:src="@drawable/partymore" />
 
                     <ImageView
-                        android:id="@+id/imageView5"
+                        android:id="@+id/PartyDetailsPartyGraphicImage"
                         android:layout_width="15.0dp"
                         android:layout_height="15.0dp"
                         android:layout_alignBottom="@+id/PartyDetailsPartyGraphic"
@@ -317,7 +317,6 @@
                         android:textColor="#55d4cc"
                         android:textSize="30.0sp"
                         android:textStyle="bold" />
-
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -349,7 +348,6 @@
                         android:textColor="#55d4cc"
                         android:textSize="30.0sp"
                         android:textStyle="bold" />
-
                 </RelativeLayout>
             </LinearLayout>
 
@@ -402,6 +400,16 @@
                     android:textSize="13.0sp" />
             </RelativeLayout>
         </RelativeLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/PartyDetailsBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:background="#55000000"
+        android:visibility="gone"
+         >
     </RelativeLayout>
 
 </RelativeLayout>
