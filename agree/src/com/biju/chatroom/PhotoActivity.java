@@ -1,7 +1,9 @@
 package com.biju.chatroom;
 
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.UUID;
 
 import android.app.Activity;
@@ -15,7 +17,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.Weeks;
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
@@ -365,10 +367,13 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position,
 			long id) {
+		Photo photo = listphotos.get(position);
 		Intent intent = new Intent(PhotoActivity.this,
 				MyGalleryActivity.class);
 		intent.putExtra("position", position);
 		intent.putExtra("ID", position);
+		intent.putExtra("photo", photo);
+		intent.putExtra("listphotos", listphotos);
 		startActivity(intent);
 	}
 
@@ -533,6 +538,32 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 				Log.e("PhotoActivity.this", "图片上传成功");
 				Log.e("PhotoActivity.this", "objectKey==" + objectKey);
 				
+				SimpleDateFormat sdf=new SimpleDateFormat("yyyy年MM月dd日");
+				String format = sdf.format(new Date());
+				
+				SimpleDateFormat sdf2=new SimpleDateFormat("yyyyMMdd");
+				String format2 = sdf2.format(new Date());
+				
+				SimpleDateFormat sdf3=new SimpleDateFormat("HH:mm:ss");
+				String format3 = sdf3.format(new Date());
+				
+				String years = format2.substring(0, 4);
+				String months = format2.substring(4, 6);
+				String days = format2.substring(6, 8);
+				Log.e("", "years=="+years);
+				Log.e("", "months=="+months);
+				Log.e("", "days=="+days);
+				// 计算星期几
+				int y = Integer.valueOf(years);
+				int m = Integer.valueOf(months);
+				int d = Integer.valueOf(days);
+				// 调用计算星期几的方法
+				Weeks.CaculateWeekDay(y, m, d);
+				String week = Weeks.getweek();
+				Log.e("", "week=="+week);
+				
+				String compleTime=format+" "+week+" "+format3;
+				
 				photo = new Photo();
 				photo.setFk_group(GroupActivity.getPk_group());
 				photo.setFk_user(SD_pk_user);
@@ -540,6 +571,7 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 				photo.setStatus(1);
 				photo.setPath(imagePath);//设置内存路径
 				photo.setFk_party(pk_party);//设置pk_party
+				photo.setCreate_time(compleTime);//设置创建时间
 				Log.e("PhotoActivity", "pk_party=="+pk_party);
 				instance.uploadingPhoto(PhotoActivity.this, photo);
 				
@@ -553,6 +585,7 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
 				Log.e("PhotoActivity.this", "上传失败，请重新上传" + ossException.toString());
+				//这里OSS失败，有UI线程的问题~~~~~~
 //				new Handler().post(new Runnable() {
 //					
 //					@Override

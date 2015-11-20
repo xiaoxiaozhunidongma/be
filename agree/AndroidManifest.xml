@@ -168,7 +168,7 @@
         <!-- 百度签名 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="am4a3xRjopFOrnHsDW7nnlb4" />
+            android:value="yGkNOAGTinoQq0oFRuksvUIi" />
         <!-- 百度签名 -->
         <activity
             android:name="com.biju.MainActivity"
@@ -526,7 +526,10 @@
             android:name="com.biju.pay.PreviewActivity"
             android:label="@string/title_activity_preview" >
         </activity>
-        <activity android:name="com.biju.chatroom.MyGalleryActivity" >
+        <activity 
+            android:name="com.biju.chatroom.MyGalleryActivity"
+           	android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
+            
         </activity>
         <activity
             android:name="com.biju.chatroom.AddChatsActivity"

@@ -2,12 +2,14 @@ package com.biju.chatroom;
 
 import android.app.Activity;
 import android.os.Bundle;
-import android.view.Menu;
+import android.util.Log;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.EditText;
 
+import com.avos.avoscloud.im.v2.AVIMException;
+import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.biju.R;
 import com.example.testleabcloud.ChatActivityLean;
 
@@ -44,6 +46,17 @@ public class ChangeChatNameActivity extends Activity implements OnClickListener 
 	private void completeName() {
 		chatName = edit_chatName.getText().toString();
 		ChatActivityLean.conversation.setName(chatName);
+		ChatActivityLean.conversation.setAttribute("isupdate", true);
+		ChatActivityLean.conversation.updateInfoInBackground(new AVIMConversationCallback() {
+			
+			@Override
+			public void done(AVIMException e) {
+				if(e==null){
+					ChatActivityLean.chatRoomNameInter.updateSuccess(chatName);
+					Log.e("ChangeChatNameActivity", "更新对话名字成功");
+				}
+			}
+		});
 		finish();
 	}
 

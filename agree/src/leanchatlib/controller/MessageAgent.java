@@ -8,6 +8,8 @@ import leanchatlib.utils.PathUtils;
 import leanchatlib.utils.PhotoUtils;
 import leanchatlib.utils.Utils;
 import android.content.Context;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 
 import com.avos.avoscloud.AVGeoPoint;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -54,14 +56,15 @@ public class MessageAgent {
 
 	@Override
 	public void done(AVIMException e) {
-        if (e == null && originPath != null) {
-            File tmpFile = new File(originPath);
-            File newFile = new File(PathUtils.getChatFilePath(msg.getMessageId()));
-            boolean result = tmpFile.renameTo(newFile);
-            if (!result) {
-              LogUtils.i("move file failed, can't use local cache");
-            }
-          }
+		//这里会将图片文件移除！！！！
+//        if (e == null && originPath != null) {
+//            File tmpFile = new File(originPath);
+//            File newFile = new File(PathUtils.getChatFilePath(msg.getMessageId()));
+//            boolean result = tmpFile.renameTo(newFile);
+//            if (!result) {
+//              LogUtils.e("move file failed, can't use local cache");
+//            }
+//          }
           if (callback != null) {
             if (e != null) {
               callback.onError(msg, e);
@@ -98,11 +101,32 @@ public class MessageAgent {
   }
 
   public void sendImage(String imagePath,Context context ) {
+	  //newPath的图片有经过压缩，点击大图时候不清晰,并且getChatFilePath()可能删除本地图片！！
     final String newPath = PathUtils.getChatFilePath(Utils.uuid());
-    PhotoUtils.compressImage(imagePath, newPath, context);
+//    PhotoUtils.compressImage(imagePath, newPath, context);
+    String compressPath = PhotoUtils.MycompressImage(imagePath,newPath,context,1280);
+	Log.e("sendImage", "compressPath=="+compressPath);
+	
+	BitmapFactory.Options options = new BitmapFactory.Options();
+	options.inJustDecodeBounds = true;
+	BitmapFactory.decodeFile(compressPath, options);
+	Log.e("sendImage", "压缩后options.outWidth=="+options.outWidth);
+	Log.e("sendImage", "压缩后options.outHeight=="+options.outHeight);
+    Log.e("sendImage", "压缩后newPath=="+compressPath);
+    
+    BitmapFactory.Options options2 = new BitmapFactory.Options();
+    options2.inJustDecodeBounds = true;
+    BitmapFactory.decodeFile(imagePath, options2);
+    Log.e("sendImage", "原图options.outWidth=="+options2.outWidth);
+    Log.e("sendImage", "原图options.outHeight=="+options2.outHeight);
+    Log.e("sendImage", "原图newPath=="+compressPath);
+    
     try {
-      AVIMImageMessage imageMsg = new AVIMImageMessage(newPath);
-      sendMsg(imageMsg, newPath, sendCallback);
+//      AVIMImageMessage imageMsg = new AVIMImageMessage(newPath);
+//      sendMsg(imageMsg, newPath, sendCallback);
+    	//使用压缩后路径
+      AVIMImageMessage imageMsg = new AVIMImageMessage(compressPath);
+      sendMsg(imageMsg, compressPath, sendCallback);
     } catch (IOException e) {
       LogUtils.logException(e);
     }

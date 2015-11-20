@@ -31,7 +31,7 @@ public class Path2Bitmap {
 		
 		in = new BufferedInputStream(new FileInputStream(new File(path)));
 		options.inSampleSize = computeSampleSize(options, 768, 768*1280);
-		Log.e("~convertToBitmap", "inSampleSize==="+computeSampleSize(options, 768, 1280*760));
+		Log.e("~convertToBitmap", "inSampleSize==="+computeSampleSize(options, 768, 768*1280));
 		options.inJustDecodeBounds = false;
 		Bitmap bitmap = BitmapFactory.decodeStream(in, null, options);
 //		SoftReference<Bitmap> weak = new SoftReference<Bitmap>(bitmap);//软引用会自动释放

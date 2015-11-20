@@ -22,12 +22,18 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_ReadAllUser;
+import com.BJ.javabean.Group_ReadAllUserback;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
+import com.BJ.javabean.ImageText;
 import com.BJ.utils.SdPkUser;
+import com.activeandroid.Model;
+import com.activeandroid.query.Select;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readUserGroupRelationListenner;
 import com.biju.R;
 import com.biju.chatroom.PersonalDataActivity;
@@ -111,10 +117,17 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		partyDetails = PartyDetails_sp.getBoolean(IConstant.PartyDetails, false);
 
 		initInterface();// 监听
+		initReadGroupAllUsers();//读取小组中所有用户
 		initreadUserGroupRelation();// 获取小组的关系ID
 		initSliding();//小组成员列表调用接口
 		initGetGroupChat();//点击群聊头像调用接口实现跳转界面
 		initPersonal();//在头像界面点击完成按钮监听
+	}
+
+	private void initReadGroupAllUsers() {
+		Group readAllPerRelation_group = new Group();
+		readAllPerRelation_group.setPk_group(pk_group);
+		groupInterface.readAllPerRelation(GroupActivity.this,readAllPerRelation_group);
 	}
 
 	private void initPersonal() {
@@ -187,6 +200,82 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 						Group_User group_user = groupuser_returnData.get(0);
 						pk_group_user = group_user.getPk_group_user();
 
+					}
+				}
+			}
+
+			@Override
+			public void defail(Object B) {
+
+			}
+		});
+		
+		groupInterface.setPostListener(new readAllPerRelationListenner() {
+
+
+			@Override
+			public void success(String A) {
+				Group_ReadAllUserback group_ReadAllUserback = GsonUtils.parseJson(A, Group_ReadAllUserback.class);
+				int status = group_ReadAllUserback.getStatusMsg();
+				if (status == 1) {
+					Log.e("GroupActivity", "读取出小组中的所有用户========" + A);
+					List<Group_ReadAllUser> allUsers = group_ReadAllUserback.getReturnData();
+					if (allUsers.size() > 0) {
+						for (int i = 0; i < allUsers.size(); i++) {
+							Group_ReadAllUser readAllUser = allUsers.get(i);
+							Group_Readalluser_List.add(readAllUser);
+						}
+						SdPkUser.setGetGroup_ReadAllUser(Group_Readalluser_List);//把小组中的所有成员List传给小组添加成员界面
+						//查表所有数据
+						List<Group_ReadAllUser> Group_ReadAllUserList = new Select().from(Group_ReadAllUser.class).execute();
+						//加入数据库
+						for (int i = 0; i < allUsers.size(); i++) {
+							boolean isInsert=true;//默认为true
+							Group_ReadAllUser group_ReadAllUser = allUsers.get(i);
+							
+							Integer fk_user = group_ReadAllUser.getFk_user();
+							Integer fk_group = group_ReadAllUser.getFk_group();
+							Integer message_warn = group_ReadAllUser.getMessage_warn();
+							Integer party_warn = group_ReadAllUser.getParty_warn();
+							Integer public_phone = group_ReadAllUser.getPublic_phone();
+							String remarks_name = group_ReadAllUser.getRemarks_name();
+							Integer role = group_ReadAllUser.getRole();
+							Integer pk_user = group_ReadAllUser.getPk_user();
+							String avatar_path = group_ReadAllUser.getAvatar_path();
+							String nickname = group_ReadAllUser.getNickname();
+							String phone = group_ReadAllUser.getPhone();
+							String last_login_time = group_ReadAllUser.getLast_login_time();
+							
+							for (int j = 0; j < Group_ReadAllUserList.size(); j++) {
+								Group_ReadAllUser group_ReadAllUser2 = Group_ReadAllUserList.get(j);
+								Integer fk_user2 = group_ReadAllUser2.getFk_user();
+								if(String.valueOf(fk_user).equals(String.valueOf(fk_user2))){
+									//先查后改
+									Group_ReadAllUser executeSingle = new Select().from(Group_ReadAllUser.class).where("fk_user=?", fk_user).executeSingle();
+									executeSingle.setFk_group(fk_group);
+									executeSingle.setMessage_warn(message_warn);
+									executeSingle.setParty_warn(party_warn);
+									executeSingle.setPublic_phone(public_phone);
+									executeSingle.setRemarks_name(remarks_name);
+									executeSingle.setRole(role);
+									executeSingle.setPk_user(pk_user);
+									executeSingle.setAvatar_path(avatar_path);
+									executeSingle.setNickname(nickname);
+									executeSingle.setPhone(phone);
+									executeSingle.setLast_login_time(last_login_time);
+									executeSingle.save();
+									isInsert = false;//有相同就不插入，而是改数据
+								}
+							}
+							
+							if(isInsert){
+								Group_ReadAllUser group_ReadAllUser2 = new  Group_ReadAllUser(pk_group_user, fk_user, fk_group,
+										message_warn, party_warn, public_phone, remarks_name, role, pk_user, avatar_path, nickname,
+										phone, last_login_time);
+								group_ReadAllUser2.save();
+							}
+							isInsert=true;//默认可以插入数据
+						}
 					}
 				}
 			}

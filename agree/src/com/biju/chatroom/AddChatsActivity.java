@@ -23,6 +23,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
@@ -171,7 +172,12 @@ public class AddChatsActivity extends Activity implements OnClickListener, OnIte
 		switch (v.getId()) {
 		case R.id.AddFriends3OK:
 		case R.id.AddFriends3OKLayout:
-			AddFriends3OK();
+			
+			if(members.size()!=0){
+				AddFriends3OK();
+			}else{
+				Toast.makeText(AddChatsActivity.this, "请添加对话成员", Toast.LENGTH_SHORT).show();
+			}
 			break;
 		case R.id.AddFriends3BackLayout:
 		case R.id.AddFriends3Back:
@@ -201,16 +207,20 @@ public class AddChatsActivity extends Activity implements OnClickListener, OnIte
 		            HashMap<String,Object> attr = new HashMap<String,Object>();
 		            
 		            attr.put("type",3);//1是群聊 ，3是聊天室
-
+		            attr.put("isupdate", false);
 					String convName="";
 					for (int i = 0; i < NicNameList.size(); i++) {
 							
+						if(NicNameList.size()!=1){
 							if(i!=NicNameList.size()-1){
 								convName=convName+NicNameList.get(i)+",";
 							}
 							if(i==NicNameList.size()-1){
 								convName=convName+NicNameList.get(i)+"的对话";
 							}
+						}else{
+							convName=NicNameList.get(i);
+						}
 					}
 		            
 		          client.createConversation(members, convName, attr,

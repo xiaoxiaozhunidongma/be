@@ -76,6 +76,7 @@ import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.biju.R;
 import com.biju.chatroom.MembersChatActivity;
 import com.biju.chatroom.PersonalDataActivity;
+import com.fragment.FriendsFragment;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
@@ -448,6 +449,11 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	public interface FromAvaUrlMapInter{
 		void AvaSuccess(HashMap<Integer, String> fromAvaUrlMap );
 	}
+	//异步更新聊天室对话名字接口
+	public static ChatRoomNameInter chatRoomNameInter;
+	public interface ChatRoomNameInter{
+		void updateSuccess(String CurName);
+	}
 
 	@SuppressWarnings("unchecked")
 	public void initData(Intent intent) {
@@ -457,7 +463,6 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		tochatname.setText(conName);
 		fromAvaUrlMap = (HashMap<Integer, String>) intent
 				.getSerializableExtra("FromAvaUrlMap");
-		FromAvaUrlMapInterInter();//异步更新头像接口
 		currUserUrl = intent.getStringExtra("CurrUserUrl");
 		String convid = intent.getStringExtra(CONVID);
 		conversation = chatManager.lookUpConversationById(convid);
@@ -469,6 +474,19 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		messageAgent.setSendCallback(defaultSendCallback);// 回调监听！！！！！！！！！！！！！！！！！！
 		roomsTable.clearUnread(conversation.getConversationId());
 		conversationType = ConversationHelper.typeOfConversation(conversation);
+		FromAvaUrlMapInterInter();//异步更新头像接口
+		initChatRoomNameInter();//异步更新聊天室名字
+	}
+
+	private void initChatRoomNameInter() {
+		ChatRoomNameInter chatRoomNameInter = new ChatRoomNameInter() {
+			
+			@Override
+			public void updateSuccess(String CurName) {
+				tochatname.setText(CurName);
+			}
+		};
+		this.chatRoomNameInter=chatRoomNameInter;
 	}
 
 	private void FromAvaUrlMapInterInter() {
@@ -803,7 +821,9 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		messageListView.post(new Runnable() {
 			@Override
 			public void run() {
-				messageListView.smoothScrollToPosition(messageListView
+//				messageListView.smoothScrollToPosition(messageListView
+//						.getAdapter().getCount() - 1);
+				messageListView.setSelection(messageListView
 						.getAdapter().getCount() - 1);
 			}
 		});
@@ -817,6 +837,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	}
 
 	public void onEvent(MessageEvent messageEvent) {
+		Log.e("", "onEvent~~~~~~~~~~~~~~~~~");
 		final AVIMTypedMessage message = messageEvent.getMessage();
 		if (message.getConversationId()
 				.equals(conversation.getConversationId())) {
@@ -901,8 +922,10 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 				            				}
 				            			});
 				                	}
-									adapter.setDatas(typedMessages);
-									adapter.notifyDataSetChanged();
+									if(adapter!=null){
+										adapter.setDatas(typedMessages);
+										adapter.notifyDataSetChanged();
+									}
 									scrollToLast();
 								}
 							}.execute();
@@ -1042,6 +1065,8 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 			// Utils.i();
 			Log.e("ChatActivity", "DefaultSendCallback--onSuccess");
 			addMessageAndScroll(message);
+			//及时更新对话列表的信息
+			FriendsFragment.notifyList();
 		}
 	}
 

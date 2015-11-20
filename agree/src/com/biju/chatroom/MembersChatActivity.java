@@ -14,13 +14,11 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
-import com.BJ.javabean.Group_User;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
@@ -32,8 +30,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.biju.MainActivity;
 import com.biju.R;
-import com.biju.function.GroupActivity;
-import com.biju.function.TeamSetting2Activity;
 import com.example.testleabcloud.ChatActivityLean;
 
 public class MembersChatActivity extends Activity implements OnClickListener,OnItemClickListener{
@@ -220,6 +216,30 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 
 	//退出群聊
 	private void MembersChatExitGroup() {
+		final SweetAlertDialog sd = new SweetAlertDialog(MembersChatActivity.this);
+		sd.setTitleText("提示");
+		sd.setContentText("真的要退出这个群聊吗?");
+		sd.setCancelText("我再想想");
+		sd.setConfirmText("是的");
+		sd.showCancelButton(true);
+		sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+				
+			}
+		}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+				ExitChatRoom();
+			}
+		}).show();
+
+		
+	}
+
+	private void ExitChatRoom() {
 		AVIMClient tom = AVIMClient.getInstance(String.valueOf(sd_pk_user));
 		tom.open(new AVIMClientCallback(){
 
@@ -238,28 +258,10 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 				                public void done(AVIMException e){
 				                  if(e==null){
 				                  //退出成功
-				                	  
-				                	  final SweetAlertDialog sd = new SweetAlertDialog(MembersChatActivity.this);
-										sd.setTitleText("提示");
-										sd.setContentText("真的要删除该成员？");
-										sd.setCancelText("我再想想");
-										sd.setConfirmText("是的");
-										sd.showCancelButton(true);
-										sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
-											@Override
-											public void onClick(SweetAlertDialog sDialog) {
-												sd.cancel();
-											}
-										}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
-											@Override
-											public void onClick(SweetAlertDialog sDialog) {
-												sd.cancel();
-												//退出群聊
-												Log.e("MembersCha", sd_pk_user+"退出群聊成功~");
-							                	Intent intent=new Intent(MembersChatActivity.this, MainActivity.class);
-												startActivity(intent);
-											}
-										}).show();
+				                	//退出群聊
+										Log.e("MembersCha", sd_pk_user+"退出群聊成功~");
+					                	Intent intent=new Intent(MembersChatActivity.this, MainActivity.class);
+										startActivity(intent);
 				                  }
 				                } 
 				              });
@@ -269,8 +271,6 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 				      }
 				    }
 		});
-
-		
 	}
 
 	//添加成员

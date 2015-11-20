@@ -94,7 +94,7 @@ public class MyApplication extends Application {
 		      public void cacheUserInfoByIdsInBackground(List<String> userIds) throws Exception {
 		      }
 
-		    //鍏充簬杩欎釜鏂规硶璇疯 leanchat 搴旂敤涓殑 ChatManagerAdapterImpl.java
+			    //关于这个方法请见 leanchat 应用中的 ChatManagerAdapterImpl.java
 		      @Override
 		      public void shouldShowNotification(Context context, String selfId, AVIMConversation conversation, AVIMTypedMessage message) {
 //		    	  Toast.makeText(context, "收到了一条消息但并未打开相应的对话。可以触发系统通知。", Toast.LENGTH_LONG).show();

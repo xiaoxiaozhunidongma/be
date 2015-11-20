@@ -2,7 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="#fff">
+    android:background="#fff" >
 
     <leanchatlib.view.RefreshableView
         android:id="@+id/refreshableView"
@@ -25,176 +25,177 @@
             android:scrollbarStyle="outsideOverlay" />
     </leanchatlib.view.RefreshableView>
 
-<!--     <LinearLayout -->
-<!--         android:id="@+id/bottomLayout" -->
-<!--         android:layout_width="match_parent" -->
-<!--         android:layout_height="wrap_content" -->
-<!--         android:layout_alignParentBottom="true" -->
-<!--         android:background="@drawable/chat_layout_home_bg_bottombar" -->
-<!--         android:orientation="vertical"> -->
+    <!-- <LinearLayout -->
+    <!-- android:id="@+id/bottomLayout" -->
+    <!-- android:layout_width="match_parent" -->
+    <!-- android:layout_height="wrap_content" -->
+    <!-- android:layout_alignParentBottom="true" -->
+    <!-- android:background="@drawable/chat_layout_home_bg_bottombar" -->
+    <!-- android:orientation="vertical"> -->
+
+    <LinearLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="#efefef"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        android:paddingBottom="3dp"
+        android:paddingTop="3dp" >
+
+        <Button
+            android:id="@+id/btn_set_mode_voice"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/chatting_setmode_voice_btn"
+            android:visibility="gone" />
+
+        <Button
+            android:id="@+id/btn_set_mode_keyboard"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginLeft="6dp"
+            android:background="@drawable/chatting_setmode_keyboard_btn"
+            android:visibility="gone" />
 
         <LinearLayout
-            android:id="@+id/rl_bottom"
+            android:id="@+id/btn_press_to_speak"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="6dp"
+            android:layout_marginLeft="6dp"
+            android:layout_marginRight="6dp"
+            android:layout_marginTop="6dp"
+            android:layout_weight="1"
+            android:background="@drawable/chat_press_speak_btn"
+            android:gravity="center"
+            android:visibility="gone" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="5dp"
+                android:text="@string/chat_bottom_record_layout_pressToRecord"
+                android:textColor="#666666"
+                android:textSize="16sp" />
+        </LinearLayout>
+
+        <RelativeLayout
+            android:id="@+id/rela_more"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:layout_marginLeft="10dp"
+            android:layout_marginRight="5dp"
+            android:background="@drawable/selector_camera_bg" >
+
+            <ImageView
+                android:id="@+id/iv_more"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:src="@drawable/btn_photo3x" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/edittext_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="#ffffff"
-            android:gravity="center_vertical"
-            android:orientation="horizontal" 
-                    android:layout_alignParentBottom="true"
-            >
+            android:layout_marginBottom="3dp"
+            android:layout_marginLeft="5dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginTop="3dp"
+            android:gravity="bottom" >
 
-            <Button
-                android:id="@+id/btn_set_mode_voice"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginLeft="6dp"
-                android:background="@drawable/chatting_setmode_voice_btn"
-                android:visibility="gone" />
-
-            <Button
-                android:id="@+id/btn_set_mode_keyboard"
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_marginLeft="6dp"
-                android:background="@drawable/chatting_setmode_keyboard_btn"
-                android:visibility="gone" />
-
-            <LinearLayout
-                android:id="@+id/btn_press_to_speak"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="6dp"
-                android:layout_marginLeft="6dp"
-                android:layout_marginRight="6dp"
-                android:layout_marginTop="6dp"
-                android:layout_weight="1"
-                android:background="@drawable/chat_press_speak_btn"
-                android:gravity="center"
-                android:visibility="gone" >
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginLeft="5dp"
-                    android:text="@string/chat_bottom_record_layout_pressToRecord"
-                    android:textColor="#666666"
-                    android:textSize="16sp" />
-            </LinearLayout>
-
-            <RelativeLayout
-                android:id="@+id/rela_more"
-                android:layout_width="45dp"
-                android:layout_height="match_parent"
-                android:background="@drawable/selector_back_gray_white"
-                 >
-<!--                 android:background="@drawable/selector_back_gray_black" -->
-
-                <ImageView
-                    android:id="@+id/iv_more"
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/iconfont_qita" />
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:id="@+id/edittext_layout"
+            <leanchatlib.view.PasteEditText
+                android:id="@+id/et_sendmessage"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginBottom="3dp"
-                android:layout_marginLeft="5dp"
                 android:layout_marginRight="10dp"
-                android:layout_marginTop="3dp"
-                android:gravity="bottom" >
+                android:layout_toLeftOf="@+id/send"
+                android:background="@drawable/edit_back_shape"
+                android:maxLines="4"
+                android:minHeight="30dp"
+                android:paddingBottom="3dp"
+                android:paddingLeft="1dp"
+                android:paddingRight="1dp"
+                android:paddingTop="3dp"
+                android:textSize="14sp" />
 
-                <leanchatlib.view.PasteEditText
-                    android:id="@+id/et_sendmessage"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_toLeftOf="@+id/send"
-                    android:background="@drawable/edit_back_shape"
-                    android:maxLines="4"
-                    android:minHeight="30dp"
-                    android:paddingBottom="3dp"
-                    android:paddingLeft="1dp"
-                    android:paddingRight="1dp"
-                    android:paddingTop="3dp"
-                    android:textSize="14sp" />
-
-                <ImageView
-                    android:id="@+id/send_expression"
-                    android:layout_width="26dip"
-                    android:layout_height="26dip"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:layout_gravity="center_vertical|right"
-                    android:layout_margin="1dip"
-                    android:scaleType="fitCenter"
-                    android:src="@drawable/chatting_biaoqing_btn_normal"
-                    android:visibility="gone" />
-
-                <Button
-                    android:id="@+id/send"
-                    android:layout_width="wrap_content"
-                    android:layout_height="32dp"
-                    android:layout_alignParentRight="true"
-                    android:layout_centerVertical="true"
-                    android:background="@drawable/chat_send_btn_selector"
-                    android:text="发送"
-                    android:textColor="#666666"
-                    android:textSize="16sp"
-                    android:visibility="gone" />
-            </RelativeLayout>
+            <ImageView
+                android:id="@+id/send_expression"
+                android:layout_width="26dip"
+                android:layout_height="26dip"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_gravity="center_vertical|right"
+                android:layout_margin="1dip"
+                android:scaleType="fitCenter"
+                android:src="@drawable/chatting_biaoqing_btn_normal"
+                android:visibility="gone" />
 
             <Button
-                android:id="@+id/btn_more"
-                android:layout_width="32dip"
-                android:layout_height="32dip"
-                android:layout_marginLeft="4dp"
-                android:layout_marginRight="10dp"
-                android:background="@drawable/type_select_btn"
+                android:id="@+id/send"
+                android:layout_width="wrap_content"
+                android:layout_height="30dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/chat_send_btn_selector"
+                android:text="发送"
+                android:textColor="#666666"
+                android:textSize="16sp"
                 android:visibility="gone" />
-        </LinearLayout>
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_more"
+            android:layout_width="32dip"
+            android:layout_height="32dip"
+            android:layout_marginLeft="4dp"
+            android:layout_marginRight="10dp"
+            android:background="@drawable/type_select_btn"
+            android:visibility="gone" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/chat_BottomHeight"
+        android:orientation="horizontal"
+        android:visibility="gone" >
 
         <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/chat_BottomHeight"
-            android:orientation="horizontal"
-            android:visibility="gone"
-            >
+            android:id="@+id/chatBottomLeftLayout"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:gravity="center_vertical" >
 
-            <LinearLayout
-                android:id="@+id/chatBottomLeftLayout"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center_vertical">
+            <Button
+                android:id="@+id/showAddBtn"
+                android:layout_width="@dimen/chat_BottomBtnSize"
+                android:layout_height="@dimen/chat_BottomBtnSize"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/chat_btn_add_selector" />
 
-                <Button
-                    android:id="@+id/showAddBtn"
-                    android:layout_width="@dimen/chat_BottomBtnSize"
-                    android:layout_height="@dimen/chat_BottomBtnSize"
-                    android:layout_marginLeft="3dp"
-                    android:background="@drawable/chat_btn_add_selector" />
-
-                <Button
-                    android:id="@+id/showEmotionBtn"
-                    android:layout_width="@dimen/chat_BottomBtnSize"
-                    android:layout_height="@dimen/chat_BottomBtnSize"
-                    android:layout_marginLeft="3dp"
-                    android:background="@drawable/chat_btn_emo_selector"
-                    android:gravity="center" />
-
-            </LinearLayout>
-
-            <include layout="@layout/chat_bottom_text_layout" />
-
-            <include layout="@layout/chat_bottom_record_layout" />
-        <include layout="@layout/chat_bottom_more_layout" />
+            <Button
+                android:id="@+id/showEmotionBtn"
+                android:layout_width="@dimen/chat_BottomBtnSize"
+                android:layout_height="@dimen/chat_BottomBtnSize"
+                android:layout_marginLeft="3dp"
+                android:background="@drawable/chat_btn_emo_selector"
+                android:gravity="center" />
         </LinearLayout>
 
-<!--     </LinearLayout> -->
+        <include layout="@layout/chat_bottom_text_layout" />
+
+        <include layout="@layout/chat_bottom_record_layout" />
+
+        <include layout="@layout/chat_bottom_more_layout" />
+    </LinearLayout>
+
+    <!-- </LinearLayout> -->
 
     <RelativeLayout
         android:id="@+id/picture_source_rela"
@@ -202,8 +203,8 @@
         android:layout_height="match_parent"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:background="#40000000" 
-        android:visibility="gone">
+        android:background="#40000000"
+        android:visibility="gone" >
 
         <RelativeLayout
             android:id="@+id/rela_cancle"
@@ -327,5 +328,12 @@
             android:text="暂无对话信息  点击" />
 
     </RelativeLayout>
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignTop="@+id/rl_bottom"
+        android:background="#aaaaaa"
+        android:text="fsadfasdfsdfsadfs" />
 
 </RelativeLayout>

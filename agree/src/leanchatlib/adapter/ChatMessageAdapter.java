@@ -28,6 +28,7 @@ import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.javabean.User;
 import com.BJ.utils.SdPkUser;
+import com.activeandroid.query.Select;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
@@ -193,6 +194,30 @@ public class ChatMessageAdapter extends BaseAdapter {
 	}
 
     final UserInfo user = ChatManager.getInstance().getChatManagerAdapter().getUserInfoById(msg.getFrom());
+    
+	//查表所有数据(小组群聊成员)
+	List<Group_ReadAllUser> Group_ReadAllUserList = new Select().from(Group_ReadAllUser.class).execute();
+	
+	//查表所有数据(聊天室所有好友)
+	List<User> DBuserList = new Select().from(User.class).execute();
+	
+	String NicName=user.getUsername();//默认为ID数字
+	//以下两个方法可覆盖实现昵称更改。其中一个for能进入就可以设置NicName,两个都没有才是默认的数字ID
+	for (int i = 0; i < Group_ReadAllUserList.size(); i++) {
+		Group_ReadAllUser group_ReadAllUser = Group_ReadAllUserList.get(i);
+		Integer fk_user = group_ReadAllUser.getFk_user();
+		if(String.valueOf(fk_user).equals(user.getUsername())){
+			NicName=group_ReadAllUser.getNickname();
+		}
+	}
+	
+	for (int i = 0; i < DBuserList.size(); i++) {
+		User user222 = DBuserList.get(i);
+		Integer pk_user = user222.getPk_user();
+		if(String.valueOf(pk_user).equals(user.getUsername())){
+			NicName=user222.getNickname();
+		}
+	}
     if (user == null) {
       throw new IllegalStateException("user is null, please implement ChatManagetAdapter.cacheUserInfoById()");
     }
@@ -203,10 +228,12 @@ public class ChatMessageAdapter extends BaseAdapter {
       if (conversationType == ConversationType.Single) {
 //        usernameView.setVisibility(View.GONE);
         usernameView.setVisibility(View.VISIBLE);
-        usernameView.setText(user.getUsername());
+//        usernameView.setText(user.getUsername());
+        usernameView.setText(NicName);
       } else {
         usernameView.setVisibility(View.VISIBLE);
-        usernameView.setText(user.getUsername());
+//        usernameView.setText(user.getUsername());
+        usernameView.setText(NicName);
       }
     }
     

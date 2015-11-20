@@ -227,12 +227,16 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 			  					String convName="";
 								for (int i = 0; i < NicNameList.size(); i++) {
 										
+									if(NicNameList.size()!=1){
 										if(i!=NicNameList.size()-1){
 											convName=convName+NicNameList.get(i)+",";
 										}
 										if(i==NicNameList.size()-1){
 											convName=convName+NicNameList.get(i)+"µÄ¶Ô»°";
 										}
+									}else{
+										convName=NicNameList.get(i);
+									}
 								}
 								ChatActivityLean.conversation.setName(convName);
 								
