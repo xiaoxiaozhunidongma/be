@@ -410,15 +410,6 @@
 
     </RelativeLayout>
     
-    <RelativeLayout
-        android:id="@+id/LeanChatBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/top_bar"
-        android:layout_centerHorizontal="true"
-        android:background="#cc000000"
-        android:visibility="gone" >
-    </RelativeLayout>
     
         <TextView
         android:id="@+id/textView1"
@@ -427,5 +418,15 @@
         android:layout_alignTop="@+id/rl_bottom"
         android:background="#aaaaaa"
         android:text="fsadfasdfsdfsadfs" />
+        
+            <RelativeLayout
+        android:id="@+id/LeanChatBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_bar"
+        android:layout_centerHorizontal="true"
+        android:background="#cc000000"
+        android:visibility="gone" >
+    </RelativeLayout>
 
 </RelativeLayout>
