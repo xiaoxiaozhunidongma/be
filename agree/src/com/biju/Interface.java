@@ -14,6 +14,7 @@ import android.util.Log;
 
 import com.BJ.javabean.Chat;
 import com.BJ.javabean.CreateGroup;
+import com.BJ.javabean.CreateOrder;
 import com.BJ.javabean.FeedBack;
 import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_Code;
@@ -23,6 +24,7 @@ import com.BJ.javabean.ImageText;
 import com.BJ.javabean.JsonAddParty;
 import com.BJ.javabean.MapAddParty;
 import com.BJ.javabean.MultiUserModle;
+import com.BJ.javabean.Order;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.PaymentAccount;
@@ -31,14 +33,12 @@ import com.BJ.javabean.PhoneArray;
 import com.BJ.javabean.Photo;
 import com.BJ.javabean.Photo_Review;
 import com.BJ.javabean.StrPhoneArray;
-import com.BJ.javabean.StringAddParty;
 import com.BJ.javabean.StringCreGroup;
+import com.BJ.javabean.UnionPay;
 import com.BJ.javabean.User;
 import com.BJ.javabean.User_Chat;
 import com.BJ.javabean.User_User;
 import com.BJ.javabean.WeChatPay;
-import com.BJ.javabean.UnionPay;
-import com.BJ.javabean.Order;
 import com.BJ.utils.Bean2Map;
 import com.android.volley.VolleyError;
 import com.github.volley_examples.app.MyVolley;
@@ -59,6 +59,10 @@ public class Interface {
 		return Thisinterface;
 	}
 
+	//小组添加新的成员
+	String KTeamAddFriends="391";
+	//生成财务订单
+	String KCreateOrder="416";
 	//更改小组名称
 	String kChangeGroupName = "312";
 	// 查看图片评论列表接口
@@ -178,6 +182,28 @@ public class Interface {
 		Log.e("Interface", "小组json:" + jsonObject.toString());
 		params.put("request_data", jsonObject.toString());
 
+		return params;
+	}
+	//添加新成员
+	@SuppressWarnings("unchecked")
+	public Map<String, String> packParamsNewMembers(Object classObject,
+			String interfaceType) {
+		JSONArray jsonArray = new JSONArray();
+		for (int i = 0; i < ((List<Group_User>)classObject).size(); i++) {
+			Group_User group_User = ((List<Group_User>)classObject).get(i);
+			
+			Map map = Bean2Map.ConvertObjToMap(group_User);
+			Log.e("Interface", "map------" + map);
+			JSONObject jsonObject = new JSONObject(map);
+			jsonArray.put(jsonObject);
+			
+		}
+		Map<String, String> params = new HashMap<String, String>();
+		
+		params.put("request_type", interfaceType);
+		Log.e("Interface", "小组json:" + jsonArray.toString());
+		params.put("request_data", jsonArray.toString());
+		
 		return params;
 	}
 
@@ -352,6 +378,42 @@ public class Interface {
 	// });
 	// }
 
+	//小组添加新的成员	
+	private void TeamAddFriendsPost(Context context, Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError55(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone55(response);
+			}
+		});
+	}
+	
+	//生成财务订单	
+	private void CreateOrderPost(Context context, Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError54(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone54(response);
+			}
+		});
+	}
+	
 	//添加图片评论接口	
 	private void AddPicReviewPost(Context context, Map<String, String> params) {
 		
@@ -369,6 +431,7 @@ public class Interface {
 			}
 		});
 	}
+	
 	//查看图片评论列表接口
 	private void CheckPicReviewPost(Context context, Map<String, String> params) {
 		
@@ -1260,14 +1323,26 @@ public class Interface {
 	// volleyPost(context,per);
 	// }
 
+	// 小组添加新的成员
+	public void TeamAddFriends(Context context, List<Group_User> group_Userslist) {
+		TeamAddFriendsPost(context, packParamsNewMembers(group_Userslist, KTeamAddFriends));
+	}
+	
+	// 生成财务订单
+	public void CreateOrder(Context context, CreateOrder createOrder) {
+		CreateOrderPost(context, packParams(createOrder, KCreateOrder));
+	}
+	
 	// 添加图片评论接口
 	public void AddPicReview(Context context, Photo_Review photo_Review) {
 		AddPicReviewPost(context, packParams(photo_Review, KAddPicReview));
 	}
+	
 	// 查看图片评论列表接口
 	public void CheckPicReview(Context context, Photo Photo) {
 		CheckPicReviewPost(context, packParams(Photo, KCheckPicReview));
 	}
+	
 	// 更改小组名称
 	public void ChangeGroupName(Context context, Group group) {
 		ChangeGroupNamePost(context, packParams(group, kChangeGroupName));
@@ -1284,10 +1359,8 @@ public class Interface {
 	}
 
 	// 删除用户的取现账户
-	public void DeletePayMentAccount(Context context,
-			PaymentAccount paymentAccount) {
-		DeletePayMentAccountPost(context,
-				packParams(paymentAccount, KDeletePayMentAccount));
+	public void DeletePayMentAccount(Context context,PaymentAccount paymentAccount) {
+		DeletePayMentAccountPost(context,packParams(paymentAccount, KDeletePayMentAccount));
 	}
 
 	// 添加用户的取现账户
@@ -1391,8 +1464,7 @@ public class Interface {
 
 	// 读取用户小组关系
 	public void readUserGroupRelation(Context context, Group_User group_User) {
-		readUserGroupRelationPost(context,
-				packParams(group_User, kReadGroupRelation));
+		readUserGroupRelationPost(context,packParams(group_User, kReadGroupRelation));
 	}
 
 	// 更新用户小组设置
@@ -1436,8 +1508,7 @@ public class Interface {
 
 	// 更新用户对于聚会的参与信息
 	public void updateUserJoinMsg(Context context, Party_User party_User) {
-		updateUserJoinMsgPost(context,
-				packParams(party_User, kUpdateUserJoinMsg));
+		updateUserJoinMsgPost(context,packParams(party_User, kUpdateUserJoinMsg));
 	}
 
 	// 用户取消聚会
@@ -1457,8 +1528,7 @@ public class Interface {
 
 	// 建立一条新的聚会关系
 	public void createPartyRelation(Context context, Party_User party_User) {
-		createPartyRelationPost(context,
-				packParams(party_User, kCreatePartyRelation));
+		createPartyRelationPost(context,packParams(party_User, kCreatePartyRelation));
 	}
 
 	// 添加一条聊天数据
@@ -1545,6 +1615,10 @@ public class Interface {
 	// 接口部分
 	// private static UserInterface listener;
 
+	// 小组添加新的成员
+	private static TeamAddFriendsListenner teamaddfriendslistenner;
+	// 生成财务订单
+	private static CreateOrderListenner createorderlistenner;
 	// 添加图片评论接口
 	private static AddPicReviewListenner addPicReviewListenner;
 	// 查看图片评论列表接口
@@ -1620,18 +1694,34 @@ public class Interface {
 	// void defail(Object B);
 	// }
 
+	// 小组添加新的成员
+	public interface TeamAddFriendsListenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
+	
+	// 生成财务订单
+	public interface CreateOrderListenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
+	
 	// 添加图片评论接口
 	public interface AddPicReviewListenner {
 		void success(String A);
 		
 		void defail(Object B);
 	}
+	
 	// 查看图片评论列表接口
 	public interface CheckPicReviewListenner {
 		void success(String A);
 		
 		void defail(Object B);
 	}
+	
 	// 更改小组名称
 	public interface ChangeGroupNameListenner {
 		void success(String A);
@@ -1945,14 +2035,26 @@ public class Interface {
 	// this.listener=listener;
 	// }
 
+	//小组添加新的成员
+	public void setPostListener(TeamAddFriendsListenner listener) {
+		this.teamaddfriendslistenner = listener;
+	}
+	
+	//生成财务订单
+	public void setPostListener(CreateOrderListenner listener) {
+		this.createorderlistenner = listener;
+	}
+	
 	//添加图片评论接口
 	public void setPostListener(AddPicReviewListenner listener) {
 		this.addPicReviewListenner = listener;
 	}
+	
 	//查看图片评论列表接口
 	public void setPostListener(CheckPicReviewListenner listener) {
 		this.checkPicReviewListenner = listener;
 	}
+	
 	// 更改小组名称
 	public void setPostListener(ChangeGroupNameListenner listener) {
 		this.changegroupnamelistenner = listener;
@@ -2649,6 +2751,7 @@ public class Interface {
 	public static void requestError51(VolleyError error) {
 		changegroupnamelistenner.defail(error);
 	}
+	
 	// 添加图片评论接口
 	public static void requestDone52(String theObject) {
 		addPicReviewListenner.success(theObject);
@@ -2657,6 +2760,7 @@ public class Interface {
 	public static void requestError52(VolleyError error) {
 		addPicReviewListenner.defail(error);
 	}
+	
 	//查看图片评论列表接口
 	public static void requestDone53(String theObject) {
 		checkPicReviewListenner.success(theObject);
@@ -2664,5 +2768,23 @@ public class Interface {
 	
 	public static void requestError53(VolleyError error) {
 		checkPicReviewListenner.defail(error);
+	}
+	
+	//查看图片评论列表接口
+	public static void requestDone54(String theObject) {
+		createorderlistenner.success(theObject);
+	}
+	
+	public static void requestError54(VolleyError error) {
+		createorderlistenner.defail(error);
+	}
+	
+	//小组添加新的成员
+	public static void requestDone55(String theObject) {
+		teamaddfriendslistenner.success(theObject);
+	}
+	
+	public static void requestError55(VolleyError error) {
+		teamaddfriendslistenner.defail(error);
 	}
 }

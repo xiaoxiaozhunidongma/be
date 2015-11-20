@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -15,11 +16,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import com.BJ.javabean.Order;
 import com.BJ.javabean.OrderBack;
 import com.BJ.javabean.PaymentAccount;
-import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.DeletePayMentAccountListenner;
 import com.biju.Interface.OrderListenner;
-import com.biju.function.BindingPhoneActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -188,4 +187,15 @@ public class DeletePaymentAccountActivity extends Activity implements OnClickLis
 		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			DeletePaymentBack();
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
 }

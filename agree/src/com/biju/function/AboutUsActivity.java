@@ -14,6 +14,7 @@ import android.graphics.PorterDuffXfermode;
 import android.graphics.RectF;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -76,13 +77,6 @@ public class AboutUsActivity extends Activity implements OnClickListener {
    }
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.about_us, menu);
-		return true;
-	}
-
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.aboutus_back_layout:
@@ -98,6 +92,18 @@ public class AboutUsActivity extends Activity implements OnClickListener {
 	private void aboutus_back() {
 		finish();
 		overridePendingTransition(R.anim.left, R.anim.right);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			aboutus_back();
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 
 }

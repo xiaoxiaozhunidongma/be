@@ -1,24 +1,8 @@
 package com.fragment;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import com.BJ.javabean.Group;
-import com.BJ.javabean.Party2;
-import com.BJ.javabean.Party4;
-import com.BJ.javabean.PartyAllback;
-import com.BJ.javabean.Photo;
-import com.BJ.utils.ImageLoaderUtils4Photos;
-import com.BJ.utils.MyGridView;
-import com.biju.Interface;
-import com.biju.R;
-import com.biju.Interface.ReadGroupPartyAlllistenner;
-import com.biju.R.layout;
-import com.biju.chatroom.PhotoActivity;
-import com.biju.function.GroupActivity;
-import com.github.volley_examples.utils.GsonUtils;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -28,22 +12,35 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.view.ViewGroup.LayoutParams;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
-import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.BJ.javabean.Group;
+import com.BJ.javabean.Party4;
+import com.BJ.javabean.PartyAllback;
+import com.BJ.javabean.Photo;
+import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.BJ.utils.MyGridView;
+import com.biju.IConstant;
+import com.biju.Interface;
+import com.biju.Interface.ReadGroupPartyAlllistenner;
+import com.biju.R;
+import com.biju.chatroom.PhotoActivity;
+import com.biju.function.AddNewPartyActivity;
+import com.biju.function.GroupActivity;
+import com.github.volley_examples.utils.GsonUtils;
+
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class PhotosPreviewFragment extends Fragment implements OnItemClickListener {
+public class PhotosPreviewFragment extends Fragment implements OnItemClickListener ,OnClickListener{
 
 	private View mLayout;
 	private ListView listpreview;
@@ -54,6 +51,7 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	ArrayList<MyAdapter2> MyAdapterList=new ArrayList<PhotosPreviewFragment.MyAdapter2>();
 	HashMap<Integer, ListAdapter> MyAdapter2Map=new HashMap<Integer, ListAdapter>();
 	private Interface instance;
+	private RelativeLayout mPhotosPreviewPromptLayout;
 
 	public PhotosPreviewFragment() {
 		// Required empty public constructor
@@ -63,8 +61,7 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if(mLayout==null){
-			mLayout = inflater.inflate(R.layout.fragment_photos_preview, container,
-					false);
+			mLayout = inflater.inflate(R.layout.fragment_photos_preview, container,false);
 			initUI();
 			iniListener();
 		}
@@ -73,7 +70,6 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	
 	@Override
 	public void onStart() {
-		// TODO Auto-generated method stub
 		readGroupParty();
 		super.onStart();
 	}
@@ -103,9 +99,15 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 			public void success(String A) {
 				Log.e("PhotosPreviewFragment", "包含未过期的所有聚会=="+A);
 				PartyAllback partyAllback = GsonUtils.parseJson(A, PartyAllback.class);
-				returnData = partyAllback.getReturnData();
-				Log.e("PhotosPreviewFragment", "returnData.size="+returnData.size());
-				adapter.notifyDataSetChanged();
+				Integer status=partyAllback.getStatusMsg();
+				if(1==status){
+					returnData = partyAllback.getReturnData();
+					Log.e("PhotosPreviewFragment", "returnData.size="+returnData.size());
+					adapter.notifyDataSetChanged();
+				}else {
+					mPhotosPreviewPromptLayout.setVisibility(View.VISIBLE);
+					listpreview.setVisibility(View.GONE);
+				}
 			}
 			
 			@Override
@@ -118,6 +120,8 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 	}
 
 	private void initUI() {
+		mPhotosPreviewPromptLayout = (RelativeLayout) mLayout.findViewById(R.id.PhotosPreviewPromptLayout);
+		mPhotosPreviewPromptLayout.setOnClickListener(this);
 		listpreview = (ListView) mLayout.findViewById(R.id.listpreview);
 		adapter = new MyAdapter();
 		listpreview.setAdapter(adapter);
@@ -129,26 +133,22 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return returnData.size();
 		}
 
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 
 		@Override
 		public View getView(int position, View convertView, ViewGroup parent) {
 			Party4 party4 = returnData.get(position);
-			// TODO Auto-generated method stub
 			View inflate = getActivity().getLayoutInflater().inflate(R.layout.preview_item,null);
 			MyGridView gridView = (MyGridView) inflate.findViewById(R.id.gv_partypreview);
 			View onclick_layout = inflate.findViewById(R.id.onclick_layout);
@@ -205,19 +205,16 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 
 		@Override
 		public int getCount() {
-			// TODO Auto-generated method stub
 			return photos.size();
 		}
 		
 		@Override
 		public Object getItem(int position) {
-			// TODO Auto-generated method stub
 			return null;
 		}
 		
 		@Override
 		public long getItemId(int position) {
-			// TODO Auto-generated method stub
 			return 0;
 		}
 		
@@ -227,7 +224,6 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 				Photo photo = photos.get(position);
 			String pk_photo = photo.getPk_photo();
 			String completeUrl=beginStr+pk_photo+endStr+"mini-avatar";
-			// TODO Auto-generated method stub
 			ImageView imageView = (ImageView) inflate.findViewById(R.id.imageView1);
 			
 			ImageLoaderUtils4Photos.getInstance().LoadImage(getActivity(), completeUrl, imageView);
@@ -253,6 +249,25 @@ public class PhotosPreviewFragment extends Fragment implements OnItemClickListen
 //		intent.putExtra("pk_party", pk_party);
 //		intent.putExtra("photos", photos);
 //		startActivity(intent);
+	}
+
+	@Override
+	public void onClick(View v) {
+		switch (v.getId()) {
+		case R.id.PhotosPreviewPromptLayout:
+			PhotosPreviewPromptLayout();
+			break;
+
+		default:
+			break;
+		}
+	}
+
+	private void PhotosPreviewPromptLayout() {
+		Intent intent=new Intent(getActivity(), AddNewPartyActivity.class);
+		intent.putExtra(IConstant.Fk_group, GroupActivity.getPk_group());
+		intent.putExtra(IConstant.IsSchedule, true);
+		startActivity(intent);
 	}
 
 }

@@ -9,7 +9,7 @@ import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -379,13 +379,6 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.team_setting2, menu);
-		return true;
-	}
-
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.TeamSetting2_back:
@@ -508,8 +501,21 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	//返回
 	private void TeamSetting2_back() {
 		finish();
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			TeamSetting2_back();
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 	//回去回调的修改状态(聚会信息)
 	public interface GetMessage
 	{

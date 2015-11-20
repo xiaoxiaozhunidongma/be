@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import leanchatlib.controller.ChatManager;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.os.Bundle;
@@ -32,7 +31,6 @@ import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
 import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
-import com.avos.avoscloud.im.v2.callback.AVIMConversationCreatedCallback;
 import com.biju.Interface;
 import com.biju.Interface.MyAllfriendsListenner;
 import com.biju.R;
@@ -173,13 +171,6 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 			return inflater;
 		}
 
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_friends3, menu);
-		return true;
 	}
 
 	@Override

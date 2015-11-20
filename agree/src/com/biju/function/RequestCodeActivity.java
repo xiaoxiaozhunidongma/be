@@ -80,19 +80,11 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 								// 查找是否已添加过该小组
 								User homeuser = new User();
 								homeuser.setPk_user(sD_pk_user);
+								Log.e("RequestCodeActivity", "sD_pk_user=====" +sD_pk_user);
 								requestcode_interface.readUserGroupMsg(RequestCodeActivity.this, homeuser);
 							}
 						}else
 						{
-//							Toast toast = Toast.makeText(getApplicationContext(),"没有查到该小组信息!", Toast.LENGTH_SHORT);
-//							toast.setGravity(Gravity.CENTER, 0, 0);
-//							LinearLayout toastView = (LinearLayout) toast.getView();
-//							ImageView imageCodeProject = new ImageView(getApplicationContext());
-//							imageCodeProject.setColorFilter(Color.RED);
-//							imageCodeProject.setImageResource(R.drawable.checked);
-//							toastView.addView(imageCodeProject, 0);
-//							toast.show();
-							
 							//自定义Toast
 							View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast, null);
 							Toast toast=new Toast(getApplicationContext());
@@ -147,22 +139,28 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 						tv.setText("已经加入过该小组");
 						toast.show();
 					} else {
-						Intent intent=new Intent(RequestCodeActivity.this, RequestCode3Activity.class);
-						intent.putExtra(IConstant.Requestcode_readhomeuser, requestcode_readhomeuser);
-						intent.putExtra("RequestCodeNumber", group_count);
-						RequestCodeActivity.this.startActivity(intent);
-						//自定义Toast
-						View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
-						Toast toast=new Toast(getApplicationContext());
-						toast.setGravity(Gravity.TOP, 0, toastHeight);
-						toast.setView(toastRoot);
-						toast.setDuration(100);
-						TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
-						tv.setText("找到小组");
-						toast.show();
+						FindSuccess();
 					}
+				}else {
+					FindSuccess();//查找成功
 				}
 
+			}
+
+			private void FindSuccess() {
+				Intent intent=new Intent(RequestCodeActivity.this, RequestCode3Activity.class);
+				intent.putExtra(IConstant.Requestcode_readhomeuser, requestcode_readhomeuser);
+				intent.putExtra("RequestCodeNumber", group_count);
+				RequestCodeActivity.this.startActivity(intent);
+				//自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
+				Toast toast=new Toast(getApplicationContext());
+				toast.setGravity(Gravity.TOP, 0, toastHeight);
+				toast.setView(toastRoot);
+				toast.setDuration(100);
+				TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
+				tv.setText("找到小组");
+				toast.show();
 			}
 
 			@Override
@@ -189,13 +187,6 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 			
 		};
 		this.interActivity=interActivity;
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.request_code, menu);
-		return true;
 	}
 
 	@Override

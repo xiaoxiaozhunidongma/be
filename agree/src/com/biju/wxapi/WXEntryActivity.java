@@ -268,13 +268,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.wxentry, menu);
-		return true;
-	}
-
-	@Override
 	protected void onNewIntent(Intent intent) {
 		super.onNewIntent(intent);
 		setIntent(intent);

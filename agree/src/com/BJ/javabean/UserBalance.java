@@ -5,7 +5,14 @@ import com.activeandroid.annotation.Table;
 
 @Table(name = "t_user")
 public class UserBalance {
-
+//	﻿{"statusMsg":1,"returnData":{"pk_user":"168",
+//		"nickname":"\u60f3\u60f3\u968f\u4fbf",
+//		"avatar_path":"97b5cc47-6c5e-4157-9f7a-ec1dd567b298",
+//		"phone":"18059866229","password":"","setup_time":"0000-00-00 00:00:00",
+//		"last_login_time":"0000-00-00 00:00:00","jpush_id":"020ffe99d00",
+//		"sex":"1","device_id":"55cda5833d90e03dc5e7f9238903d8a5f5fee1138b199567d81f8cca6da8dc05",
+//		"status":"1","amount":"0.00","wechat_id":"oyvhHxMNOdWJZikYsVtRfUAwJY58",
+//		"real_name":null,"unArr_money":"3"},"interface":"113"}
 	@Column
 	private Integer pk_user;
 	@Column
@@ -34,6 +41,8 @@ public class UserBalance {
 	private String wechat_id ;
 	@Column
 	private String real_name ;
+	@Column
+	private float unArr_money;
 	public Integer getPk_user() {
 		return pk_user;
 	}
@@ -118,5 +127,12 @@ public class UserBalance {
 	public void setReal_name(String real_name) {
 		this.real_name = real_name;
 	}
+	public float getUnArr_money() {
+		return unArr_money;
+	}
+	public void setUnArr_money(float unArr_money) {
+		this.unArr_money = unArr_money;
+	}
+	
 	
 }

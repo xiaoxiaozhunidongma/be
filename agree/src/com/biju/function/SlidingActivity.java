@@ -15,11 +15,12 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
@@ -39,15 +40,15 @@ import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.produceRequestCodeListenner;
 import com.biju.Interface.readAllPerRelationListenner;
-import com.biju.chatroom.PersonalDataActivity;
 import com.biju.MainActivity;
 import com.biju.R;
+import com.biju.chatroom.PersonalDataActivity;
 import com.fragment.CommonFragment;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
 @SuppressLint("CommitPrefEdits")
-public class SlidingActivity extends Activity implements OnClickListener {
+public class SlidingActivity extends Activity implements OnClickListener,OnItemClickListener {
 
 	private ListView mSlidingMenu_member_listView;
 	private TextView mSlidingMenu_requestcode_code;
@@ -69,6 +70,8 @@ public class SlidingActivity extends Activity implements OnClickListener {
 	private RelativeLayout mSliding_OK_layout;
 	private boolean source;
 	private Integer mGroupManager;
+	private Integer SING=1;
+	private boolean isopen;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -193,6 +196,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 		mSlidingMenu_member_listView.addFooterView(mFooterView);
 		adapter = new MyMemBerAdapter();
 		mSlidingMenu_member_listView.setAdapter(adapter);
+		mSlidingMenu_member_listView.setOnItemClickListener(this);
 	}
 
 	private void initUI() {
@@ -277,13 +281,6 @@ public class SlidingActivity extends Activity implements OnClickListener {
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.sliding, menu);
-		return true;
-	}
-
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.Sliding_OK_layout:
@@ -345,6 +342,7 @@ public class SlidingActivity extends Activity implements OnClickListener {
 		intent.putExtra("GroupManager", mGroupManager);
 		intent.putExtra(IConstant.Group, pk_group);
 		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	@Override
@@ -372,11 +370,29 @@ public class SlidingActivity extends Activity implements OnClickListener {
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			Sliding_back_layout();
+			Sliding_OK_layout();
 			break;
 		default:
 			break;
 		}
 		return super.onKeyDown(keyCode, event);
+	}
+
+	@Override
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		SdPkUser.setGetSource(3);
+		Group_ReadAllUser group_ReadAllUser = Group_Readalluser_List.get(position);
+		boolean isOpen=SdPkUser.GetOpen;
+		if(isOpen){
+			PersonalDataActivity.getClose.Close();
+			PersonalDataActivity.getRefreshData.RefreshData(group_ReadAllUser);
+		}else {
+			GroupActivity.getSliding.SlidingClick();//打开好友信息界面时改变字
+			SdPkUser.setGroup_ReadAllUser(group_ReadAllUser);
+			Intent intent=new Intent(SlidingActivity.this, PersonalDataActivity.class);
+			startActivity(intent);
+			overridePendingTransition(R.anim.leftin_item, R.anim.leftout_item);
+		}
+		finish();
 	}
 }

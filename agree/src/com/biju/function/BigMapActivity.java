@@ -153,13 +153,6 @@ public class BigMapActivity extends Activity implements android.view.View.OnClic
 		mMarkerD = (Marker) mBaiduMap.addOverlay(ooA);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.big_map, menu);
-		return true;
-	}
-	
 	/**
 	 * ¿ªÊ¼µ¼º½
 	 * 

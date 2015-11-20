@@ -4,27 +4,15 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import com.BJ.javabean.Group_ReadAllUser;
-import com.BJ.javabean.Loginback;
-import com.BJ.javabean.User;
-import com.BJ.utils.ImageLoaderUtils;
-import com.BJ.utils.SdPkUser;
-import com.biju.Interface;
-import com.biju.R;
-import com.biju.Interface.MyAllfriendsListenner;
-import com.biju.function.TeamFriendsActivity.ViewHolder;
-import com.github.volley_examples.utils.GsonUtils;
-
-import android.os.Bundle;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -32,6 +20,18 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+
+import com.BJ.javabean.Group_ReadAllUser;
+import com.BJ.javabean.Group_User;
+import com.BJ.javabean.Loginback;
+import com.BJ.javabean.User;
+import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.SdPkUser;
+import com.biju.Interface;
+import com.biju.Interface.MyAllfriendsListenner;
+import com.biju.Interface.TeamAddFriendsListenner;
+import com.biju.R;
+import com.github.volley_examples.utils.GsonUtils;
 
 public class AddTeamFriendsActivity extends Activity implements OnClickListener,OnItemClickListener{
 
@@ -41,11 +41,15 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 	
 	private List<User> userList = new ArrayList<User>();
 	private MyAddTeamFriendsAdapter adapter;
+	private List<Integer> Pk_user_List=new ArrayList<Integer>();
 	
 	@SuppressLint("UseSparseArrays")
 	private HashMap<Integer, Boolean> isSelectMap=new HashMap<Integer, Boolean>();
 	private boolean isSelected;
 	private List<User> AddTeamFriendsList=new ArrayList<User>();
+	private List<Group_User> Group_UserList=new ArrayList<Group_User>();
+	private Interface addTeamFriendsInterface;
+	private Interface instance;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -57,7 +61,7 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 	}
 
 	private void ReadAllfriends() {
-		Interface instance = Interface.getInstance();
+		instance = Interface.getInstance();
 		User user = new User();
 		Integer getsD_pk_user = SdPkUser.getsD_pk_user();
 		user.setPk_user(getsD_pk_user);
@@ -100,6 +104,19 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 			@Override
 			public void defail(Object B) {
 
+			}
+		});
+		
+		instance.setPostListener(new TeamAddFriendsListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("AddTeamFriendsActivity", "返回结果===="+A);
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
 			}
 		});
 	}
@@ -182,15 +199,38 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 		case R.id.AddTeamFriendsBack:
 			AddTeamFriendsBack();
 			break;
-
+		case R.id.AddTeamFriendsOK:
+			AddTeamFriendsOK();
+			break;
 		default:
 			break;
 		}
 	}
 
 
+	//完成
+	private void AddTeamFriendsOK() {
+		if(Pk_user_List.size()>0){
+			Integer fk_group=GroupActivity.getPk_group();
+			for (int i = 0; i < Pk_user_List.size(); i++) {
+				Integer pk_user=Pk_user_List.get(i);
+				Group_User group_User=new Group_User();
+				group_User.setFk_group(fk_group);
+				group_User.setFk_user(pk_user);
+				group_User.setMessage_warn(1);
+				group_User.setParty_warn(1);
+				group_User.setPublic_phone(0);
+				group_User.setRole(2);
+				Group_UserList.add(group_User);
+			}
+			instance.TeamAddFriends(AddTeamFriendsActivity.this,  Group_UserList);
+			
+		}
+	}
+
 	private void AddTeamFriendsBack() {
 		finish();
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
 	@Override
@@ -200,8 +240,12 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 		isSelectMap.put(position, isSelected);
 		User user=userList.get(position);
 		if(isSelected){
+			Integer pk_user=user.getPk_user();
+			Pk_user_List.add(pk_user);
 			view.findViewById(R.id.TeamFriends_choose).setVisibility(View.VISIBLE);
 		}else {
+			Integer pk_user=user.getPk_user();
+			Pk_user_List.remove(pk_user);
 			view.findViewById(R.id.TeamFriends_choose).setVisibility(View.GONE);
 		}
 	}
@@ -210,7 +254,7 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {
 		case KeyEvent.KEYCODE_BACK:
-			finish();
+			AddTeamFriendsBack();
 			break;
 		default:
 			break;

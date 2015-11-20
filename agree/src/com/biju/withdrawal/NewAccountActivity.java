@@ -3,6 +3,7 @@ package com.biju.withdrawal;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -198,4 +199,16 @@ public class NewAccountActivity extends Activity implements OnClickListener{
 		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			NewAccountBackBut();
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 }

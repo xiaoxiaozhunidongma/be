@@ -1,5 +1,7 @@
 package com.example.testleabcloud;
 
+import internal.org.apache.http.entity.mime.content.Header;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +65,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
@@ -213,11 +216,15 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	}
 
 	private void findView() {
+		mChatPromptLayout = (RelativeLayout) findViewById(R.id.LeanChatPromptLayout);
+		TextView ChatPromptText=(TextView) findViewById(R.id.LeanChatPromptText);
+		ChatPromptText.setText("这里还没有人说过话...点击下"+"\n"+"方聊天框开始发言");
+		
 		mLeanChatBackground = (RelativeLayout) findViewById(R.id.LeanChatBackground);//覆盖色
 		
 		tochatname = (TextView) findViewById(R.id.name);
 		mTv_detail = (TextView) findViewById(R.id.tv_detail);
-		mTv_detail.setOnClickListener(this);// 详情
+		mTv_detail.setOnClickListener(this);// 成员
 		findViewById(R.id.rela_more).setOnClickListener(this);
 		findViewById(R.id.tv_back).setOnClickListener(this);
 		picture_source_rela = (RelativeLayout) findViewById(R.id.picture_source_rela);
@@ -297,8 +304,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	}
 
 	private void initListView() {
-		refreshableView
-				.setRefreshListener(new RefreshableView.ListRefreshListener(
+		refreshableView.setRefreshListener(new RefreshableView.ListRefreshListener(
 						messageListView) {
 					@Override
 					public void onRefresh() {
@@ -439,6 +445,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	//异步更新头像接口
 	public static FromAvaUrlMapInter fromAvaUrlMapInter;
 	private String currUserUrl;
+	private RelativeLayout mChatPromptLayout;
 	public interface FromAvaUrlMapInter{
 		void AvaSuccess(HashMap<Integer, String> fromAvaUrlMap );
 	}
@@ -592,6 +599,13 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 			// }
 			hideSoftInputView();
 			sendText();
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					 mChatPromptLayout.setVisibility(View.GONE);
+				}
+			});
 			break;
 		case R.id.tv_detail:
 			tv_detail();
@@ -625,6 +639,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 
 	//查看成员
 	private void tv_detail() {
+		SdPkUser.setGetChatRoomOpen(false);//点击聊天室成员列表时传false
 		mTv_detail.setText("关闭");
 		mLeanChatBackground.setVisibility(View.VISIBLE);
 		Animation animation=new AlphaAnimation(0.0f,1.0f);
@@ -864,6 +879,8 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 			return;
 		}
 		ChatManager.setCurrentChattingConvid(conversation.getConversationId());
+		SdPkUser.setGetSource(2);//当好友界面销毁时从新传当前的标签
+		 Log.e("ChatActivityLean", "进入了onResume()========");
 	}
 
 	@Override
@@ -886,6 +903,25 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 									typedMessages) {
 								@Override
 								void onSucceed(List<AVIMTypedMessage> messages) {
+									if(messages.size()==0){
+				                		//显示
+										runOnUiThread(new Runnable() {
+											
+											@Override
+											public void run() {
+												mChatPromptLayout.setVisibility(View.VISIBLE);
+											}
+										});
+				                	}else{
+				                		//隐藏
+				                		runOnUiThread(new Runnable() {
+				            				
+				            				@Override
+				            				public void run() {
+				            					 mChatPromptLayout.setVisibility(View.GONE);
+				            				}
+				            			});
+				                	}
 									if(adapter!=null){
 										adapter.setDatas(typedMessages);
 										adapter.notifyDataSetChanged();
@@ -954,10 +990,28 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	}
 
 	public void loadOldMessages() {
+		//显示
+		
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				mChatPromptLayout.setVisibility(View.VISIBLE);
+			}
+		});
+		
 		if (adapter.getDatas().size() == 0) {
 			refreshableView.finishRefreshing();
 			return;
 		} else {
+			 //隐藏
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					 mChatPromptLayout.setVisibility(View.GONE);
+				}
+			});
 			AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
 			String msgId = firstMsg.getMessageId();
 			long time = firstMsg.getTimestamp();

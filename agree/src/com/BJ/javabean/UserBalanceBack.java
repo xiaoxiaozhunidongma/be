@@ -10,7 +10,7 @@ public class UserBalanceBack {
     @Expose
     private Integer statusMsg;
     @Expose
-    private List<UserBalance> returnData = new ArrayList<UserBalance>();
+    private UserBalance returnData ;
     @SerializedName("interface")
     @Expose
     private String _interface;
@@ -20,10 +20,10 @@ public class UserBalanceBack {
 	public void setStatusMsg(Integer statusMsg) {
 		this.statusMsg = statusMsg;
 	}
-	public List<UserBalance> getReturnData() {
+	public UserBalance getReturnData() {
 		return returnData;
 	}
-	public void setReturnData(List<UserBalance> returnData) {
+	public void setReturnData(UserBalance returnData) {
 		this.returnData = returnData;
 	}
 	public String get_interface() {

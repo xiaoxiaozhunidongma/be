@@ -81,17 +81,28 @@
         android:layout_height="match_parent"
         android:layout_below="@+id/friends_title"
         android:layout_centerHorizontal="true"
-        android:visibility="gone" >
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        android:visibility="gone"
+         >
+         <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="50.0dp"
+            android:layout_height="50.0dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="50dp"
-            android:text="@string/friends_prompt"
-            android:textColor="#ff0000" />
+            android:layout_marginTop="170.0dp"
+            android:src="@drawable/chat" />
+
+        <TextView
+            android:id="@+id/friends_add_Text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30.0dp"
+            android:gravity="center"
+            android:textColor="#b9b9b9"
+            android:textSize="13.0sp"
+            android:text="暂无对话信息  点击" />
     </RelativeLayout>
 
 </RelativeLayout>

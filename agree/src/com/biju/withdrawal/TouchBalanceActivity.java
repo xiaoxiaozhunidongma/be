@@ -45,6 +45,7 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 	private RelativeLayout mAccountFooter;
 	private float userbalance;
 	public static GetBalancePayMentAccount getBalancePayMentAccount;
+	private TextView mTouchBalanceUnArr_money;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -90,13 +91,12 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 				UserBalanceBack userBalanceBack=GsonUtils.parseJson(A, UserBalanceBack.class);
 				Integer StatusMsg=userBalanceBack.getStatusMsg();
 				if(1==StatusMsg){
-					List<UserBalance> balancelist=userBalanceBack.getReturnData();
-					if(balancelist.size()>0){
-						UserBalance balance=balancelist.get(0);
-						userbalance = balance.getAmount();
-						mTouchBalanceMoney.setText("¥"+userbalance+"0");
+					UserBalance balance=userBalanceBack.getReturnData();
+					userbalance = balance.getAmount();
+					float unArr_money=balance.getUnArr_money();
+					mTouchBalanceMoney.setText("¥"+userbalance+"0");
+					mTouchBalanceUnArr_money.setText("未到账金额: ¥"+unArr_money+"0");
 					}
-				}
 			}
 			
 			@Override
@@ -165,7 +165,8 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 		View mHeadView=View.inflate(TouchBalanceActivity.this, R.layout.account_head_iten, null);
 		mTouchBalanceLixtview.addHeaderView(mHeadView);
 		mTouchBalanceMoney = (TextView) mHeadView.findViewById(R.id.TouchBalanceMoney);//显示余额
-	
+		mTouchBalanceUnArr_money = (TextView) mHeadView.findViewById(R.id.TouchBalanceUnArr_money);
+		
 		mTouchBalanceLixtview.setOnItemClickListener(new OnItemClickListener() {
 
 			@Override

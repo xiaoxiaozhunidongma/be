@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -85,13 +86,6 @@ public class NicknameActivity extends Activity implements OnClickListener{
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.nickname, menu);
-		return true;
-	}
-
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.Nickname_OK_layout:
@@ -131,5 +125,17 @@ public class NicknameActivity extends Activity implements OnClickListener{
 	private void Nickname_back() {
 		finish();
 		overridePendingTransition(R.anim.left, R.anim.right);
+	}
+	
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			Nickname_back();
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
 	}
 }

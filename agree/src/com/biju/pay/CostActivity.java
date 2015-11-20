@@ -7,7 +7,6 @@ import android.app.Activity;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -20,7 +19,6 @@ import android.widget.RelativeLayout;
 
 import com.biju.IConstant;
 import com.biju.R;
-import com.biju.function.NewteamActivity;
 
 public class CostActivity extends Activity implements OnClickListener{
 
@@ -58,13 +56,6 @@ public class CostActivity extends Activity implements OnClickListener{
 				inputManager.showSoftInput(mCostPayMoneyEditText, 0);
 			}
 		}, 998);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.cost, menu);
-		return true;
 	}
 
 	@Override

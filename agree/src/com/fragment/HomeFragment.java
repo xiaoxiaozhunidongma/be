@@ -89,6 +89,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private MyGridviewAdapter adapter;
 	private Interface homeInterface;
 	private SwipeRefreshLayout swipeLayout;
+	private SwipeRefreshLayout swipe_refresh_1;
 
 	private Integer SD_pk_user = null;
 	private int EvenNumber;
@@ -109,6 +110,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private Group group;
 	public static  User readuser;
 	private boolean changeName;
+	private boolean isSwipe;
 
 	public String getSDPath() {
 		File sdDir = null;
@@ -139,9 +141,15 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 			swipeLayout = (SwipeRefreshLayout) mLayout.findViewById(R.id.swipe_refresh);
 			swipeLayout.setOnRefreshListener(this);
+			swipe_refresh_1 = (SwipeRefreshLayout) mLayout.findViewById(R.id.swipe_refresh_1);
+			swipe_refresh_1.setOnRefreshListener(this);
 
 			// 顶部刷新的样式
 			swipeLayout.setColorSchemeResources(android.R.color.holo_red_light,
+					android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright,
+					android.R.color.holo_orange_light);
+			swipe_refresh_1.setColorSchemeResources(android.R.color.holo_red_light,
 					android.R.color.holo_green_light,
 					android.R.color.holo_blue_bright,
 					android.R.color.holo_orange_light);
@@ -252,13 +260,18 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						Size = PhoneLoginActivity.list.size();
 						Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="+ PhoneLoginActivity.list.toString());
 						if (PhoneLoginActivity.list.size() > 0) {
+							isSwipe=true;
+							swipeLayout.setVisibility(View.VISIBLE);
+							swipe_refresh_1.setVisibility(View.GONE);
 							mHome_NoTeam_prompt_layout.setVisibility(View.GONE);
 							home_gridview.setVisibility(View.VISIBLE);
-							home_gridview.setAdapter(adapter);
 						}
 					}
 					adapter.notifyDataSetChanged();
 				} else {
+					isSwipe=false;
+					swipeLayout.setVisibility(View.GONE);
+					swipe_refresh_1.setVisibility(View.VISIBLE);
 					mHome_NoTeam_prompt_layout.setVisibility(View.VISIBLE);
 					home_gridview.setVisibility(View.GONE);
 				}
@@ -291,7 +304,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						}
 					}
 					SdPkUser.setHomeClickUser(allUsers);//把容器传到成员列表界面
-					SdPkUser.setGetSource(false);//传个true说明是聊天室的
+					SdPkUser.setGetSource(1);//传个true说明是群聊的
 					
 					Intent intent = new Intent(getActivity(),GroupActivity.class);
 					intent.putExtra(IConstant.HomePk_group, pk_group);
@@ -346,7 +359,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	}
 
 	private void initUI(LayoutInflater inflater) {
-		mHome_NoTeam_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Home_NoTeam_prompt_layout);
+		mLayout.findViewById(R.id.HomeRequestCodeLayout).setOnClickListener(this);
+		mHome_NoTeam_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Home_NoTeam_prompt_layout);//没有小组时显示
 		mLayout.findViewById(R.id.tab_home_new_layout).setOnClickListener(this);// 新建小组
 		mLayout.findViewById(R.id.tab_home_new).setOnClickListener(this);// 新建小组
 		home_gridview = (GridView) mLayout.findViewById(R.id.home_gridview);
@@ -577,10 +591,17 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		case R.id.tab_home_new:
 			tab_home_new_layout();
 			break;
-
+		case R.id.HomeRequestCodeLayout:
+			HomeRequestCodeLayout();
+			break;
 		default:
 			break;
 		}
+	}
+
+	private void HomeRequestCodeLayout() {
+		Intent intent = new Intent(getActivity(),RequestCodeActivity.class);
+		startActivity(intent);
 	}
 
 	private void tab_home_new_layout() {
@@ -625,8 +646,11 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			@Override
 			public void run() {
 				ReadTeamInterface(SD_pk_user);
-				adapter.notifyDataSetChanged();
-				swipeLayout.setRefreshing(false);
+				if(isSwipe){
+					swipeLayout.setRefreshing(false);
+				}else {
+					swipe_refresh_1.setRefreshing(false);
+				}
 			}
 		}, 3000);
 	}

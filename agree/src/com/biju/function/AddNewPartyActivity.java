@@ -19,6 +19,7 @@ import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -44,7 +45,6 @@ import com.alibaba.sdk.android.oss.storage.OSSData;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.addPartyListenner;
-import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
 import com.biju.pay.CostActivity;
@@ -58,16 +58,14 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private AddNewPartyActivity context;
 	private RelativeLayout mAdd_New_Party_back_layout;
 	private TextView mAdd_New_Party_back;
-	private RelativeLayout mAdd_New_Party_OK_layout;
-	private TextView mAdd_New_Party_OK;
 	private EditText mAdd_New_Party_name;
 	private RelativeLayout mAdd_New_Party_time;
 	private RelativeLayout mAdd_New_Party_address;
 	private TextView mAdd_New_Party_time_details;
 	private TextView mAdd_New_Party_address_details;
 
-	private Double mLng=null;
-	private Double mLat=null;
+	private double mLng;
+	private double mLat;
 	private Integer fk_group;
 	private Integer sD_pk_user;
 	private String isCalendar;
@@ -145,6 +143,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private boolean isNoChoose;
 	private String party_name;
 	private boolean ischoose;
+	private Button mAdd_New_Party_OK;
 	//查表
 	private void initDB() {
 		GraphicDetailsList = new Select().from(ImageText.class).execute();
@@ -288,7 +287,6 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 					intent.putExtra("Source", source);
 					intent.putExtra("Party_name", party_name);
 					startActivity(intent);
-					mAdd_New_Party_OK_layout.setEnabled(true);
 					mAdd_New_Party_OK.setEnabled(true);
 					OKToast();
 					finish();
@@ -437,6 +435,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			float mLat_1 = map_sp.getFloat(IConstant.MLat, 0);
 			mLng = Double.valueOf(mLng_1);
 			mLat = Double.valueOf(mLat_1);
+			Log.e("AddNewPartyActivity", "获取回来的mLng========"+mLng);
+			Log.e("AddNewPartyActivity", "获取回来的mLat========"+mLat);
 			mAdd_New_Party_address_details.setText(address);
 		}
 	}
@@ -444,16 +444,11 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private void initUI() {
 		mAdd_New_Party_back_layout = (RelativeLayout) findViewById(R.id.Add_New_Party_back_layout);
 		mAdd_New_Party_back = (TextView) findViewById(R.id.Add_New_Party_back);// 返回
-		mAdd_New_Party_OK_layout = (RelativeLayout) findViewById(R.id.Add_New_Party_OK_layout);
-		mAdd_New_Party_OK = (TextView) findViewById(R.id.Add_New_Party_OK);// 完成
+		mAdd_New_Party_OK = (Button) findViewById(R.id.Add_New_Party_OK);
 		
 		mAdd_New_Party_back_layout.setOnClickListener(this);
 		mAdd_New_Party_back.setOnClickListener(this);
-		mAdd_New_Party_OK_layout.setOnClickListener(this);
 		mAdd_New_Party_OK.setOnClickListener(this);
-		mAdd_New_Party_OK.setEnabled(true);
-		mAdd_New_Party_OK_layout.setEnabled(true);
-		mAdd_New_Party_OK.setEnabled(true);
 		
 		mAdd_New_Party_name = (EditText) findViewById(R.id.Add_New_Party_name);// 聚会名称
 		mAdd_New_Party_time = (RelativeLayout) findViewById(R.id.Add_New_Party_time);// 聚会时间
@@ -477,20 +472,12 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	}
 	
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_new_party, menu);
-		return true;
-	}
-
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.Add_New_Party_back_layout:
 		case R.id.Add_New_Party_back:
 			Add_New_Party_back();
 			break;
-		case R.id.Add_New_Party_OK_layout:
 		case R.id.Add_New_Party_OK:
 			Add_New_Party_OK();
 			break;
@@ -519,6 +506,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			break;
 		}
 	}
+
 	//图文详情
 	private void Add_New_Party_details_layout() {
 		Intent intent=new Intent(AddNewPartyActivity.this, GraphicDetailsActivity.class);
@@ -615,7 +603,6 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	// 完成
 	private void Add_New_Party_OK() {
 		initDB();
-		mAdd_New_Party_OK_layout.setEnabled(false);
 		mAdd_New_Party_OK.setEnabled(false);
 		
 	}
@@ -648,13 +635,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			}else {
 				party.setBegin_time(isCalendar + "   " + hour + ":" + minute);
 			}
-			if(ischoose){
-				party.setLongitude(mLng);
-				party.setLatitude(mLat);
-			}else {
-				party.setLongitude(null);
-				party.setLatitude(null);
-			}
+			party.setLongitude(mLng);
+			party.setLatitude(mLat);
 			party.setLocation(address);
 			party.setStatus(1);
 			party.setPay_type(type);

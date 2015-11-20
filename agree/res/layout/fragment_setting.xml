@@ -218,7 +218,7 @@
                         android:layout_marginLeft="20dp"
                         android:text="性别"
                         android:gravity="right|center"
-                        android:drawableLeft="@drawable/settingsex"
+                        android:drawableLeft="@drawable/sex"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -270,7 +270,7 @@
                         android:layout_marginLeft="20dp"
                         android:text="绑定手机"
                         android:gravity="right|center"
-                        android:drawableLeft="@drawable/settingphone"
+                        android:drawableLeft="@drawable/phone"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -322,7 +322,7 @@
                         android:layout_marginLeft="20dp"
                         android:text="绑定微信"
                         android:gravity="right|center"
-                        android:drawableLeft="@drawable/settingwechat"
+                        android:drawableLeft="@drawable/wechat"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -407,7 +407,7 @@
                         android:layout_marginLeft="20.0dp"
                         android:text="余额"
                         android:gravity="right|center"
-                        android:drawableLeft="@drawable/settingbalance"
+                        android:drawableLeft="@drawable/balance"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -492,7 +492,7 @@
                         android:layout_marginLeft="20.0dp"
                         android:text="反馈"
                         android:gravity="right|center"
-                        android:drawableLeft="@drawable/settingfeedback"
+                        android:drawableLeft="@drawable/feedback"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -531,7 +531,7 @@
                         android:layout_marginLeft="20.0dp"
                         android:text="关于必聚"
                         android:gravity="right|center"
-                        android:drawableLeft="@drawable/settingaboutus"
+                        android:drawableLeft="@drawable/aboutus"
                         android:textSize="@dimen/setting_size" />
 
                     <TextView
@@ -602,7 +602,7 @@
                         android:layout_marginLeft="20.0dp"
                         android:text="退出登录"
                         android:gravity="right|center"
-                        android:drawableLeft="@drawable/settingexit"
+                        android:drawableLeft="@drawable/exit"
                         android:textColor="#ff0000"
                         android:textSize="@dimen/setting_size" />
 

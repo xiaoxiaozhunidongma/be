@@ -120,14 +120,6 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 		mRequestcode2_txet.setText(number+"");
 	}
 
-	
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.request_code3, menu);
-		return true;
-	}
-
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {

@@ -132,13 +132,6 @@ public class AddFriends2Activity extends Activity implements OnClickListener,Swi
 		mHeadView.findViewById(R.id.Contact_search_layout).setOnClickListener(this);
 	}
 
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.add_friends2, menu);
-		return true;
-	}
-
 	/**
 	 * 初始化数据库查询参数
 	 */

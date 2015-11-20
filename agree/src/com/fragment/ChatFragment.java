@@ -56,8 +56,10 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
+import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
@@ -112,6 +114,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 
 	private View mLayout;
 	public static onActivityResultInterface onActivityResultInterface;
+	private RelativeLayout mChatPromptLayout;
 
 	public ChatFragment() {
 		// Required empty public constructor
@@ -180,6 +183,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		    Intent intent = getActivity().getIntent();
 			initByIntent(intent);
 			initOnActivityResult();
+			Log.e("ChatFragment", "进入了onCreateView()========");
 		}
 		return mLayout;
 	}
@@ -307,7 +311,26 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		            if (filterException(e)) {
 		              new CacheMessagesTask(getActivity(), typedMessages) {
 		                @Override
-		                void onSucceed(List<AVIMTypedMessage> messages) {
+		                void onSucceed(List<AVIMTypedMessage> messages) { 
+		                	if(messages.size()==0){
+		                		//显示
+		                		getActivity().runOnUiThread(new Runnable() {
+		        					
+		        					@Override
+		        					public void run() {
+		        						mChatPromptLayout.setVisibility(View.VISIBLE);
+		        					}
+		        				});
+		                	}else{
+		                		//隐藏
+		                		getActivity().runOnUiThread(new Runnable() {
+		        					
+		        					@Override
+		        					public void run() {
+		        						mChatPromptLayout.setVisibility(View.GONE);
+		        					}
+		        				});
+		                	}
 		                  adapter.setDatas(typedMessages);
 		                  adapter.notifyDataSetChanged();
 		                  scrollToLast();
@@ -351,10 +374,26 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		        }
 
 				private void loadOldMessages() {
+					//显示
+					getActivity().runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							mChatPromptLayout.setVisibility(View.VISIBLE);
+						}
+					});
 				    if (adapter.getDatas().size() == 0) {
 				        refreshableView.finishRefreshing();
 				        return;
 				      } else {
+				    	  //隐藏
+				    	  getActivity().runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									mChatPromptLayout.setVisibility(View.GONE);
+								}
+							});
 				        AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
 				        String msgId = firstMsg.getMessageId();
 				        long time = firstMsg.getTimestamp();
@@ -567,6 +606,10 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 	  }
 
 	private void findView() {
+		mChatPromptLayout = (RelativeLayout) mLayout.findViewById(R.id.ChatPromptLayout);//没有；聊天记录时显示
+		TextView ChatPromptText=(TextView) mLayout.findViewById(R.id.ChatPromptText);
+		ChatPromptText.setText("这里还没有人说过话...点击下"+"\n"+"方聊天框开始发言");//"暂无对话信息  点击"+"\"添加\""+"增加"+"\n"+"新的对话信息"
+		
 		  mLayout.findViewById(R.id.rela_more).setOnClickListener(this);
 			picture_source_rela = (RelativeLayout) mLayout.findViewById(R.id.picture_source_rela);
 			picture_source_rela.setOnClickListener(this);
@@ -685,6 +728,13 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 //				}
 				hideSoftInputView();
 				sendText();
+				getActivity().runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						mChatPromptLayout.setVisibility(View.GONE);
+					}
+				});
 				break;
 			default:
 				break;
@@ -901,6 +951,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 	      return;
 	    }
 	    ChatManager.setCurrentChattingConvid(conversation.getConversationId());
+	    SdPkUser.setGetSource(1);//从新传值1说明是群聊来的
 	  }
 
 	  @Override

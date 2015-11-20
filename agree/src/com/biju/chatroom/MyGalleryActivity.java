@@ -29,15 +29,14 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.BaseAdapter;
@@ -48,6 +47,11 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+
+import com.BJ.utils.DensityUtil;
+import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.biju.HackyViewPager;
+import com.biju.R;
 
 
 public class MyGalleryActivity extends Activity implements OnClickListener {
@@ -344,14 +348,16 @@ private ListView review_listview;
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.iv_jianhao:
-			ALWAYShideSoftInputView();
+//			ALWAYShideSoftInputView();
+			hideSoftInputView();
 			hide();
 			break;
 		case R.id.comment:
 			popupComment();
 			break;
 		case R.id.rela_translucent:
-			ALWAYShideSoftInputView();
+//			ALWAYShideSoftInputView();
+			hideSoftInputView();
 			hide();
 			break;
 		case R.id.et_sendmessage:

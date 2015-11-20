@@ -309,13 +309,6 @@ public class MapActivity extends Activity implements OnGetGeoCoderResultListener
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.main, menu);
-		return true;
-	}
-
-	@Override
 	protected void onPause() {
 		// MapView的生命周期与Activity同步，当activity挂起时需调用MapView.onPause()
 		mMapView.onPause();

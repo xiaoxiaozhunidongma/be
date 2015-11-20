@@ -12,7 +12,6 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -59,8 +58,7 @@ public class BeforeLoginActivity extends Activity implements OnClickListener {
 				if (SD_pk_user != null) {
 					// 跳转主界面
 					SdPkUser.setsD_pk_user(SD_pk_user);
-					Intent intent = new Intent(BeforeLoginActivity.this,
-							MainActivity.class);
+					Intent intent = new Intent(BeforeLoginActivity.this,MainActivity.class);
 					intent.putExtra(IConstant.Sdcard, true);
 					startActivity(intent);
 				}
@@ -81,13 +79,6 @@ public class BeforeLoginActivity extends Activity implements OnClickListener {
 	private void initUI() {
 		findViewById(R.id.BeforeLogin_text_login).setOnClickListener(this);
 		findViewById(R.id.BeforeLogin_text_registered).setOnClickListener(this);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.before_login, menu);
-		return true;
 	}
 
 	@Override

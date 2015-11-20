@@ -238,7 +238,9 @@
         </activity>
         <activity
             android:name="com.biju.function.PartyDetailsActivity"
-            android:label="@string/title_activity_party_details" >
+            android:label="@string/title_activity_party_details"
+            android:launchMode="singleTask"
+             >
         </activity>
         <activity
             android:name="com.biju.function.MoreActivity"
@@ -348,10 +350,6 @@
             android:name="com.biju.function.CommentsListActivity"
             android:label="@string/title_activity_comments_list" >
         </activity>
-        <activity
-            android:name="com.biju.function.FriendsDataActivity"
-            android:label="@string/title_activity_friends_data" >
-        </activity>
         <!-- 环信部分 -->
         <meta-data
             android:name="EASEMOB_APPKEY"
@@ -437,9 +435,8 @@
         </activity>
         <activity
             android:name="com.biju.function.AddNewPartyActivity"
-            android:label="@string/title_activity_add_new_party" 
-            android:launchMode="singleTask"
-            >
+            android:label="@string/title_activity_add_new_party"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.biju.function.AddFriends2Activity"

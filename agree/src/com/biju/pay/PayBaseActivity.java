@@ -26,6 +26,8 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -35,26 +37,31 @@ import android.text.TextUtils;
 import android.util.Log;
 import android.util.Xml;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.AliPayBack;
 import com.BJ.javabean.AliPayMode;
+import com.BJ.javabean.CreateOrder;
+import com.BJ.javabean.Party2;
 import com.BJ.javabean.UnionPay;
 import com.BJ.javabean.UnionPayBack;
+import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.WeChatPay;
 import com.BJ.javabean.WeChatPayBack;
 import com.BJ.javabean.WeChatPayMode;
+import com.BJ.utils.SdPkUser;
 import com.alipay.sdk.app.PayTask;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.AliPayListenner;
+import com.biju.Interface.CreateOrderListenner;
 import com.biju.Interface.UnionPayListenner;
 import com.biju.Interface.WeChatPayListenner;
 import com.biju.R;
@@ -134,9 +141,22 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		sb = new StringBuffer();
 		
 		Intent intent = getIntent();
+		boolean userAll=intent.getBooleanExtra(IConstant.UserAll, false);
+		if (userAll) {
+			UserAllParty userAllParty = (UserAllParty) intent.getSerializableExtra(IConstant.UserAllUoreParty);
+			to_user = userAllParty.getFk_user();
+			startTime = userAllParty.getBegin_time();
+			fk_party = userAllParty.getPk_party();
+		} else {
+			Party2 moreparty = (Party2) intent.getSerializableExtra(IConstant.MoreParty);
+			to_user = moreparty.getFk_user();
+			startTime = moreparty.getBegin_time();
+			fk_party = moreparty.getPk_party();
+		}
+		
 		mPaymount = intent.getFloatExtra(IConstant.Paymount, 0);
-		mWeChatPayMount = (int) (mPaymount* 100);// 微信支付金额// 测试完要*100，单位是分
-		mAliPayMount = String.valueOf(mPaymount);// 支付宝金额
+		mWeChatPayMount = (int) (mPaymount);// 微信支付金额// 测试完要*100，单位是分
+		mAliPayMount = String.valueOf(mPaymount/100);// 支付宝金额//测试完要把除100去掉
 		mUnionPayMount = mPaymount;
 		mPayName = intent.getStringExtra(IConstant.Payname);
 		initUI();
@@ -242,6 +262,20 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 			public void defail(Object B) {
 			}
 		});
+		
+		//创建财务订单监听
+		mPayInterface.setPostListener(new CreateOrderListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("PayActivity", "返回创建财务订单的结果====="+A);
+			}
+			
+			@Override
+			public void defail(Object B) {
+				
+			}
+		});
 	}
 
 	private void initUI() {
@@ -258,13 +292,6 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 	}
 
 	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.pay, menu);
-		return true;
-	}
-
-	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.PayWeChatWalletLayout:
@@ -274,7 +301,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 			PayTreasureLayout();
 			break;
 		case R.id.PayCancle:
-			finish();
+			PayCancle();
 			break;
 		case R.id.PayUnionpayLayout:
 			PayUnionpayLayout();
@@ -284,6 +311,27 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		}
 	}
 
+	//取消
+	private void PayCancle() {
+		PartyDetailsActivity.partyDetailsBackground.PartyDetailsBackground();
+		finish();
+		Intent intent=new Intent(PayBaseActivity.this, PartyDetailsActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.top_1_item, R.anim.bottom_1_item);
+	}
+
+	@Override
+	public boolean onKeyDown(int keyCode, KeyEvent event) {
+		switch (keyCode) {
+		case KeyEvent.KEYCODE_BACK:
+			PayCancle();
+			break;
+		default:
+			break;
+		}
+		return super.onKeyDown(keyCode, event);
+	}
+	
 	// //////////////////////////////////////////微信支付，以下
 	private void PayWeChatWalletLayout() {
 		WeChatPay mWeChatPay = new WeChatPay();
@@ -432,7 +480,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		req.partnerId = mch_id;
 		req.prepayId = resultunifiedorder.get("prepay_id");
 		req.packageValue = "Sign=WXPay";
-		req.nonceStr = genNonceStr();
+		req.nonceStr = genNonceStr();//订单号
 		req.timeStamp = String.valueOf(genTimeStamp());
 		Log.e("PayActivity", "第5步========");
 		List<NameValuePair> signParams = new LinkedList<NameValuePair>();
@@ -451,6 +499,22 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		msgApi.registerApp(app_id);
 		msgApi.sendReq(req);
 		Log.e("PayActivity", "第6步========");
+		//以下是传值做财务订单
+		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		String Create_time=sdf.format(new Date());
+		Integer from_user=SdPkUser.getsD_pk_user();
+		SharedPreferences PayBase_sp=getSharedPreferences("PayBase", 0);
+		Editor editor=PayBase_sp.edit();
+		editor.putString("CreateOrder", req.nonceStr);
+		editor.putInt("Order_type", 1);
+		editor.putString("Create_time", Create_time);
+		editor.putString("Arrival_time", startTime);
+		editor.putInt("From_user", from_user);
+		editor.putInt("To_user", to_user);
+		editor.putString("Fk_party", fk_party);
+		editor.putInt("fk_party", 1);
+		editor.putFloat("Amount", mPaymount);
+		editor.commit();
 	}
 
 	private long genTimeStamp() {
@@ -534,6 +598,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		}
 		// 订单
 		String orderInfo = getOrderInfo(mPayName, "必聚聚会", mAliPayMount);// mAliPayMount
+		order_id = orderInfo;//传订单号
 		Log.e("PayActivity", "该商品的订单=========" + orderInfo);
 
 		// 对订单做RSA 签名
@@ -654,6 +719,23 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 				// 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
 				if (TextUtils.equals(resultStatus, "9000")) {
 					PartyDetailsActivity.getAliPay.AliPay();
+					
+					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+					String Create_time=sdf.format(new Date());
+					Integer from_user=SdPkUser.getsD_pk_user();
+					CreateOrder createOrder=new CreateOrder();
+					createOrder.setOrder_id(order_id);
+					createOrder.setOrder_type(2);
+					createOrder.setCreate_time(Create_time);
+					createOrder.setArrival_time(startTime);
+					createOrder.setFrom_user(from_user);
+					createOrder.setTo_user(to_user);
+					createOrder.setFk_party(fk_party);
+					createOrder.setArrival_type(1);
+					createOrder.setAmount(mPaymount);
+					createOrder.setStatus(1);
+					mPayInterface.CreateOrder(PayBaseActivity.this, createOrder);
+					
 					finish();
 				} else {
 					// 判断resultStatus 为非“9000”则代表可能支付失败
@@ -683,6 +765,10 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 			}
 		};
 	};
+	private Integer to_user;
+	private String startTime;
+	private String fk_party;
+	private String order_id;
 
 	// ////////////////////////////////////////////支付宝支付，以上
 	// ////////////////////////////////////////////银联支付,以下

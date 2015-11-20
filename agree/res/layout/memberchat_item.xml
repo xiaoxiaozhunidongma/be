@@ -68,21 +68,18 @@
             android:layout_marginLeft="10.0dp"
             android:background="#aaaaaa" />
 
-        <Button
+        <TextView
             android:id="@+id/MemberChat_delete"
             android:layout_width="60.0dp"
             android:layout_height="40.0dp"
             android:layout_alignParentRight="true"
             android:layout_alignParentTop="true"
-            android:background="@null"
-            android:layout_marginTop="5.0dp"
             android:layout_marginRight="10.0dp"
+            android:layout_marginTop="5.0dp"
             android:text="删除"
-            android:textSize="13.0sp"
+            android:gravity="center"
             android:textColor="#88d4cc"
-            android:visibility="gone"
-             />
-
+            android:textSize="13.0sp" />
     </RelativeLayout>
 
 </RelativeLayout>

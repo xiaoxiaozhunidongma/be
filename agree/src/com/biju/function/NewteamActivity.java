@@ -19,21 +19,18 @@ import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
-import android.database.Cursor;
 import android.graphics.Bitmap;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -90,12 +87,11 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private byte[] bitmap2Bytes;
 	private String uUid;
 	private int toastHeight;
-	private RelativeLayout mNewTeam_OK_layout;
-	private TextView mNewTeam_OK;
 	private List<Group_User> Group_UserList = new ArrayList<Group_User>();
 	private List<String> mTeamFriendsList=new ArrayList<String>();
 	private int reUploadNum=3;
 	private int reUploadNum1=3;
+	private Button mNewTeam_OK;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -135,7 +131,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 				int newteamStatusMsg = newteamback.getStatusMsg();
 				if (newteamStatusMsg == 1) {
 					Log.e("NewteamActivity", "小组ID" + A);
-					mNewTeam_OK_layout.setEnabled(true);
 					mNewTeam_OK.setEnabled(true);
 					SdPkUser.setRefreshTeam(true);
 					
@@ -177,13 +172,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		mNewTeam_tv_head.setOnClickListener(this);// 选择小组头像
 		findViewById(R.id.NewTeam_back_layout).setOnClickListener(this);// 返回
 		findViewById(R.id.NewTeam_back).setOnClickListener(this);// 返回
-		mNewTeam_OK_layout = (RelativeLayout) findViewById(R.id.NewTeam_OK_layout);
-		mNewTeam_OK_layout.setOnClickListener(this);// 完成
-		mNewTeam_OK = (TextView) findViewById(R.id.NewTeam_OK);
+		mNewTeam_OK = (Button) findViewById(R.id.NewTeam_OK);
 		mNewTeam_OK.setOnClickListener(this);
-
-		mNewTeam_OK_layout.setEnabled(true);
-		mNewTeam_OK.setEnabled(true);
 
 		mNewteam_name.setFocusable(true);
 		mNewteam_name.setFocusableInTouchMode(true);
@@ -205,7 +195,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		case R.id.NewTeam_back:
 			NewTeam_back();
 			break;
-		case R.id.NewTeam_OK_layout:
 		case R.id.NewTeam_OK:
 			NewTeam_OK();
 			sendMessageToJerryFromTom();
@@ -284,7 +273,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private void NewTeam_OK() {
-		mNewTeam_OK_layout.setEnabled(false);
 		mNewTeam_OK.setEnabled(false);
 
 		newteam_name = mNewteam_name.getText().toString().trim();
@@ -504,13 +492,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	private void NewTeam_back() {
 		finish();
-	}
-
-	@Override
-	protected void onStop() {
-		mNewTeam_OK_layout.setEnabled(true);
-		mNewTeam_OK.setEnabled(true);
-		super.onStop();
 	}
 
 }

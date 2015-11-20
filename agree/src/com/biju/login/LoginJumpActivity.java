@@ -2,8 +2,6 @@ package com.biju.login;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.content.SharedPreferences;
-import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -57,13 +55,6 @@ public class LoginJumpActivity extends Activity implements OnClickListener{
 		findViewById(R.id.LoginJump_weixin_layout).setOnClickListener(this);
 		mLoginJump_weixin = (TextView) findViewById(R.id.LoginJump_weixin);
 		mLoginJump_weixin.setOnClickListener(this);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.login_jump, menu);
-		return true;
 	}
 
 	@Override
