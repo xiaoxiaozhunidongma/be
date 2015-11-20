@@ -340,14 +340,16 @@ private ListView review_listview;
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.iv_jianhao:
-			ALWAYShideSoftInputView();
+//			ALWAYShideSoftInputView();
+			hideSoftInputView();
 			hide();
 			break;
 		case R.id.comment:
 			popupComment();
 			break;
 		case R.id.rela_translucent:
-			ALWAYShideSoftInputView();
+//			ALWAYShideSoftInputView();
+			hideSoftInputView();
 			hide();
 			break;
 		case R.id.et_sendmessage:

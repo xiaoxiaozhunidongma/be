@@ -94,6 +94,7 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true" 
         android:background="#55000000"
+        android:visibility="gone"
         >
 
         <ImageView
