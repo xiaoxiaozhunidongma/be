@@ -1,10 +1,18 @@
 package com.BJ.javabean;
 
+import java.io.Serializable;
+
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-@Table (name="tre_group_user")
-public class Group_ReadAllUser{
+@Table (name="tre_group_readalluser")
+public class Group_ReadAllUser extends Model implements Serializable{
+	//无参数的构造！！
+	public Group_ReadAllUser() {
+		
+	}
+	
 	@Column
 	private Integer pk_group_user;
 	@Column
@@ -109,5 +117,26 @@ public class Group_ReadAllUser{
 	public void setLast_login_time(String last_login_time) {
 		this.last_login_time = last_login_time;
 	}
+	public Group_ReadAllUser(Integer pk_group_user, Integer fk_user,
+			Integer fk_group, Integer message_warn, Integer party_warn,
+			Integer public_phone, String remarks_name, Integer role,
+			Integer pk_user, String avatar_path, String nickname, String phone,
+			String last_login_time) {
+		super();
+		this.pk_group_user = pk_group_user;
+		this.fk_user = fk_user;
+		this.fk_group = fk_group;
+		this.message_warn = message_warn;
+		this.party_warn = party_warn;
+		this.public_phone = public_phone;
+		this.remarks_name = remarks_name;
+		this.role = role;
+		this.pk_user = pk_user;
+		this.avatar_path = avatar_path;
+		this.nickname = nickname;
+		this.phone = phone;
+		this.last_login_time = last_login_time;
+	}
 
+	
 }

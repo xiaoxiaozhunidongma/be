@@ -147,7 +147,9 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		    messageListView.post(new Runnable() {
 		      @Override
 		      public void run() {
-		        messageListView.smoothScrollToPosition(messageListView.getAdapter().getCount() - 1);
+//		        messageListView.smoothScrollToPosition(messageListView.getAdapter().getCount() - 1);
+				messageListView.setSelection(messageListView
+						.getAdapter().getCount() - 1);
 		      }
 		    });
 		  }

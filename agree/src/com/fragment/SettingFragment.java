@@ -194,22 +194,27 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			usersetting.setLast_login_time(mUserLast_login_time);
 			//上传
 			String mFilePath = SdPkUser.getFilePath;//回调SD卡路径
-			try {
-				convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
-			} catch (IOException e) {
-				e.printStackTrace();
+			if(mFilePath!=null){
+				try {
+					convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
+						convertToBitmap, 1080);
+				centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
+						limitLongScaleBitmap, 180);
+				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
+				recycleBitmaps.add(convertToBitmap);
+				recycleBitmaps.add(limitLongScaleBitmap);
+				recycleBitmaps.add(centerSquareScaleBitmap);
+				UUID randomUUID = UUID.randomUUID();
+				uUid = randomUUID.toString();
+				OSSupload(ossData, bitmap2Bytes, uUid,usersetting);
+			}else{
+				mSetting_head.setVisibility(View.VISIBLE);
+				mSetting_head_1.setVisibility(View.GONE);
 			}
-			limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-					convertToBitmap, 1080);
-			centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-					limitLongScaleBitmap, 180);
-			bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
-			recycleBitmaps.add(convertToBitmap);
-			recycleBitmaps.add(limitLongScaleBitmap);
-			recycleBitmaps.add(centerSquareScaleBitmap);
-			UUID randomUUID = UUID.randomUUID();
-			uUid = randomUUID.toString();
-			OSSupload(ossData, bitmap2Bytes, uUid,usersetting);
 		}
 		super.onResume();
 	}

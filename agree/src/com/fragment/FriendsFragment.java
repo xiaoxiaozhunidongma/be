@@ -26,12 +26,15 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.SdPkUser;
+import com.activeandroid.query.Select;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.AVQuery.CachePolicy;
+import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMConversationQuery;
@@ -71,7 +74,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	private String endStr = "@!";
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
-	private MyAdapter adapter;
+	private static MyAdapter adapter;
 	private Integer fk_user_from;
 
 	private Integer SD_pk_user;
@@ -102,7 +105,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			initUI();
 //			LoginHuanXin();
 //			initInterface();
-			initFindUserlistener();
+			initFindUserlistener();//这个改为数据库的比较好！！！！！！！！！！
 			ReadUserAllFriends();//暂时没用
 			readAllfriends();//读取我的所有好友
 			mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout.findViewById(R.id.friends_swipe_refresh);
@@ -129,15 +132,70 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		instance.setPostListener(new MyAllfriendsListenner() {
 			
 
+
 			@Override
 			public void success(String A) {
 				Log.e("AddFriends3Activity", "返回结果"+A);
 				Loginback loginbackread = GsonUtils.parseJson(A,
 						Loginback.class);
 				List<User> userList = loginbackread.getReturnData();
+				//查表所有数据
+				List<User> DBuserList = new Select().from(User.class).execute();
 				for (int i = 0; i < userList.size(); i++) {
-					User user2 = userList.get(i);
-					AllFriendsMap.put(user2.getPk_user(), user2);
+					boolean isInsert=true;//默认为true
+					User user = userList.get(i);
+					AllFriendsMap.put(user.getPk_user(), user);
+					
+					Integer pk_user = user.getPk_user();
+					String nickname = user.getNickname();
+					String avatar_path = user.getAvatar_path();
+					String phone = user.getPhone();
+					String password = user.getPassword();
+					String setup_time = user.getSetup_time();
+					String last_login_time = user.getLast_login_time();
+					String jpush_id = user.getJpush_id();
+					Integer sex = user.getSex();
+					String device_id = user.getDevice_id();
+					Integer status = user.getStatus();
+					float amount = user.getAmount();
+					String wechat_id = user.getWechat_id();
+					String real_name = user.getReal_name();
+					
+					for (int j = 0; j < DBuserList.size(); j++) {
+						User Curuser = DBuserList.get(j);
+						Integer pk_user2 = Curuser.getPk_user();
+						if(String.valueOf(pk_user).equals(String.valueOf(pk_user2))){
+							//先查后改
+							User executeSingle = new Select().from(User.class).where("fk_user=?", pk_user).executeSingle();
+							
+							executeSingle.setPk_user(pk_user);
+							executeSingle.setNickname(nickname);
+							executeSingle.setAvatar_path(avatar_path);
+							executeSingle.setPhone(phone);
+							executeSingle.setPassword(password);
+							executeSingle.setSetup_time(setup_time);
+							executeSingle.setLast_login_time(last_login_time);
+							executeSingle.setJpush_id(jpush_id);
+							executeSingle.setSex(sex);
+							executeSingle.setDevice_id(device_id);
+							executeSingle.setStatus(status);
+							executeSingle.setAmount(amount);
+							executeSingle.setWechat_id(wechat_id);
+							executeSingle.setReal_name(real_name);
+							
+							executeSingle.save();
+							
+							isInsert = false;
+						}
+					}
+					
+					if(isInsert){
+						User user2 = new User(pk_user, nickname, avatar_path, phone, password, setup_time, last_login_time,
+						jpush_id, sex, device_id, status, amount, wechat_id, real_name);
+						user2.save();
+					}
+					isInsert=true;//默认可以插入数据
+					
 				}
 				adapter.notifyDataSetChanged();
 			}
@@ -311,6 +369,12 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		mFriends_listview.setAdapter(adapter);
 	}
 
+
+	public  static void notifyList() {
+		adapter.notifyDataSetChanged();
+	}
+
+
 	class ViewHolder {
 		ImageView PartyReadUserAllFriends_head;
 		TextView PartyReadUserAllFriends_name;
@@ -362,10 +426,51 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			
 			AVIMConversation avimConversation = convs.get(position);
 			readMsg(avimConversation,holder.tv_lastmsg);
-			String convName = avimConversation.getName();
+			String convName="";
+			List<String> members = avimConversation.getMembers();
+			
+			Object attribute = avimConversation.getAttribute("isupdate");
+			log.e("isupdate", "isupdate现在的值=="+attribute);
+			if(attribute!=null){
+				if("true".equals(String.valueOf(attribute))){
+					//有更新过对话名字
+					convName = avimConversation.getName();
+				}else{
+					//没更新过
+					convName="";//先清空
+					for (int i = 0; i < members.size(); i++) {
+						
+						String string = members.get(i);
+						if(members.size()!=2){
+							//除了当前名字拼成的对话名
+							if(!String.valueOf(SD_pk_user).equals(string)){
+								User user = AllFriendsMap.get(Integer.valueOf(string));
+								if(user!=null){
+									if(i!=members.size()-1){
+										convName=convName+user.getNickname()+",";
+									}
+									if(i==members.size()-1){
+										convName=convName+user.getNickname()+"的对话";
+									}
+								}
+							}
+						}else{
+							if(!String.valueOf(SD_pk_user).equals(string)){
+								User user = AllFriendsMap.get(Integer.valueOf(string));
+								if(user!=null){
+									convName=user.getNickname();
+									
+								}
+							}
+						}
+					}
+					
+				}
+			}
+			
+			
 			holder.PartyReadUserAllFriends_name.setText(convName);
 			
-			List<String> members = avimConversation.getMembers();
 			if(members.size()>2){
 				holder.tv_menmberNum.setVisibility(View.VISIBLE);
 				holder.tv_menmberNum.setText(String.valueOf(members.size()));
@@ -524,5 +629,5 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
 	}
-
+	
 }

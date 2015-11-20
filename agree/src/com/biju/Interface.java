@@ -29,6 +29,7 @@ import com.BJ.javabean.PaymentAccount;
 import com.BJ.javabean.Phone;
 import com.BJ.javabean.PhoneArray;
 import com.BJ.javabean.Photo;
+import com.BJ.javabean.Photo_Review;
 import com.BJ.javabean.StrPhoneArray;
 import com.BJ.javabean.StringAddParty;
 import com.BJ.javabean.StringCreGroup;
@@ -1260,8 +1261,8 @@ public class Interface {
 	// }
 
 	// 添加图片评论接口
-	public void AddPicReview(Context context, Photo photo) {
-		AddPicReviewPost(context, packParams(photo, KAddPicReview));
+	public void AddPicReview(Context context, Photo_Review photo_Review) {
+		AddPicReviewPost(context, packParams(photo_Review, KAddPicReview));
 	}
 	// 查看图片评论列表接口
 	public void CheckPicReview(Context context, Photo Photo) {

@@ -529,7 +529,10 @@
             android:name="com.biju.pay.PreviewActivity"
             android:label="@string/title_activity_preview" >
         </activity>
-        <activity android:name="com.biju.chatroom.MyGalleryActivity" >
+        <activity 
+            android:name="com.biju.chatroom.MyGalleryActivity"
+           	android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
+            
         </activity>
         <activity
             android:name="com.biju.chatroom.AddChatsActivity"

@@ -233,7 +233,7 @@ public class MembersChatActivity extends Activity implements OnClickListener{
 		
 	}
 
-	//添加成员。。。。。未做
+	//添加成员。。。。。
 	private void MembersChatAddMembers() {
 		Intent intent=new Intent(MembersChatActivity.this, AddMembersActivity.class);
 		startActivity(intent);

@@ -2,12 +2,17 @@ package com.BJ.javabean;
 
 import java.io.Serializable;
 
+import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
 @Table(name = "t_user")
-public class User implements Serializable{
-
+public class User extends Model implements Serializable{
+	
+	public User() {
+		
+	}
+	
 	@Column
 	private Integer pk_user;
 	@Column
@@ -120,4 +125,27 @@ public class User implements Serializable{
 	public void setReal_name(String real_name) {
 		this.real_name = real_name;
 	}
+	public User(Integer pk_user, String nickname, String avatar_path,
+			String phone, String password, String setup_time,
+			String last_login_time, String jpush_id, Integer sex,
+			String device_id, Integer status, float amount, String wechat_id,
+			String real_name) {
+		super();
+		this.pk_user = pk_user;
+		this.nickname = nickname;
+		this.avatar_path = avatar_path;
+		this.phone = phone;
+		this.password = password;
+		this.setup_time = setup_time;
+		this.last_login_time = last_login_time;
+		this.jpush_id = jpush_id;
+		this.sex = sex;
+		this.device_id = device_id;
+		this.status = status;
+		this.amount = amount;
+		this.wechat_id = wechat_id;
+		this.real_name = real_name;
+	}
+	
+	
 }
