@@ -223,7 +223,7 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 				group_User.setRole(2);
 				Group_UserList.add(group_User);
 			}
-			instance.TeamAddFriends(AddTeamFriendsActivity.this, Group_UserList);
+			instance.TeamAddFriends(AddTeamFriendsActivity.this,  Group_UserList);
 			
 		}
 	}

@@ -309,7 +309,26 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		            if (filterException(e)) {
 		              new CacheMessagesTask(getActivity(), typedMessages) {
 		                @Override
-		                void onSucceed(List<AVIMTypedMessage> messages) {
+		                void onSucceed(List<AVIMTypedMessage> messages) { 
+		                	if(messages.size()==0){
+		                		//显示
+		                		getActivity().runOnUiThread(new Runnable() {
+		        					
+		        					@Override
+		        					public void run() {
+		        						mChatPromptLayout.setVisibility(View.VISIBLE);
+		        					}
+		        				});
+		                	}else{
+		                		//隐藏
+		                		getActivity().runOnUiThread(new Runnable() {
+		        					
+		        					@Override
+		        					public void run() {
+		        						mChatPromptLayout.setVisibility(View.GONE);
+		        					}
+		        				});
+		                	}
 		                  adapter.setDatas(typedMessages);
 		                  adapter.notifyDataSetChanged();
 		                  scrollToLast();
@@ -353,10 +372,26 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		        }
 
 				private void loadOldMessages() {
+					//显示
+					getActivity().runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							mChatPromptLayout.setVisibility(View.VISIBLE);
+						}
+					});
 				    if (adapter.getDatas().size() == 0) {
 				        refreshableView.finishRefreshing();
 				        return;
 				      } else {
+				    	  //隐藏
+				    	  getActivity().runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									mChatPromptLayout.setVisibility(View.GONE);
+								}
+							});
 				        AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
 				        String msgId = firstMsg.getMessageId();
 				        long time = firstMsg.getTimestamp();
@@ -571,7 +606,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 	private void findView() {
 		mChatPromptLayout = (RelativeLayout) mLayout.findViewById(R.id.ChatPromptLayout);//没有；聊天记录时显示
 		TextView ChatPromptText=(TextView) mLayout.findViewById(R.id.ChatPromptText);
-		ChatPromptText.setText("暂无对话信息  点击"+"\"添加\""+"增加"+"\n"+"新的对话信息");
+		ChatPromptText.setText("这里还没有人说过话...点击下"+"\n"+"方聊天框开始发言");//"暂无对话信息  点击"+"\"添加\""+"增加"+"\n"+"新的对话信息"
 		
 		  mLayout.findViewById(R.id.rela_more).setOnClickListener(this);
 			picture_source_rela = (RelativeLayout) mLayout.findViewById(R.id.picture_source_rela);
@@ -691,6 +726,13 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 //				}
 				hideSoftInputView();
 				sendText();
+				getActivity().runOnUiThread(new Runnable() {
+					
+					@Override
+					public void run() {
+						mChatPromptLayout.setVisibility(View.GONE);
+					}
+				});
 				break;
 			default:
 				break;

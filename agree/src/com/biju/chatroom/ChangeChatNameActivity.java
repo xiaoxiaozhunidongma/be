@@ -1,16 +1,15 @@
 package com.biju.chatroom;
 
-import com.biju.R;
-import com.example.testleabcloud.ChatActivityLean;
-
-import android.os.Bundle;
 import android.app.Activity;
+import android.os.Bundle;
 import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.Button;
 import android.widget.EditText;
+
+import com.biju.R;
+import com.example.testleabcloud.ChatActivityLean;
 
 public class ChangeChatNameActivity extends Activity implements OnClickListener {
 
@@ -28,13 +27,6 @@ public class ChangeChatNameActivity extends Activity implements OnClickListener 
 	private void iniUI() {
 		edit_chatName = (EditText) findViewById(R.id.ChangeChatNameEdit);
 		findViewById(R.id.ChangeChatNameOKBut).setOnClickListener(this);
-	}
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.chat_room, menu);
-		return true;
 	}
 
 	@Override

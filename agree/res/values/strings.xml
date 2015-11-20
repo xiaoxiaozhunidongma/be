@@ -232,12 +232,12 @@
     <string name="pay_result_callback_msg" formatted="false">微信支付结果：%s</string>
 
     <!-- home界面 -->
-    <string name="home_title_text">小组</string>
+    <string name="home_title_text">必聚</string>
     <string name="home_title_right_text">新建</string>
     <string name="home_tab_text">小组</string>
 
     <!-- party界面 -->
-    <string name="party_title_text">聚会详情</string>
+    <string name="party_title_text">活动</string>
     <string name="party_title_right_text">新建</string>
     <string name="party_prompt">你还没有参与过日程哦！</string>
     <!-- 好友界面 -->

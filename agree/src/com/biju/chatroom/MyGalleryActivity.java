@@ -2,33 +2,31 @@ package com.biju.chatroom;
 
 import java.util.ArrayList;
 
-import com.BJ.utils.DensityUtil;
-import com.BJ.utils.ImageLoaderUtils4Photos;
-import com.biju.HackyViewPager;
-import com.biju.R;
-
 import uk.co.senab.photoview.PhotoView;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.view.PagerAdapter;
-import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
-import android.view.WindowManager;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.ViewParent;
 import android.view.Window;
+import android.view.WindowManager;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+
+import com.BJ.utils.DensityUtil;
+import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.biju.HackyViewPager;
+import com.biju.R;
 
 
 public class MyGalleryActivity extends Activity implements OnClickListener {

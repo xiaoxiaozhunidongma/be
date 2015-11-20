@@ -89,8 +89,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
 			Bundle savedInstanceState) {
 		if (mLayout == null) {
-			mLayout = inflater.inflate(R.layout.fragment_friends, container,
-					false);
+			mLayout = inflater.inflate(R.layout.fragment_friends, container,false);
 
 			// 获取SD卡中的pk_user
 			SD_pk_user = SdPkUser.getsD_pk_user();
@@ -132,14 +131,16 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			@Override
 			public void success(String A) {
 				Log.e("AddFriends3Activity", "返回结果"+A);
-				Loginback loginbackread = GsonUtils.parseJson(A,
-						Loginback.class);
-				List<User> userList = loginbackread.getReturnData();
-				for (int i = 0; i < userList.size(); i++) {
-					User user2 = userList.get(i);
-					AllFriendsMap.put(user2.getPk_user(), user2);
+				Loginback loginbackread = GsonUtils.parseJson(A,Loginback.class);
+				Integer status=loginbackread.getStatusMsg();
+				if(1==status){
+					List<User> userList = loginbackread.getReturnData();
+					for (int i = 0; i < userList.size(); i++) {
+						User user2 = userList.get(i);
+						AllFriendsMap.put(user2.getPk_user(), user2);
+					}
+					adapter.notifyDataSetChanged();
 				}
-				adapter.notifyDataSetChanged();
 			}
 			
 			@Override
@@ -275,22 +276,30 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		        @Override
 		        public void done(List<AVIMConversation> convs,AVIMException e){
 		          if(e==null){
+		        	  Log.e("FriendsFragment", "进入这里111111=======");
 		              if(convs!=null && !convs.isEmpty()){
+		            	  Log.e("FriendsFragment", "进入这里33333=======");
 		                //获取符合查询条件的Conversation列表
 		            	  Log.e("FriendsFragment", "查询所有对成功！！！！数量："+convs.size());
 		            	  FriendsFragment.this.convs=convs;//赋值
+		            	  mFriends_add_tishi_layout.setVisibility(View.GONE);
+			          	  mFriends_listview.setVisibility(View.VISIBLE);
 		            	  adapter.notifyDataSetChanged();
-		            	  
+		              }else {
+		            	  Log.e("FriendsFragment", "进入这里44444=======");
+		            	mFriends_add_tishi_layout.setVisibility(View.VISIBLE);
+		          		mFriends_listview.setVisibility(View.GONE);
 		              }
+		          }else {
+		        	  Log.e("FriendsFragment", "进入这里22222=======");
 		          }
 		        }
 		      });
 		      }
 		    }
 		});
-
 	}
-
+	
 	private void ReadUserAllFriends() {
 		User user = new User();
 		user.setPk_user(SD_pk_user);
@@ -304,6 +313,9 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		mLayout.findViewById(R.id.tab_friends_addbuddy).setOnClickListener(this);// 添加好友
 		mFriends_add_layout = (RelativeLayout) mLayout.findViewById(R.id.friends_add_layout);// 有好友的时候的布局
 		mFriends_add_tishi_layout = (RelativeLayout) mLayout.findViewById(R.id.friends_add_tishi_layout);// 没有好友的时候的提示布局
+		TextView friends_add_Text=(TextView) mLayout.findViewById(R.id.friends_add_Text);
+		friends_add_Text.setText("暂无对话信息  点击"+"\"添加\""+"增加"+"\n"+"新的对话信息");
+		
 		mFriends_listview = (ListView) mLayout.findViewById(R.id.friends_listview);// listview布局
 		mFriends_listview.setDividerHeight(0);// 设置listview的item直接的间隙为0
 		adapter = new MyAdapter();

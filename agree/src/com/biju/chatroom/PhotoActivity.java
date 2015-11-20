@@ -1,61 +1,24 @@
 package com.biju.chatroom;
 
-import java.io.File;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.UUID;
 
-import com.BJ.javabean.Group;
-import com.BJ.javabean.Party4;
-import com.BJ.javabean.Photo;
-import com.BJ.javabean.Photosback;
-import com.BJ.photo.AlbumActivity;
-import com.BJ.photo.Bimp;
-import com.BJ.utils.ByteOrBitmap;
-import com.BJ.utils.ImageLoaderUtils4Photos;
-import com.BJ.utils.LimitLong;
-import com.BJ.utils.Path2Bitmap;
-import com.BJ.utils.PicCutter;
-import com.BJ.utils.SdPkUser;
-import com.alibaba.sdk.android.oss.OSSService;
-import com.alibaba.sdk.android.oss.callback.SaveCallback;
-import com.alibaba.sdk.android.oss.model.OSSException;
-import com.alibaba.sdk.android.oss.storage.OSSBucket;
-import com.alibaba.sdk.android.oss.storage.OSSData;
-import com.biju.Interface;
-import com.biju.R;
-import com.biju.APP.MyApplication;
-import com.biju.Interface.readPartyPhotosListenner;
-import com.biju.Interface.uploadingPhotoListenner;
-import com.biju.R.anim;
-import com.biju.R.id;
-import com.biju.R.layout;
-import com.biju.R.menu;
-import com.biju.function.GroupActivity;
-import com.example.imageselected.photo.SelectPhotoActivity;
-import com.fragment.PhotoFragment2.GridAdapter.ViewHolder;
-import com.github.volley_examples.utils.GsonUtils;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.ColorDrawable;
+import android.os.Bundle;
+import android.provider.MediaStore;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.View.OnClickListener;
+import android.view.ViewGroup;
 import android.view.ViewGroup.LayoutParams;
 import android.view.Window;
 import android.widget.AdapterView;
@@ -69,6 +32,27 @@ import android.widget.PopupWindow;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.BJ.javabean.Party4;
+import com.BJ.javabean.Photo;
+import com.BJ.photo.AlbumActivity;
+import com.BJ.photo.Bimp;
+import com.BJ.utils.ByteOrBitmap;
+import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.BJ.utils.LimitLong;
+import com.BJ.utils.Path2Bitmap;
+import com.BJ.utils.SdPkUser;
+import com.alibaba.sdk.android.oss.OSSService;
+import com.alibaba.sdk.android.oss.callback.SaveCallback;
+import com.alibaba.sdk.android.oss.model.OSSException;
+import com.alibaba.sdk.android.oss.storage.OSSBucket;
+import com.alibaba.sdk.android.oss.storage.OSSData;
+import com.biju.Interface;
+import com.biju.Interface.uploadingPhotoListenner;
+import com.biju.R;
+import com.biju.APP.MyApplication;
+import com.biju.function.GroupActivity;
+import com.example.imageselected.photo.SelectPhotoActivity;
 
 public class PhotoActivity extends Activity implements OnClickListener, OnItemClickListener {
 	
@@ -376,14 +360,6 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		tv_partytime.setText(party4.getBegin_time());
 		tv_partyphotonum.setText(String.valueOf(listphotos.size()));
 		
-	}
-
-
-	@Override
-	public boolean onCreateOptionsMenu(Menu menu) {
-		// Inflate the menu; this adds items to the action bar if it is present.
-		getMenuInflater().inflate(R.menu.photo, menu);
-		return true;
 	}
 
 	@Override

@@ -106,11 +106,11 @@ public class CommonFragment extends Fragment implements OnClickListener {
 		tv_2.setTextColor(tv_2.getResources().getColor(R.drawable.Common_text_color_gray));// 给字设置灰颜色
 		tv_3.setTextColor(tv_3.getResources().getColor(R.drawable.Common_text_color_gray));// 给字设置灰颜色
 		//设置红色小圆点
-		Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
-		/** 这一步必须要做,否则不会显示. */
-		drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
-		/** 设置图片位置，四个参数分别方位是左上右下，都设置为null就表示不显示图片 */
-		tv_1.setCompoundDrawables(drawable, null, null, null);
+//		Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
+//		/** 这一步必须要做,否则不会显示. */
+//		drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
+//		/** 设置图片位置，四个参数分别方位是左上右下，都设置为null就表示不显示图片 */
+//		tv_1.setCompoundDrawables(drawable, null, null, null);
 		current_realwidth = getScreenWidth();
 		mCommon_ArticleIndicates.setWidth(current_realwidth / 3);// 设置滑块的长度
 		
@@ -128,11 +128,11 @@ public class CommonFragment extends Fragment implements OnClickListener {
 					//设置字体颜色
 					textView.setTextColor(textView.getResources().getColor(R.drawable.Common_text_color_green));
 					//设置红色小圆点
-					Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
-					/** 这一步必须要做,否则不会显示. */
-					drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
-					/** 设置图片位置，四个参数分别方位是左上右下，都设置为null就表示不显示图片 */
-					textView.setCompoundDrawables(drawable, null, null, null);
+//					Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
+//					/** 这一步必须要做,否则不会显示. */
+//					drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
+//					/** 设置图片位置，四个参数分别方位是左上右下，都设置为null就表示不显示图片 */
+//					textView.setCompoundDrawables(drawable, null, null, null);
 					//设置滑块滑动
 					Animation animation = new TranslateAnimation((current_realwidth / 3) * currIndex,(current_realwidth / 3) * (position), 0, 0);
 					currIndex = position;
@@ -143,11 +143,11 @@ public class CommonFragment extends Fragment implements OnClickListener {
 					//设置字体颜色
 					textView.setTextColor(textView.getResources().getColor(R.drawable.Common_text_color_gray));
 					//设置红色小圆点
-					Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
-					/** 这一步必须要做,否则不会显示. */
-					drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
-					/** 设置图片位置，四个参数分别方位是左上右下，都设置为null就表示不显示图片 */
-					textView.setCompoundDrawables(null, null, null, null);
+//					Drawable drawable = getResources().getDrawable(R.drawable.red_yuan);
+//					/** 这一步必须要做,否则不会显示. */
+//					drawable.setBounds(0, 0, drawable.getMinimumWidth(),drawable.getMinimumHeight());// 对图片进行压缩
+//					/** 设置图片位置，四个参数分别方位是左上右下，都设置为null就表示不显示图片 */
+//					textView.setCompoundDrawables(null, null, null, null);
 				}
 			}
 

@@ -18,7 +18,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import com.BJ.javabean.Group_User;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
@@ -30,7 +32,8 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.biju.MainActivity;
 import com.biju.R;
-import com.biju.function.SlidingActivity;
+import com.biju.function.GroupActivity;
+import com.biju.function.TeamSetting2Activity;
 import com.example.testleabcloud.ChatActivityLean;
 
 public class MembersChatActivity extends Activity implements OnClickListener,OnItemClickListener{
@@ -93,7 +96,7 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 		TextView MemberChat_role;
 		TextView MemberChat_line_1;
 		TextView MemberChat_line_2;
-		Button MemberChat_delete;
+		TextView MemberChat_delete;
 	}
 
 	class MyMemberChatAdapter extends BaseAdapter{
@@ -126,7 +129,7 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 				holder.MemberChat_role = (TextView) inflater.findViewById(R.id.MemberChat_role);
 				holder.MemberChat_line_1 = (TextView) inflater.findViewById(R.id.MemberChat_line_1);
 				holder.MemberChat_line_2 = (TextView) inflater.findViewById(R.id.MemberChat_line_2);
-				holder.MemberChat_delete=(Button) inflater.findViewById(R.id.MemberChat_delete);
+				holder.MemberChat_delete=(TextView) inflater.findViewById(R.id.MemberChat_delete);
 				inflater.setTag(holder);
 			} else {
 				inflater = convertView;
@@ -164,6 +167,24 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 					@Override
 					public void onClick(View v) {
 						//删除聊天室中的成员.....未做
+						final SweetAlertDialog sd = new SweetAlertDialog(MembersChatActivity.this);
+						sd.setTitleText("提示");
+						sd.setContentText("真的要删除该成员？");
+						sd.setCancelText("我再想想");
+						sd.setConfirmText("是的");
+						sd.showCancelButton(true);
+						sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(SweetAlertDialog sDialog) {
+								sd.cancel();
+							}
+						}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+							@Override
+							public void onClick(SweetAlertDialog sDialog) {
+								sd.cancel();
+								//删除
+							}
+						}).show();
 					}
 				});
 			}
@@ -197,7 +218,7 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 		}
 	}
 
-	//退出群聊。。。。未做
+	//退出群聊
 	private void MembersChatExitGroup() {
 		AVIMClient tom = AVIMClient.getInstance(String.valueOf(sd_pk_user));
 		tom.open(new AVIMClientCallback(){
@@ -217,9 +238,28 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 				                public void done(AVIMException e){
 				                  if(e==null){
 				                  //退出成功
-				                	  Log.e("MembersCha", sd_pk_user+"退出群聊成功~");
-				                	  Intent intent=new Intent(MembersChatActivity.this, MainActivity.class);
-									startActivity(intent);
+				                	  
+				                	  final SweetAlertDialog sd = new SweetAlertDialog(MembersChatActivity.this);
+										sd.setTitleText("提示");
+										sd.setContentText("真的要删除该成员？");
+										sd.setCancelText("我再想想");
+										sd.setConfirmText("是的");
+										sd.showCancelButton(true);
+										sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+											@Override
+											public void onClick(SweetAlertDialog sDialog) {
+												sd.cancel();
+											}
+										}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+											@Override
+											public void onClick(SweetAlertDialog sDialog) {
+												sd.cancel();
+												//退出群聊
+												Log.e("MembersCha", sd_pk_user+"退出群聊成功~");
+							                	Intent intent=new Intent(MembersChatActivity.this, MainActivity.class);
+												startActivity(intent);
+											}
+										}).show();
 				                  }
 				                } 
 				              });
@@ -233,7 +273,7 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 		
 	}
 
-	//添加成员。。。。。未做
+	//添加成员
 	private void MembersChatAddMembers() {
 		Intent intent=new Intent(MembersChatActivity.this, AddMembersActivity.class);
 		startActivity(intent);

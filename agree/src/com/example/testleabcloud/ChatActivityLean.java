@@ -1,5 +1,7 @@
 package com.example.testleabcloud;
 
+import internal.org.apache.http.entity.mime.content.Header;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -213,6 +215,10 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	}
 
 	private void findView() {
+		mChatPromptLayout = (RelativeLayout) findViewById(R.id.LeanChatPromptLayout);
+		TextView ChatPromptText=(TextView) findViewById(R.id.LeanChatPromptText);
+		ChatPromptText.setText("这里还没有人说过话...点击下"+"\n"+"方聊天框开始发言");
+		
 		mLeanChatBackground = (RelativeLayout) findViewById(R.id.LeanChatBackground);//覆盖色
 		
 		tochatname = (TextView) findViewById(R.id.name);
@@ -297,8 +303,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	}
 
 	private void initListView() {
-		refreshableView
-				.setRefreshListener(new RefreshableView.ListRefreshListener(
+		refreshableView.setRefreshListener(new RefreshableView.ListRefreshListener(
 						messageListView) {
 					@Override
 					public void onRefresh() {
@@ -439,6 +444,7 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	//异步更新头像接口
 	public static FromAvaUrlMapInter fromAvaUrlMapInter;
 	private String currUserUrl;
+	private RelativeLayout mChatPromptLayout;
 	public interface FromAvaUrlMapInter{
 		void AvaSuccess(HashMap<Integer, String> fromAvaUrlMap );
 	}
@@ -575,6 +581,13 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 			// }
 			hideSoftInputView();
 			sendText();
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					 mChatPromptLayout.setVisibility(View.GONE);
+				}
+			});
 			break;
 		case R.id.tv_detail:
 			tv_detail();
@@ -869,6 +882,25 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 									typedMessages) {
 								@Override
 								void onSucceed(List<AVIMTypedMessage> messages) {
+									if(messages.size()==0){
+				                		//显示
+										runOnUiThread(new Runnable() {
+											
+											@Override
+											public void run() {
+												mChatPromptLayout.setVisibility(View.VISIBLE);
+											}
+										});
+				                	}else{
+				                		//隐藏
+				                		runOnUiThread(new Runnable() {
+				            				
+				            				@Override
+				            				public void run() {
+				            					 mChatPromptLayout.setVisibility(View.GONE);
+				            				}
+				            			});
+				                	}
 									adapter.setDatas(typedMessages);
 									adapter.notifyDataSetChanged();
 									scrollToLast();
@@ -935,10 +967,28 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 	}
 
 	public void loadOldMessages() {
+		//显示
+		
+		runOnUiThread(new Runnable() {
+			
+			@Override
+			public void run() {
+				mChatPromptLayout.setVisibility(View.VISIBLE);
+			}
+		});
+		
 		if (adapter.getDatas().size() == 0) {
 			refreshableView.finishRefreshing();
 			return;
 		} else {
+			 //隐藏
+			runOnUiThread(new Runnable() {
+				
+				@Override
+				public void run() {
+					 mChatPromptLayout.setVisibility(View.GONE);
+				}
+			});
 			AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
 			String msgId = firstMsg.getMessageId();
 			long time = firstMsg.getTimestamp();

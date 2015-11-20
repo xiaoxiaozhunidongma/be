@@ -301,7 +301,7 @@
         android:layout_height="match_parent"
         android:layout_above="@+id/rl_bottom"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="50.0dp"
+        android:background="#efefef"
         android:visibility="gone"
          >
 
@@ -311,7 +311,7 @@
             android:layout_height="50.0dp"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:layout_marginTop="168dp"
+            android:layout_marginTop="150.0dp"
             android:src="@drawable/chat" />
 
         <TextView

@@ -67,17 +67,10 @@
             <RelativeLayout
                 android:id="@+id/Schedule_prompt"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_height="200.0dp"
+                android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true" >
-
-                <ImageView
-                    android:id="@+id/imageView1"
-                    android:layout_width="50.0dp"
-                    android:layout_height="50.0dp"
-                    android:layout_centerHorizontal="true"
-                    android:layout_centerVertical="true"
-                    android:src="@drawable/calender" />
+                android:layout_marginTop="130.0dp" >
 
                 <TextView
                     android:id="@+id/textView1"
@@ -85,7 +78,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@+id/imageView1"
                     android:layout_centerHorizontal="true"
-                    android:layout_marginTop="70.0dp"
+                    android:layout_marginTop="40.0dp"
                     android:text="这个小组还没有任何的活动 点"
                     android:textColor="#b9b9b9"
                     android:textSize="14.0sp" />
@@ -100,6 +93,15 @@
                     android:text="击这里来创建一个活动吧"
                     android:textColor="#b9b9b9"
                     android:textSize="14.0sp" />
+
+                <ImageView
+                    android:id="@+id/imageView1"
+                    android:layout_width="50.0dp"
+                    android:layout_height="50.0dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_marginTop="50dp"
+                    android:src="@drawable/calender" />
             </RelativeLayout>
         </RelativeLayout>
     </RelativeLayout>

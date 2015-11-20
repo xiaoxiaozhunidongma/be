@@ -1358,10 +1358,8 @@ public class Interface {
 	}
 
 	// 删除用户的取现账户
-	public void DeletePayMentAccount(Context context,
-			PaymentAccount paymentAccount) {
-		DeletePayMentAccountPost(context,
-				packParams(paymentAccount, KDeletePayMentAccount));
+	public void DeletePayMentAccount(Context context,PaymentAccount paymentAccount) {
+		DeletePayMentAccountPost(context,packParams(paymentAccount, KDeletePayMentAccount));
 	}
 
 	// 添加用户的取现账户
@@ -1465,8 +1463,7 @@ public class Interface {
 
 	// 读取用户小组关系
 	public void readUserGroupRelation(Context context, Group_User group_User) {
-		readUserGroupRelationPost(context,
-				packParams(group_User, kReadGroupRelation));
+		readUserGroupRelationPost(context,packParams(group_User, kReadGroupRelation));
 	}
 
 	// 更新用户小组设置
@@ -1510,8 +1507,7 @@ public class Interface {
 
 	// 更新用户对于聚会的参与信息
 	public void updateUserJoinMsg(Context context, Party_User party_User) {
-		updateUserJoinMsgPost(context,
-				packParams(party_User, kUpdateUserJoinMsg));
+		updateUserJoinMsgPost(context,packParams(party_User, kUpdateUserJoinMsg));
 	}
 
 	// 用户取消聚会
@@ -1531,8 +1527,7 @@ public class Interface {
 
 	// 建立一条新的聚会关系
 	public void createPartyRelation(Context context, Party_User party_User) {
-		createPartyRelationPost(context,
-				packParams(party_User, kCreatePartyRelation));
+		createPartyRelationPost(context,packParams(party_User, kCreatePartyRelation));
 	}
 
 	// 添加一条聊天数据
