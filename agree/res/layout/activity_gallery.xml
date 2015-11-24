@@ -29,7 +29,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:layout_marginLeft="10dp"
-            android:src="@drawable/ad_loading_14" />
+             />
 
         <RelativeLayout
             android:layout_width="150dp"
@@ -42,15 +42,6 @@
             android:layout_marginRight="40dp" >
 
             <TextView
-                android:id="@+id/comment_username"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:text="TextView"
-                android:textColor="#959595"
-                android:textSize="12sp" />
-
-            <TextView
                 android:id="@+id/comment_creattime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -59,7 +50,15 @@
                 android:layout_below="@+id/comment_username"
                 android:layout_marginTop="2dp"
                 android:singleLine="true"
-                android:text="TextViewasdfasdgdfgdfgasdfgasdfgad"
+                android:textColor="#959595"
+                android:textSize="12sp" />
+
+            <TextView
+                android:id="@+id/comment_username"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
                 android:textColor="#959595"
                 android:textSize="12sp" />
 
@@ -67,14 +66,15 @@
 
         <TextView
             android:id="@+id/comment_num"
-            android:layout_width="wrap_content"
+            android:layout_width="15dp"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:layout_marginRight="20dp"
             android:text="0"
             android:textColor="#959595"
-            android:textSize="12sp" />
+            android:textSize="12sp"
+            android:gravity="center" />
 
         <ImageView
             android:id="@+id/comment"
@@ -83,7 +83,7 @@
             android:layout_centerVertical="true"
             android:layout_marginRight="10dp"
             android:layout_toLeftOf="@+id/comment_num"
-            android:src="@drawable/agree_tabbar_setting_icon_gray" />
+            android:src="@drawable/feedback" />
 
     </RelativeLayout>
 
@@ -251,7 +251,8 @@
                 android:layout_above="@+id/rl_bottom"
                 android:layout_alignParentTop="true"
                 android:layout_centerHorizontal="true" 
-                android:background="#ffffff">
+                android:stackFromBottom="true"
+                android:background="#00ffffff">
 
             </ListView>
 

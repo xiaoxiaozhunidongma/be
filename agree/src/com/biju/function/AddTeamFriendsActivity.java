@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Loginback;
+import com.BJ.javabean.TeamAddNewMemberModel;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.SdPkUser;
@@ -221,9 +222,16 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 				group_User.setParty_warn(1);
 				group_User.setPublic_phone(0);
 				group_User.setRole(2);
+				group_User.setStatus(1);
 				Group_UserList.add(group_User);
 			}
-			instance.TeamAddFriends(AddTeamFriendsActivity.this,  Group_UserList);
+			Group_User[] members=new Group_User[Group_UserList.size()];
+			for (int i = 0; i < members.length; i++) {
+				Group_User group_User = Group_UserList.get(i);
+				members[i]=group_User;
+			}
+			TeamAddNewMemberModel TeamAddNewMemberModel=new TeamAddNewMemberModel(members);
+			instance.TeamAddFriends(AddTeamFriendsActivity.this, TeamAddNewMemberModel);
 			
 		}
 	}

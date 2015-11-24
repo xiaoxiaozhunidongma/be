@@ -34,6 +34,8 @@ import com.BJ.javabean.Photo;
 import com.BJ.javabean.Photo_Review;
 import com.BJ.javabean.StrPhoneArray;
 import com.BJ.javabean.StringCreGroup;
+import com.BJ.javabean.TeamAddNewMemberJson;
+import com.BJ.javabean.TeamAddNewMemberModel;
 import com.BJ.javabean.UnionPay;
 import com.BJ.javabean.User;
 import com.BJ.javabean.User_Chat;
@@ -184,13 +186,13 @@ public class Interface {
 
 		return params;
 	}
-	//添加新成员
-	@SuppressWarnings("unchecked")
+	//小组添加新成员
 	public Map<String, String> packParamsNewMembers(Object classObject,
 			String interfaceType) {
 		JSONArray jsonArray = new JSONArray();
-		for (int i = 0; i < ((List<Group_User>)classObject).size(); i++) {
-			Group_User group_User = ((List<Group_User>)classObject).get(i);
+		Group_User[] members = ((TeamAddNewMemberModel)classObject).getMembers();
+		for (int i = 0; i < members.length; i++) {
+			Group_User group_User = members[i];
 			
 			Map map = Bean2Map.ConvertObjToMap(group_User);
 			Log.e("Interface", "map------" + map);
@@ -198,11 +200,16 @@ public class Interface {
 			jsonArray.put(jsonObject);
 			
 		}
+		
+		TeamAddNewMemberJson teamAddNewMemberJson = new TeamAddNewMemberJson(jsonArray);
+		Map map = Bean2Map.ConvertObjToMap(teamAddNewMemberJson);
+		JSONObject jsonObject = new JSONObject(map);
+		
 		Map<String, String> params = new HashMap<String, String>();
 		
 		params.put("request_type", interfaceType);
-		Log.e("Interface", "小组json:" + jsonArray.toString());
-		params.put("request_data", jsonArray.toString());
+		Log.e("Interface", "小组json:" + jsonObject.toString());
+		params.put("request_data", jsonObject.toString());
 		
 		return params;
 	}
@@ -1324,8 +1331,8 @@ public class Interface {
 	// }
 
 	// 小组添加新的成员
-	public void TeamAddFriends(Context context, List<Group_User> group_Userslist) {
-		TeamAddFriendsPost(context, packParamsNewMembers(group_Userslist, KTeamAddFriends));
+	public void TeamAddFriends(Context context, TeamAddNewMemberModel TeamAddNewMemberModel) {
+		TeamAddFriendsPost(context, packParamsNewMembers(TeamAddNewMemberModel, KTeamAddFriends));
 	}
 	
 	// 生成财务订单
