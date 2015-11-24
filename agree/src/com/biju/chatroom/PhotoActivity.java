@@ -441,6 +441,9 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 //			//这个mFilePath不可以用缩略图路径
 ////				Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 		
+		if (requestCode != 110 || data == null){
+			return;
+		}
 		@SuppressWarnings("unchecked")
 		ArrayList<String> mSelectedImageList = (ArrayList<String>) data.getSerializableExtra("mSelectedImageList");
 		mFilePath=mSelectedImageList.get(0);

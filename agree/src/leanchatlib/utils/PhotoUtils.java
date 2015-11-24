@@ -26,9 +26,9 @@ import com.nostra13.universalimageloader.core.display.RoundedBitmapDisplayer;
  */
 public class PhotoUtils {
   public static DisplayImageOptions avatarImageOptions = new DisplayImageOptions.Builder()
-      .showImageOnLoading(R.drawable.chat_default_user_avatar)
-      .showImageForEmptyUri(R.drawable.chat_default_user_avatar)
-      .showImageOnFail(R.drawable.chat_default_user_avatar)
+      .showImageOnLoading(R.drawable.agree_tabbar_setting_icon_green)
+      .showImageForEmptyUri(R.drawable.agree_tabbar_setting_icon_green)
+      .showImageOnFail(R.drawable.agree_tabbar_setting_icon_green)
       .cacheInMemory(true)
       .cacheOnDisc(true)
       .displayer(new CircleBitmapDisplayer())//圆形

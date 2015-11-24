@@ -47,16 +47,18 @@ public class ChangeChatNameActivity extends Activity implements OnClickListener 
 		chatName = edit_chatName.getText().toString();
 		ChatActivityLean.conversation.setName(chatName);
 		ChatActivityLean.conversation.setAttribute("isupdate", true);
-		ChatActivityLean.conversation.updateInfoInBackground(new AVIMConversationCallback() {
-			
-			@Override
-			public void done(AVIMException e) {
-				if(e==null){
-					ChatActivityLean.chatRoomNameInter.updateSuccess(chatName);
-					Log.e("ChangeChatNameActivity", "更新对话名字成功");
-				}
-			}
-		});
+		ChatActivityLean.conversation
+				.updateInfoInBackground(new AVIMConversationCallback() {
+
+					@Override
+					public void done(AVIMException e) {
+						if (e == null) {
+							ChatActivityLean.chatRoomNameInter
+									.updateSuccess(chatName);
+							Log.e("ChangeChatNameActivity", "更新对话名字成功");
+						}
+					}
+				});
 		finish();
 	}
 
