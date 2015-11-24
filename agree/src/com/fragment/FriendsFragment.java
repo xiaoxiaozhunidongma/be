@@ -168,10 +168,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 							if (String.valueOf(pk_user).equals(
 									String.valueOf(pk_user2))) {
 								// 先查后改
-								User executeSingle = new Select()
-										.from(User.class)
-										.where("pk_user=?", pk_user)
-										.executeSingle();
+								User executeSingle = new Select().from(User.class).where("pk_user=?", pk_user).executeSingle();
 
 								executeSingle.setPk_user(pk_user);
 								executeSingle.setNickname(nickname);

@@ -296,13 +296,6 @@
         </LinearLayout>
     </RelativeLayout>
 
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignTop="@+id/rl_bottom"
-        android:background="#aaaaaa"
-        android:text="fsadfasdfsdfsadfs" />
     <RelativeLayout
         android:id="@+id/ChatPromptLayout"
         android:layout_width="match_parent"
@@ -335,5 +328,12 @@
             android:text="暂无对话信息  点击" />
 
     </RelativeLayout>
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignTop="@+id/rl_bottom"
+        android:background="#aaaaaa"
+        android:text="fsadfasdfsdfsadfs" />
 
 </RelativeLayout>

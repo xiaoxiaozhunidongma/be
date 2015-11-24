@@ -54,7 +54,6 @@ import android.os.Bundle;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -81,6 +80,7 @@ import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.Weeks;
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
@@ -478,6 +478,9 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 //			//这个mFilePath不可以用缩略图路径
 ////				Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 		
+		if (requestCode != 110 || data == null){
+			return;
+		}
 		@SuppressWarnings("unchecked")
 		ArrayList<String> mSelectedImageList = (ArrayList<String>) data.getSerializableExtra("mSelectedImageList");
 		mFilePath=mSelectedImageList.get(0);
