@@ -140,8 +140,11 @@
                         android:background="@drawable/but_click_selector"
                         android:gravity="left|center"
                         android:paddingLeft="20.0dp"
-                        android:text="拨打电话"
-                        android:textSize="13.0sp" />
+                        android:text="   拨打电话"
+                        android:textSize="13.0sp"
+                        android:drawableLeft="@drawable/phone"
+                        
+                         />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -169,8 +172,10 @@
                         android:background="@drawable/but_click_selector"
                         android:gravity="left|center"
                         android:paddingLeft="20.0dp"
-                        android:text="发信息"
-                        android:textSize="13.0sp" />
+                        android:text="   发信息"
+                        android:textSize="13.0sp"
+                        android:drawableLeft="@drawable/message"
+                         />
                 </RelativeLayout>
 
                 <RelativeLayout
@@ -197,8 +202,10 @@
                         android:background="@drawable/but_click_selector"
                         android:gravity="left|center"
                         android:paddingLeft="20.0dp"
-                        android:text="私信ta"
-                        android:textSize="13.0sp" />
+                        android:text="   私信ta"
+                        android:textSize="13.0sp"
+                        android:drawableLeft="@drawable/directmessages"
+                         />
                 </RelativeLayout>
             </RelativeLayout>
 

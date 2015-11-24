@@ -70,8 +70,7 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 	private RelativeLayout mSliding_OK_layout;
 	private boolean source;
 	private Integer mGroupManager;
-	private Integer SING=1;
-	private boolean isopen;
+	public static GetReadGroupMember readGroupMember;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -106,6 +105,19 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 		default:
 			break;
 		}
+		initReadGroupMember();//添加完好友后进行所有好友重新读取的接口
+	}
+
+	private void initReadGroupMember() {
+		GetReadGroupMember readGroupMember=new GetReadGroupMember(){
+
+			@Override
+			public void ReadGroupMember() {
+				returndata();
+			}
+			
+		};
+		this.readGroupMember=readGroupMember;
 	}
 
 	// 读取小组中的所有用户
@@ -122,7 +134,7 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 
 			@Override
 			public void success(String A) {
-				Log.e("SlidingActivity", "=========" + A);
+				Log.e("SlidingActivity", "邀请码返回=========" + A);
 				try {
 					JSONObject jsonObject = new JSONObject(A);
 					Object object = jsonObject.get("returnData");
@@ -394,5 +406,9 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 			overridePendingTransition(R.anim.leftin_item, R.anim.leftout_item);
 		}
 		finish();
+	}
+	
+	public interface GetReadGroupMember{
+		void ReadGroupMember();
 	}
 }
