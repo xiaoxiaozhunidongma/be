@@ -32,6 +32,7 @@ import com.BJ.javabean.ReturnData;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
+import com.activeandroid.query.Select;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readAllPerRelationListenner;
@@ -81,6 +82,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 		initUI();
 		initData();
 	}
+	
 
 	private void returndata() {
 		Group readAllPerRelation_group = new Group();
@@ -164,7 +166,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 
 			}
 		});
-
+		
 		mCommentInterface.setPostListener(new readAllPerRelationListenner() {
 
 			@Override
