@@ -32,6 +32,7 @@ import com.BJ.javabean.ReturnData;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
+import com.activeandroid.query.Select;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readAllPerRelationListenner;
@@ -51,7 +52,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 	private ArrayList<Relation> not_sayList = new ArrayList<Relation>();
 
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!avatar";
 	private String completeURL;
 	private String TestcompleteURL = beginStr+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
 	private int commentsList_msg = -1;
@@ -81,6 +82,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 		initUI();
 		initData();
 	}
+	
 
 	private void returndata() {
 		Group readAllPerRelation_group = new Group();
@@ -164,7 +166,7 @@ public class CommentsListActivity extends Activity implements OnClickListener {
 
 			}
 		});
-
+		
 		mCommentInterface.setPostListener(new readAllPerRelationListenner() {
 
 			@Override
