@@ -1,48 +1,11 @@
 package com.biju.chatroom;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.UUID;
 
-import com.BJ.javabean.Group;
-import com.BJ.javabean.Party4;
-import com.BJ.javabean.Photo;
-import com.BJ.javabean.Photosback;
-import com.BJ.photo.AlbumActivity;
-import com.BJ.photo.Bimp;
-import com.BJ.utils.ByteOrBitmap;
-import com.BJ.utils.ImageLoaderUtils4Photos;
-import com.BJ.utils.LimitLong;
-import com.BJ.utils.Path2Bitmap;
-import com.BJ.utils.PicCutter;
-import com.BJ.utils.SdPkUser;
-import com.BJ.utils.Weeks;
-import com.alibaba.sdk.android.oss.OSSService;
-import com.alibaba.sdk.android.oss.callback.SaveCallback;
-import com.alibaba.sdk.android.oss.model.OSSException;
-import com.alibaba.sdk.android.oss.storage.OSSBucket;
-import com.alibaba.sdk.android.oss.storage.OSSData;
-import com.biju.Interface;
-import com.biju.R;
-import com.biju.APP.MyApplication;
-import com.biju.Interface.readPartyPhotosListenner;
-import com.biju.Interface.uploadingPhotoListenner;
-import com.biju.R.anim;
-import com.biju.R.id;
-import com.biju.R.layout;
-import com.biju.R.menu;
-import com.biju.function.GroupActivity;
-import com.example.imageselected.photo.SelectPhotoActivity;
-import com.fragment.PhotoFragment2.GridAdapter.ViewHolder;
-import com.github.volley_examples.utils.GsonUtils;
-
-import android.net.Uri;
-import android.os.Bundle;
-import android.os.Handler;
-import android.provider.MediaStore;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -128,7 +91,6 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 	private byte[] bitmap2Bytes;
 	private String uUid;
 	private String pk_party;
-	private Photo photo;
 	private Party4 party4;
 	private TextView tv_partyname;
 	private TextView tv_partytime;
@@ -208,7 +170,7 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 			@Override
 			public void success(String A) {
 				Log.e("PhotoActivity", "图片是否上传："+A);
-				listphotos.add(photo);
+//				listphotos.add(photo);
 				runOnUiThread( new Runnable() {
 					public void run() {
 						tv_partyphotonum.setText(String.valueOf(listphotos.size()));
@@ -438,7 +400,7 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 //		startActivityForResult(getAlbum, IMAGE_CODE);
 		
 		Intent getAlbum = new Intent(this, SelectPhotoActivity.class);
-		getAlbum.putExtra("SelectType", 0);
+		getAlbum.putExtra("SelectType", 1);//多张上传模式
 		startActivityForResult(getAlbum, IMAGE_CODE);
 	}
 
@@ -483,13 +445,13 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 		}
 		@SuppressWarnings("unchecked")
 		ArrayList<String> mSelectedImageList = (ArrayList<String>) data.getSerializableExtra("mSelectedImageList");
-		mFilePath=mSelectedImageList.get(0);
+//		mFilePath=mSelectedImageList.get(0);
 		Log.e("PhotoActivity", "mSelectedImageList.size()======" + mSelectedImageList.size());
 		Log.e("PhotoActivity", "mFilePath======" + mFilePath);
 		
-		Log.e("PhotoActivity", "mFilePath======" + mFilePath);
-			
-			
+		//多张上传
+		for (int z = 0; z < mSelectedImageList.size(); z++) {
+			mFilePath=mSelectedImageList.get(z);
 			if(listphotos.size()==0){
 				Log.e("PhotoActivity.this", "上传第一张图片");
 				try {
@@ -535,6 +497,7 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 					
 				}
 			}
+		}
 		
 	
 	}
@@ -604,7 +567,7 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 				
 				String compleTime=format+" "+week+" "+format3;
 				
-				photo = new Photo();
+				Photo photo = new Photo();
 				photo.setFk_group(GroupActivity.getPk_group());
 				photo.setFk_user(SD_pk_user);
 				photo.setPk_photo(objectKey);//pk_photo
@@ -614,6 +577,7 @@ public class PhotoActivity extends Activity implements OnClickListener, OnItemCl
 				photo.setCreate_time(compleTime);//设置创建时间
 				Log.e("PhotoActivity", "pk_party=="+pk_party);
 				instance.uploadingPhoto(PhotoActivity.this, photo);
+				listphotos.add(photo);
 				
 			}
 

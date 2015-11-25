@@ -80,19 +80,14 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 				Integer status=loginbackread.getStatusMsg();
 				if(1==status){
 					userList = loginbackread.getReturnData();
-//					Log.e("AddTeamFriendsActivity", "userList.size()111111=====" + userList.size());
 					if(userList.size()>0){
 							for (int j = 0; j < mGroup_ReadAllUserList.size(); j++) {
 								Group_ReadAllUser group_user=mGroup_ReadAllUserList.get(j);
 								Integer group_pk_user=group_user.getFk_user();
-//								Log.e("AddTeamFriendsActivity", "当前小组的好友ID=====" + group_pk_user);
 								for (int i = 0; i <userList.size(); i++) {
 									User all_user=userList.get(i);
 									Integer all_pk_user=all_user.getPk_user();
-//									Log.e("AddTeamFriendsActivity", "所有的好友ID=====" + all_pk_user+ "   "+i);
 								if(String.valueOf(all_pk_user).equals(String.valueOf(group_pk_user))){
-//									Log.e("AddTeamFriendsActivity", "删除的ID=====" + all_user.getPk_user());
-//									Log.e("AddTeamFriendsActivity", "删除的名称=====" + all_user.getNickname());
 									userList.remove(userList.get(i));
 								}
 							}
@@ -113,6 +108,7 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 			@Override
 			public void success(String A) {
 				Log.e("AddTeamFriendsActivity", "返回结果===="+A);
+//				SlidingActivity.readGroupMember.ReadGroupMember();
 			}
 			
 			@Override

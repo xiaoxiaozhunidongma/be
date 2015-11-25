@@ -430,30 +430,24 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		group_user.setPk_group_user(GroupActivity.pk_group_user);
 		group_user.setFk_user(sD_pk_user);
 		group_user.setFk_group(pk_group);
-		if(Clickmessage)
-		{
+		if(Clickmessage){
 			group_user.setParty_warn(Message_ischecked);// 聚会信息
 			Log.e("TeamSettingActivity", "需要传入的聚会信息ID--------" + Message_ischecked);
-		}else
-		{
+		}else{
 			group_user.setParty_warn(ismessage);// 聚会信息
 			Log.e("TeamSettingActivity", "需要传入的聚会信息ID--------" + ismessage);
 		}
-		if(Clickphone)
-		{
+		if(Clickphone){
 			group_user.setPublic_phone(Phone_ischecked);
 			Log.e("TeamSettingActivity", "需要传入的电话ID--------" + Phone_ischecked);
-		}else
-		{
+		}else{
 			group_user.setPublic_phone(isphone);
 			Log.e("TeamSettingActivity", "需要传入的电话ID--------" + isphone);
 		}
-		if(Clickchat)
-		{
+		if(Clickchat){
 			group_user.setMessage_warn(Chat_ischecked);// 聊天信息
 			Log.e("TeamSettingActivity", "需要传入的聊天信息ID--------" + Chat_ischecked);
-		}else
-		{
+		}else{
 			group_user.setMessage_warn(ischat);// 聊天信息
 			Log.e("TeamSettingActivity", "需要传入的聊天信息ID--------" + ischat);
 		}
