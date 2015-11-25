@@ -19,8 +19,11 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import com.BJ.javabean.AddTeamBack;
 import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Loginback;
@@ -51,6 +54,7 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 	private List<Group_User> Group_UserList=new ArrayList<Group_User>();
 	private Interface addTeamFriendsInterface;
 	private Interface instance;
+	private RelativeLayout mAddTeamFriendsNoShow;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +112,11 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 			@Override
 			public void success(String A) {
 				Log.e("AddTeamFriendsActivity", "返回结果===="+A);
-//				SlidingActivity.readGroupMember.ReadGroupMember();
+				AddTeamBack addTeamBack=GsonUtils.parseJson(A, AddTeamBack.class);
+				Integer status=addTeamBack.getStatusMsg();
+				if(1==status){
+					SlidingActivity.readGroupMember.ReadGroupMember();
+				}
 			}
 			
 			@Override
@@ -118,7 +126,32 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 		});
 	}
 
+	private void Dialog() {
+		final SweetAlertDialog sd = new SweetAlertDialog(AddTeamFriendsActivity.this);
+		sd.setTitleText("提示");
+		sd.setContentText("是否要将选择的1个好友加入小组?");
+		sd.setCancelText("不~~~");
+		sd.setConfirmText("是的");
+		sd.showCancelButton(true);
+		sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+				finish();
+			}
+		}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			@Override
+			public void onClick(SweetAlertDialog sDialog) {
+				sd.cancel();
+				AddTeamFriendsOK();
+				finish();
+				
+			}
+		}).show();
+	}
+	
 	private void initUI() {
+		mAddTeamFriendsNoShow = (RelativeLayout) findViewById(R.id.AddTeamFriendsNoShow);
 		findViewById(R.id.AddTeamFriendsBack).setOnClickListener(this);//返回
 		findViewById(R.id.AddTeamFriendsOK).setOnClickListener(this);//完成
 		mAddTeamFriendsListView = (ListView) findViewById(R.id.AddTeamFriendsListView);
@@ -197,7 +230,8 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 			AddTeamFriendsBack();
 			break;
 		case R.id.AddTeamFriendsOK:
-			AddTeamFriendsOK();
+			mAddTeamFriendsNoShow.setVisibility(View.GONE);
+			Dialog();
 			break;
 		default:
 			break;

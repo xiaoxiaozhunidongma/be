@@ -168,7 +168,7 @@
         <!-- 百度签名 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="yGkNOAGTinoQq0oFRuksvUIi" />
+            android:value="am4a3xRjopFOrnHsDW7nnlb4" />
         <!-- 百度签名 -->
         <activity
             android:name="com.biju.MainActivity"
@@ -598,7 +598,9 @@
         </activity>
         <activity
             android:name="com.biju.function.AddTeamFriendsActivity"
-            android:label="@string/title_activity_add_team_friends" >
+            android:label="@string/title_activity_add_team_friends" 
+            android:theme="@android:style/Theme.Translucent.NoTitleBar"
+            >
         </activity>
     </application>
 
