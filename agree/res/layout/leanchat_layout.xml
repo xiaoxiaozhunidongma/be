@@ -275,6 +275,57 @@
             android:background="#aaaaaa" />
     </RelativeLayout>
 
+
+    <RelativeLayout
+        android:id="@+id/LeanChatPromptLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/rl_bottom"
+        android:layout_below="@+id/top_bar"
+        android:layout_centerHorizontal="true"
+        android:background="#efefef"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="50.0dp"
+            android:layout_height="50.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="170.0dp"
+            android:src="@drawable/chat" />
+
+        <TextView
+            android:id="@+id/LeanChatPromptText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView1"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30.0dp"
+            android:gravity="center"
+            android:text="暂无对话信息  点击"
+            android:textColor="#b9b9b9"
+            android:textSize="13.0sp" />
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="match_parent"
+        android:layout_height="0.5dp"
+        android:layout_alignTop="@+id/rl_bottom"
+        android:background="#aaaaaa"
+        android:text="fsadfasdfsdfsadfs" />
+
+    <RelativeLayout
+        android:id="@+id/LeanChatBackground"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/top_bar"
+        android:layout_centerHorizontal="true"
+        android:background="#cc000000"
+        android:visibility="gone" >
+    </RelativeLayout>
+    
     <RelativeLayout
         android:id="@+id/picture_source_rela"
         android:layout_width="match_parent"
@@ -372,56 +423,6 @@
                     android:textSize="17.0sp" />
             </RelativeLayout>
         </LinearLayout>
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:id="@+id/LeanChatPromptLayout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_above="@+id/rl_bottom"
-        android:layout_below="@+id/top_bar"
-        android:layout_centerHorizontal="true"
-        android:background="#efefef"
-        android:visibility="gone" >
-
-        <ImageView
-            android:id="@+id/imageView1"
-            android:layout_width="50.0dp"
-            android:layout_height="50.0dp"
-            android:layout_alignParentTop="true"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="170.0dp"
-            android:src="@drawable/chat" />
-
-        <TextView
-            android:id="@+id/LeanChatPromptText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@+id/imageView1"
-            android:layout_centerHorizontal="true"
-            android:layout_marginTop="30.0dp"
-            android:gravity="center"
-            android:text="暂无对话信息  点击"
-            android:textColor="#b9b9b9"
-            android:textSize="13.0sp" />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/textView1"
-        android:layout_width="match_parent"
-        android:layout_height="0.5dp"
-        android:layout_alignTop="@+id/rl_bottom"
-        android:background="#aaaaaa"
-        android:text="fsadfasdfsdfsadfs" />
-
-    <RelativeLayout
-        android:id="@+id/LeanChatBackground"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/top_bar"
-        android:layout_centerHorizontal="true"
-        android:background="#cc000000"
-        android:visibility="gone" >
     </RelativeLayout>
 
 </RelativeLayout>
