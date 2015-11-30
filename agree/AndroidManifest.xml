@@ -178,15 +178,21 @@
         </activity>
 
         <!-- 打开应用显现的首界面 -->
-        <activity
-            android:name="com.biju.login.BeforeLoginActivity"
-            android:label="@string/title_activity_before_login"
-            android:launchMode="singleTask" >
+         <activity
+            android:name="com.biju.login.WelComeActivity"
+            android:label="@string/title_activity_wel_come"
+            android:theme="@android:style/Theme.Light.NoTitleBar"
+             >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name="com.biju.login.BeforeLoginActivity"
+            android:label="@string/title_activity_before_login"
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.biju.login.RegisteredActivity"
@@ -239,8 +245,7 @@
         <activity
             android:name="com.biju.function.PartyDetailsActivity"
             android:label="@string/title_activity_party_details"
-            android:launchMode="singleTask"
-             >
+            android:launchMode="singleTask" >
         </activity>
         <activity
             android:name="com.biju.function.MoreActivity"
@@ -526,10 +531,9 @@
             android:name="com.biju.pay.PreviewActivity"
             android:label="@string/title_activity_preview" >
         </activity>
-        <activity 
+        <activity
             android:name="com.biju.chatroom.MyGalleryActivity"
-           	android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
-            
+            android:windowSoftInputMode="stateHidden|stateAlwaysHidden" >
         </activity>
         <activity
             android:name="com.biju.chatroom.AddChatsActivity"
@@ -598,9 +602,8 @@
         </activity>
         <activity
             android:name="com.biju.function.AddTeamFriendsActivity"
-            android:label="@string/title_activity_add_team_friends" 
-            android:theme="@android:style/Theme.Translucent.NoTitleBar"
-            >
+            android:label="@string/title_activity_add_team_friends"
+            android:theme="@android:style/Theme.Translucent.NoTitleBar" >
         </activity>
     </application>
 
