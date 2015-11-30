@@ -474,7 +474,8 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		messageAgent.setSendCallback(defaultSendCallback);// 回调监听！！！！！！！！！！！！！！！！！！
 		roomsTable.clearUnread(conversation.getConversationId());
 		conversationType = ConversationHelper.typeOfConversation(conversation);
-		FromAvaUrlMapInterInter();//异步更新头像接口
+		bindAdapterToListView(conversationType, fromAvaUrlMap, currUserUrl);
+//		FromAvaUrlMapInterInter();//异步更新头像接口
 		initChatRoomNameInter();//异步更新聊天室名字
 	}
 
