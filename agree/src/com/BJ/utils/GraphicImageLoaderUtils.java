@@ -38,7 +38,7 @@ public class GraphicImageLoaderUtils {
 		options = new DisplayImageOptions.Builder()
 //		.showImageOnLoading(R.drawable.preview_2)
 		.showImageForEmptyUri(R.drawable.preview_2)
-		.showImageOnFail(R.drawable.ic_error)
+		.showImageOnFail(R.drawable.iconfont_jiazaishibai)
 		.cacheInMemory(true)//是否缓存在内存中
 //		.displayer(new RoundedBitmapDisplayer(10))//设置圆角
 		.cacheOnDisk(true)//是否缓存在SD卡中

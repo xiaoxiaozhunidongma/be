@@ -147,7 +147,6 @@ public class ChatMessageAdapter extends BaseAdapter {
       conView = createViewByType(AVIMReservedMessageType.getAVIMReservedMessageType(msg.getMessageType()), isComMsg);
     }
 //    TextView sendTimeView = ViewHolder.findViewById(conView, R.id.sendTimeView);
-    TextView tv_sendtime = ViewHolder.findViewById(conView, R.id.tv_sendtime);
     TextView tv_yymmdd = (TextView) conView.findViewById(R.id.tv_yymmdd);
     TextView tv_hhmm = (TextView) conView.findViewById(R.id.tv_hhmm);
 //    TextView contentView = ViewHolder.findViewById(conView, R.id.textContent);
@@ -177,13 +176,8 @@ public class ChatMessageAdapter extends BaseAdapter {
 //      sendTimeView.setVisibility(View.GONE);
 //    }
     SimpleDateFormat format2=new SimpleDateFormat("HH:mm");
-	String HHmm=format2.format(new Date(msg.getTimestamp()));
-	if(tv_sendtime !=null){
-		tv_sendtime .setVisibility(View.VISIBLE);
-		tv_sendtime .setText(HHmm);
-	}
+	SimpleDateFormat format=new SimpleDateFormat("yy/M");
 	
-	SimpleDateFormat format=new SimpleDateFormat("yy/M/d");
 	String yymmdd=format.format(new Date(msg.getTimestamp()));//??
 	String HHmm2=format2.format(new Date(msg.getTimestamp()));
 	if(tv_yymmdd!=null){
@@ -240,6 +234,7 @@ public class ChatMessageAdapter extends BaseAdapter {
     
     if(avatarView!=null){
     	if(isComMsg==false){
+    		avatarView.setVisibility(View.VISIBLE);
     		ImageLoader.getInstance().displayImage(CurrUserUrl, avatarView, PhotoUtils.avatarImageOptions);
 //    		Log.e("ChatMessageAdapter", "completeURL==="+CurrUserUrl);
     	}else{
@@ -321,7 +316,7 @@ public class ChatMessageAdapter extends BaseAdapter {
         setLocationView(msg, locationView);
         break;
       default:
-    	    	 contentView.setText("鏈煡娑堟伅");
+    	    	 contentView.setText("其他类型");
 //        contentLayout.requestLayout();
         break;
     }
@@ -331,8 +326,9 @@ public class ChatMessageAdapter extends BaseAdapter {
       switch (msg.getMessageStatus()) {
         case AVIMMessageStatusFailed:
           statusSendFailed.setVisibility(View.VISIBLE);
-      	if(tv_sendtime !=null){
-    		tv_sendtime .setVisibility(View.GONE);
+      	if(tv_yymmdd !=null&&tv_hhmm!=null){
+      		tv_yymmdd .setVisibility(View.GONE);
+      		tv_hhmm .setVisibility(View.GONE);
     	}
           break;
         case AVIMMessageStatusSent:
@@ -345,8 +341,9 @@ public class ChatMessageAdapter extends BaseAdapter {
           break;
         case AVIMMessageStatusSending:
           statusSendStart.setVisibility(View.VISIBLE);
-        	if(tv_sendtime !=null){
-        		tv_sendtime .setVisibility(View.GONE);
+        	if(tv_yymmdd !=null&&tv_hhmm!=null){
+          		tv_yymmdd .setVisibility(View.GONE);
+          		tv_hhmm .setVisibility(View.GONE);
         	}
           break;
         case AVIMMessageStatusNone:

@@ -105,8 +105,9 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			initUI();
 			// LoginHuanXin();
 			// initInterface();
-			initFindUserlistener();// 这个改为数据库的比较好！！！！！！！！！！
+//			initFindUserlistener();// 这个改为数据库的比较好！！！！！！！！！！
 			ReadUserAllFriends();// 暂时没用
+			selectDB();//查表
 			readAllfriends();// 读取我的所有好友
 			mFriends_swipe_refresh = (SwipeRefreshLayout) mLayout
 					.findViewById(R.id.friends_swipe_refresh);
@@ -124,7 +125,21 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		return mLayout;
 	}
 
+	private void selectDB() {
+		//FromAvaUrlMap!!!!ChatActivityLean聊天头像用的容器
+		List<User> DBuserList = new Select().from(User.class).execute();
+		FromAvaUrlMap.clear();
+		for (int i = 0; i < DBuserList.size(); i++) {
+			User Curuser = DBuserList.get(i);
+			String avatar_path = beginStr + Curuser.getAvatar_path()
+					+ endStr + "mini-avatar";
+			FromAvaUrlMap.put(Curuser.getPk_user(), avatar_path);
+		}
+		
+	}
+
 	private void readAllfriends() {
+		instance=Interface.getInstance();
 		User user = new User();
 		Integer getsD_pk_user = SdPkUser.getsD_pk_user();
 		user.setPk_user(getsD_pk_user);
@@ -205,6 +220,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 					}
 
 				}
+				
+				selectDB();//查表
 			}
 
 			@Override
@@ -214,40 +231,40 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		});
 	}
 
-	private void initFindUserlistener() {
-
-		instance = Interface.getInstance();
-
-		instance.setPostListener(new FindMultiUserListenner() {
-
-			@Override
-			public void success(String A) {
-				Log.e("FriendsFragment", "查询多个用户返回成功！！！====" + A);
-				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,
-						Loginback.class);
-				int statusmsg = findfriends_statusmsg.getStatusMsg();
-				if (statusmsg == 1) {
-					List<User> Users = findfriends_statusmsg.getReturnData();
-					for (int i = 0; i < Users.size(); i++) {
-						User user = Users.get(i);
-						String avatar_path = beginStr + user.getAvatar_path()
-								+ endStr + "mini-avatar";
-						FromAvaUrlMap.put(user.getPk_user(), avatar_path);
-					}
-					SdPkUser.setUser((ArrayList<User>) Users);// 把容器传到成员列表界面
-					SdPkUser.setGetSource(2);// 传个true说明是聊天室的
-					// 查询完毕，异步更新头像
-					ChatActivityLean.fromAvaUrlMapInter
-							.AvaSuccess(FromAvaUrlMap);
-				}
-			}
-
-			@Override
-			public void defail(Object B) {
-
-			}
-		});
-	}
+//	private void initFindUserlistener() {
+//
+//		instance = Interface.getInstance();
+//
+//		instance.setPostListener(new FindMultiUserListenner() {
+//
+//			@Override
+//			public void success(String A) {
+//				Log.e("FriendsFragment", "查询多个用户返回成功！！！====" + A);
+//				Loginback findfriends_statusmsg = GsonUtils.parseJson(A,
+//						Loginback.class);
+//				int statusmsg = findfriends_statusmsg.getStatusMsg();
+//				if (statusmsg == 1) {
+//					List<User> Users = findfriends_statusmsg.getReturnData();
+//					for (int i = 0; i < Users.size(); i++) {
+//						User user = Users.get(i);
+//						String avatar_path = beginStr + user.getAvatar_path()
+//								+ endStr + "mini-avatar";
+//						FromAvaUrlMap.put(user.getPk_user(), avatar_path);
+//					}
+//					SdPkUser.setUser((ArrayList<User>) Users);// 把容器传到成员列表界面
+//					SdPkUser.setGetSource(2);// 传个true说明是聊天室的
+//					// 查询完毕，异步更新头像
+////					ChatActivityLean.fromAvaUrlMapInter
+////							.AvaSuccess(FromAvaUrlMap);
+//				}
+//			}
+//
+//			@Override
+//			public void defail(Object B) {
+//
+//			}
+//		});
+//	}
 
 	private void ReadUser() {
 		Interface instance = Interface.getInstance();
@@ -312,6 +329,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 	@Override
 	public void onStart() {
+		selectDB();//查表
 		// ReadUserAllFriends();//???????????????????????????????????????????
 		QueryAllConv();// 查询对话
 		super.onStart();
@@ -517,7 +535,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 				holder.tv_menmberNum.setText(String.valueOf(members.size()));
 				holder.PartyReadUserAllFriends_head
 						.setImageResource(R.drawable.chatroomhead);
-			} else {
+			} else if(members.size() == 2){
 				holder.tv_menmberNum.setVisibility(View.GONE);
 				for (int i = 0; i < members.size(); i++) {
 					String string = members.get(i);
@@ -539,6 +557,11 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 					}
 				}
+			}else{
+				holder.tv_menmberNum.setVisibility(View.VISIBLE);
+				holder.tv_menmberNum.setText("1");
+				holder.PartyReadUserAllFriends_head
+				.setImageResource(R.drawable.chatroomhead);
 			}
 
 			if (position == convs.size() - 1) {
@@ -658,8 +681,39 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		// user.setPhone(members.get(i));
 		// instance.findUser(getActivity(),user);
 		// }
-		instance.findMultiUsers(getActivity(), members);
+//		instance.findMultiUsers(getActivity(), members);
+		
 
+		ArrayList<User> users=new ArrayList<User>();
+		users.clear();
+		List<User> DBuserList = new Select().from(User.class).execute();
+		for (int i = 0; i < DBuserList.size(); i++) {
+			User Curuser = DBuserList.get(i);
+			Integer pk_user = Curuser.getPk_user();
+			for (int j = 0; j < members.size(); j++) {
+				String string = members.get(j);
+				if(String.valueOf(pk_user).equals(string)){
+					users.add(Curuser);
+				}
+			}
+		}
+		//添加当前用户到容器
+		List<Group_ReadAllUser> Group_ReadAllUserList = new Select().from(Group_ReadAllUser.class).execute();
+		for (int j = 0; j < Group_ReadAllUserList.size(); j++) {
+			Group_ReadAllUser group_ReadAllUser = Group_ReadAllUserList.get(j);
+			Integer pk_user2 = group_ReadAllUser.getPk_user();
+			if(String.valueOf(pk_user2).equals(String.valueOf(SD_pk_user))){
+				User user = new User();//new 一个user对象出来设置
+				user.setPk_user(pk_user2);
+				user.setNickname(group_ReadAllUser.getNickname());
+				user.setAvatar_path(group_ReadAllUser.getAvatar_path());
+				user.setPhone(group_ReadAllUser.getPhone());
+				users.add(user);
+			}
+		}
+		SdPkUser.setUser((ArrayList<User>) users);// 把容器传到成员列表界面
+		SdPkUser.setGetSource(2);// 传个true说明是聊天室的
+		
 		String creator = avimConversation.getCreator();
 		Log.e("FriendsFragment", "创建者的ID=======" + creator);
 		SdPkUser.setCreator(creator);// 传创建者ID给成员界面

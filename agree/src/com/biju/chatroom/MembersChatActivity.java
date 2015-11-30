@@ -1,6 +1,7 @@
 package com.biju.chatroom;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import android.app.Activity;
 import android.content.Intent;
@@ -23,6 +24,7 @@ import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.avos.avoscloud.LogUtil.log;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
@@ -158,6 +160,7 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 					holder.MemberChat_line_2.setVisibility(View.GONE);
 				}
 				
+				final int pos=position;
 				holder.MemberChat_delete.setOnClickListener(new OnClickListener() {
 					
 					@Override
@@ -179,13 +182,51 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 							public void onClick(SweetAlertDialog sDialog) {
 								sd.cancel();
 								//删除
+								ExitOneMember(pos);
+								log.e("sfdsdegfsdgadfrgsdfg", "position=-===="+pos);
 							}
+
 						}).show();
 					}
 				});
 			}
 			return inflater;
 		}
+		
+	}
+	private void ExitOneMember(final int pos) {
+		String CreatorId=SdPkUser.getCreator();
+		AVIMClient GroupLeader = AVIMClient.getInstance(CreatorId);
+		GroupLeader.open(new AVIMClientCallback(){
+
+		    @Override
+		    public void done(AVIMClient client,AVIMException e){
+		      if(e==null){
+		      //登录成功
+		        final AVIMConversation conv = client.getConversation(ChatActivityLean.conversation.getConversationId());
+		        conv.join(new AVIMConversationCallback(){
+		            @Override
+		            public void done(AVIMException e){
+		              if(e==null){
+		              //加入成功
+		            	  final User user = membersChatList.get(pos);
+		            	  Integer pk_user = user.getPk_user();
+		            	  conv.kickMembers(Arrays.asList(String.valueOf(pk_user)),new AVIMConversationCallback(){
+
+		                   @Override
+		                public void done(AVIMException e){
+		                	   //剔除成功
+		                	   log.e("kickMembers", "剔除成功");
+		                	   membersChatList.remove(user);
+		                	   adapter.notifyDataSetChanged();
+		                }}
+		              );
+		              }
+		            }
+		        });
+		      }
+		    }
+		});
 		
 	}
 	@Override

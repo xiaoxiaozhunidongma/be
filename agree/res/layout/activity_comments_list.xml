@@ -61,9 +61,8 @@
             android:id="@+id/textView4"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
+            android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
-            android:layout_marginRight="100.0dp"
             android:text="参与列表"
             android:textColor="#535353"
             android:textSize="15.0sp" />

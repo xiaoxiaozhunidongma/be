@@ -339,7 +339,7 @@ public class SelectPhotoActivity extends Activity  {
 		photoBtn.setOnClickListener(new OnClickListener() {
 			@Override
 			public void onClick(View v) {
-				Toast.makeText(SelectPhotoActivity.this, GirdItemAdapter.mSelectedImage.toString(), 1).show();
+//				Toast.makeText(SelectPhotoActivity.this, GirdItemAdapter.mSelectedImage.toString(), 1).show();
 				Intent data=new Intent();
 				data.putExtra("mSelectedImageList", GirdItemAdapter.mSelectedImage);
 				setResult(Activity.RESULT_OK, data);

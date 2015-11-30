@@ -36,6 +36,7 @@ import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.text.Editable;
 import android.text.Selection;
@@ -68,8 +69,10 @@ import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
 import com.biju.R;
+import com.biju.function.GroupActivity;
 import com.example.testleabcloud.ChatActivityEventListener;
 import com.example.testleabcloud.PhotoViewActivity;
+import com.github.volley_examples.utils.NotifiUtils;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
@@ -245,8 +248,11 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 //		ReadUserAllFriends mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("allFriends");
 		  String conName = intent.getStringExtra("conName");
 //		  String otherAvaUrl = intent.getStringExtra("otherAvaUrl");
-		  @SuppressWarnings("unchecked")
-		  HashMap<Integer, String> FromAvaUrlMap= (HashMap<Integer, String>) intent.getSerializableExtra("FromAvaUrlMap");
+		  GroupActivity activity = (GroupActivity) getActivity();
+		  HashMap<Integer, String> FromAvaUrlMap = activity.getFromAvaUrlMap();
+		 Log.e("有米有  ~~~~", "FromAvaUrlMap.size()=="+FromAvaUrlMap.size());
+//		  @SuppressWarnings("unchecked")
+//		  HashMap<Integer, String> FromAvaUrlMap= (HashMap<Integer, String>) intent.getSerializableExtra("FromAvaUrlMap");
 		String CurrUserUrl = intent.getStringExtra("CurrUserUrl");
 	    String convid = intent.getStringExtra(CONVID);
 	    conversation = chatManager.lookUpConversationById(convid);

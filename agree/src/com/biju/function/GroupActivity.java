@@ -1,6 +1,7 @@
 package com.biju.function;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import android.annotation.SuppressLint;
@@ -46,6 +47,15 @@ import com.github.volley_examples.utils.GsonUtils;
 @TargetApi(Build.VERSION_CODES.HONEYCOMB)
 @SuppressLint("NewApi")
 public class GroupActivity extends FragmentActivity implements OnClickListener {
+	private HashMap<Integer, String> FromAvaUrlMap=new HashMap<Integer, String>();
+	public HashMap<Integer, String> getFromAvaUrlMap() {
+		return FromAvaUrlMap;
+	}
+
+	public void setFromAvaUrlMap(HashMap<Integer, String> fromAvaUrlMap) {
+		FromAvaUrlMap = fromAvaUrlMap;
+	}
+
 	public static int pk_group;
 
 	public static int getPk_group() {
@@ -86,7 +96,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private MyMemBerAdapter adapter;
 
 	private String beginStr = "http://picstyle.beagree.com/";
-	private String endStr = "";
+	private String endStr = "@!";
 	private String completeURL;
 	private String TestcompleteURL = beginStr
 			+ "1ddff6cf-35ac-446b-8312-10f4083ee13d" + endStr;
@@ -117,6 +127,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		partyDetails = PartyDetails_sp.getBoolean(IConstant.PartyDetails, false);
 
 		initInterface();// 监听
+		selectDB();//oncreate时候就查表一次，后面还要查表
 		initReadGroupAllUsers();//读取小组中所有用户
 		initreadUserGroupRelation();// 获取小组的关系ID
 		initSliding();//小组成员列表调用接口
@@ -276,6 +287,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 							}
 							isInsert=true;//默认可以插入数据
 						}
+						//查表给FromAvaUrlMap赋值
+						selectDB();
 					}
 				}
 			}
@@ -326,6 +339,24 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	public void group_back() {
 		finish();
 	}
+	
+	@Override
+	protected void onStart() {
+		// TODO Auto-generated method stub
+		selectDB();//查表
+		super.onStart();
+	}
+
+	private void selectDB() {
+		
+	List<Group_ReadAllUser> Group_ReadAllUserList = new Select().from(Group_ReadAllUser.class).execute();
+	FromAvaUrlMap.clear();
+	for (int i = 0; i < Group_ReadAllUserList.size(); i++) {
+		Group_ReadAllUser user = Group_ReadAllUserList.get(i);
+		String avatar_path = beginStr + user.getAvatar_path()
+				+ endStr + "mini-avatar";
+		FromAvaUrlMap.put(user.getFk_user(), avatar_path);
+	}}
 
 	@Override
 	protected void onStop() {

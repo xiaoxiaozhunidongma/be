@@ -62,7 +62,7 @@
                 android:layout_marginRight="5dp"
                 android:gravity="center"
                 android:text="确定"
-                android:visibility="invisible" />
+                android:visibility="gone" />
         </LinearLayout>
 
         <TextView

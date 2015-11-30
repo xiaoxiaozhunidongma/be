@@ -104,7 +104,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private RelativeLayout mHome_NoTeam_prompt_layout;
 	private int columnWidth;
 	private String currUserUrl;
-	private HashMap<Integer, String> FromAvaUrlMap=new HashMap<Integer, String>();
+//	private HashMap<Integer, String> FromAvaUrlMap=new HashMap<Integer, String>();
 	private int pk_group;
 	private String group_name;
 	private Group group;
@@ -290,7 +290,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 			@Override
 			public void success(String A) {
-				FromAvaUrlMap.clear();
+//				FromAvaUrlMap.clear();
 				Group_ReadAllUserback group_ReadAllUserback = GsonUtils.parseJson(A, Group_ReadAllUserback.class);
 				int status = group_ReadAllUserback.getStatusMsg();
 				if (status == 1) {
@@ -300,7 +300,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						for (int i = 0; i < allUsers.size(); i++) {
 							Group_ReadAllUser readAllUser = allUsers.get(i);
 							String avatar_path = beginStr+readAllUser.getAvatar_path()+endStr+"mini-avatar";
-							FromAvaUrlMap.put(readAllUser.getFk_user(), avatar_path);
+//							FromAvaUrlMap.put(readAllUser.getFk_user(), avatar_path);
 						}
 					}
 					SdPkUser.setHomeClickUser(allUsers);//把容器传到成员列表界面
@@ -310,7 +310,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					intent.putExtra(IConstant.HomePk_group, pk_group);
 					intent.putExtra(IConstant.HomeGroupName, group_name);
 					intent.putExtra("conName", "group_name");
-					intent.putExtra("FromAvaUrlMap", FromAvaUrlMap);//数组
+//					intent.putExtra("FromAvaUrlMap", FromAvaUrlMap);//数组
 					intent.putExtra("convid", group.getEm_id());
 					intent.putExtra("CurrUserUrl", currUserUrl);
 					startActivity(intent);
