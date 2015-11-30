@@ -178,13 +178,13 @@
         </activity>
 
         <!-- 打开应用显现的首界面 -->
-         <activity
+        <activity
             android:name="com.biju.login.WelComeActivity"
             android:label="@string/title_activity_wel_come"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-             >
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -192,8 +192,7 @@
             android:name="com.biju.login.BeforeLoginActivity"
             android:label="@string/title_activity_before_login"
             android:launchMode="singleTask"
-            android:theme="@android:style/Theme.Light.NoTitleBar"
-             >
+            android:theme="@android:style/Theme.Light.NoTitleBar" >
         </activity>
         <activity
             android:name="com.biju.login.RegisteredActivity"
