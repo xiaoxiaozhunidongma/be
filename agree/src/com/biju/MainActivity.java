@@ -185,6 +185,12 @@ public class MainActivity extends FragmentActivity  {
 		Editor editor2=refresh_sp.edit();
 		editor2.putBoolean(IConstant.IsAddRefresh,false);
 		editor2.commit();
+		
+		//欢迎界面
+		SharedPreferences Welcome_sp=getSharedPreferences("WelCome", 0);
+		Editor Welcome_editor=Welcome_sp.edit();
+		Welcome_editor.putBoolean("welcome", true);
+		Welcome_editor.commit();
 	}
 
 	@Override
@@ -258,6 +264,7 @@ public class MainActivity extends FragmentActivity  {
 	       System.gc();  //提醒系统及时回收
 		super.onDestroy();
 	}
+	
 
 	// 滑动过程
 //	@SuppressWarnings("deprecation")

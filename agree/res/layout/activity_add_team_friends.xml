@@ -2,56 +2,62 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddTeamFriendsActivity"
-    android:background="#efefef"
-     >
+    android:background="#88000000"
+    tools:context=".AddTeamFriendsActivity" >
 
     <RelativeLayout
-        android:id="@+id/AddTeamFriendsTitleLayout"
-        android:layout_width="match_parent"
-        android:layout_height="50.0dp"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:background="#ffffff"
-         >
-
-        <TextView
-            android:id="@+id/AddTeamFriendsBack"
-            android:layout_width="65.0dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:gravity="center"
-            android:text="返回"
-            android:textColor="@drawable/title_left_color"
-            android:textSize="13.0sp" />
-
-        <TextView
-            android:id="@+id/textView2"
-            android:layout_width="match_parent"
-            android:layout_height="0.50dp"
-            android:layout_alignParentBottom="true"
-            android:background="#aaaaaa" />
-
-        <TextView
-            android:id="@+id/AddTeamFriendsOK"
-            android:layout_width="65.0dp"
-            android:layout_height="match_parent"
-            android:layout_alignBaseline="@+id/AddTeamFriendsBack"
-            android:layout_alignBottom="@+id/AddTeamFriendsBack"
-            android:layout_alignParentRight="true"
-            android:gravity="center"
-            android:text="完成"
-            android:textColor="@drawable/title_right_color"
-            android:textSize="13.0sp" />
-    </RelativeLayout>
-
-    <ListView
-        android:id="@+id/AddTeamFriendsListView"
+        android:id="@+id/AddTeamFriendsNoShow"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/AddTeamFriendsTitleLayout"
-        android:background="#ffffff" >
-    </ListView>
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true" >
+
+        <RelativeLayout
+            android:id="@+id/AddTeamFriendsTitleLayout"
+            android:layout_width="match_parent"
+            android:layout_height="50.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:background="#ffffff" >
+
+            <TextView
+                android:id="@+id/AddTeamFriendsBack"
+                android:layout_width="65.0dp"
+                android:layout_height="match_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="返回"
+                android:textColor="@drawable/title_left_color"
+                android:textSize="13.0sp" />
+
+            <TextView
+                android:id="@+id/textView2"
+                android:layout_width="match_parent"
+                android:layout_height="0.50dp"
+                android:layout_alignParentBottom="true"
+                android:background="#aaaaaa" />
+
+            <TextView
+                android:id="@+id/AddTeamFriendsOK"
+                android:layout_width="65.0dp"
+                android:layout_height="match_parent"
+                android:layout_alignBaseline="@+id/AddTeamFriendsBack"
+                android:layout_alignBottom="@+id/AddTeamFriendsBack"
+                android:layout_alignParentRight="true"
+                android:gravity="center"
+                android:text="完成"
+                android:textColor="@drawable/title_right_color"
+                android:textSize="13.0sp" />
+        </RelativeLayout>
+
+        <ListView
+            android:id="@+id/AddTeamFriendsListView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_below="@+id/AddTeamFriendsTitleLayout"
+            android:background="#ffffff" >
+        </ListView>
+    </RelativeLayout>
 
 </RelativeLayout>

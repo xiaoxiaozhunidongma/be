@@ -390,5 +390,6 @@
     <string name="title_activity_change_group_name">ChangeGroupNameActivity</string>
     <string name="title_activity_add_team_friends">AddTeamFriendsActivity</string>
     <string name="title_activity_personal_data1">PersonalData1Activity</string>
+    <string name="title_activity_wel_come">必聚</string>
 
 </resources>
