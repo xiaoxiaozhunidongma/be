@@ -32,6 +32,7 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.Photo;
 import com.BJ.javabean.Photo_Review;
@@ -41,6 +42,7 @@ import com.BJ.utils.DensityUtil;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.ImageLoaderUtils4Photos;
 import com.BJ.utils.SdPkUser;
+import com.activeandroid.query.Select;
 import com.avos.avoscloud.LogUtil.log;
 import com.biju.HackyViewPager;
 import com.biju.Interface;
@@ -78,12 +80,14 @@ public class MyGalleryActivity extends Activity implements OnClickListener {
 	private MyAdapter myAdapter;
 	private List<Photo_Review> returnData=new ArrayList<Photo_Review>();
 	private TextView comment_num;
+	private List<Group_ReadAllUser> dB_Users=new ArrayList<Group_ReadAllUser>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_gallery);
+		selectDB();
 		Intent intent = getIntent();
 		curposition = intent.getIntExtra("position", -1);
 		listphotos = (ArrayList<Photo>) intent
@@ -151,6 +155,10 @@ public class MyGalleryActivity extends Activity implements OnClickListener {
 			}
 		});
 		mViewPager.setCurrentItem(curposition);
+	}
+
+	private void selectDB() {
+		dB_Users = new Select().from(Group_ReadAllUser.class).execute();
 	}
 
 	private void initCheckPicReviewListener() {
@@ -333,12 +341,23 @@ public class MyGalleryActivity extends Activity implements OnClickListener {
 			TextView review_createtime = (TextView) inflate.findViewById(R.id.review_createtime);
 			TextView review_content = (TextView) inflate.findViewById(R.id.review_content);
 			
-			String fk_photo = photo_Review.getFk_photo();
+//			String fk_photo = photo_Review.getFk_photo();
 			String create_date = photo_Review.getCreate_date();
 			String content = photo_Review.getContent();
-			String Url=beginStr+fk_photo+endStr+"mini-avatar";
+//			String Url=beginStr+fk_photo+endStr+"mini-avatar";
 			
-			ImageLoaderUtils.getInstance().LoadImageCricular(MyGalleryActivity.this,Url, review_head);
+			String ReviewAva_Url="http://ac-x3o016bx.clouddn.com/86O7RAPx2BtTW5zgZTPGNwH9RZD5vNDtPm1YbIcu";//Ä¬ÈÏÍÃ×ÓÍ·Ïñ
+			Integer fk_user = photo_Review.getFk_user();
+			for (int i = 0; i < dB_Users.size(); i++) {
+				Group_ReadAllUser user = dB_Users.get(i);
+				Integer pk_user = user.getPk_user();
+				if(String.valueOf(pk_user).equals(String.valueOf(fk_user))){
+					String ReviewAva_path = user.getAvatar_path();
+					 ReviewAva_Url=beginStr+ReviewAva_path+endStr+"mini-avatar";
+				}
+			}
+			
+			ImageLoaderUtils.getInstance().LoadImageCricular(MyGalleryActivity.this,ReviewAva_Url, review_head);
 			review_createtime.setText(create_date);
 			review_content.setText(content);
 			

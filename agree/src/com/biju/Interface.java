@@ -40,6 +40,8 @@ import com.BJ.javabean.UnionPay;
 import com.BJ.javabean.User;
 import com.BJ.javabean.User_Chat;
 import com.BJ.javabean.User_User;
+import com.BJ.javabean.Users_convid;
+import com.BJ.javabean.Users_convid_json;
 import com.BJ.javabean.WeChatPay;
 import com.BJ.utils.Bean2Map;
 import com.android.volley.VolleyError;
@@ -61,6 +63,10 @@ public class Interface {
 		return Thisinterface;
 	}
 
+	//聊天室通知
+	String KChatRoomNotification="81";
+	//群聊通知
+	String KGroupChatNotification="52";
 	//小组添加新的成员
 	String KTeamAddFriends="391";
 	//生成财务订单
@@ -184,6 +190,25 @@ public class Interface {
 		Log.e("Interface", "小组json:" + jsonObject.toString());
 		params.put("request_data", jsonObject.toString());
 
+		return params;
+	}
+	//聊天室通知
+	public Map<String, String> packParamsChatRoomNotify(Object classObject,
+			String interfaceType) {
+		List<String> members = ((Users_convid)classObject).getMembers();
+		String con_id = ((Users_convid)classObject).getCon_id();
+		JSONArray jsonUsers = new JSONArray(members);
+		
+		Users_convid_json users_convid_json = new Users_convid_json(jsonUsers, con_id);
+		Map map = Bean2Map.ConvertObjToMap(users_convid_json);
+		JSONObject jsonObject = new JSONObject(map);
+		
+		Map<String, String> params = new HashMap<String, String>();
+		
+		params.put("request_type", interfaceType);
+		Log.e("Interface", "小组json:" + jsonObject.toString());
+		params.put("request_data", jsonObject.toString());
+		
 		return params;
 	}
 	//小组添加新成员
@@ -385,6 +410,40 @@ public class Interface {
 	// });
 	// }
 
+	//聊天室通知
+	private void ChatRoomNotifycationPost(Context context, Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError58(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone58(response);
+			}
+		});
+	}
+	//群聊通知	
+	private void GroupChatNotifycationPost(Context context, Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError57(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone57(response);
+			}
+		});
+	}
 	//小组添加新的成员	
 	private void TeamAddFriendsPost(Context context, Map<String, String> params) {
 		
@@ -1329,7 +1388,14 @@ public class Interface {
 	//
 	// volleyPost(context,per);
 	// }
-
+	// 聊天室通知
+	public void CharRoomNotify(Context context, Users_convid users_convid) {
+		ChatRoomNotifycationPost(context, packParamsChatRoomNotify(users_convid, KChatRoomNotification));
+	}
+	// 群聊通知
+	public void GroupChatNotify(Context context, Chat chat) {
+		GroupChatNotifycationPost(context, packParams(chat, KGroupChatNotification));
+	}
 	// 小组添加新的成员
 	public void TeamAddFriends(Context context, TeamAddNewMemberModel TeamAddNewMemberModel) {
 		TeamAddFriendsPost(context, packParamsNewMembers(TeamAddNewMemberModel, KTeamAddFriends));
@@ -1622,6 +1688,10 @@ public class Interface {
 	// 接口部分
 	// private static UserInterface listener;
 
+	// 聊天室通知
+	private static ChatRoomNotifyListenner chatroomnotifylistenner;
+	// 群聊通知
+	private static GroupChatNotifyListenner groupchatnotifylistenner;
 	// 小组添加新的成员
 	private static TeamAddFriendsListenner teamaddfriendslistenner;
 	// 生成财务订单
@@ -1701,6 +1771,18 @@ public class Interface {
 	// void defail(Object B);
 	// }
 
+	// 群聊通知
+	public interface ChatRoomNotifyListenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
+	// 群聊通知
+	public interface GroupChatNotifyListenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
 	// 小组添加新的成员
 	public interface TeamAddFriendsListenner {
 		void success(String A);
@@ -2042,6 +2124,14 @@ public class Interface {
 	// this.listener=listener;
 	// }
 
+	//聊天室通知
+	public void setPostListener(ChatRoomNotifyListenner listener) {
+		this.chatroomnotifylistenner = listener;
+	}
+	//群聊通知
+	public void setPostListener(GroupChatNotifyListenner listener) {
+		this.groupchatnotifylistenner = listener;
+	}
 	//小组添加新的成员
 	public void setPostListener(TeamAddFriendsListenner listener) {
 		this.teamaddfriendslistenner = listener;
@@ -2793,5 +2883,21 @@ public class Interface {
 	
 	public static void requestError55(VolleyError error) {
 		teamaddfriendslistenner.defail(error);
+	}
+	//群聊通知
+	public static void requestDone57(String theObject) {
+		groupchatnotifylistenner.success(theObject);
+	}
+	
+	public static void requestError57(VolleyError error) {
+		groupchatnotifylistenner.defail(error);
+	}
+	//聊天室通知
+	public static void requestDone58(String theObject) {
+		chatroomnotifylistenner.success(theObject);
+	}
+	
+	public static void requestError58(VolleyError error) {
+		chatroomnotifylistenner.defail(error);
 	}
 }

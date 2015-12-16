@@ -1,30 +1,137 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:ptr="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:background="#fff" >
-
-    <leanchatlib.view.RefreshableView
-        android:id="@+id/refreshableView"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:layout_above="@+id/rl_bottom"
+    
+        <RelativeLayout
+        android:id="@+id/top_bar"
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="50dp"
-        android:orientation="vertical" >
+        android:gravity="center_vertical" >
 
-        <ListView
-            android:id="@+id/messageListView"
+        <TextView
+            android:id="@+id/name"
+            android:layout_width="100.0dp"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:gravity="center"
+            android:singleLine="true"
+            android:text="name"
+            android:textColor="#535353"
+            android:textSize="15.0sp" />
+
+        <RelativeLayout
+            android:id="@+id/container_remove"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/common_tab_bg"
+            android:visibility="gone" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:layout_marginRight="9dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/mm_title_remove" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/container_to_group"
+            android:layout_width="50dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:background="@drawable/common_tab_bg"
+            android:visibility="gone" >
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:scaleType="centerInside"
+                android:src="@drawable/to_group_details_normal" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tv_back"
+            android:layout_width="65.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/selector_back_gray_white"
+            android:gravity="center"
+            android:text="返回"
+            android:textColor="@drawable/title_left_color"
+            android:textSize="@dimen/title_left_size" />
+
+        <TextView
+            android:id="@+id/tv_detail"
+            android:layout_width="65.0dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/selector_back_gray_white"
+            android:gravity="center"
+            android:text="成员"
+            android:textColor="@drawable/title_right_color"
+            android:textSize="@dimen/title_right_size" />
+
+        <TextView
+            android:id="@+id/textView1"
             android:layout_width="match_parent"
-            android:layout_height="302dp"
-            android:layout_weight="0.01"
-            android:background="#fff"
-            android:cacheColorHint="#0000"
-            android:divider="@null"
-            android:dividerHeight="5dp"
-            android:listSelector="#00000000"
-            android:scrollbarStyle="outsideOverlay" />
-    </leanchatlib.view.RefreshableView>
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa" />
+    </RelativeLayout>
+
+<!--     <leanchatlib.view.RefreshableView -->
+<!--         android:id="@+id/refreshableView" -->
+<!--         android:layout_width="fill_parent" -->
+<!--         android:layout_height="fill_parent" -->
+<!--         android:layout_above="@+id/rl_bottom" -->
+<!--         android:layout_alignParentTop="true" -->
+<!--         android:layout_marginTop="50dp" -->
+<!--         android:orientation="vertical" > -->
+
+<!--         <ListView -->
+<!--             android:id="@+id/messageListView" -->
+<!--             android:layout_width="match_parent" -->
+<!--             android:layout_height="match_parent" -->
+<!--             android:background="#fff" -->
+<!--             android:cacheColorHint="#0000" -->
+<!--             android:divider="@null" -->
+<!--             android:dividerHeight="5dp" -->
+<!--             android:listSelector="#00000000" -->
+<!--             android:scrollbarStyle="outsideOverlay" -->
+<!--             /> -->
+
+<!--     </leanchatlib.view.RefreshableView> -->
+
+        <com.handmark.pulltorefresh.library.PullToRefreshListView
+            android:id="@+id/pull_refresh_list222"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_above="@+id/rl_bottom"
+            android:layout_below="@+id/top_bar"
+            android:cacheColorHint="#00000000"
+            android:divider="#19000000"
+            android:fadingEdge="none"
+            android:fastScrollEnabled="false"
+            android:footerDividersEnabled="false"
+            android:headerDividersEnabled="false"
+            android:smoothScrollbar="true"
+            ptr:ptrAnimationStyle="flip"
+            ptr:ptrDrawable="@drawable/iconfont_xiangxiajiantou"
+            ptr:ptrHeaderTextColor="#cdcdcd" >
+
+    </com.handmark.pulltorefresh.library.PullToRefreshListView>
 
     <LinearLayout
         android:id="@+id/rl_bottom"
@@ -35,7 +142,8 @@
         android:gravity="center_vertical"
         android:orientation="horizontal"
         android:paddingBottom="3dp"
-        android:paddingTop="3dp" >
+        android:paddingTop="3dp" 
+        android:layout_above="@+id/ruanjianpanHeght">
 
         <Button
             android:id="@+id/btn_set_mode_voice"
@@ -189,91 +297,6 @@
 
     <!-- </LinearLayout> -->
 
-    <RelativeLayout
-        android:id="@+id/top_bar"
-        android:layout_width="match_parent"
-        android:layout_height="50.0dp"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:gravity="center_vertical" >
-
-        <TextView
-            android:id="@+id/name"
-            android:layout_width="100.0dp"
-            android:layout_height="wrap_content"
-            android:layout_centerInParent="true"
-            android:gravity="center"
-            android:singleLine="true"
-            android:text="name"
-            android:textColor="#535353"
-            android:textSize="15.0sp" />
-
-        <RelativeLayout
-            android:id="@+id/container_remove"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/common_tab_bg"
-            android:visibility="gone" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
-                android:layout_centerVertical="true"
-                android:layout_marginRight="9dp"
-                android:scaleType="centerInside"
-                android:src="@drawable/mm_title_remove" />
-        </RelativeLayout>
-
-        <RelativeLayout
-            android:id="@+id/container_to_group"
-            android:layout_width="50dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:background="@drawable/common_tab_bg"
-            android:visibility="gone" >
-
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_centerHorizontal="true"
-                android:layout_centerVertical="true"
-                android:scaleType="centerInside"
-                android:src="@drawable/to_group_details_normal" />
-        </RelativeLayout>
-
-        <TextView
-            android:id="@+id/tv_back"
-            android:layout_width="65.0dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/selector_back_gray_white"
-            android:gravity="center"
-            android:text="返回"
-            android:textColor="@drawable/title_left_color"
-            android:textSize="@dimen/title_left_size" />
-
-        <TextView
-            android:id="@+id/tv_detail"
-            android:layout_width="65.0dp"
-            android:layout_height="match_parent"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:background="@drawable/selector_back_gray_white"
-            android:gravity="center"
-            android:text="成员"
-            android:textColor="@drawable/title_right_color"
-            android:textSize="@dimen/title_right_size" />
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="match_parent"
-            android:layout_height="0.50dp"
-            android:layout_alignParentBottom="true"
-            android:background="#aaaaaa" />
-    </RelativeLayout>
 
 
     <RelativeLayout
@@ -423,6 +446,14 @@
                     android:textSize="17.0sp" />
             </RelativeLayout>
         </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/ruanjianpanHeght"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+                android:layout_alignParentBottom="true"
+        android:background="#000000" >
     </RelativeLayout>
 
 </RelativeLayout>

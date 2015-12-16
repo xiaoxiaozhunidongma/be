@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
+import java.util.ArrayList;
 import java.util.UUID;
 
 import android.app.Activity;
@@ -56,12 +57,13 @@ import com.biju.function.NewteamActivity;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
+import com.example.imageselected.photo.SelectPhotoActivity;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class RegisteredActivity extends Activity implements OnClickListener {
 
 	private final String IMAGE_TYPE = "image/*";
-	private final int IMAGE_CODE = 0; // 这里的IMAGE_CODE是自己任意定义的
+	private final int IMAGE_CODE = 110; // 这里的IMAGE_CODE是自己任意定义的
 	public static ImageView mRegistered_head;
 	private EditText mNickname;
 	private TextView mRegistered_tv_nickname;
@@ -374,8 +376,12 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	// 打开图库，选择图片
 	private void registered_head() {
 		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
-		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
-		getAlbum.setType(IMAGE_TYPE);
+//		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
+//		getAlbum.setType(IMAGE_TYPE);
+//		startActivityForResult(getAlbum, IMAGE_CODE);
+		
+		Intent getAlbum = new Intent(this, SelectPhotoActivity.class);
+		getAlbum.putExtra("SelectType", 0);//单张上传
 		startActivityForResult(getAlbum, IMAGE_CODE);
 	}
 
@@ -384,28 +390,35 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 		if (resultCode != Activity.RESULT_OK || data == null)
 			return;
 		try {
-			Uri selectedImage = data.getData();
-			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-			Cursor cursor = RegisteredActivity.this.getContentResolver().query(
-					selectedImage, filePathColumn, null, null, null);
-			if (cursor != null) {
-				cursor.moveToFirst();
-				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-				mFilePath = cursor.getString(columnIndex);
-				cursor.close();
-				cursor = null;
-
-			} else {
-				File file = new File(selectedImage.getPath());
-				mFilePath = file.getAbsolutePath();
-				if (!file.exists()) {
-					Toast toast = Toast.makeText(this, "找不到图片",
-							Toast.LENGTH_SHORT);
-					toast.setGravity(Gravity.CENTER, 0, 0);
-					toast.show();
-					return;
-				}
-			}
+//			Uri selectedImage = data.getData();
+//			String[] filePathColumn = { MediaStore.Images.Media.DATA };
+//			Log.e("", "filePathColumn.size========="+filePathColumn.length);
+//			Cursor cursor = RegisteredActivity.this.getContentResolver().query(
+//					selectedImage, filePathColumn, null, null, null);
+//			if (cursor != null) {
+//				Log.e("", "WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW");
+//				cursor.moveToFirst();
+//				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+//				mFilePath = cursor.getString(columnIndex);
+//				cursor.close();
+//				cursor = null;
+//
+//			} else {
+//				File file = new File(selectedImage.getPath());
+//				mFilePath = file.getAbsolutePath();
+//				if (!file.exists()) {
+//					Toast toast = Toast.makeText(this, "找不到图片",
+//							Toast.LENGTH_SHORT);
+//					toast.setGravity(Gravity.CENTER, 0, 0);
+//					toast.show();
+//					return;
+//				}
+//			}
+			
+			@SuppressWarnings("unchecked")
+			ArrayList<String> mSelectedImageList = (ArrayList<String>) data.getSerializableExtra("mSelectedImageList");
+			mFilePath=mSelectedImageList.get(0);
+			
 			Log.e("NewteamActivity", "mFilePath======" + mFilePath);
 			// OSS上传~
 			// 这个mFilePath不可以用缩略图路径

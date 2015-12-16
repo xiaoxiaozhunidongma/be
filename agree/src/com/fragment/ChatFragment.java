@@ -1,8 +1,10 @@
 package com.fragment;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -31,6 +33,8 @@ import android.annotation.SuppressLint;
 import android.app.ActionBar;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -50,8 +54,10 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.View.OnTouchListener;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver.OnGlobalLayoutListener;
 import android.view.WindowManager;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridView;
@@ -59,7 +65,9 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
+import cn.pedant.SweetAlert.SweetAlertDialog;
 
+import com.BJ.javabean.Chat;
 import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -68,11 +76,18 @@ import com.avos.avoscloud.im.v2.AVIMTypedMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMAudioMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
 import com.avos.avoscloud.im.v2.messages.AVIMLocationMessage;
+import com.biju.Interface;
 import com.biju.R;
 import com.biju.function.GroupActivity;
+import com.biju.login.BeforeLoginActivity;
+import com.biju.pay.GraphicDetailsActivity;
 import com.example.testleabcloud.ChatActivityEventListener;
 import com.example.testleabcloud.PhotoViewActivity;
 import com.github.volley_examples.utils.NotifiUtils;
+import com.handmark.pulltorefresh.library.ILoadingLayout;
+import com.handmark.pulltorefresh.library.PullToRefreshBase;
+import com.handmark.pulltorefresh.library.PullToRefreshBase.OnRefreshListener;
+import com.handmark.pulltorefresh.library.PullToRefreshListView;
 import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
 
@@ -85,7 +100,7 @@ import de.greenrobot.event.EventBus;
 public class ChatFragment extends Fragment implements OnClickListener,ChatActivityEventListener {
 	
 	  public static final String CONVID = "convid";
-	  private static final int PAGE_SIZE = 8;
+	  private static final int PAGE_SIZE = 15;//每次加载的信息数目
 	  private static final int TAKE_CAMERA_REQUEST = 2;
 	  private static final int GALLERY_REQUEST = 0;
 	  private static final int GALLERY_KITKAT_REQUEST = 3;
@@ -106,7 +121,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 	  protected View turnToTextBtn, turnToAudioBtn, sendBtn, addImageBtn, showAddBtn, addLocationBtn, showEmotionBtn;
 	  protected ViewPager emotionPager;
 	  protected PasteEditText contentEdit;
-	  protected RefreshableView refreshableView;
+//	  protected RefreshableView refreshableView;
 	  protected ListView messageListView;
 	  protected RecordButton recordBtn;
 	  protected String localCameraPath = PathUtils.getPicturePathByCurrentTime();
@@ -118,6 +133,9 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 	private View mLayout;
 	public static onActivityResultInterface onActivityResultInterface;
 	private RelativeLayout mChatPromptLayout;
+	private PullToRefreshListView mPullToRefreshListView;
+	private ListView mlistView;
+	Interface GroupChatInter = Interface.getInstance();
 
 	public ChatFragment() {
 		// Required empty public constructor
@@ -129,7 +147,8 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		    public void onError(AVIMTypedMessage message, Exception e) {
 		      LogUtils.i();
 		      Log.e("ChatFragment", "DefaultSendCallback--onError");
-		      Toast.makeText(getActivity(), "无可用的网络"+e.toString(), Toast.LENGTH_SHORT).show();
+//		      Toast.makeText(getActivity(), "无可用的网络"+e.toString(), Toast.LENGTH_SHORT).show();
+		      Toast.makeText(getActivity(), "请重新启动该应用", Toast.LENGTH_SHORT).show();
 //		      addMessageAndScroll(message);
 		    }
 
@@ -138,6 +157,10 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 //		      Utils.i();
 		    	Log.e("ChatFragment", "DefaultSendCallback--onSuccess");
 		      addMessageAndScroll(message);
+		      Chat chat=new Chat();
+		      chat.setFk_group(GroupActivity.pk_group);
+		      chat.setFk_user(SdPkUser.getsD_pk_user());
+			GroupChatInter.GroupChatNotify(getActivity(), chat);
 		    }
 		  }
 	  
@@ -196,38 +219,61 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		
 		@SuppressLint("NewApi")
 		@Override
-		public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		public void onActivityResult(final int requestCode, final int resultCode, final Intent data) {
 			// TODO Auto-generated method stub
 			Log.e("群聊的onActivityResult", "");
-		    if (resultCode == getActivity().RESULT_OK) {
-		      switch (requestCode) {
-		        case GALLERY_REQUEST:
-		        case GALLERY_KITKAT_REQUEST:
-		          if (data == null) {
-		            toast("return intent is null");
-		            return;
-		          }
-		          Uri uri;
-		          if (requestCode == GALLERY_REQUEST) {
-		            uri = data.getData();
-		          } else {
-		        	  Log.e("", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
-		            //for Android 4.4
-		            uri = data.getData();
-		            final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
-		                | Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
-		            getActivity().getContentResolver().takePersistableUriPermission(uri, takeFlags);
-		          }
-		          String localSelectPath = ProviderPathUtils.getPath(getActivity(), uri);
-		          messageAgent.sendImage(localSelectPath,getActivity());
-		          hideBottomLayout();
-		          break;
-		        case TAKE_CAMERA_REQUEST:
-		          messageAgent.sendImage(localCameraPath,getActivity());
-		          hideBottomLayout();
-		          break;
-		      }
-		    }
+			
+
+			final SweetAlertDialog sd = new SweetAlertDialog(getActivity());
+			sd.setTitleText("警告");
+			sd.setContentText("确定要发送该图片？");
+			sd.setCancelText("我再想想");
+			sd.setConfirmText("是的");
+			sd.showCancelButton(true);
+			sd.setCancelClickListener(new SweetAlertDialog.OnSweetClickListener() {
+				@Override
+				public void onClick(SweetAlertDialog sDialog) {
+					sd.cancel();
+					//我再想想
+				}
+			}).setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+				@Override
+				public void onClick(SweetAlertDialog sDialog) {
+					sd.cancel();
+					//是的
+					if (resultCode == getActivity().RESULT_OK) {
+						switch (requestCode) {
+						case GALLERY_REQUEST:
+						case GALLERY_KITKAT_REQUEST:
+							if (data == null) {
+								toast("return intent is null");
+								return;
+							}
+							Uri uri;
+							if (requestCode == GALLERY_REQUEST) {
+								uri = data.getData();
+							} else {
+								Log.e("", "DDDDDDDDDDDDDDDDDDDDDDDDDDDDDDD");
+								//for Android 4.4
+								uri = data.getData();
+								final int takeFlags = data.getFlags() & (Intent.FLAG_GRANT_READ_URI_PERMISSION
+										| Intent.FLAG_GRANT_WRITE_URI_PERMISSION);
+								getActivity().getContentResolver().takePersistableUriPermission(uri, takeFlags);
+							}
+							String localSelectPath = ProviderPathUtils.getPath(getActivity(), uri);
+							messageAgent.sendImage(localSelectPath,getActivity());
+							hideBottomLayout();
+							break;
+						case TAKE_CAMERA_REQUEST:
+							messageAgent.sendImage(localCameraPath,getActivity());
+							hideBottomLayout();
+							break;
+						}
+					}
+				}
+			}).show();
+
+		
 		}
 	};
 	
@@ -243,6 +289,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		    initData(intent);
 		    loadMessagesWhenInit(PAGE_SIZE);
 		  }
+	  
 
 	private void initData(Intent intent) {
 //		ReadUserAllFriends mAllFriends = (ReadUserAllFriends) intent.getSerializableExtra("allFriends");
@@ -373,86 +420,93 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 	    }
 
 	private void initListView() {
-		    refreshableView.setRefreshListener(new RefreshableView.ListRefreshListener(messageListView) {
-		        @Override
-		        public void onRefresh() {
-		          loadOldMessages();
-		        }
-
-				private void loadOldMessages() {
-					//显示
-					getActivity().runOnUiThread(new Runnable() {
-						
-						@Override
-						public void run() {
-							mChatPromptLayout.setVisibility(View.VISIBLE);
-						}
-					});
-				    if (adapter.getDatas().size() == 0) {
-				        refreshableView.finishRefreshing();
-				        return;
-				      } else {
-				    	  //隐藏
-				    	  getActivity().runOnUiThread(new Runnable() {
-								
-								@Override
-								public void run() {
-									mChatPromptLayout.setVisibility(View.GONE);
-								}
-							});
-				        AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
-				        String msgId = firstMsg.getMessageId();
-				        long time = firstMsg.getTimestamp();
-				        ChatManager.getInstance().queryMessages(conversation, msgId, time, PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
-				          @Override
-				          public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
-				            refreshableView.finishRefreshing();
-				            if (filterException(e)) {
-				              new CacheMessagesTask(getActivity(), typedMessages) {
-				                @Override
-				                void onSucceed(List<AVIMTypedMessage> typedMessages) {
-				                  List<AVIMTypedMessage> newMessages = new ArrayList<AVIMTypedMessage>(PAGE_SIZE);
-				                  newMessages.addAll(typedMessages);
-				                  newMessages.addAll(adapter.getDatas());
-				                  adapter.setDatas(newMessages);
-				                  adapter.notifyDataSetChanged();
-				                  if (typedMessages.size() > 0) {
-				                    messageListView.setSelection(typedMessages.size() - 1);
-				                  } else {
-				                    toast(R.string.chat_activity_loadMessagesFinish);
-				                  }
-				                }
-				              }.execute();
-				            }
-				          }
-
-				        });
-				      }
-
-				    }
-		      });
+//		    refreshableView.setRefreshListener(new RefreshableView.ListRefreshListener(messageListView) {
+//		        @Override
+//		        public void onRefresh() {
+//		          loadOldMessages();
+//		        }
+//
+//				private void loadOldMessages() {
+//					//显示
+//					getActivity().runOnUiThread(new Runnable() {
+//						
+//						@Override
+//						public void run() {
+//							mChatPromptLayout.setVisibility(View.VISIBLE);
+//						}
+//					});
+//				    if (adapter.getDatas().size() == 0) {
+//				        refreshableView.finishRefreshing();
+//				        return;
+//				      } else {
+//				    	  //隐藏
+//				    	  getActivity().runOnUiThread(new Runnable() {
+//								
+//								@Override
+//								public void run() {
+//									mChatPromptLayout.setVisibility(View.GONE);
+//								}
+//							});
+//				        AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
+//				        String msgId = firstMsg.getMessageId();
+//				        long time = firstMsg.getTimestamp();
+//				        ChatManager.getInstance().queryMessages(conversation, msgId, time, PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
+//				          @Override
+//				          public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
+////				            refreshableView.finishRefreshing();
+//				            if (filterException(e)) {
+//				              new CacheMessagesTask(getActivity(), typedMessages) {
+//				                @Override
+//				                void onSucceed(List<AVIMTypedMessage> typedMessages) {
+//				                  List<AVIMTypedMessage> newMessages = new ArrayList<AVIMTypedMessage>(PAGE_SIZE);
+//				                  newMessages.addAll(typedMessages);
+//				                  newMessages.addAll(adapter.getDatas());
+//				                  adapter.setDatas(newMessages);
+//				                  adapter.notifyDataSetChanged();
+//				                  if (typedMessages.size() > 0) {
+//				                	  Log.e("ABCDE", "typedMessages.size()=="+typedMessages.size());
+//				                    messageListView.setSelection(typedMessages.size() - 1);
+//				                  } else {
+//				                    toast(R.string.chat_activity_loadMessagesFinish);
+//				                  }
+//				            refreshableView.finishRefreshing();
+//				                }
+//				              }.execute();
+//				            }
+//				          }
+//
+//				        });
+//				      }
+//
+//				    }
+//		      });
 		      messageListView.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
-		      messageListView.setOnTouchListener(new OnTouchListener() {
-
-		  		@Override
-		  		public boolean onTouch(View v, MotionEvent event) {
-		  			//隐藏软键盘
-		  			hideSoftInputView();
-		  			return false;
-		  		}
-
-				private void hideSoftInputView() {
-				    if (getActivity().getWindow().getAttributes().softInputMode !=
-				            WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
-				          InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
-				          View currentFocus = getActivity().getCurrentFocus();
-				          if (currentFocus != null) {
-				            manager.hideSoftInputFromWindow(currentFocus.getWindowToken(),
-				                InputMethodManager.HIDE_NOT_ALWAYS);
-				          }
-				        }
-				      }
-		  	});
+//		      messageListView.setOnTouchListener(new OnTouchListener() {
+//
+//		  		@Override
+//		  		public boolean onTouch(View v, MotionEvent event) {
+//		  			int action = event.getAction();
+//		  			if(action==MotionEvent.ACTION_MOVE){
+//		  				
+//		  			}else{
+//		  				//隐藏软键盘
+//		  				hideSoftInputView();
+//		  			}
+//		  			return false;
+//		  		}
+//
+//				private void hideSoftInputView() {
+//				    if (getActivity().getWindow().getAttributes().softInputMode !=
+//				            WindowManager.LayoutParams.SOFT_INPUT_STATE_HIDDEN) {
+//				          InputMethodManager manager = (InputMethodManager) getActivity().getSystemService(INPUT_METHOD_SERVICE);
+//				          View currentFocus = getActivity().getCurrentFocus();
+//				          if (currentFocus != null) {
+//				            manager.hideSoftInputFromWindow(currentFocus.getWindowToken(),
+//				                InputMethodManager.HIDE_NOT_ALWAYS);
+//				          }
+//				        }
+//				      }
+//		  	});
 		      
 		    }
 	
@@ -627,8 +681,83 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 			
 			send = (Button) mLayout.findViewById(R.id.send);
 			send.setOnClickListener(this);
-	    refreshableView = (RefreshableView) mLayout.findViewById(R.id.refreshableView);
-	    messageListView = (ListView) mLayout.findViewById(R.id.messageListView);
+//	    refreshableView = (RefreshableView) mLayout.findViewById(R.id.refreshableView);
+			//下拉刷新
+	     mPullToRefreshListView = (PullToRefreshListView) mLayout.findViewById(R.id.pull_refresh_list);
+			mPullToRefreshListView.setOnRefreshListener(new OnRefreshListener<ListView>() {
+				public void onRefresh(PullToRefreshBase<ListView> refreshView) {
+					Log.e("", "onRefresh");
+					loadOldMessages();
+				}
+
+				private void loadOldMessages() {
+					//显示
+					getActivity().runOnUiThread(new Runnable() {
+						
+						@Override
+						public void run() {
+							mChatPromptLayout.setVisibility(View.VISIBLE);
+						}
+					});
+				    if (adapter.getDatas().size() == 0) {
+				        return;
+				      } else {
+				    	  //隐藏
+				    	  getActivity().runOnUiThread(new Runnable() {
+								
+								@Override
+								public void run() {
+									mChatPromptLayout.setVisibility(View.GONE);
+								}
+							});
+				        AVIMTypedMessage firstMsg = adapter.getDatas().get(0);
+				        String msgId = firstMsg.getMessageId();
+				        long time = firstMsg.getTimestamp();
+				        ChatManager.getInstance().queryMessages(conversation, msgId, time, PAGE_SIZE, new AVIMTypedMessagesArrayCallback() {
+				          @Override
+				          public void done(List<AVIMTypedMessage> typedMessages, AVException e) {
+				            if (filterException(e)) {
+				              new CacheMessagesTask(getActivity(), typedMessages) {
+				                @Override
+				                void onSucceed(List<AVIMTypedMessage> typedMessages) {
+				                  List<AVIMTypedMessage> newMessages = new ArrayList<AVIMTypedMessage>(PAGE_SIZE);
+				                  newMessages.addAll(typedMessages);
+				                  newMessages.addAll(adapter.getDatas());
+				                  adapter.setDatas(newMessages);
+				                  adapter.notifyDataSetChanged();
+				                  // 更新ListView数据后隐藏下拉刷新动画布局
+				                  mPullToRefreshListView.onRefreshComplete();
+				                  if (typedMessages.size() > 0) {
+				                	  Log.e("ABCDE", "typedMessages.size()=="+typedMessages.size());
+				                    messageListView.setSelection(typedMessages.size() + 1);
+				                  } else {
+				                    toast(R.string.chat_activity_loadMessagesFinish);
+				                  }
+				                }
+				              }.execute();
+				            }
+				          }
+
+				        });
+				      }
+
+				    }
+			});
+			
+			ILoadingLayout iLoadingLayout = mPullToRefreshListView.
+						getLoadingLayoutProxy();
+				iLoadingLayout.setPullLabel("下拉刷新");
+				iLoadingLayout.setRefreshingLabel("正在刷新...");
+				iLoadingLayout.setReleaseLabel("放开即可刷新");
+				iLoadingLayout.setLabelTextColor(Color.GRAY);//自定义
+				messageListView = mPullToRefreshListView.getRefreshableView(); 
+				messageListView.setDividerHeight(0);
+				//显示最后更新时间
+				SimpleDateFormat sdf=new SimpleDateFormat("MM/dd HH:mm");
+				String label = sdf.format(new Date());
+				mPullToRefreshListView.getLoadingLayoutProxy().setLastUpdatedLabel("最后更新:"+label);
+	    
+//	    messageListView = (ListView) mLayout.findViewById(R.id.messageListView);
 	    addImageBtn = mLayout.findViewById(R.id.addImageBtn);
 
 	    contentEdit = (PasteEditText) mLayout.findViewById(R.id.et_sendmessage);
@@ -679,6 +808,27 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 			public void afterTextChanged(Editable s) {
 			}
 		});
+	    //软键盘监听
+//	    contentEdit.getViewTreeObserver().addOnGlobalLayoutListener(new OnGlobalLayoutListener() {
+//			
+//			@Override
+//			public void onGlobalLayout() {
+//				Rect r = new Rect();
+//                //获取当前界面可视部分
+//              getActivity().getWindow().getDecorView().getWindowVisibleDisplayFrame(r);
+//                //获取屏幕的高度
+//                int screenHeight =  getActivity().getWindow().getDecorView().getRootView().getHeight();
+//                //此处就是用来获取键盘的高度的， 在键盘没有弹出的时候 此高度为0 键盘弹出的时候为一个正数
+//                int heightDifference = screenHeight - r.bottom;
+//                if(heightDifference<100){
+//                	//隐藏键盘
+//                }else{
+//                	//显示键盘
+//                	
+//                }
+//			}
+//		});
+	    
 	  }
 
 	public void commonInit() {

@@ -129,7 +129,7 @@ public class SelectPhotoActivity extends Activity  {
 		quxiaoBtn=(TextView)findViewById(R.id.quxiao_btn);
 		titleIcon=(ImageView)findViewById(R.id.selected_photo_icon);
 		headLayout=(RelativeLayout)findViewById(R.id.selected_photo_header_layout);
-		titleIcon.setBackgroundResource(R.drawable.navigationbar_arrow_down);
+		titleIcon.setBackgroundResource(R.drawable.iconfont_icontabdown);
 	}
 	/**
 	 * 利用ContentProvider扫描手机中的图片，此方法在运行在子线程中 完成图片的扫描，最终获得jpg最多的那个文件夹
@@ -277,12 +277,12 @@ public class SelectPhotoActivity extends Activity  {
 		// 这个是为了点击“返回Back”也能使其消失，并且并不会影响你的背景
 		popupWindow.setBackgroundDrawable(new BitmapDrawable());
 		// 显示的位置为:屏幕的宽度的一半-PopupWindow的高度的一半
-		titleIcon.setBackgroundResource(R.drawable.navigationbar_arrow_up);
+		titleIcon.setBackgroundResource(R.drawable.iconfont_icontabup);
 		popupWindow.showAsDropDown(headLayout,0,0);
 		popupWindow.setOnDismissListener(new OnDismissListener() {
 			@Override
 			public void onDismiss() {
-				titleIcon.setBackgroundResource(R.drawable.navigationbar_arrow_down);
+				titleIcon.setBackgroundResource(R.drawable.iconfont_icontabdown);
 			}
 		});
 		dirListView.setOnItemClickListener(new OnItemClickListener() {

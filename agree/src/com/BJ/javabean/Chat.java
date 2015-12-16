@@ -9,7 +9,7 @@ public class Chat extends Model{
 	@Column
 	private Integer pk_chat;
 	@Column
-	private String fk_group;
+	private Integer fk_group;
 	@Column
 	private Integer fk_user;
 	@Column
@@ -31,10 +31,10 @@ public class Chat extends Model{
 	public void setPk_chat(Integer pk_chat) {
 		this.pk_chat = pk_chat;
 	}
-	public String getFk_group() {
+	public Integer getFk_group() {
 		return fk_group;
 	}
-	public void setFk_group(String fk_group) {
+	public void setFk_group(Integer fk_group) {
 		this.fk_group = fk_group;
 	}
 	public Integer getFk_user() {

@@ -59,6 +59,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.Interface.GroupChatNotifyListenner;
 import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.Interface.readUserListenner;
@@ -160,9 +161,24 @@ public class HomeFragment extends Fragment implements OnClickListener,
 				Log.e("HomeFragment", "进入了onStart()中的input里了========"+ SD_pk_user);
 				ReadTeamInterface(SD_pk_user);
 			}
-
+			initGroupChatListenner();
 		}
 		return mLayout;
+	}
+
+	private void initGroupChatListenner() {
+		Interface GroupChatInter = Interface.getInstance();
+		GroupChatInter.setPostListener(new GroupChatNotifyListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("HomeFragment", "群聊通知返回："+A);
+			}
+			
+			@Override
+			public void defail(Object B) {
+			}
+		});
 	}
 
 	private void DisplayMetrics() {
@@ -309,7 +325,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					Intent intent = new Intent(getActivity(),GroupActivity.class);
 					intent.putExtra(IConstant.HomePk_group, pk_group);
 					intent.putExtra(IConstant.HomeGroupName, group_name);
-					intent.putExtra("conName", "group_name");
+//					intent.putExtra("conName", "group_name");
 //					intent.putExtra("FromAvaUrlMap", FromAvaUrlMap);//数组
 					intent.putExtra("convid", group.getEm_id());
 					intent.putExtra("CurrUserUrl", currUserUrl);

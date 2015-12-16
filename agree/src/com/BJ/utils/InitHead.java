@@ -38,7 +38,7 @@ public class InitHead {
 		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 		canvas.drawBitmap(bmp, new Rect(0, 0, bmp.getWidth(), bmp.getWidth()),
 				new Rect(0, 0, dstWidth, dstWidth), paint);
-//		Registered(resultBmp);
+		Registered(resultBmp);
 //		usersetting(resultBmp);
 //		bmp.recycle();
 		return resultBmp;
