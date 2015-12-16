@@ -136,6 +136,9 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <!-- LeanChat权限 -->
     <uses-permission android:name="android.permission.MANAGE_DOCUMENTS" />
+    <uses-permission android:name="android.permission.INTERNET"/>
+	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+	<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- OSS -->
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
@@ -168,7 +171,7 @@
         <!-- 百度签名 -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="am4a3xRjopFOrnHsDW7nnlb4" />
+            android:value="yGkNOAGTinoQq0oFRuksvUIi" />
         <!-- 百度签名 -->
         <activity
             android:name="com.biju.MainActivity"
@@ -221,7 +224,8 @@
         <activity
             android:name="com.biju.function.GroupActivity"
             android:label="@string/title_activity_group"
-            android:launchMode="singleTask" >
+            android:launchMode="singleTask"
+            >
         </activity>
         <activity
             android:name="com.biju.function.NewPartyActivity"
@@ -461,12 +465,15 @@
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.USER_PRESENT" />
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
             </intent-filter>
         </receiver>
-
+        
         <activity android:name="com.example.testleabcloud.SecActivity" >
         </activity>
-        <activity android:name="com.example.testleabcloud.ChatActivityLean" >
+        <activity android:name="com.example.testleabcloud.ChatActivityLean" 
+            android:windowSoftInputMode="adjustResize"
+            >
         </activity>
         <activity
             android:name="com.example.testleabcloud.PhotoViewActivity"
