@@ -43,6 +43,7 @@ import com.BJ.photo.AlbumActivity;
 import com.BJ.photo.Bimp;
 import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.PicCutter;
@@ -88,7 +89,6 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 	private String completeURL;
 	private String beginStr = "http://picstyle.beagree.com/";
 	private String endStr = "@!";
-	private Integer SD_pk_user;
 	private RelativeLayout mPhoto_upload_layout;
 	private final String IMAGE_TYPE = "image/*";
 	private final int IMAGE_CODE = 110; // 这里的IMAGE_CODE是自己任意定义的
@@ -101,6 +101,7 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 	private OSSBucket sampleBucket;
 	private byte[] bitmap2Bytes;
 	private String uUid;
+	private Integer init_pk_user;
 
 
 	public PhotoFragment2() {
@@ -116,8 +117,8 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 				mLayout = inflater.inflate(R.layout.activity_selectimg, container,false);
 				
 				//获取sd卡中的pk_user
-				SD_pk_user = SdPkUser.getsD_pk_user();
-				Log.e("PhotoFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+				init_pk_user = InitPkUser.InitPkUser();
+				Log.e("PhotoFragment", "从SD卡中获取到的Pk_user" + init_pk_user);
 				
 				Init(inflater);
 				initPhotoUplisten();
@@ -683,7 +684,7 @@ public class PhotoFragment2 extends Fragment implements OnClickListener, OnItemC
 				
 				Photo photo = new Photo();
 				photo.setFk_group(GroupActivity.getPk_group());
-				photo.setFk_user(SD_pk_user);
+				photo.setFk_user(init_pk_user);
 				photo.setPk_photo(objectKey);//pk_photo
 				photo.setStatus(1);
 				photo.setPath(imagePath);//设置内存路径

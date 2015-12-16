@@ -52,7 +52,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginRight="5.0dp"
                     android:gravity="right|bottom"
-                    android:text="9月10号"
+                    android:text="9月10日"
                     android:layout_marginTop="3.0dp"
                     android:textColor="#ffffff"
                     android:textSize="16.0sp" />
@@ -79,10 +79,12 @@
                         android:id="@+id/Party_item_redprompt"
                         android:layout_width="10.0dp"
                         android:layout_height="10.0dp"
+                        android:layout_alignParentTop="true"
                         android:layout_centerHorizontal="true"
-                        android:layout_centerVertical="true"
-                        android:src="@drawable/red_yuan"
-                        android:visibility="gone" />
+                        android:src="@drawable/redpromprt"
+                        android:visibility="gone" 
+                         />
+
                 </RelativeLayout>
             </RelativeLayout>
 

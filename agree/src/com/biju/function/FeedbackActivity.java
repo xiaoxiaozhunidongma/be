@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -16,8 +17,12 @@ import android.view.Window;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.FeedBack;
+import com.BJ.utils.Ifwifi;
+import com.BJ.utils.ToastUtils;
 import com.biju.Interface;
 import com.biju.Interface.feedBackListenner;
 import com.biju.R;
@@ -112,7 +117,14 @@ public class FeedbackActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.feedback_send_layout:
 		case R.id.feedback_send:
-			feedback_send();
+			boolean isWIFI = Ifwifi.getNetworkConnected(FeedbackActivity.this);
+			if (isWIFI) {
+				feedback_send();
+			} else {
+				// 自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+				ToastUtils.ShowMsgCENTER(getApplicationContext(), "网络不可用", 0, toastRoot, 0);
+			}
 			break;
 		default:
 			break;

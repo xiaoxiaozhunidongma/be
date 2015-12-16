@@ -29,6 +29,7 @@ public class ChangeChatNameActivity extends Activity implements OnClickListener 
 	private void iniUI() {
 		edit_chatName = (EditText) findViewById(R.id.ChangeChatNameEdit);
 		findViewById(R.id.ChangeChatNameOKBut).setOnClickListener(this);
+		findViewById(R.id.ChangeChatNameBackBut).setOnClickListener(this);
 	}
 
 	@Override
@@ -37,10 +38,18 @@ public class ChangeChatNameActivity extends Activity implements OnClickListener 
 		case R.id.ChangeChatNameOKBut:
 			completeName();
 			break;
+		case R.id.ChangeChatNameBackBut:
+			ChangeChatNameBackBut();
+			break;
 
 		default:
 			break;
 		}
+	}
+
+	private void ChangeChatNameBackBut() {
+		finish();
+		overridePendingTransition(R.anim.left, R.anim.right);
 	}
 
 	private void completeName() {

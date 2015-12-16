@@ -12,7 +12,6 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -24,9 +23,9 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.utils.DensityUtil;
 import com.BJ.utils.KCalendar;
-import com.BJ.utils.Weeks;
 import com.BJ.utils.KCalendar.OnCalendarClickListener;
 import com.BJ.utils.KCalendar.OnCalendarDateChangedListener;
+import com.BJ.utils.Weeks;
 import com.biju.IConstant;
 import com.biju.R;
 
@@ -69,6 +68,7 @@ public class TimeActivity extends Activity implements OnClickListener {
 	private String mNomonth;
 	private String mNoday;
 	private String mNoWeek;
+	private String oldDate;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,9 @@ public class TimeActivity extends Activity implements OnClickListener {
 		if(IConstant.EndTimeChoose.equals(currentChoose)){
 			String startTimeString=intent.getStringExtra(IConstant.StartTimeString);
 			mTimePicker_Time_show.setText("开始时间:"+startTimeString);
+		}else if(IConstant.DeadlineTimeChoose.equals(currentChoose)){
+			String startTimeString=intent.getStringExtra(IConstant.StartTimeString);
+			mTimePicker_Time_show.setText("开始时间:"+startTimeString);
 		}
 	}
 
@@ -93,13 +96,15 @@ public class TimeActivity extends Activity implements OnClickListener {
 		boolean date1 = sp.getBoolean("date", false);
 		if (date1) {
 			String dateFormat = sp.getString("dateFormat", "");
+			
+			oldDate=dateFormat;
 			calendar.setCalendarDayBgColor(dateFormat,R.drawable.yuan_6,false);//设置背景红色圆圈
 			date = dateFormat;// 最后返回给全局 date
 			Log.e("TimeActivity", "进保存后的"+date);
 			if (null != date) {
 
-				int years = Integer.parseInt(date.substring(0,date.indexOf("-")));
-				int month = Integer.parseInt(date.substring(date.indexOf("-") + 1, date.lastIndexOf("-")));
+				int years = Integer.parseInt(date.substring(0,date.indexOf("-")));//date.indexOf("-")
+				int month = Integer.parseInt(date.substring(date.indexOf("-") + 1,date.lastIndexOf("-")));//date.indexOf("-") + 1   date.lastIndexOf("-")
 				popupwindow_calendar_month.setText(years + "年" + month + "月");
 
 				calendar.showCalendar(years, month);
@@ -304,8 +309,121 @@ public class TimeActivity extends Activity implements OnClickListener {
 		}else if(IConstant.EndTimeChoose.equals(currentChoose)){
 			EndTimeChoose();
 		}else if(IConstant.DeadlineTimeChoose.equals(currentChoose)){
-			
+			DeadlineTimeChoose();
 		}
+	}
+
+	//报名截止时间的判断过程
+	private void DeadlineTimeChoose() {
+		String StartMonths=intent.getStringExtra(IConstant.StartMonths);
+		String StartDay=intent.getStringExtra(IConstant.StartDay);
+		Integer StartHour=intent.getIntExtra(IConstant.StartHour, 0);
+		if(date!=null){
+			String DeadlineMonth=date.substring(5, 7);
+			String DeadlineDay=date.substring(8, 10);
+			DeadlineMonthsChoose(StartMonths,StartDay,StartHour,DeadlineMonth,DeadlineDay);
+		}else {
+			SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
+			sd.setTitleText("提示");
+			sd.setContentText("活动日期不能为空哦~");
+			sd.show();
+		}
+	}
+
+	//从月开始判断
+	private void DeadlineMonthsChoose(String startMonths, String startDay,Integer startHour, String DeadlineMonth, String DeadlineDay) {
+		//判断月份是否超过10
+				String DeadlineCurrentMonth=DeadlineMonth.substring(0);
+				Integer DeadlineCurrentMonth_1;
+				if(Integer.valueOf(DeadlineCurrentMonth)>0){
+					DeadlineCurrentMonth_1 = Integer.valueOf(DeadlineMonth);
+				}else{
+					DeadlineCurrentMonth_1=Integer.valueOf(DeadlineMonth.substring(1));
+				}
+						
+				String startCurrentMonths=startMonths.substring(0);
+				Integer DeadlinestartCurrentMonths_1;
+				if(Integer.valueOf(startCurrentMonths)>0)
+				{
+					DeadlinestartCurrentMonths_1 = Integer.valueOf(startMonths);
+				}else
+				{
+					DeadlinestartCurrentMonths_1 = Integer.valueOf(startMonths.substring(1));
+				}
+				//判断月开始时间与结束时间
+				if(DeadlineCurrentMonth_1<DeadlinestartCurrentMonths_1){
+					//传值完成
+					DeadlineOK();
+				}else if(DeadlineCurrentMonth_1==DeadlinestartCurrentMonths_1){
+					DeadlineDayChoose(startDay,startHour,DeadlineDay);//判断日
+				}else if(DeadlineCurrentMonth_1>DeadlinestartCurrentMonths_1){
+					DeadlineSweetAlertDialog();
+				}
+	}
+
+	private void DeadlineSweetAlertDialog() {
+		SweetAlertDialog sd=new SweetAlertDialog(TimeActivity.this);
+		sd.setTitleText("提示");
+		sd.setContentText("聚会的报名时间应该是在开始时间之前哦~");
+		sd.show();
+	}
+
+	private void DeadlineDayChoose(String startDay, Integer startHour,String DeadlineDay) {
+		//判断日是否超过10
+				String DeadlineCurrentDay=DeadlineDay.substring(0);
+				Integer DeadlinecurrentDay_2;
+				if(Integer.valueOf(DeadlineCurrentDay)>0)
+				{
+					DeadlinecurrentDay_2 = Integer.valueOf(DeadlineDay);
+				}else
+				{
+					DeadlinecurrentDay_2=Integer.valueOf(DeadlineDay.substring(1));
+				}
+					
+				String startCurrentDay=startDay.substring(0);
+				Integer DeadlinestartCurrentDay_2;
+				if(Integer.valueOf(startCurrentDay)>0)
+				{
+					DeadlinestartCurrentDay_2 = Integer.valueOf(startDay);
+				}else
+				{
+					DeadlinestartCurrentDay_2 = Integer.valueOf(startDay.substring(1));
+				}
+				if(DeadlinecurrentDay_2<DeadlinestartCurrentDay_2){
+					//传值完成
+					DeadlineOK();
+				}else if(DeadlinecurrentDay_2==DeadlinestartCurrentDay_2){
+					DeadlineHourChoose(startHour);
+				}else if(DeadlinecurrentDay_2>DeadlinestartCurrentDay_2){
+					DeadlineSweetAlertDialog();
+				}
+	}
+
+	private void DeadlineHourChoose(Integer startHour) {
+		Integer chooseCurrentHour = mTimePicker.getCurrentHour();
+		if(chooseCurrentHour<Integer.valueOf(startHour)){
+			//传值完成
+			DeadlineOK();
+		}else if(chooseCurrentHour<=Integer.valueOf(startHour)){
+			SweetAlertDialog();
+		}
+	}
+
+	private void DeadlineOK() {
+		SharedPreferences sp = getSharedPreferences("isdate", 0);
+		Editor editor1 = sp.edit();
+		editor1.putString("dateFormat", oldDate);
+		editor1.putBoolean("date", true);
+		editor1.commit();
+		
+		SharedPreferences time_sp = getSharedPreferences(IConstant.DeadlineTime, 0);
+		Editor editor = time_sp.edit();
+		editor.putBoolean(IConstant.IsDeadlineTimeChoose, true);
+		editor.putInt(IConstant.DeadlineTimeHour, chooseCurrentHour);
+		editor.putInt(IConstant.DeadlineTimeMinute, chooseCurrentMinute);
+		editor.putString(IConstant.DeadlineTimeDate, date);
+		editor.commit();
+		finish();
 	}
 
 	//选择结束时间的判断过程
@@ -358,6 +476,13 @@ public class TimeActivity extends Activity implements OnClickListener {
 
 	//进行传值
 	private void EndOK() {
+		
+		SharedPreferences sp = getSharedPreferences("isdate", 0);
+		Editor editor1 = sp.edit();
+		editor1.putString("dateFormat", oldDate);
+		editor1.putBoolean("date", true);
+		editor1.commit();
+		
 		SharedPreferences time_sp = getSharedPreferences(IConstant.EndTime, 0);
 		Editor editor = time_sp.edit();
 		editor.putBoolean(IConstant.IsEndTimeChoose, true);
@@ -578,6 +703,11 @@ public class TimeActivity extends Activity implements OnClickListener {
 	}
 
 	private void time_back() {
+		SharedPreferences oldsp = getSharedPreferences("isdate", 0);
+		Editor editor1 = oldsp.edit();
+		editor1.putString("dateFormat", oldDate);
+		editor1.putBoolean("date", true);
+		editor1.commit();
 		finish();
 	}
 
@@ -639,11 +769,11 @@ public class TimeActivity extends Activity implements OnClickListener {
 						mTimePicker_Time_show.setText("开始时间:"+OldYears+"年"+OldMonth+"月"+OldDay+"日"+" "+week+" "+chooseCurrentHour+":"+chooseCurrentMinute);
 					}
 					isNoChoose=false;
-					SharedPreferences sp = getSharedPreferences("isdate", 0);
-					Editor editor = sp.edit();
-					editor.putString("dateFormat", dateFormat);
-					editor.putBoolean("date", true);
-					editor.commit();
+//					SharedPreferences sp = getSharedPreferences("isdate", 0);
+//					Editor editor = sp.edit();
+//					editor.putString("dateFormat", dateFormat);
+//					editor.putBoolean("date", true);
+//					editor.commit();
 				}
 			}
 		});

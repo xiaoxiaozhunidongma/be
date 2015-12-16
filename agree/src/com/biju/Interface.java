@@ -61,6 +61,8 @@ public class Interface {
 		return Thisinterface;
 	}
 
+	//提现记录
+	String KHistoryList="118";
 	//小组添加新的成员
 	String KTeamAddFriends="391";
 	//生成财务订单
@@ -385,6 +387,24 @@ public class Interface {
 	// });
 	// }
 
+	//提现记录	
+	private void HistoryListPost(Context context, Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError56(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone56(response);
+			}
+		});
+	}
+	
 	//小组添加新的成员	
 	private void TeamAddFriendsPost(Context context, Map<String, String> params) {
 		
@@ -1330,6 +1350,11 @@ public class Interface {
 	// volleyPost(context,per);
 	// }
 
+	// 提现记录
+	public void HistoryList(Context context, User user) {
+		HistoryListPost(context, packParams(user, KHistoryList));
+	}
+	
 	// 小组添加新的成员
 	public void TeamAddFriends(Context context, TeamAddNewMemberModel TeamAddNewMemberModel) {
 		TeamAddFriendsPost(context, packParamsNewMembers(TeamAddNewMemberModel, KTeamAddFriends));
@@ -1622,6 +1647,8 @@ public class Interface {
 	// 接口部分
 	// private static UserInterface listener;
 
+	// 提现记录
+	private static HistoryListListenner historylistlistenner;
 	// 小组添加新的成员
 	private static TeamAddFriendsListenner teamaddfriendslistenner;
 	// 生成财务订单
@@ -1701,6 +1728,13 @@ public class Interface {
 	// void defail(Object B);
 	// }
 
+	// 提现记录
+	public interface HistoryListListenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
+	
 	// 小组添加新的成员
 	public interface TeamAddFriendsListenner {
 		void success(String A);
@@ -2042,6 +2076,11 @@ public class Interface {
 	// this.listener=listener;
 	// }
 
+	//提现记录
+	public void setPostListener(HistoryListListenner listener) {
+		this.historylistlistenner = listener;
+	}
+	
 	//小组添加新的成员
 	public void setPostListener(TeamAddFriendsListenner listener) {
 		this.teamaddfriendslistenner = listener;
@@ -2793,5 +2832,14 @@ public class Interface {
 	
 	public static void requestError55(VolleyError error) {
 		teamaddfriendslistenner.defail(error);
+	}
+	
+	//提现记录
+	public static void requestDone56(String theObject) {
+		historylistlistenner.success(theObject);
+	}
+	
+	public static void requestError56(VolleyError error) {
+		historylistlistenner.defail(error);
 	}
 }

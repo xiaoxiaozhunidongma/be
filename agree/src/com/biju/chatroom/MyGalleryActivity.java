@@ -40,6 +40,7 @@ import com.BJ.javabean.User;
 import com.BJ.utils.DensityUtil;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.LogUtil.log;
 import com.biju.HackyViewPager;
@@ -47,6 +48,7 @@ import com.biju.Interface;
 import com.biju.Interface.AddPicReviewListenner;
 import com.biju.Interface.CheckPicReviewListenner;
 import com.biju.Interface.FindMultiUserListenner;
+import com.biju.function.RequestCodeActivity;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
@@ -446,12 +448,12 @@ public class MyGalleryActivity extends Activity implements OnClickListener {
 
 	private void sendReview() {
 		String content = et_sendmessage.getText().toString();
-		
+		Integer init_pk_user = InitPkUser.InitPkUser();
 		Photo_Review photo_Review = new Photo_Review();
 		photo_Review.setFk_photo(photo.getPk_photo());
 		photo_Review.setContent(content);//评论内容
 		photo_Review.setCreate_date("2015-11-23");//当前时间
-		photo_Review.setFk_user(SdPkUser.getsD_pk_user());
+		photo_Review.setFk_user(init_pk_user);
 		photo_Review.setReview_type(2);
 		photo_Review.setStatus(1);
 

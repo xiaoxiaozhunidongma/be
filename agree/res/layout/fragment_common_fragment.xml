@@ -113,4 +113,5 @@
         android:visibility="gone" >
     </RelativeLayout>
 
+    <!-- android:background="#cc000000" -->
 </RelativeLayout>

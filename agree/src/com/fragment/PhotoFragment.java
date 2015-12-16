@@ -52,6 +52,7 @@ import com.BJ.photo.GalleryActivity;
 import com.BJ.photo.ImageItem;
 import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.ImageLoaderUtils4Photos;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.PicCutter;
@@ -117,7 +118,6 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 			}
 		}
 	};
-	private Integer SD_pk_user;
 	private RelativeLayout mPhoto_upload_layout;
 
 
@@ -136,6 +136,7 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 	private OSSBucket sampleBucket;
 	private byte[] bitmap2Bytes;
 	private String uUid;
+	private Integer init_pk_user;
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -146,8 +147,8 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 			mLayout = inflater.inflate(R.layout.activity_selectimg, container,false);
 			
 			//获取sd卡中的pk_user
-			SD_pk_user = SdPkUser.getsD_pk_user();
-			Log.e("PhotoFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+			init_pk_user = InitPkUser.InitPkUser();
+			Log.e("PhotoFragment", "从SD卡中获取到的Pk_user" + init_pk_user);
 			
 //			Res.init(getActivity());
 			bimap = BitmapFactory.decodeResource(getResources(),
@@ -713,7 +714,7 @@ public class PhotoFragment extends Fragment implements OnClickListener  {
 				
 				Photo photo = new Photo();
 				photo.setFk_group(GroupActivity.getPk_group());
-				photo.setFk_user(SD_pk_user);
+				photo.setFk_user(init_pk_user);
 //				photo.setPath(result.fileId);
 				photo.setPk_photo(objectKey);
 				photo.setStatus(1);

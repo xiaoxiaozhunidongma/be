@@ -28,6 +28,7 @@ import com.BJ.javabean.Party2;
 import com.BJ.javabean.PartyRelationshipback;
 import com.BJ.javabean.Party_User;
 import com.BJ.javabean.Partyback;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
 import com.biju.Interface;
@@ -53,13 +54,13 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private MyAdapter adapter = null;
 	private Integer pk_user_1;
 	private Party2 scheduleparty;
-	private Integer sD_pk_user;
 	private SwipeRefreshLayout mSchedule_swipe_refresh;
 	private int num=0;
 	private RelativeLayout mSchedule_new_party_layout;
 	private TextView mSchedule_new_party;
 	private RelativeLayout mSchedule_swipe_refresh_layout;
 	private RelativeLayout mSchedule_prompt_layout;
+	private Integer init_pk_user;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -70,7 +71,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 			Bundle savedInstanceState) {
 		if(mLayout==null){
 			mLayout = inflater.inflate(R.layout.fragment_schedule, container, false);
-			sD_pk_user = SdPkUser.getsD_pk_user();
+			init_pk_user = InitPkUser.InitPkUser();
 			initInterface();
 			initreadUserGroupParty();
 			initUI();
@@ -153,7 +154,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					String pk_party = scheduleparty.getPk_party();
 					Log.e("ScheduleFragment", "获取到的pk_party ========="+pk_party);
 					if (relatonship == null) {
-						initcreatePartyRelation(sD_pk_user,pk_party);
+						initcreatePartyRelation(init_pk_user,pk_party);
 						Log.e("ScheduleFragment", "进入到relatonship为null的地方==========");
 					}else if(relatonship==0)
 					{
@@ -429,8 +430,8 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private void initreadUserGroupParty() {
 		Integer id_group = GroupActivity.getPk_group();
 		Integer id_user_group = GroupActivity.getPk_group_user();
-		IDs ids = new IDs(id_group, sD_pk_user, id_user_group);
-		pk_user_1 = sD_pk_user;
+		IDs ids = new IDs(id_group, init_pk_user, id_user_group);
+		pk_user_1 = init_pk_user;
 		scheduleInterface.readUserGroupParty(getActivity(), ids);
 		SharedPreferences sp = getActivity().getSharedPreferences("isPk_user",0);
 		Editor editor = sp.edit();

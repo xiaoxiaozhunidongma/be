@@ -22,6 +22,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.LogUtil.log;
@@ -42,36 +43,19 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 	private String completeURL;
 	private ArrayList<User> membersChatList=new ArrayList<User>();
 	private MyMemberChatAdapter adapter;
-	private Integer sd_pk_user;
 	private boolean source;
+	private Integer init_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_members_chat);
-		sd_pk_user = SdPkUser.getsD_pk_user();
-//<<<<<<< HEAD
-//		
-//		List<String> members = ChatActivityLean.conversation.getMembers();
-//		members.remove(String.valueOf(sd_pk_user));//移除当前menber
-//		membersChatList.clear();
-//		for (int i = 0; i < members.size(); i++) {
-//			String string = members.get(i);
-//			User user = FriendsFragment.AllFriendsMap.get(Integer.valueOf(string));
-//			membersChatList.add(user);
-//		}
-//		membersChatList.add(HomeFragment.readuser);
-//		initUI();
-//		
-////		membersChatList = SdPkUser.getUser();
-////		if(membersChatList.size()>0){
-////			mMembersChatListview.setAdapter(adapter);
-////		}
-//=======
+		init_pk_user = InitPkUser.InitPkUser();
 		Intent intent = getIntent();
 		source = intent.getBooleanExtra("PersonalData", false);
 		initUI();
 		membersChatList = SdPkUser.getUser();
+		log.e("MembersChatActivity", "membersChatList的长度====="+membersChatList.size());
 	}
 
 	private void initUI() {
@@ -136,6 +120,7 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 			if (membersChatList.size() > 0) {
 				User user = membersChatList.get(position);
 				holder.MemberChat_name.setText(user.getNickname());
+				log.e("MembersChatActivity", "user.getNickname()====="+user.getNickname());
 				Integer pk_user=user.getPk_user();
 				String CreatorId=SdPkUser.getCreator();
 				if (pk_user.equals(Integer.valueOf(CreatorId))) {
@@ -144,8 +129,10 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 					holder.MemberChat_role.setText("组员");
 				}
 
-				if(sd_pk_user.equals(Integer.valueOf(CreatorId))){
+				if(init_pk_user.equals(Integer.valueOf(CreatorId))){
 					holder.MemberChat_delete.setVisibility(View.VISIBLE);
+				}else {
+					holder.MemberChat_delete.setVisibility(View.GONE);
 				}
 				
 				String useravatar_path = user.getAvatar_path();
@@ -281,7 +268,7 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 	}
 
 	private void ExitChatRoom() {
-		AVIMClient tom = AVIMClient.getInstance(String.valueOf(sd_pk_user));
+		AVIMClient tom = AVIMClient.getInstance(String.valueOf(init_pk_user));
 		tom.open(new AVIMClientCallback(){
 
 			@Override
@@ -300,7 +287,7 @@ public class MembersChatActivity extends Activity implements OnClickListener,OnI
 				                  if(e==null){
 				                  //退出成功
 				                	//退出群聊
-										Log.e("MembersCha", sd_pk_user+"退出群聊成功~");
+										Log.e("MembersCha", init_pk_user+"退出群聊成功~");
 					                	Intent intent=new Intent(MembersChatActivity.this, MainActivity.class);
 										startActivity(intent);
 				                  }

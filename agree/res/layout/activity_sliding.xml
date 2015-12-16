@@ -141,7 +141,7 @@
                     <TextView
                         android:id="@+id/SlidingMenu_requestcode_code"
                         android:layout_width="130.0dp"
-                        android:layout_height="wrap_content"
+                        android:layout_height="match_parent"
                         android:layout_alignParentLeft="true"
                         android:layout_centerVertical="true"
                         android:layout_marginLeft="20.0dp"
@@ -149,7 +149,9 @@
                         android:textColor="#000000"
                         android:gravity="right|center"
                         android:drawableLeft="@drawable/slidingcode"
-                        android:textSize="15.0sp" />
+                        android:textSize="15.0sp" 
+                        android:textIsSelectable="true"
+                        />
 
                     <TextView
                         android:id="@+id/textView7"
@@ -198,7 +200,7 @@
                 <ListView
                     android:id="@+id/SlidingMenu_member_listView"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
+                    android:layout_height="match_parent"
                     android:layout_alignParentTop="true"
                     android:layout_centerHorizontal="true"
                     android:divider="@null"

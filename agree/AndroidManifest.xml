@@ -290,14 +290,10 @@
             android:name="cn.jpush.android.service.PushReceiver"
             android:enabled="true" >
             <intent-filter android:priority="1000" >
-
-                <!-- since 1.3.5 -->
                 <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED_PROXY" />
-                <!-- since 1.3.5 -->
+
                 <category android:name="com.biju" />
-                <!-- since 1.3.5 -->
             </intent-filter>
-            <!-- since 1.3.5 -->
             <intent-filter>
                 <action android:name="android.intent.action.USER_PRESENT" />
                 <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
@@ -310,6 +306,26 @@
             </intent-filter>
 
             <action android:name="cn.jpush.android.intent.REGISTRATION" />
+        </receiver>
+        <receiver
+            android:name="com.BJ.utils.JPReceive"
+            android:enabled="true" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" />
+ <!-- Required  用户注册SDK的intent -->
+                <action android:name="cn.jpush.android.intent.UNREGISTRATION" />
+                <action android:name="cn.jpush.android.intent.MESSAGE_RECEIVED" />
+ <!-- Required  用户接收SDK消息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+ <!-- Required  用户接收SDK通知栏信息的intent -->
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+ <!-- Required  用户打开自定义通知栏的intent -->
+                <action android:name="cn.jpush.android.intent.ACTION_RICHPUSH_CALLBACK" />
+ <!-- Optional 用户接受Rich Push Javascript 回调函数的intent -->
+                <action android:name="cn.jpush.android.intent.CONNECTION" />
+ <!-- 接收网络变化 连接/断开 since 1.6.3 -->
+                <category android:name="com.biju" />
+            </intent-filter>
         </receiver>
         <!-- Required SDK核心功能 -->
         <activity
@@ -604,6 +620,10 @@
             android:name="com.biju.function.AddTeamFriendsActivity"
             android:label="@string/title_activity_add_team_friends"
             android:theme="@android:style/Theme.Translucent.NoTitleBar" >
+        </activity>
+        <activity
+            android:name="com.biju.function.HistoryPartyActivity"
+            android:label="@string/title_activity_history_party" >
         </activity>
     </application>
 

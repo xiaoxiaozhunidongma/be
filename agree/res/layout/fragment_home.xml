@@ -126,7 +126,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_centerHorizontal="true"
-                    android:text="你还没有加入任何一个的社团"
+                    android:text="你还没有加入任何一个社团"
                     android:textColor="#b9b9b9"
                     android:textSize="13.0sp" />
 
@@ -165,5 +165,35 @@
             </RelativeLayout>
         </RelativeLayout>
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <RelativeLayout
+        android:id="@+id/HomeNoWIFI"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/Home_title_layout"
+        android:layout_centerHorizontal="true" 
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:id="@+id/HomeNoWIFIImageView"
+            android:layout_width="100.0dp"
+            android:layout_height="100.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="118dp"
+            android:src="@drawable/nowifi" />
+
+        <TextView
+            android:id="@+id/HomeNoWIFIText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="网络不可用!"
+            android:textSize="13.0sp"
+            android:textColor="#959595" />
+
+    </RelativeLayout>
 
 </RelativeLayout>

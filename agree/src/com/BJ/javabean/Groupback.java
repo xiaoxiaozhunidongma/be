@@ -10,7 +10,7 @@ public class Groupback {
     @Expose
     private Integer statusMsg;
     @Expose
-    private List<Group> returnData = new ArrayList<Group>();
+    private List<GroupHome> returnData = new ArrayList<GroupHome>();
     @SerializedName("interface")
     @Expose
     private String _interface;
@@ -20,10 +20,10 @@ public class Groupback {
 	public void setStatusMsg(Integer statusMsg) {
 		this.statusMsg = statusMsg;
 	}
-	public List<Group> getReturnData() {
+	public List<GroupHome> getReturnData() {
 		return returnData;
 	}
-	public void setReturnData(List<Group> returnData) {
+	public void setReturnData(List<GroupHome> returnData) {
 		this.returnData = returnData;
 	}
 	public String get_interface() {

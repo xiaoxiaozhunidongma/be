@@ -643,9 +643,11 @@ public class ChatActivityLean extends Activity implements OnClickListener,
 		SdPkUser.setGetChatRoomOpen(false);//点击聊天室成员列表时传false
 		mTv_detail.setText("关闭");
 		mLeanChatBackground.setVisibility(View.VISIBLE);
-		Animation animation=new AlphaAnimation(0.0f,1.0f);
-		animation.setDuration(500);
-		mLeanChatBackground.startAnimation(animation);
+		
+//		Animation animation=new AlphaAnimation(0.0f,1.0f);
+//		animation.setDuration(500);
+//		mLeanChatBackground.startAnimation(animation);
+		
 		Intent intent = new Intent(ChatActivityLean.this, MembersChatActivity.class);
 		startActivity(intent);
 		overridePendingTransition(R.anim.in_item, R.anim.out_item);

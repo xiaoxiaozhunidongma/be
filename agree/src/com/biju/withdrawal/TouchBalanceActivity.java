@@ -26,6 +26,7 @@ import com.BJ.javabean.PaymentAccountBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserBalance;
 import com.BJ.javabean.UserBalanceBack;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.BalanceListenner;
@@ -37,7 +38,6 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 
 	private TextView mTouchBalanceMoney;
 	private ListView mTouchBalanceLixtview;
-	private Integer sd_pk_user;
 	private Interface mTouchBalanceInterface;
 	private List<PaymentAccount> PaymentAccountList=new ArrayList<PaymentAccount>();
 	private MyTouchBalanceAdapter adapter;
@@ -46,13 +46,14 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 	private float userbalance;
 	public static GetBalancePayMentAccount getBalancePayMentAccount;
 	private TextView mTouchBalanceUnArr_money;
+	private Integer init_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_touch_balance);
-		sd_pk_user = SdPkUser.getsD_pk_user();
+		init_pk_user = InitPkUser.InitPkUser();
 		initUI();
 		initInterFace();
 		initBalance();//获取用户的余额
@@ -76,7 +77,7 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 	//获取用户的提现账户
 	private void initReadPayMnetAccount() {
 		User user=new User();
-		user.setPk_user(sd_pk_user);
+		user.setPk_user(init_pk_user);
 		mTouchBalanceInterface.ReadPayMentAccount(TouchBalanceActivity.this, user);
 	}
 
@@ -142,7 +143,7 @@ public class TouchBalanceActivity extends Activity implements OnClickListener{
 	//获取新建账户的回调
 	private void initBalance() {
 		User user=new User();
-		user.setPk_user(sd_pk_user);
+		user.setPk_user(init_pk_user);
 		mTouchBalanceInterface.Balance(TouchBalanceActivity.this, user);
 	}
 

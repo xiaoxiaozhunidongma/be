@@ -137,7 +137,7 @@ public class MyApplication extends Application {
 		// 地图初始化
 		SDKInitializer.initialize(this);
 		// 极光推送
-		JPushInterface.setDebugMode(true); // 设置开启日志,发布时请关闭日志
+		JPushInterface.setDebugMode(false); // 设置开启日志,发布时请关闭日志true
 		JPushInterface.init(this); // 初始化 JPush
 
 		regId = JPushInterface.getRegistrationID(MyApplication.this);

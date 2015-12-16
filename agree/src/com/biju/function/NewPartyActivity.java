@@ -27,9 +27,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.GroupHome;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
 import com.BJ.utils.DensityUtil;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
@@ -42,15 +44,15 @@ import com.github.volley_examples.utils.GsonUtils;
 public class NewPartyActivity extends Activity implements OnClickListener{
 
 	private GridView newparty_gridview;
-	private List<Group> users;
-	private ArrayList<Group> list = new ArrayList<Group>();
+	private List<GroupHome> users;
+	private ArrayList<GroupHome> list = new ArrayList<GroupHome>();
 	private String beginStr = "http://picstyle.beagree.com/";
 	private String endStr = "@!";
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private MyGridviewAdapter adapter;
-	private Integer sD_pk_user;
 	private int columnWidth;
+	private Integer init_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,21 +60,18 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_new_party);
 		//获取sd卡中的pk_user
-		sD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("NewPartyActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
+		init_pk_user = InitPkUser.InitPkUser();
+		Log.e("NewPartyActivity", "从SD卡中获取到的Pk_user" + init_pk_user);
 		DisplayMetrics();
 		initUI();
 		initNewTeam();
 	}
 
+	//获取屏幕宽高
 	private void DisplayMetrics() {
-		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
-        NewPartyActivity.this.getWindowManager().getDefaultDisplay().getMetrics(metric);
-        int width = metric.widthPixels;     // 屏幕宽度（像素）
+		com.BJ.utils.DisplayMetrics.DisplayMetrics(NewPartyActivity.this);
+		int width = com.BJ.utils.DisplayMetrics.Width();
         columnWidth = (width-30)/2;
-        int height = metric.heightPixels;   // 屏幕高度（像素）
-        Log.e("HomeFragment", "屏幕宽度（像素）width======="+width);
-        Log.e("HomeFragment", "屏幕高度（像素）height======="+height);
 	}
 	
 	@Override
@@ -89,7 +88,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 	}
 
 	private void initNewTeam() {
-		ReadTeam(sD_pk_user);
+		ReadTeam(init_pk_user);
 	}
 
 	private void ReadTeam(int pk_user) {
@@ -108,7 +107,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 					users = homeback.getReturnData();
 					if (users.size() > 0) {
 						for (int i = 0; i < users.size(); i++) {
-							Group readhomeuser = users.get(i);
+							GroupHome readhomeuser = users.get(i);
 							list.add(readhomeuser);
 						}
 						adapter.notifyDataSetChanged();
@@ -136,7 +135,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 			@Override
 			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
 					long arg3) {
-				Group group = list.get(arg2);
+				GroupHome group = list.get(arg2);
 				int fk_group=group.getPk_group();
 				Intent intent=new Intent(NewPartyActivity.this, AddNewPartyActivity.class);
 				intent.putExtra(IConstant.Fk_group, fk_group);
@@ -202,7 +201,7 @@ public class NewPartyActivity extends Activity implements OnClickListener{
 		    layoutParams9.width = columnWidth; //设置图片的宽度
 		    mNewParty_item_head.setLayoutParams(layoutParams9);
 			
-			Group newparty_gridview = list.get(position);
+		    GroupHome newparty_gridview = list.get(position);
 			String newpartyAvatar_path = newparty_gridview.getAvatar_path();
 			String homenickname = newparty_gridview.getName();
 			mNewParty_item_name.setText(homenickname);

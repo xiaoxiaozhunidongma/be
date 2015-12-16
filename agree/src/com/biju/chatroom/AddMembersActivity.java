@@ -9,7 +9,6 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
@@ -22,9 +21,13 @@ import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.BJ.javabean.AddTeamFriends;
+import com.BJ.javabean.AddTeamFriendsBack;
+import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -42,7 +45,6 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 
 	private ListView listView;
 	private MyAdapter myAdapter;
-	private List<User> userList=new ArrayList<User>();
 	private String beginStr = "http://picstyle.beagree.com/";
 	private String endStr = "@!";
 	final ArrayList<String> members=new ArrayList<String>();
@@ -53,12 +55,18 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 	private HashMap<Integer, Boolean> isSelectMap=new HashMap<Integer, Boolean>();
 	private boolean isSelected;
 	
+	private List<AddTeamFriends> userList = new ArrayList<AddTeamFriends>();
+	private List<Integer> add_Pk_user_List = new ArrayList<Integer>();
+	private List<AddTeamFriends> AddTeamFriendsList = new ArrayList<AddTeamFriends>();
+	private List<User> membersChatList=new ArrayList<User>();
+	
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_friends3);
+		membersChatList = SdPkUser.getUser();
 		initUI();
 		readAllfriends();
 	}
@@ -78,8 +86,8 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 	private void readAllfriends() {
 		Interface instance = Interface.getInstance();
 		User user=new User();
-		Integer getsD_pk_user = SdPkUser.getsD_pk_user();
-		user.setPk_user(getsD_pk_user);
+		Integer init_pk_user = InitPkUser.InitPkUser();
+		user.setPk_user(init_pk_user);
 		instance.readMyAllfriend(this, user);
 		instance.setPostListener(new MyAllfriendsListenner() {
 			
@@ -87,13 +95,48 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 			@Override
 			public void success(String A) {
 				Log.e("AddFriends3Activity", "返回结果"+A);
-				Loginback loginbackread = GsonUtils.parseJson(A,
-						Loginback.class);
-				userList = loginbackread.getReturnData();
 				AllfriendMap.clear();
-				for (int i = 0; i < userList.size(); i++) {
-					User user2 = userList.get(i);
-					AllfriendMap.put(user2.getPk_user(), user2.getNickname());
+				userList.clear();
+				add_Pk_user_List.clear();
+				AddTeamFriendsList.clear();
+				AddTeamFriendsBack teamFriendsBack = GsonUtils.parseJson(A,AddTeamFriendsBack.class);
+				Integer status = teamFriendsBack.getStatusMsg();
+				if (1 == status) {
+					userList = teamFriendsBack.getReturnData();
+					if (userList.size() > 0) {
+						for (int i = 0; i < userList.size(); i++) {
+							AddTeamFriends all_user = userList.get(i);
+							add_Pk_user_List.add(all_user.getPk_user());
+						}
+						
+						for (int i = 0; i < userList.size(); i++) {
+							AddTeamFriends all_user = userList.get(i);
+							Integer all_pk_user = all_user.getPk_user();
+							for (int j = 0; j < membersChatList.size(); j++) {
+								User group_user = membersChatList.get(j);
+								Integer group_pk_user = group_user.getPk_user();
+								if (String.valueOf(all_pk_user).equals(String.valueOf(group_pk_user))) {
+									add_Pk_user_List.remove(userList.get(i).getPk_user());
+								}
+							}
+						}
+						
+						for (int i = 0; i < userList.size(); i++) {
+							AddTeamFriends all_user = userList.get(i);
+							Integer all_pk_user = all_user.getPk_user();
+							for (int j = 0; j < add_Pk_user_List.size(); j++) {
+								Integer all_pk_user1 = add_Pk_user_List.get(j);
+								if (String.valueOf(all_pk_user).equals(String.valueOf(all_pk_user1))) {
+									AddTeamFriendsList.add(all_user);
+								}
+							}
+						}
+						
+						for (int i = 0; i < userList.size(); i++) {
+							AddTeamFriends user2 = userList.get(i);
+							AllfriendMap.put(user2.getPk_user(), user2.getNickname());
+						}
+					}
 				}
 				myAdapter.notifyDataSetChanged();//刷新
 			}
@@ -118,7 +161,7 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 
 		@Override
 		public int getCount() {
-			return userList.size();
+			return AddTeamFriendsList.size();
 		}
 
 		@Override
@@ -151,8 +194,7 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 				holder = (ViewHolder) inflater.getTag();
 			}
 			
-			User user = userList.get(position);
-			Integer pk_user=user.getPk_user();
+			AddTeamFriends user = AddTeamFriendsList.get(position);
 			String nickname = user.getNickname();       
 			String avatar_path = user.getAvatar_path();
 			holder.ReadUserAllFriends_name.setText(nickname);
@@ -195,9 +237,9 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 
 	private void AddFriends3OK() {
 		    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
-			final Integer SD_pk_user = SdPkUser.getsD_pk_user();
+			final Integer init_pk_user = InitPkUser.InitPkUser();
 			
-			 AVIMClient currUser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
+			 AVIMClient currUser = AVIMClient.getInstance(String.valueOf(init_pk_user));
 			 currUser.open(new AVIMClientCallback() {
 
 			      @Override
@@ -222,7 +264,7 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 			                		  String NicName = AllfriendMap.get(Integer.valueOf(string));
 			                		  NicNameList.add(NicName);
 			                	  }
-			                	  NicNameList.remove(String.valueOf(SD_pk_user));//移除当前用户
+			                	  NicNameList.remove(String.valueOf(init_pk_user));//移除当前用户
 			                	  
 			  					String convName="";
 								for (int i = 0; i < NicNameList.size(); i++) {
@@ -258,7 +300,7 @@ public class AddMembersActivity extends Activity implements OnClickListener, OnI
 		isSelected = isSelectMap.get(position);
 		isSelected=!isSelected;
 		isSelectMap.put(position, isSelected);
-		User user1 = userList.get(position);
+		AddTeamFriends user1 = AddTeamFriendsList.get(position);
 		if(isSelected){
 			view.findViewById(R.id.ReadUserAllFriends_choose).setVisibility(View.VISIBLE);
 //			holder.ReadUserAllFriends_choose.setVisibility(View.VISIBLE);

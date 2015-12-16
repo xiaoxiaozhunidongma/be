@@ -13,23 +13,26 @@ import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v4.view.ViewPager.OnPageChangeListener;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.view.animation.Animation.AnimationListener;
 import android.view.animation.TranslateAnimation;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.biju.R;
+import com.biju.function.GroupActivity;
 
 /**
  * A simple {@link android.support.v4.app.Fragment} subclass.
  *
  */
-public class CommonFragment extends Fragment implements OnClickListener {
+public class CommonFragment extends Fragment implements OnClickListener{
 
 	private int[] mTextviewResIds = new int[] { R.id.tv_1, R.id.tv_2, R.id.tv_3 };
 	private View mLayout1;
@@ -81,15 +84,16 @@ public class CommonFragment extends Fragment implements OnClickListener {
 			@Override
 			public void Open() {
 				mCommonBackground.setVisibility(View.VISIBLE);
-				Animation animation=new AlphaAnimation(0.5f,1.0f);
-				animation.setDuration(300);
-				mCommonBackground.startAnimation(animation);
+//				Animation animation=new AlphaAnimation(0.0f,1.0f);
+//				animation.setDuration(300);
+//				mCommonBackground.startAnimation(animation);
 			}
 			
 		};
 		this.getOpen=getOpen;
 	}
-
+	
+	
 	// »ñÈ¡ÆÁÄ»¿í¶È
 	private int getScreenWidth() {
 		DisplayMetrics dm = new DisplayMetrics();
@@ -219,6 +223,5 @@ public class CommonFragment extends Fragment implements OnClickListener {
 	public interface GetClose{
 		void Close();
 	}
-	
 	
 }

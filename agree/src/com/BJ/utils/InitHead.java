@@ -38,9 +38,7 @@ public class InitHead {
 		paint.setXfermode(new PorterDuffXfermode(PorterDuff.Mode.SRC_IN));
 		canvas.drawBitmap(bmp, new Rect(0, 0, bmp.getWidth(), bmp.getWidth()),
 				new Rect(0, 0, dstWidth, dstWidth), paint);
-//		Registered(resultBmp);
-//		usersetting(resultBmp);
-//		bmp.recycle();
+		Registered(resultBmp);
 		return resultBmp;
 	}
 
@@ -51,13 +49,6 @@ public class InitHead {
 			RegisteredActivity.mRegistered_head.setImageBitmap(resultBmp);
 		}
 	}
-	private static void usersetting(Bitmap resultBmp) {
-		if(SettingFragment.mSetting_head_1!=null)
-		{
-			SettingFragment.mSetting_head_1.setImageBitmap(resultBmp);
-		}
-	}
-	
 
 	private static int calculateInSampleSize(BitmapFactory.Options options,
 			int reqWidth, int reqHeight) {

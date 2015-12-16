@@ -6,7 +6,7 @@ public class Order {
 	private Integer pk_order;
 	private Date create_time;
 	private Date arrival_time;
-	private Integer amount;
+	private float amount;
 	private Integer fk_payment_account;
 	private String remark;
 	private Integer status;
@@ -28,10 +28,10 @@ public class Order {
 	public void setArrival_time(Date arrival_time) {
 		this.arrival_time = arrival_time;
 	}
-	public Integer getAmount() {
+	public float getAmount() {
 		return amount;
 	}
-	public void setAmount(Integer amount) {
+	public void setAmount(float amount) {
 		this.amount = amount;
 	}
 	public Integer getFk_payment_account() {

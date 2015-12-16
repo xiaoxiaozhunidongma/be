@@ -1,26 +1,25 @@
 package com.fragment;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.StreamCorruptedException;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import leanchatlib.controller.ChatManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
-import android.os.Environment;
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -41,17 +40,28 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.GroupHome;
 import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_ReadAllUserback;
 import com.BJ.javabean.Groupback;
+import com.BJ.javabean.ImageText;
+import com.BJ.javabean.JPush;
+import com.BJ.javabean.JPushTabNumber;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.DensityUtil;
+import com.BJ.utils.ExampleUtil;
 import com.BJ.utils.FooterView;
-import com.BJ.utils.Person;
+import com.BJ.utils.Ifwifi;
+import com.BJ.utils.InitPkUser;
+import com.BJ.utils.JPReceive;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.BJ.utils.homeImageLoaderUtils;
+import com.activeandroid.Model;
+import com.activeandroid.query.Delete;
+import com.activeandroid.query.Select;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
 import com.avos.avoscloud.im.v2.AVIMException;
@@ -76,8 +86,7 @@ import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
  *
  */
 @TargetApi(19)
-public class HomeFragment extends Fragment implements OnClickListener,
-		SwipeRefreshLayout.OnRefreshListener {
+public class HomeFragment extends Fragment implements OnClickListener,SwipeRefreshLayout.OnRefreshListener {
 
 	private View mLayout;
 	private String beginStr = "http://picstyle.beagree.com/";
@@ -85,18 +94,17 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
 	private GridView home_gridview;
-	private List<Group> users;
+	private List<GroupHome> users;
 	private MyGridviewAdapter adapter;
 	private Interface homeInterface;
 	private SwipeRefreshLayout swipeLayout;
 	private SwipeRefreshLayout swipe_refresh_1;
 
-	private Integer SD_pk_user = null;
+	private Integer init_pk_user = null;
 	private int EvenNumber;
 	private int Size;
 	private FooterView footerView;
 
-	private String fileName = getSDPath() + "/" + "saveData";
 	private boolean sdcard;
 	private boolean refresh;
 	private ImageView home_item_head;
@@ -104,24 +112,24 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	private RelativeLayout mHome_NoTeam_prompt_layout;
 	private int columnWidth;
 	private String currUserUrl;
-//	private HashMap<Integer, String> FromAvaUrlMap=new HashMap<Integer, String>();
 	private int pk_group;
 	private String group_name;
-	private Group group;
-	public static  User readuser;
+	private GroupHome group;
+	public static User readuser;
 	private boolean changeName;
-	private boolean isSwipe;
-
-	public String getSDPath() {
-		File sdDir = null;
-		boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
-		// 判断sd卡是否存在
-		if (sdCardExist) {
-			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录
-		}
-		return sdDir.toString();
-
-	}
+	private RelativeLayout mHomeNoWIFI;
+	
+	private MessageReceiver mMessageReceiver;
+	public static final String MESSAGE_RECEIVED_ACTION = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
+	public static final String KEY_TITLE = "title";
+	public static final String KEY_MESSAGE = "message";
+	public static final String KEY_EXTRAS = "extras";
+	public static boolean isForeground = false;
+	private ImageView mHomePromptImage;
+	
+	private List<String>  JpushList=new ArrayList<String>();
+	private List<JPush>  JpushList1=new ArrayList<JPush>();
+	private List<JPushTabNumber>  JPushTabNumberList=new ArrayList<JPushTabNumber>();
 
 	public HomeFragment() {
 	}
@@ -132,9 +140,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			Bundle savedInstanceState) {
 		if (mLayout == null) {
 			mLayout = inflater.inflate(R.layout.fragment_home, container, false);
-			
 			DisplayMetrics();// 获取屏幕的高度和宽度
-			
+
 			Intent intent = getActivity().getIntent();
 			sdcard = intent.getBooleanExtra(IConstant.Sdcard, false);
 			initUI(inflater);
@@ -145,88 +152,167 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			swipe_refresh_1.setOnRefreshListener(this);
 
 			// 顶部刷新的样式
-			swipeLayout.setColorSchemeResources(android.R.color.holo_red_light,
-					android.R.color.holo_green_light,
-					android.R.color.holo_blue_bright,
-					android.R.color.holo_orange_light);
-			swipe_refresh_1.setColorSchemeResources(android.R.color.holo_red_light,
-					android.R.color.holo_green_light,
-					android.R.color.holo_blue_bright,
-					android.R.color.holo_orange_light);
+			swipeLayout.setColorSchemeResources(android.R.color.holo_red_light,android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright,android.R.color.holo_orange_light);
+			swipe_refresh_1.setColorSchemeResources(android.R.color.holo_red_light,android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright,android.R.color.holo_orange_light);
 
-			Log.e("HomeFragment", "进入了onCreateView()=========" + sdcard);
 			if (sdcard) {
-				InputSdcard();
-				Log.e("HomeFragment", "进入了onStart()中的input里了========"+ SD_pk_user);
-				ReadTeamInterface(SD_pk_user);
+				init_pk_user = InitPkUser.InitPkUser();
+				Log.e("HomeFragment", "有封装工具类来的pk_user====="+init_pk_user);
+				ReadTeamInterface(init_pk_user);
 			}
-
+			initDB();
+			registerMessageReceiver();
+			Log.e("HomeFragment", "onCreateView()=======");
 		}
 		return mLayout;
 	}
 
-	private void DisplayMetrics() {
-		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
-		getActivity().getWindowManager().getDefaultDisplay().getMetrics(metric);
-		int width = metric.widthPixels; // 屏幕宽度（像素）
-		columnWidth = (width - 30) / 2;
-		int height = metric.heightPixels; // 屏幕高度（像素）
-		Log.e("HomeFragment", "屏幕宽度（像素）width=======" + width);
-		Log.e("HomeFragment", "屏幕高度（像素）height=======" + height);
+	private void initDB() {
+		JpushList1.clear();
+		JpushList.clear();
+		// 查表
+		JpushList1 = new Select().from(JPush.class).execute();
+		for (int i = 0; i < JpushList1.size(); i++) {
+			JPush jPush3=JpushList1.get(i);
+			String jpush_pk_group=jPush3.getPk_group();
+			Log.e("HomeFragment", "在查表时得到的jpush_pk_group====="+jpush_pk_group);
+			JpushList.add(jpush_pk_group);
+		}
+		Log.e("HomeFragment", "在查表时得到的JpushList1====="+JpushList1.size());
+		Log.e("HomeFragment", "在查表时得到的JpushList====="+JpushList.size());
+		adapter.notifyDataSetChanged();
 	}
 
-	private void InputSdcard() {
-		FileInputStream fis;
-		try {
-			fis = new FileInputStream(fileName);
-			ObjectInputStream ois = new ObjectInputStream(fis);
-			Person person = (Person) ois.readObject();
-			SD_pk_user = person.pk_user;
-			SdPkUser.setsD_pk_user(SD_pk_user);
-			ois.close();
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		} catch (StreamCorruptedException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		} catch (ClassNotFoundException e) {
-			e.printStackTrace();
+	//获取屏幕宽高
+	private void DisplayMetrics() {
+		com.BJ.utils.DisplayMetrics.DisplayMetrics(getActivity());
+		int width = com.BJ.utils.DisplayMetrics.Width();
+		columnWidth = (width - 30) / 2;
+	}
+	
+	public void registerMessageReceiver() {
+		mMessageReceiver = new MessageReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.setPriority(IntentFilter.SYSTEM_HIGH_PRIORITY);
+		filter.addAction(MESSAGE_RECEIVED_ACTION);
+		getActivity().registerReceiver(mMessageReceiver, filter);
+	}
+	
+	public class MessageReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
+              String extras = intent.getStringExtra(KEY_EXTRAS);
+              setCostomMsg(extras);
+			}
 		}
+	}
+	
+	private void setCostomMsg(String extras){
+		Log.e("HomeFragment", "得到的msg====="+extras);
+		JpushList1.clear();
+		JpushList.clear();
+		 if (!ExampleUtil.isEmpty(extras)) {
+				try {
+					JSONObject extraJson = new JSONObject(extras);
+					if (null != extraJson && extraJson.length() > 0) {
+						JPush jPush=GsonUtils.parseJson(extras, JPush.class);
+						String jPush_pk_group = jPush.getPk_group();
+						String jPush_type_tag = jPush.getType_tag();
+						if(2==Integer.valueOf(jPush_type_tag)){
+							//存进数据库
+							JPush jPush2=new JPush(jPush_pk_group, jPush_type_tag);
+							jPush2.save();
+							
+							// 查表
+							JpushList1 = new Select().from(JPush.class).execute();
+							for (int i = 0; i < JpushList1.size(); i++) {
+								JPush jPush3=JpushList1.get(i);
+								String jpush_pk_group=jPush3.getPk_group();
+								JpushList.add(jpush_pk_group);
+							}
+							
+							SendBroadcastReceiver(false,0);//发送广播给mainactivity
+							
+							adapter.notifyDataSetChanged();
+							Log.e("HomeFragment", "得到的jPush_pk_group====="+jPush_pk_group);
+							Log.e("HomeFragment", "得到的jPush_type_tag====="+jPush_type_tag);
+							Log.e("HomeFragment", "得到的JpushList1====="+JpushList1.size());
+							Log.e("HomeFragment", "得到的JpushList====="+JpushList.size());
+						}
+					}
+				} catch (JSONException e) {
+
+				}}
+		
+	}
+
+	private void SendBroadcastReceiver(boolean one, Integer party_update) {
+		Intent intent=new Intent();
+		intent.setAction("JPush");
+		intent.putExtra("JPushTabNumber", one);
+		if(one){
+			intent.putExtra("OneNumber", party_update);
+		}
+		getActivity().sendBroadcast(intent);
 	}
 
 	@Override
+	public void onPause() {
+		isForeground = false;
+		super.onPause();
+	}
+	
+	@Override
 	public void onStart() {
+		initDB();
+		Log.e("HomeFragment", "onStart()=======");
+		WIFIChange();// 判断WIFI的改变进行布局显示的改变
 		boolean exitteam = SdPkUser.RefreshTeam;
 		if (exitteam) {
-			InputSdcard();
-			ReadTeamInterface(SD_pk_user);
+			ReadTeamInterface(init_pk_user);
 		}
+		ReadTeamInterface(init_pk_user);
 		super.onStart();
 	}
 
-	
+	private void WIFIChange() {
+		boolean isWIFI = Ifwifi.getNetworkConnected(getActivity());// 判断是否有网络
+		// 无网络时
+		if (isWIFI) {
+			mHomeNoWIFI.setVisibility(View.GONE);
+			home_gridview.setVisibility(View.VISIBLE);
+		} else {
+			mHomeNoWIFI.setVisibility(View.VISIBLE);
+			home_gridview.setVisibility(View.GONE);
+		}
+	}
+
 	@Override
 	public void onResume() {
+		isForeground = true;
+		WIFIChange();// 判断WIFI的改变进行布局显示的改变
+
 		SharedPreferences requestcode_sp = getActivity().getSharedPreferences(IConstant.RequestCode, 0);
 		refresh = requestcode_sp.getBoolean(IConstant.Refresh, false);
 		if (refresh) {
-			// 获取SD卡中的pk_user
-			SD_pk_user = SdPkUser.getsD_pk_user();
-			ReadTeamInterface(SD_pk_user);
+			// 获取pk_user
+			init_pk_user = InitPkUser.InitPkUser();
+			ReadTeamInterface(init_pk_user);
 		}
-		
-		SharedPreferences ChangeName_sp=getActivity().getSharedPreferences("ChangeGroupName", 0);
+
+		SharedPreferences ChangeName_sp = getActivity().getSharedPreferences("ChangeGroupName", 0);
 		changeName = ChangeName_sp.getBoolean("ChangeName", false);
-		Log.e("HomeFragment", "得到的changeName====="+changeName);
-		if(changeName){
-			// 获取SD卡中的pk_user
-			SD_pk_user = SdPkUser.getsD_pk_user();
-			ReadTeamInterface(SD_pk_user);
+		if (changeName) {
+			// 获取pk_user
+			init_pk_user = InitPkUser.InitPkUser();
+			ReadTeamInterface(init_pk_user);
 		}
-		
-		
-		readCurUser();//读取当前用户
+
+		readCurUser();// 读取当前用户
 		readAlluserOfgroup();
 		super.onResume();
 	}
@@ -238,8 +324,7 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		homeInterface.readUserGroupMsg(getActivity(), homeuser);
 		homeInterface.setPostListener(new readUserGroupMsgListenner() {
 
-			private Group readhomeuser_1;
-
+			private GroupHome readhomeuser_1;
 			@Override
 			public void success(String A) {
 				PhoneLoginActivity.list.clear();
@@ -251,7 +336,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					if (users.size() > 0) {
 						for (int i = 0; i < users.size(); i++) {
 							readhomeuser_1 = users.get(i);
-							Log.e("HomeFragment", "readhomeuser==="+ readhomeuser_1.getPk_group());
 							PhoneLoginActivity.list.add(readhomeuser_1);
 						}
 
@@ -260,7 +344,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 						Size = PhoneLoginActivity.list.size();
 						Log.e("HomeFragment", "读取用户小组信息加入List后的内容==="+ PhoneLoginActivity.list.toString());
 						if (PhoneLoginActivity.list.size() > 0) {
-							isSwipe=true;
 							swipeLayout.setVisibility(View.VISIBLE);
 							swipe_refresh_1.setVisibility(View.GONE);
 							mHome_NoTeam_prompt_layout.setVisibility(View.GONE);
@@ -269,7 +352,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					}
 					adapter.notifyDataSetChanged();
 				} else {
-					isSwipe=false;
 					swipeLayout.setVisibility(View.GONE);
 					swipe_refresh_1.setVisibility(View.VISIBLE);
 					mHome_NoTeam_prompt_layout.setVisibility(View.VISIBLE);
@@ -290,7 +372,6 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 			@Override
 			public void success(String A) {
-//				FromAvaUrlMap.clear();
 				Group_ReadAllUserback group_ReadAllUserback = GsonUtils.parseJson(A, Group_ReadAllUserback.class);
 				int status = group_ReadAllUserback.getStatusMsg();
 				if (status == 1) {
@@ -299,24 +380,22 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					if (allUsers.size() > 0) {
 						for (int i = 0; i < allUsers.size(); i++) {
 							Group_ReadAllUser readAllUser = allUsers.get(i);
-							String avatar_path = beginStr+readAllUser.getAvatar_path()+endStr+"mini-avatar";
-//							FromAvaUrlMap.put(readAllUser.getFk_user(), avatar_path);
+							String avatar_path = beginStr+ readAllUser.getAvatar_path() + endStr+ "mini-avatar";
 						}
 					}
-					SdPkUser.setHomeClickUser(allUsers);//把容器传到成员列表界面
-					SdPkUser.setGetSource(1);//传个true说明是群聊的
-					
+					SdPkUser.setHomeClickUser(allUsers);// 把容器传到成员列表界面
+					SdPkUser.setGetSource(1);// 传个true说明是群聊的
+
 					Intent intent = new Intent(getActivity(),GroupActivity.class);
 					intent.putExtra(IConstant.HomePk_group, pk_group);
 					intent.putExtra(IConstant.HomeGroupName, group_name);
 					intent.putExtra("conName", "group_name");
-//					intent.putExtra("FromAvaUrlMap", FromAvaUrlMap);//数组
+					// intent.putExtra("FromAvaUrlMap", FromAvaUrlMap);//数组
 					intent.putExtra("convid", group.getEm_id());
 					intent.putExtra("CurrUserUrl", currUserUrl);
 					startActivity(intent);
-					Log.e("CommentsListActivity", "有点击到==========");
 				}
-				
+
 			}
 
 			@Override
@@ -328,13 +407,10 @@ public class HomeFragment extends Fragment implements OnClickListener,
 
 	private void readCurUser() {
 		homeInterface.setPostListener(new readUserListenner() {
-			
-
 
 			@Override
 			public void success(String A) {
-				Loginback loginbackread = GsonUtils.parseJson(A,
-						Loginback.class);
+				Loginback loginbackread = GsonUtils.parseJson(A,Loginback.class);
 				int aa = loginbackread.getStatusMsg();
 				if (aa == 1) {
 					// 取第一个Users[0]
@@ -342,106 +418,142 @@ public class HomeFragment extends Fragment implements OnClickListener,
 					if (Users.size() >= 1) {
 						readuser = Users.get(0);
 						String mAvatar_path = readuser.getAvatar_path();
-						currUserUrl = beginStr + mAvatar_path + endStr+"mini-avatar";
+						currUserUrl = beginStr + mAvatar_path + endStr+ "mini-avatar";
 					}
 				}
 			}
-			
+
 			@Override
 			public void defail(Object B) {
-				
+
 			}
 		});
-		
+
 		User user = new User();
-		user.setPk_user(SD_pk_user);
+		user.setPk_user(init_pk_user);
 		homeInterface.readUser(getActivity(), user);
 	}
 
 	private void initUI(LayoutInflater inflater) {
+		mHomeNoWIFI = (RelativeLayout) mLayout.findViewById(R.id.HomeNoWIFI);// 没有网络时候显现
 		mLayout.findViewById(R.id.HomeRequestCodeLayout).setOnClickListener(this);
-		mHome_NoTeam_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Home_NoTeam_prompt_layout);//没有小组时显示
+		mHome_NoTeam_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Home_NoTeam_prompt_layout);// 没有小组时显示
 		mLayout.findViewById(R.id.tab_home_new_layout).setOnClickListener(this);// 新建小组
 		mLayout.findViewById(R.id.tab_home_new).setOnClickListener(this);// 新建小组
 		home_gridview = (GridView) mLayout.findViewById(R.id.home_gridview);
 		home_gridview.setSelector(new ColorDrawable(Color.TRANSPARENT));// 去除gridview点击后的背景颜色
 
+		WIFIChange();// 判断WIFI的改变进行布局显示的改变
+
 		// 是否滑动时候暂停加载
 		home_gridview.setOnScrollListener(new PauseOnScrollListener(ImageLoader.getInstance(), true, true));
 		home_gridview.setOnItemClickListener(new OnItemClickListener() {
 			@Override
-			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,
-					long arg3) {
-				if (EvenNumber == 0) {
-					if (!(PhoneLoginActivity.list.size() == arg2)) {
-						Log.e("HomeFragment", "点击到了小组的==========");
-						group = PhoneLoginActivity.list.get(arg2);
-						
-						joinConv(group);//加入到对话
-						pk_group = group.getPk_group();
-						
-						Group readAllPerRelation_group = new Group();
-						readAllPerRelation_group.setPk_group(pk_group);
-						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
-						
-						group_name = group.getName();
-//						Intent intent = new Intent(getActivity(),GroupActivity.class);
-//						intent.putExtra(IConstant.HomePk_group, pk_group);
-//						intent.putExtra(IConstant.HomeGroupName, group_name);
-//						intent.putExtra("conName", "group_name");
-//						intent.putExtra("FromAvaUrlList", FromAvaUrlList);//数组
-//						intent.putExtra("convid", group.getEm_id());
-//						intent.putExtra("CurrUserUrl", currUserUrl);
-//						startActivity(intent);
-					}
+			public void onItemClick(AdapterView<?> arg0, View arg1, int arg2,long arg3) {
+				boolean isWIFI = Ifwifi.getNetworkConnected(getActivity());// 判断是否有网络
+				if (isWIFI) {
+					HomeItemClick(arg2);
 				} else {
-					if (!(PhoneLoginActivity.list.size() == arg2)) {
-						group = PhoneLoginActivity.list.get(arg2);
-						joinConv(group);//加入到对话
-						pk_group = group.getPk_group();
-						
-						Group readAllPerRelation_group = new Group();
-						readAllPerRelation_group.setPk_group(pk_group);
-						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
-						
-						group_name = group.getName();
-//						Intent intent = new Intent(getActivity(),GroupActivity.class);
-//						intent.putExtra(IConstant.HomePk_group, pk_group);
-//						intent.putExtra(IConstant.HomeGroupName, group_name);
-//						intent.putExtra("conName", "group_name");
-//						intent.putExtra("FromAvaUrlList", FromAvaUrlList);//数组
-//						intent.putExtra("convid", group.getEm_id());
-//						intent.putExtra("CurrUserUrl", currUserUrl);
-//						startActivity(intent);
-					}
+					// 自定义Toast
+					View toastRoot = getActivity().getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+					ToastUtils.ShowMsgCENTER(getActivity().getApplicationContext(), "网络不可用", 0, toastRoot, 0);
 				}
 
 			}
 
-			private void joinConv(final Group group) {
-				final Integer SD_pk_user = SdPkUser.getsD_pk_user();
-				AVIMClient curUser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
-				curUser.open(new AVIMClientCallback(){
+			private void HomeItemClick(int arg2) {
+				if (EvenNumber == 0) {
+					if (!(PhoneLoginActivity.list.size() == arg2)) {
+						Log.e("HomeFragment", "点击到了小组的==========");
+						group = PhoneLoginActivity.list.get(arg2);
+
+						joinConv(group);// 加入到对话
+						pk_group = group.getPk_group();
+
+						Group readAllPerRelation_group = new Group();
+						readAllPerRelation_group.setPk_group(pk_group);
+						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
+
+						group_name = group.getName();
+						
+						//从数据库中删除
+						for (int i = 0; i < JpushList1.size(); i++) {
+							JPush jPush=JpushList1.get(i);
+							String jPush_pk_group=jPush.getPk_group();
+							if(jPush_pk_group.equals(String.valueOf(pk_group))){
+								new Delete().from(JPush.class).where("pk_group=?", jPush_pk_group).execute();
+							}
+						}
+						
+						//再查新表,然后删除点击的
+						JPushTabNumberList=new Select().from(JPushTabNumber.class).execute();
+						for (int i = 0; i < JPushTabNumberList.size(); i++) {
+							JPushTabNumber jPushTabNumber=JPushTabNumberList.get(i);
+							String jPushTab_pk_group=jPushTabNumber.getPk_group();
+							if(jPushTab_pk_group.equals(String.valueOf(pk_group))){
+								new Delete().from(JPushTabNumber.class).where("pk_group=?", jPushTab_pk_group).execute();
+							}
+						}
+						
+					}
+				} else {
+					if (!(PhoneLoginActivity.list.size() == arg2)) {
+						group = PhoneLoginActivity.list.get(arg2);
+						joinConv(group);// 加入到对话
+						pk_group = group.getPk_group();
+
+						Group readAllPerRelation_group = new Group();
+						readAllPerRelation_group.setPk_group(pk_group);
+						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
+
+						group_name = group.getName();
+						
+						//从数据库中删除
+						for (int i = 0; i < JpushList1.size(); i++) {
+							JPush jPush=JpushList1.get(i);
+							String jPush_pk_group=jPush.getPk_group();
+							if(jPush_pk_group.equals(String.valueOf(pk_group))){
+								new Delete().from(JPush.class).where("pk_group=?", jPush_pk_group).execute();
+							}
+						}
+						
+						//再查新表,然后删除点击的
+						JPushTabNumberList=new Select().from(JPushTabNumber.class).execute();
+						for (int i = 0; i < JPushTabNumberList.size(); i++) {
+							JPushTabNumber jPushTabNumber=JPushTabNumberList.get(i);
+							String jPushTab_pk_group=jPushTabNumber.getPk_group();
+							if(jPushTab_pk_group.equals(String.valueOf(pk_group))){
+								new Delete().from(JPushTabNumber.class).where("pk_group=?", jPushTab_pk_group).execute();
+							}
+						}
+					}
+				}
+			}
+
+			private void joinConv(final GroupHome group) {
+				final Integer init_pk_user = InitPkUser.InitPkUser();
+				AVIMClient curUser = AVIMClient.getInstance(String.valueOf(init_pk_user));
+				curUser.open(new AVIMClientCallback() {
 					@Override
 					public void done(AVIMClient client, AVIMException e) {
-					      if(e==null){
-						        //登录成功
-					    	  String em_id = group.getEm_id();
-						        AVIMConversation conversation = client.getConversation(em_id);
-						        //注册对话
-								final ChatManager chatManager = ChatManager.getInstance();
-								 chatManager.registerConversation(conversation);//注册对话
-								 conversation.join(new AVIMConversationCallback(){
-						            @Override
-						            public void done(AVIMException e){
-						              if(e==null){
-						              //加入成功
-						            	  Log.e("HomeFragment", "当前："+SD_pk_user+"加入小组成功");
-						              }
-						            }
-						        });
-						      }
-						    }
+						if (e == null) {
+							// 登录成功
+							String em_id = group.getEm_id();
+							AVIMConversation conversation = client.getConversation(em_id);
+							// 注册对话
+							final ChatManager chatManager = ChatManager.getInstance();
+							chatManager.registerConversation(conversation);// 注册对话
+							conversation.join(new AVIMConversationCallback() {
+								@Override
+								public void done(AVIMException e) {
+									if (e == null) {
+										// 加入成功
+										Log.e("HomeFragment", "当前："+ init_pk_user + "加入小组成功");
+									}
+								}
+							});
+						}
+					}
 				});
 
 			}
@@ -486,7 +598,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 				if (position == PhoneLoginActivity.list.size()) {
 					if (footerView == null) {
 						footerView = new FooterView(parent.getContext());
-						GridView.LayoutParams pl = new GridView.LayoutParams(getDisplayWidth((getActivity())),LayoutParams.WRAP_CONTENT);
+						GridView.LayoutParams pl = new GridView.LayoutParams(getDisplayWidth((getActivity())),
+								LayoutParams.WRAP_CONTENT);
 						footerView.setLayoutParams(pl);
 						footerView.setOnClickListener(new OnClickListener() {
 
@@ -503,7 +616,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 				if (position == PhoneLoginActivity.list.size() + 1) {
 					if (footerView == null) {
 						footerView = new FooterView(parent.getContext());
-						GridView.LayoutParams pl = new GridView.LayoutParams(getDisplayWidth((getActivity())),LayoutParams.WRAP_CONTENT);
+						GridView.LayoutParams pl = new GridView.LayoutParams(getDisplayWidth((getActivity())),
+								LayoutParams.WRAP_CONTENT);
 						footerView.setLayoutParams(pl);
 						footerView.setOnClickListener(new OnClickListener() {
 
@@ -524,6 +638,8 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			home_item_head = (ImageView) inflater.findViewById(R.id.home_item_head);
 			home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
 			home_item_name_layout = (RelativeLayout) inflater.findViewById(R.id.home_item_name_layout);
+			mHomePromptImage = (ImageView) inflater.findViewById(R.id.HomePromptImage);
+			
 			if (position == PhoneLoginActivity.list.size()) {
 				home_item_head.setVisibility(View.INVISIBLE);
 				home_item_name.setVisibility(View.INVISIBLE);
@@ -557,28 +673,72 @@ public class HomeFragment extends Fragment implements OnClickListener,
 			if (EvenNumber == 0) {
 				if (PhoneLoginActivity.list.size() > 0) {
 					if (position < PhoneLoginActivity.list.size()) {
-						Group homeuser_gridview = PhoneLoginActivity.list.get(position);
+						GroupHome homeuser_gridview = PhoneLoginActivity.list.get(position);
 						String homeAvatar_path = homeuser_gridview.getAvatar_path();
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr+ "group-front-cover";
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
 						homeImageLoaderUtils.getInstance().LoadImage(getActivity(), completeURL, home_item_head);
+						
+						for (int i = 0; i < JpushList.size(); i++) {
+							String jPush_pk_group=JpushList.get(i);
+							Log.e("HomeFragment", "当前jPush_pk_group======="+ jPush_pk_group);
+							Integer pk_group=homeuser_gridview.getPk_group();
+							Log.e("HomeFragment", "当前pk_group======="+ pk_group);
+							if(jPush_pk_group.equals(String.valueOf(pk_group))){
+								mHomePromptImage.setVisibility(View.VISIBLE);
+								Log.e("HomeFragment", "进入显示的=======");
+							}
+						}
+//						Integer party_update=homeuser_gridview.getParty_update();
+//						Log.e("HomeFragment", "party_update======="+party_update);
+//						if(party_update>0){
+//							mHomePromptImage.setVisibility(View.VISIBLE);
+//							SendBroadcastReceiver(true,party_update);//发送广播给mainactivity
+//							Log.e("HomeFragment", "进入111111111=======");
+//						}else {
+//							SendBroadcastReceiver(false,0);//发送广播给mainactivity
+//							Log.e("HomeFragment", "进入22222222=======");
+//						}
+						
 					}
 				}
 			} else {
 				if (PhoneLoginActivity.list.size() > 0) {
 					if (position < PhoneLoginActivity.list.size()) {
-						Group homeuser_gridview = PhoneLoginActivity.list.get(position);
+						GroupHome homeuser_gridview = PhoneLoginActivity.list.get(position);
 						String homeAvatar_path = homeuser_gridview.getAvatar_path();
 						String homenickname = homeuser_gridview.getName();
 						home_item_name.setText(homenickname);
 						completeURL = beginStr + homeAvatar_path + endStr+ "group-front-cover";
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
 						homeImageLoaderUtils.getInstance().LoadImage(getActivity(), completeURL, home_item_head);
+					
+						for (int i = 0; i < JpushList.size(); i++) {
+							String jPush_pk_group=JpushList.get(i);
+							Log.e("HomeFragment", "当前jPush_pk_group======="+ jPush_pk_group);
+							Integer pk_group=homeuser_gridview.getPk_group();
+							Log.e("HomeFragment", "当前pk_group======="+ pk_group);
+							if(jPush_pk_group.equals(String.valueOf(pk_group))){
+								mHomePromptImage.setVisibility(View.VISIBLE);
+								Log.e("HomeFragment", "进入显示的=======");
+							}
+						}
+						
+//						Integer party_update=homeuser_gridview.getParty_update();
+//						if(party_update>0){
+//							mHomePromptImage.setVisibility(View.VISIBLE);
+//							SendBroadcastReceiver(true,party_update);//发送广播给mainactivity
+//							Log.e("HomeFragment", "进入111111111=======");
+//						}else {
+//							SendBroadcastReceiver(false,0);//发送广播给mainactivity
+//							Log.e("HomeFragment", "进入222222222=======");
+//						}
 					}
 				}
 			}
+			
 			return inflater;
 		}
 
@@ -600,19 +760,25 @@ public class HomeFragment extends Fragment implements OnClickListener,
 	}
 
 	private void HomeRequestCodeLayout() {
-		Intent intent = new Intent(getActivity(),RequestCodeActivity.class);
+		Intent intent = new Intent(getActivity(), RequestCodeActivity.class);
 		startActivity(intent);
 	}
 
 	private void tab_home_new_layout() {
-		SharedPreferences TeamFriends_sp=getActivity().getSharedPreferences("TeamFriends", 0);
-		Editor editor=TeamFriends_sp.edit();
+		SharedPreferences TeamFriends_sp = getActivity().getSharedPreferences("TeamFriends", 0);
+		Editor editor = TeamFriends_sp.edit();
 		editor.putBoolean("AddTeamFriends", false);
 		editor.commit();
 		Intent intent = new Intent(getActivity(), NewteamActivity.class);
 		startActivity(intent);
 	}
 
+	@Override
+	public void onDestroy() {
+		getActivity().unregisterReceiver(mMessageReceiver);
+		super.onDestroy();
+	}
+	
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -623,11 +789,11 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		editor.putBoolean(IConstant.Refresh, false);
 		editor.commit();
 
-		SharedPreferences ChangeName_sp=getActivity().getSharedPreferences("ChangeGroupName", 0);
-		Editor ChangeName_editor=ChangeName_sp.edit();
+		SharedPreferences ChangeName_sp = getActivity().getSharedPreferences("ChangeGroupName", 0);
+		Editor ChangeName_editor = ChangeName_sp.edit();
 		ChangeName_editor.putBoolean("ChangeName", false);
 		ChangeName_editor.commit();
-		
+
 		// 清除缓存
 		if (PhoneLoginActivity.list.size() > 0) {
 			Drawable d = home_item_head.getDrawable();
@@ -645,12 +811,10 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				ReadTeamInterface(SD_pk_user);
-				if(isSwipe){
-					swipeLayout.setRefreshing(false);
-				}else {
-					swipe_refresh_1.setRefreshing(false);
-				}
+				initDB();
+				ReadTeamInterface(init_pk_user);
+				swipeLayout.setRefreshing(false);
+				swipe_refresh_1.setRefreshing(false);
 			}
 		}, 3000);
 	}

@@ -29,6 +29,7 @@ import com.BJ.javabean.Group_ReadAllUserback;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupuserback;
 import com.BJ.javabean.ImageText;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.activeandroid.Model;
 import com.activeandroid.query.Select;
@@ -84,7 +85,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private int verticalMinDistance = 180;
 	private int minVelocity = 0;
 
-	private Integer sD_pk_user;
 	private TextView mGroup_setting;
 	private TextView mGroup_setting_title;
 
@@ -107,6 +107,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private boolean isCode;
 	public static GetGroupChat getGroupChat;
 	public static GetClickOK clickOK;
+	
+	private Integer init_pk_user;
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -114,8 +116,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.group_tab);
 		// 获取sd卡中的pk_user
-		sD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("GroupActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
+		init_pk_user = InitPkUser.InitPkUser();
+		Log.e("GroupActivity", "从SD卡中获取到的Pk_user" + init_pk_user);
 
 		initFragment();
 		Intent intent = getIntent();
@@ -236,7 +238,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 							Group_ReadAllUser readAllUser = allUsers.get(i);
 							Group_Readalluser_List.add(readAllUser);
 						}
-						SdPkUser.setGetGroup_ReadAllUser(Group_Readalluser_List);//把小组中的所有成员List传给小组添加成员界面
 						//查表所有数据
 						List<Group_ReadAllUser> Group_ReadAllUserList = new Select().from(Group_ReadAllUser.class).execute();
 						//加入数据库
@@ -304,7 +305,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	private void initreadUserGroupRelation() {
 		Group_User group_User = new Group_User();
 		group_User.setFk_group(pk_group);
-		group_User.setFk_user(sD_pk_user);
+		group_User.setFk_user(init_pk_user);
 		groupInterface.readUserGroupRelation(GroupActivity.this, group_User);
 
 	}
@@ -333,6 +334,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		intent.putExtra("group_group", pk_group);
 		startActivity(intent);
 		overridePendingTransition(R.anim.in_item, R.anim.out_item);
+		SdPkUser.setGetGroup_ReadAllUser(Group_Readalluser_List);//把小组中的所有成员List传给小组添加成员界面
 		SdPkUser.setGetOpen(false);//传值用来判断好友信息界面是否打开
 	}
 
@@ -342,9 +344,8 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	
 	@Override
 	protected void onStart() {
-		// TODO Auto-generated method stub
-		selectDB();//查表
 		super.onStart();
+		selectDB();//查表
 	}
 
 	private void selectDB() {

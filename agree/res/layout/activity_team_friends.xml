@@ -2,9 +2,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TeamFriendsActivity" 
     android:background="#efefef"
-    >
+    tools:context=".TeamFriendsActivity" >
 
     <RelativeLayout
         android:id="@+id/TeamFriendsTitleLayout"
@@ -12,16 +11,14 @@
         android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="#ffffff"
-         >
+        android:background="#ffffff" >
 
         <TextView
             android:id="@+id/textView1"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
-            android:background="#aaaaaa"
-             />
+            android:background="#aaaaaa" />
 
         <TextView
             android:id="@+id/TeamFriendsBack"
@@ -29,11 +26,10 @@
             android:layout_height="match_parent"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="返回"
             android:gravity="center"
-            android:textSize="13.0sp"
+            android:text="返回"
             android:textColor="@drawable/title_left_color"
-             />
+            android:textSize="13.0sp" />
 
         <TextView
             android:id="@+id/TeamFriendsOK"
@@ -42,11 +38,10 @@
             android:layout_alignBaseline="@+id/TeamFriendsBack"
             android:layout_alignBottom="@+id/TeamFriendsBack"
             android:layout_alignParentRight="true"
-            android:text="完成"
-            android:textSize="13.0sp"
-            android:textColor="@drawable/title_right_color" 
             android:gravity="center"
-            />
+            android:text="完成"
+            android:textColor="@drawable/title_right_color"
+            android:textSize="13.0sp" />
 
         <TextView
             android:id="@+id/textView2"
@@ -58,16 +53,14 @@
             android:text="选择好友"
             android:textColor="@drawable/title_text_color"
             android:textSize="15.0sp" />
-
     </RelativeLayout>
 
     <RelativeLayout
+        android:id="@+id/TeamFriendsLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/TeamFriendsTitleLayout"
-        android:layout_centerHorizontal="true"
-        
-        >
+        android:layout_centerHorizontal="true" >
 
         <ListView
             android:id="@+id/TeamFriendsListView"
@@ -75,11 +68,36 @@
             android:layout_height="match_parent"
             android:layout_alignParentTop="true"
             android:layout_centerHorizontal="true"
-            android:background="#ffffff"
-             >
-
+            android:background="#ffffff" >
         </ListView>
+    </RelativeLayout>
 
+    <RelativeLayout
+        android:id="@+id/TeamFriendsNoWIFI"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/TeamFriendsTitleLayout"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone" >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="100.0dp"
+            android:layout_height="100.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="123dp"
+            android:src="@drawable/nowifi" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/imageView1"
+            android:layout_centerHorizontal="true"
+            android:text="无网络可用!"
+            android:textColor="#959595"
+            android:textSize="13.0sp" />
     </RelativeLayout>
 
 </RelativeLayout>
