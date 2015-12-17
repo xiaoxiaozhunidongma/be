@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -11,11 +12,14 @@ import android.view.Window;
 import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Order;
 import com.BJ.javabean.OrderBack;
 import com.BJ.javabean.PaymentAccount;
+import com.BJ.utils.Ifwifi;
+import com.BJ.utils.ToastUtils;
 import com.biju.Interface;
 import com.biju.Interface.DeletePayMentAccountListenner;
 import com.biju.Interface.OrderListenner;
@@ -126,10 +130,24 @@ public class DeletePaymentAccountActivity extends Activity implements OnClickLis
 			DeletePaymentBack();
 			break;
 		case R.id.DeletePaymentWithdrawal:
-			DeletePaymentWithdrawal();
+			boolean isWIFI = Ifwifi.getNetworkConnected(DeletePaymentAccountActivity.this);
+			if (isWIFI) {
+				DeletePaymentWithdrawal();
+			} else {
+				// 自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+				ToastUtils.ShowMsgCENTER(getApplicationContext(), "网络不可用", 0, toastRoot, 0);
+			}
 			break;
 		case R.id.DeletePayment_delete:
-			DeletePayment_delete();
+			boolean isWIFI1 = Ifwifi.getNetworkConnected(DeletePaymentAccountActivity.this);
+			if (isWIFI1) {
+				DeletePayment_delete();
+			} else {
+				// 自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+				ToastUtils.ShowMsgCENTER(getApplicationContext(), "网络不可用", 0, toastRoot, 0);
+			}
 			break;
 		default:
 			break;
@@ -166,14 +184,14 @@ public class DeletePaymentAccountActivity extends Activity implements OnClickLis
 	//提现
 	private void DeletePaymentWithdrawal() {
 		String withdrawal=mDeletePaymentWithdrawalEdit.getText().toString().trim();
-		if(Integer.valueOf(withdrawal)>userbalance){
+		if(Float.valueOf(withdrawal)>userbalance){
 			SweetAlertDialog sd=new SweetAlertDialog(DeletePaymentAccountActivity.this);
 			sd.setTitleText("提示");
 			sd.setContentText("提现的金额不能大于当前账户的余额哦~");
 			sd.show();
 		}else {
 			Integer pk_payment_account=paymentAccount.getPk_payment_account();
-			Integer amount=Integer.valueOf(withdrawal);
+			float amount=Float.valueOf(withdrawal);
 			Order user_order=new Order();
 			user_order.setAmount(amount);
 			user_order.setFk_payment_account(pk_payment_account);

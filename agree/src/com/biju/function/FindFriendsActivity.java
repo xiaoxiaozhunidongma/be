@@ -24,6 +24,7 @@ import com.BJ.javabean.User;
 import com.BJ.javabean.User_User;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.addFriendListenner;
@@ -49,8 +50,8 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	
-	private Integer SD_pk_user;
 	private boolean isRegistered_one;
+	private Integer init_pk_user;
 	
 
 	@Override
@@ -63,8 +64,8 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 		isRegistered_one=SdPkUser.isRegistered_one();
 		
 		//获取SD卡中的pk_user
-		SD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("FindFriendsActivity", "从SD卡中获取到的Pk_user" + SD_pk_user);
+		init_pk_user = InitPkUser.InitPkUser();
+		Log.e("FindFriendsActivity", "从SD卡中获取到的Pk_user" + init_pk_user);
 
 		initInterface();
 		initUI();
@@ -204,7 +205,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 
 	private void findfriends_sendrequest() {
 		User_User user_User = new User_User();
-		user_User.setFk_user_from(SD_pk_user);
+		user_User.setFk_user_from(init_pk_user);
 		user_User.setFk_user_to(Integer.valueOf(pk_user));
 		user_User.setRelationship(1);
 		user_User.setStatus(1);
@@ -232,7 +233,7 @@ public class FindFriendsActivity extends Activity implements OnClickListener {
 			{
 				// 检查好友关系
 				User_User user_User = new User_User();
-				user_User.setFk_user_from(SD_pk_user);
+				user_User.setFk_user_from(init_pk_user);
 				user_User.setFk_user_to(Integer.valueOf(pk_user));
 				findfriends_inter_before.checkFriend(FindFriendsActivity.this,user_User);
 			}

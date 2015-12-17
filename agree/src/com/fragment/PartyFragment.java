@@ -30,6 +30,7 @@ import com.BJ.javabean.Party_User;
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.UserAllPartyback;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
 import com.biju.Interface;
@@ -55,6 +56,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 	private MyAdapter adapter;
 	private ArrayList<UserAllParty> userAllPartieList = new ArrayList<UserAllParty>();
 	private SwipeRefreshLayout mTab_party_swipe_refresh;
+	public static GetReadAllParty getReadAllParty;
 
 	public PartyFragment() {
 		// Required empty public constructor
@@ -79,8 +81,22 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 					android.R.color.holo_green_light,
 					android.R.color.holo_blue_bright,
 					android.R.color.holo_orange_light);
+			
+			initReadAllParty();
 		}
 		return mLayout;
+	}
+
+	private void initReadAllParty() {
+		GetReadAllParty getReadAllParty=new GetReadAllParty(){
+
+			@Override
+			public void ReadAllParty() {
+				initParty();
+			}
+			
+		};
+		this.getReadAllParty=getReadAllParty;
 	}
 
 	@Override
@@ -150,9 +166,9 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 
 	private void initParty() {
 		User partyuser = new User();
-		Integer SD_pk_user=SdPkUser.getsD_pk_user();
-		partyuser.setPk_user(SD_pk_user);
-		Log.e("PartyFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+		Integer init_pk_user = InitPkUser.InitPkUser();
+		partyuser.setPk_user(init_pk_user);
+		Log.e("PartyFragment", "从SD卡中获取到的Pk_user" + init_pk_user);
 		tab_party_interface.readUserAllParty(getActivity(), partyuser);
 	}
 
@@ -296,7 +312,15 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 				}
 				//判断是否参与的显示
 				Integer relationship=party.getRelationship();
-				if(relationship==4){
+				if(0==relationship){
+					holder.Party_item_redprompt.setVisibility(View.VISIBLE);
+					holder.Party_item_background.setBackgroundResource(R.drawable.party_partake_background);//如果参与聚会则背景为绿色
+					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
+					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
+					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.party_time_background));
+					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
+				}else if(relationship==4){
+					holder.Party_item_redprompt.setVisibility(View.GONE);
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_partake_nickname_color));//参与后名称颜色黑色
 					holder.Party_item_background.setBackgroundResource(R.drawable.party_green_corners);//如果参与聚会则背景为绿色
 					holder.years_month.setTextColor(holder.years_month.getResources().getColor(R.color.white));
@@ -304,6 +328,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_partake_address_color));//参与后地址颜色深灰
 					holder.Party_item_payment.setTextColor(holder.Party_item_payment.getResources().getColor(R.drawable.Party_partake_pay_color));//参与后付款方式变绿色
 				}else{
+					holder.Party_item_redprompt.setVisibility(View.GONE);
 					holder.Party_item_background.setBackgroundResource(R.drawable.party_partake_background);//如果参与聚会则背景为绿色
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰
@@ -365,5 +390,9 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 		ViewGroup parent = (ViewGroup) mLayout.getParent();
 		parent.removeView(mLayout);
 		super.onDestroyView();
+	}
+	
+	public interface GetReadAllParty{
+		void ReadAllParty();
 	}
 }

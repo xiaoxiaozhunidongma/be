@@ -30,6 +30,7 @@ import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.activeandroid.query.Select;
 import com.avos.avoscloud.AVException;
@@ -45,7 +46,6 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationQueryCallback;
 import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.biju.Interface;
-import com.biju.Interface.FindMultiUserListenner;
 import com.biju.Interface.MyAllfriendsListenner;
 import com.biju.Interface.readUserListenner;
 import com.biju.R;
@@ -78,12 +78,12 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	private static MyAdapter adapter;
 	private Integer fk_user_from;
 
-	private Integer SD_pk_user;
 	private String CurrUserUrl;
 	private List<AVIMConversation> convs = new ArrayList<AVIMConversation>();
 	private Interface instance;
 	private HashMap<Integer, String> FromAvaUrlMap = new HashMap<Integer, String>();
 	public static HashMap<Integer, User> AllFriendsMap = new HashMap<Integer, User>();
+	private Integer init_pk_user;
 
 	public FriendsFragment() {
 		// Required empty public constructor
@@ -97,10 +97,10 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 					false);
 
 			// 获取SD卡中的pk_user
-			SD_pk_user = SdPkUser.getsD_pk_user();
+			init_pk_user = InitPkUser.InitPkUser();
 
 			ReadUser();
-			Log.e("HomeFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+			Log.e("FriendsFragment", "从SD卡中获取到的Pk_user" + init_pk_user);
 
 			initUI();
 			// LoginHuanXin();
@@ -141,8 +141,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 	private void readAllfriends() {
 		instance=Interface.getInstance();
 		User user = new User();
-		Integer getsD_pk_user = SdPkUser.getsD_pk_user();
-		user.setPk_user(getsD_pk_user);
+		Integer init_pk_user = InitPkUser.InitPkUser();
+		user.setPk_user(init_pk_user);
 		instance.readMyAllfriend(getActivity(), user);
 		instance.setPostListener(new MyAllfriendsListenner() {
 
@@ -293,7 +293,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 			}
 		});
 		User user = new User();
-		user.setPk_user(SD_pk_user);
+		user.setPk_user(init_pk_user);
 		instance.readUser(getActivity(), user);
 	}
 
@@ -337,8 +337,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 	private void QueryAllConv() {
 		final ArrayList<String> members = new ArrayList<String>();
-		members.add(String.valueOf(SD_pk_user));
-		AVIMClient tom = AVIMClient.getInstance(String.valueOf(SD_pk_user));
+		members.add(String.valueOf(init_pk_user));
+		AVIMClient tom = AVIMClient.getInstance(String.valueOf(init_pk_user));
 		tom.open(new AVIMClientCallback() {
 
 			@Override
@@ -392,8 +392,8 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 
 	private void ReadUserAllFriends() {
 		User user = new User();
-		user.setPk_user(SD_pk_user);
-		fk_user_from = SD_pk_user;
+		user.setPk_user(init_pk_user);
+		fk_user_from = init_pk_user;
 		// addFriends_interface.readFriend(getActivity(), user);
 	}
 
@@ -499,7 +499,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 						String string = members.get(i);
 						if (members.size() != 2) {
 							// 除了当前名字拼成的对话名
-							if (!String.valueOf(SD_pk_user).equals(string)) {
+							if (!String.valueOf(init_pk_user).equals(string)) {
 								User user = AllFriendsMap.get(Integer
 										.valueOf(string));
 								if (user != null) {
@@ -514,7 +514,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 								}
 							}
 						} else {
-							if (!String.valueOf(SD_pk_user).equals(string)) {
+							if (!String.valueOf(init_pk_user).equals(string)) {
 								User user = AllFriendsMap.get(Integer
 										.valueOf(string));
 								if (user != null) {
@@ -539,7 +539,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 				holder.tv_menmberNum.setVisibility(View.GONE);
 				for (int i = 0; i < members.size(); i++) {
 					String string = members.get(i);
-					if (!String.valueOf(SD_pk_user).equals(string)) {
+					if (!String.valueOf(init_pk_user).equals(string)) {
 						User user = AllFriendsMap.get(Integer.valueOf(string));
 						Log.e("聊天记录头像",
 								"YourFriendsMap.size==" + AllFriendsMap.size());
@@ -702,7 +702,7 @@ public class FriendsFragment extends Fragment implements OnClickListener,
 		for (int j = 0; j < Group_ReadAllUserList.size(); j++) {
 			Group_ReadAllUser group_ReadAllUser = Group_ReadAllUserList.get(j);
 			Integer pk_user2 = group_ReadAllUser.getPk_user();
-			if(String.valueOf(pk_user2).equals(String.valueOf(SD_pk_user))){
+			if(String.valueOf(pk_user2).equals(String.valueOf(init_pk_user))){
 				User user = new User();//new 一个user对象出来设置
 				user.setPk_user(pk_user2);
 				user.setNickname(group_ReadAllUser.getNickname());

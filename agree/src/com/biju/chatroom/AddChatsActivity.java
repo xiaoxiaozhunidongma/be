@@ -10,24 +10,22 @@ import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
-import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.im.v2.AVIMClient;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -79,8 +77,8 @@ public class AddChatsActivity extends Activity implements OnClickListener, OnIte
 	private void readAllfriends() {
 		Interface instance = Interface.getInstance();
 		User user=new User();
-		Integer getsD_pk_user = SdPkUser.getsD_pk_user();
-		user.setPk_user(getsD_pk_user);
+		Integer  init_pk_user = InitPkUser.InitPkUser();
+		user.setPk_user(init_pk_user);
 		instance.readMyAllfriend(this, user);
 		instance.setPostListener(new MyAllfriendsListenner() {
 			
@@ -194,10 +192,10 @@ public class AddChatsActivity extends Activity implements OnClickListener, OnIte
 
 	private void AddFriends3OK() {
 		    // Tom 用自己的名字作为clientId，获取AVIMClient对象实例
-			final Integer SD_pk_user = SdPkUser.getsD_pk_user();
-			members.add(String.valueOf(SD_pk_user));//添加当前用户
+			final Integer init_pk_user = InitPkUser.InitPkUser();
+			members.add(String.valueOf(init_pk_user));//添加当前用户
 			Log.e("AddChatsActivity", "members===="+members+members.size());
-		    AVIMClient curuser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
+		    AVIMClient curuser = AVIMClient.getInstance(String.valueOf(init_pk_user));
 		    // 与服务器连接
 		    curuser.open(new AVIMClientCallback() {
 		      @Override

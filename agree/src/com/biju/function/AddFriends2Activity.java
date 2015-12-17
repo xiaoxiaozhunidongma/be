@@ -30,6 +30,7 @@ import com.BJ.javabean.CheckFriendsback;
 import com.BJ.javabean.PhoneArray;
 import com.BJ.utils.ContactBean;
 import com.BJ.utils.ContactListAdapter;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.QuickAlphabeticBar;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
@@ -48,7 +49,6 @@ public class AddFriends2Activity extends Activity implements OnClickListener,Swi
 	private QuickAlphabeticBar alphabeticBar; // 快速索引条
 	private Map<Integer, ContactBean> contactIdMap = null;
 	private SwipeRefreshLayout mContact_swipe_refresh;
-	private Integer sD_pk_user;
 	
 	private ArrayList<String> phonelist = new ArrayList<String>();
 	private ArrayList<String> phonelist2 = new ArrayList<String>();
@@ -60,6 +60,7 @@ public class AddFriends2Activity extends Activity implements OnClickListener,Swi
 	private String[] phoneArrays;
 	private Integer fk_user_from;
 	private Interface add_Interface;
+	private Integer init_pk_user;
 	
 	
 	@Override
@@ -68,7 +69,7 @@ public class AddFriends2Activity extends Activity implements OnClickListener,Swi
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_friends2);
 		//获取pk_user的值
-		sD_pk_user = SdPkUser.getsD_pk_user();
+		init_pk_user = InitPkUser.InitPkUser();
 		
 		// 通讯录实例化
 		asyncQueryHandler = new MyAsyncQueryHandler(getContentResolver());
@@ -238,8 +239,8 @@ public class AddFriends2Activity extends Activity implements OnClickListener,Swi
 		}
 		PhoneArray phonearray = new PhoneArray();
 		phonearray.setPhones(phoneArrays);
-		fk_user_from = sD_pk_user;
-		phonearray.setUser_id(sD_pk_user);
+		fk_user_from = init_pk_user;
+		phonearray.setUser_id(init_pk_user);
 		add_Interface.mateComBook(AddFriends2Activity.this, phonearray);
 	}
 	
@@ -269,8 +270,8 @@ public class AddFriends2Activity extends Activity implements OnClickListener,Swi
 	public void initData() {
 		PhoneArray phonearray = new PhoneArray();
 		phonearray.setPhones(phoneArrays);
-		phonearray.setUser_id(sD_pk_user);
-		fk_user_from = sD_pk_user;
+		phonearray.setUser_id(init_pk_user);
+		fk_user_from = init_pk_user;
 		add_Interface.mateComBook(AddFriends2Activity.this, phonearray);
 	}
 	

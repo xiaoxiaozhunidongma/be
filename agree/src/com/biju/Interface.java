@@ -67,6 +67,8 @@ public class Interface {
 	String KChatRoomNotification="81";
 	//群聊通知
 	String KGroupChatNotification="52";
+	//提现记录
+	String KHistoryList="118";
 	//小组添加新的成员
 	String KTeamAddFriends="391";
 	//生成财务订单
@@ -412,21 +414,21 @@ public class Interface {
 
 	//聊天室通知
 	private void ChatRoomNotifycationPost(Context context, Map<String, String> params) {
-		
-		MyVolley.post(context, url, params, new VolleyListenner() {
 			
-			@Override
-			public void onErrorResponse(VolleyError error) {
-				requestError58(error);
-				Log.e("失败", "" + error);
-			}
-			
-			@Override
-			public void onResponse(String response) {
-				requestDone58(response);
-			}
-		});
-	}
+			MyVolley.post(context, url, params, new VolleyListenner() {
+				
+				@Override
+				public void onErrorResponse(VolleyError error) {
+					requestError58(error);
+					Log.e("失败", "" + error);
+				}
+				
+				@Override
+				public void onResponse(String response) {
+					requestDone58(response);
+				}
+			});
+		}
 	//群聊通知	
 	private void GroupChatNotifycationPost(Context context, Map<String, String> params) {
 		
@@ -441,6 +443,23 @@ public class Interface {
 			@Override
 			public void onResponse(String response) {
 				requestDone57(response);
+			}
+		});
+	}
+	//提现记录	
+	private void HistoryListPost(Context context, Map<String, String> params) {
+		
+		MyVolley.post(context, url, params, new VolleyListenner() {
+			
+			@Override
+			public void onErrorResponse(VolleyError error) {
+				requestError56(error);
+				Log.e("失败", "" + error);
+			}
+			
+			@Override
+			public void onResponse(String response) {
+				requestDone56(response);
 			}
 		});
 	}
@@ -1396,6 +1415,12 @@ public class Interface {
 	public void GroupChatNotify(Context context, Chat chat) {
 		GroupChatNotifycationPost(context, packParams(chat, KGroupChatNotification));
 	}
+
+	// 提现记录
+	public void HistoryList(Context context, User user) {
+		HistoryListPost(context, packParams(user, KHistoryList));
+	}
+	
 	// 小组添加新的成员
 	public void TeamAddFriends(Context context, TeamAddNewMemberModel TeamAddNewMemberModel) {
 		TeamAddFriendsPost(context, packParamsNewMembers(TeamAddNewMemberModel, KTeamAddFriends));
@@ -1692,6 +1717,8 @@ public class Interface {
 	private static ChatRoomNotifyListenner chatroomnotifylistenner;
 	// 群聊通知
 	private static GroupChatNotifyListenner groupchatnotifylistenner;
+	// 提现记录
+	private static HistoryListListenner historylistlistenner;
 	// 小组添加新的成员
 	private static TeamAddFriendsListenner teamaddfriendslistenner;
 	// 生成财务订单
@@ -1771,7 +1798,7 @@ public class Interface {
 	// void defail(Object B);
 	// }
 
-	// 群聊通知
+	// 聊天室通知
 	public interface ChatRoomNotifyListenner {
 		void success(String A);
 		
@@ -1779,6 +1806,12 @@ public class Interface {
 	}
 	// 群聊通知
 	public interface GroupChatNotifyListenner {
+		void success(String A);
+		
+		void defail(Object B);
+	}
+	// 提现记录
+	public interface HistoryListListenner {
 		void success(String A);
 		
 		void defail(Object B);
@@ -2132,6 +2165,11 @@ public class Interface {
 	public void setPostListener(GroupChatNotifyListenner listener) {
 		this.groupchatnotifylistenner = listener;
 	}
+	//提现记录
+	public void setPostListener(HistoryListListenner listener) {
+		this.historylistlistenner = listener;
+	}
+	
 	//小组添加新的成员
 	public void setPostListener(TeamAddFriendsListenner listener) {
 		this.teamaddfriendslistenner = listener;
@@ -2899,5 +2937,13 @@ public class Interface {
 	
 	public static void requestError58(VolleyError error) {
 		chatroomnotifylistenner.defail(error);
+	}
+	//提现记录
+	public static void requestDone56(String theObject) {
+		historylistlistenner.success(theObject);
+	}
+	
+	public static void requestError56(VolleyError error) {
+		historylistlistenner.defail(error);
 	}
 }

@@ -79,7 +79,9 @@
             android:text="删除"
             android:gravity="center"
             android:textColor="#88d4cc"
-            android:textSize="13.0sp" />
+            android:textSize="13.0sp" 
+            android:visibility="gone"
+            />
     </RelativeLayout>
 
 </RelativeLayout>

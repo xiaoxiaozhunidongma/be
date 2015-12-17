@@ -27,6 +27,7 @@ import android.widget.TextView;
 import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.ReadUserAllFriends;
 import com.BJ.javabean.User;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.activeandroid.query.Select;
 import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
@@ -257,7 +258,7 @@ public class ChatMessageAdapter extends BaseAdapter {
 						Group_ReadAllUser Group_user=Group_AllUser.get(i);
 						Integer pk_user=Group_user.getPk_user();
 						if(Click_user.equals(String.valueOf(pk_user))){
-							Integer sd_pk_user=SdPkUser.getsD_pk_user();
+							Integer sd_pk_user=InitPkUser.InitPkUser();
 							if(!(Click_user.equals(String.valueOf(sd_pk_user)))){
 								SdPkUser.setGroupChatUser(Group_user);
 								CommonFragment.getOpen.Open();
@@ -274,7 +275,7 @@ public class ChatMessageAdapter extends BaseAdapter {
 						Integer pk_user=user.getPk_user();
 						Log.e("============", " 获取到当前的pk_user==="+pk_user);
 						if(Click_user.equals(String.valueOf(pk_user))){
-							Integer sd_pk_user=SdPkUser.getsD_pk_user();
+							Integer sd_pk_user=InitPkUser.InitPkUser();
 							if(!(Click_user.equals(String.valueOf(sd_pk_user)))){
 								SdPkUser.setClickUser(user);
 								Log.e("============", " 进入了IF==="+pk_user);

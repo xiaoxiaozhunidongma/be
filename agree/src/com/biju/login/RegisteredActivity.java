@@ -18,7 +18,6 @@ import android.os.Environment;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -27,9 +26,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.BJ.javabean.CreateGroup;
-import com.BJ.javabean.Group_User;
-import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.Registeredback;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
@@ -37,7 +33,6 @@ import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.LimitLong;
-import com.BJ.utils.MyBimp;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.Person;
 import com.BJ.utils.PicCutter;
@@ -50,10 +45,8 @@ import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.storage.OSSData;
 import com.biju.IConstant;
 import com.biju.Interface;
-import com.biju.Interface.getPicSignListenner;
 import com.biju.Interface.regNewAccountListenner;
 import com.biju.Interface.updateUserListenner;
-import com.biju.function.NewteamActivity;
 import com.biju.MainActivity;
 import com.biju.R;
 import com.biju.APP.MyApplication;
@@ -175,14 +168,11 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 			@Override
 			public void success(String A) {
 				Log.e("RegisteredActivity", "注册成功" + A);
-				Registeredback registered = GsonUtils.parseJson(A,
-						Registeredback.class);
+				Registeredback registered = GsonUtils.parseJson(A,Registeredback.class);
 				int statusMsg = registered.getStatusMsg();
 				if (statusMsg == 1) {
 
 					returndata = registered.getReturnData();
-					// 把当前注册成功的pk_user传给工具类
-					SdPkUser.setsD_pk_user(returndata);
 					SdPkUser.setRegistered_one(true);
 					Log.e("RegisteredActivity", "returndata" + returndata);
 					Person person = new Person(returndata);
@@ -225,13 +215,10 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 				if (a == 1) {
 					Log.e("RegisteredActivity", "更新成功" + A);
 
-					// 把当前注册成功的pk_user传给工具类
-					SdPkUser.setsD_pk_user(returndata);
 					SdPkUser.setRegistered_one(true);
 					Person person = new Person(returndata);
 					try {
-						ObjectOutputStream oos = new ObjectOutputStream(
-								new FileOutputStream(fileName));
+						ObjectOutputStream oos = new ObjectOutputStream(new FileOutputStream(fileName));
 						oos.writeObject(person);
 						oos.close();
 					} catch (FileNotFoundException e) {
@@ -240,8 +227,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 						e.printStackTrace();
 					}
 
-					Intent intent = new Intent(RegisteredActivity.this,
-							MainActivity.class);
+					Intent intent = new Intent(RegisteredActivity.this,MainActivity.class);
 					intent.putExtra(IConstant.Sdcard, true);
 					startActivity(intent);
 				}
@@ -368,8 +354,7 @@ public class RegisteredActivity extends Activity implements OnClickListener {
 	// }
 
 	private void registered_back() {
-		Intent intent = new Intent(RegisteredActivity.this,
-				BeforeLoginActivity.class);
+		Intent intent = new Intent(RegisteredActivity.this,BeforeLoginActivity.class);
 		startActivity(intent);
 	}
 

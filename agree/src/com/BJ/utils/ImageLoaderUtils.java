@@ -64,7 +64,7 @@ public class ImageLoaderUtils {
 		optionssquare = new DisplayImageOptions.Builder()
 				.showImageOnLoading(R.drawable.preview_2)
 				.showImageForEmptyUri(R.drawable.preview_2)
-				.showImageOnFail(R.drawable.ic_error)
+				.showImageOnFail(R.drawable.iconfont_jiazaishibai)
 				.cacheInMemory(true)
 				.displayer(new RoundedBitmapDisplayer(10))//Ô²½Ç
 				.cacheOnDisk(true)

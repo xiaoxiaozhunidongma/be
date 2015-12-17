@@ -14,7 +14,6 @@ import android.os.Bundle;
 import android.os.Environment;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
@@ -26,10 +25,12 @@ import com.BJ.javabean.Loginback;
 import com.BJ.javabean.PicSignBack;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.Person;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.android.volley.VolleyError;
 import com.biju.IConstant;
 import com.biju.Interface;
@@ -54,7 +55,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	@SuppressWarnings("unused")
 	private Context context = WXEntryActivity.this;
-	private int code;
 	private Interface mWeiXinInterface;
 
 	private Integer pk_user;
@@ -70,11 +70,11 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 	private String endStr = "/original";
 	// 完整路径completeURL=beginStr+result.filepath+endStr;
 	private String completeURL = "";
-	private Integer sD_pk_user;
 	private String openid;
 	public static IWXAPI api;
 
 	private String fileName = getSDPath() + "/" + "saveData";
+	private Integer init_pk_user;
 
 	public String getSDPath() {
 		File sdDir = null;
@@ -102,7 +102,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 		
 		handleIntent(getIntent());
 		initInterface();
-		sD_pk_user = SdPkUser.getsD_pk_user();
+		init_pk_user = InitPkUser.InitPkUser();
 		Log.e("WXEntryActivity", "进入了onCreate()====" );
 	}
 
@@ -117,6 +117,8 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				int a = usersetting_updateback.getStatusMsg();
 				if (a == 1) {
 					Log.e("WXEntryActivity", "更新成功" + A);
+					finish();
+					overridePendingTransition(0, 0);
 				}
 			}
 
@@ -166,9 +168,6 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 							startActivity(intent);
 							overridePendingTransition(0, 0);
 
-							// 把pk_user保存进一个工具类中
-							SdPkUser.setsD_pk_user(pk_user);
-							
 							//从退出小组后重新登录时要重新赋值为false
 							SdPkUser.setExit(false);
 
@@ -289,13 +288,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				Log.e("WXEntryActivity", "发送成功======"+resp.errCode);
 				//自定义Toast
 				View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
-				Toast toast=new Toast(getApplicationContext());
-				toast.setGravity(Gravity.CENTER, 0, 0);
-				toast.setView(toastRoot);
-				toast.setDuration(100);
-				TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
-				tv.setText("分享成功");
-				toast.show();
+				ToastUtils.ShowMsgCENTER(getApplicationContext(), "分享成功", 0, toastRoot, 100);
 				finish();
 				break;
 			case BaseResp.ErrCode.ERR_USER_CANCEL:
@@ -310,11 +303,12 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 				break;
 			}
 		}else {
+			Log.e("WXEntryActivity", "获取的resp.errCode======" + resp.errCode);
 			switch (resp.errCode) {
 			case BaseResp.ErrCode.ERR_OK:
-				code = ((SendAuth.Resp) resp).errCode;
-				Log.e("WXEntryActivity", "获取的code======" + code);
-				initdata();
+//				int code = ((SendAuth.Resp) resp).errCode;
+				String code = ((SendAuth.Resp) resp).code;
+				initdata(code);
 				break;
 			case BaseResp.ErrCode.ERR_USER_CANCEL:
 				finish();
@@ -325,16 +319,16 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 			default:
 				break;
 			}
-			boolean Binding_weixin = SdPkUser.isGetweixinBinding();
-			if(Binding_weixin)
-			{
-				finish();
-				overridePendingTransition(0, 0);
-			}
+//			boolean Binding_weixin = SdPkUser.isGetweixinBinding();
+//			if(Binding_weixin)
+//			{
+//				finish();
+//				overridePendingTransition(0, 0);
+//			}
 		}
 	}
 
-	private void initdata() {
+	private void initdata(String code) {
 		String path = "https://api.weixin.qq.com/sns/oauth2/access_token?appid=wx2ffba147560de2ff&secret=fc78e16cf3c7522a2b4b5784fa6c6b40&code="
 				+ code + "&grant_type=authorization_code";
 		Log.e("WXEntryActivity", "路径===============" + path);
@@ -368,7 +362,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 							User user = SdPkUser.getUser;
 							
 							User usersetting = new User();
-							usersetting.setPk_user(sD_pk_user);
+							usersetting.setPk_user(init_pk_user);
 							usersetting.setJpush_id(user.getJpush_id());
 							usersetting.setNickname(user.getNickname());
 							usersetting.setPassword(user.getPassword());
@@ -379,7 +373,7 @@ public class WXEntryActivity extends Activity implements IWXAPIEventHandler {
 							usersetting.setLast_login_time(user.getLast_login_time());
 							usersetting.setAvatar_path(user.getAvatar_path());
 							usersetting.setWechat_id(openid);// 微信的唯一识别码
-							Log.e("WXEntryActivity","第二次得到的用户信息2222222====" + sD_pk_user + "\n"
+							Log.e("WXEntryActivity","第二次得到的用户信息2222222====" + init_pk_user + "\n"
 											+ user.getJpush_id() + "\n"
 											+ user.getNickname() + "\n"
 											+ user.getPassword() + "\n"

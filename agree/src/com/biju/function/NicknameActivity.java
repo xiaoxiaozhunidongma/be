@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -16,19 +15,21 @@ import android.widget.TextView;
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
 import com.BJ.utils.ChineseOrEnglishTextWatcher;
+import com.BJ.utils.Ifwifi;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.biju.Interface;
 import com.biju.Interface.updateUserListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
-public class NicknameActivity extends Activity implements OnClickListener{
-
+public class NicknameActivity extends Activity implements OnClickListener {
 
 	private EditText mNickname_nickname;
 	public static RelativeLayout mNickname_warn_layout;
-	private Integer sD_pk_user;
-    private Interface nicknameInterface;
+	private Interface nicknameInterface;
+	private Integer init_pk_user;
 
 	public RelativeLayout getmNickname_warn_layout() {
 		return mNickname_warn_layout;
@@ -44,7 +45,7 @@ public class NicknameActivity extends Activity implements OnClickListener{
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_nickname);
-		sD_pk_user = SdPkUser.getsD_pk_user();
+		init_pk_user = InitPkUser.InitPkUser();
 		initUI();
 		initInterface();
 	}
@@ -73,16 +74,18 @@ public class NicknameActivity extends Activity implements OnClickListener{
 
 	private void initUI() {
 		findViewById(R.id.Nickname_back_layout).setOnClickListener(this);
-		findViewById(R.id.Nickname_back).setOnClickListener(this);//返回
+		findViewById(R.id.Nickname_back).setOnClickListener(this);// 返回
 		findViewById(R.id.Nickname_OK_layout).setOnClickListener(this);
-		findViewById(R.id.Nickname_OK).setOnClickListener(this);//完成
-		mNickname_nickname = (EditText) findViewById(R.id.Nickname_nickname);//修改昵称
-		TextView Nickname_prompt=(TextView) findViewById(R.id.Nickname_prompt);//提示
+		findViewById(R.id.Nickname_OK).setOnClickListener(this);// 完成
+		mNickname_nickname = (EditText) findViewById(R.id.Nickname_nickname);// 修改昵称
+		TextView Nickname_prompt = (TextView) findViewById(R.id.Nickname_prompt);// 提示
 		Nickname_prompt.setVisibility(View.VISIBLE);
-		Nickname_prompt.setText("用户姓名长度不能小于2个字符,"+"\n"+"最多只能包含14个字符,可以使用英文字母,"+"\n"+"数字或者中文构成,但是不能使用特殊的字符,"+"\n"+"如:'[]:;|=,+#?<>'等,"+"\n"+"也不能使用包含有空格");
-		mNickname_nickname.addTextChangedListener((TextWatcher) new ChineseOrEnglishTextWatcher(mNickname_nickname,14));//限制输入14个字符
-		mNickname_warn_layout = (RelativeLayout) findViewById(R.id.Nickname_warn_layout);//字符大于或小于时提示
-	
+		Nickname_prompt.setText("用户姓名长度不能小于2个字符," + "\n"
+				+ "最多只能包含14个字符,可以使用英文字母," + "\n" + "数字或者中文构成,但是不能使用特殊的字符,"
+				+ "\n" + "如:'[]:;|=,+#?<>'等," + "\n" + "也不能使用包含有空格");
+		mNickname_nickname.addTextChangedListener((TextWatcher) new ChineseOrEnglishTextWatcher(mNickname_nickname, 14));// 限制输入14个字符
+		mNickname_warn_layout = (RelativeLayout) findViewById(R.id.Nickname_warn_layout);// 字符大于或小于时提示
+
 	}
 
 	@Override
@@ -90,7 +93,14 @@ public class NicknameActivity extends Activity implements OnClickListener{
 		switch (v.getId()) {
 		case R.id.Nickname_OK_layout:
 		case R.id.Nickname_OK:
-			Nickname_OK();
+			boolean isWIFI = Ifwifi.getNetworkConnected(NicknameActivity.this);
+			if (isWIFI) {
+				Nickname_OK();
+			} else {
+				// 自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+				ToastUtils.ShowMsgCENTER(getApplicationContext(), "网络不可用", 0, toastRoot, 0);
+			}
 			break;
 		case R.id.Nickname_back_layout:
 		case R.id.Nickname_back:
@@ -101,13 +111,13 @@ public class NicknameActivity extends Activity implements OnClickListener{
 		}
 	}
 
-	//完成进行更新昵称
+	// 完成进行更新昵称
 	private void Nickname_OK() {
-		String nickname=mNickname_nickname.getText().toString().trim();
-		User user=SdPkUser.getNicknameUser;
-		
+		String nickname = mNickname_nickname.getText().toString().trim();
+		User user = SdPkUser.getNicknameUser;
+
 		User usersetting = new User();
-		usersetting.setPk_user(sD_pk_user);
+		usersetting.setPk_user(init_pk_user);
 		usersetting.setJpush_id(user.getJpush_id());
 		usersetting.setNickname(nickname);
 		usersetting.setPassword(user.getPassword());
@@ -126,7 +136,7 @@ public class NicknameActivity extends Activity implements OnClickListener{
 		finish();
 		overridePendingTransition(R.anim.left, R.anim.right);
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {

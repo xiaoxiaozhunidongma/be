@@ -113,6 +113,13 @@ public interface IConstant {
 	public String EndTimeHour="endtimehour";
 	public String EndTimeMinute="endtimeminute";
 	
+	public String IsDeadlineTimeChoose="isdeadlinetimechoose";
+	public String DeadlineTime="deadlinetime";
+	public String DeadlineTimeDate="deadlinetimedate";
+	public String DeadlineTimeHour="deadlinetimehour";
+	public String DeadlineTimeMinute="deadlinetimeminute";
+	
+	
 	//LimitNumberActivity
 	public String LimitNumber="limitnumber";
 	public String IsNumber="isnumber";

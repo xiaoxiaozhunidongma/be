@@ -194,8 +194,6 @@ public class PhoneRegisteredActivity extends Activity implements OnClickListener
 							readuser.setPk_user(Phone_pk_user);
 							phoneRegisteredInterface.readUser(PhoneRegisteredActivity.this, readuser);
 							
-							//把pk_user保存进一个工具类中
-							SdPkUser.setsD_pk_user(Phone_pk_user);
 							//保存进sd卡
 							Person person = new Person(Phone_pk_user);
 							try {

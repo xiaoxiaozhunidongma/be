@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/HostoryListMoney"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="提现金额为: 100" 
+            android:layout_marginTop="10.0dp"
+            android:layout_marginLeft="20.0dp"
+            android:textSize="13.0sp"
+            />
+
+        <TextView
+            android:id="@+id/HostoryListTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/HostoryListMoney"
+            android:layout_below="@+id/HostoryListMoney"
+            android:text="预计到账时间: 2015-12-10" 
+            android:textSize="11.0sp"
+            android:textColor="#c9c9c9"
+            />
+
+        <TextView
+            android:id="@+id/HostoryListLine1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            android:layout_marginLeft="20.0dp"
+            android:visibility="gone"
+            />
+
+        <TextView
+            android:id="@+id/HostoryListLine2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

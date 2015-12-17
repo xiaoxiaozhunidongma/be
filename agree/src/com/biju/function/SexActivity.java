@@ -3,17 +3,22 @@ package com.biju.function;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.User;
 import com.BJ.javabean.updateback;
+import com.BJ.utils.Ifwifi;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.biju.Interface;
 import com.biju.Interface.updateUserListenner;
 import com.biju.R;
@@ -23,7 +28,6 @@ public class SexActivity extends Activity implements OnClickListener {
 
 	private int sex;
 	private Interface sexInterface;
-	private Integer sD_pk_user;
 	private User user;
 	private RelativeLayout mSet_man;
 	private RelativeLayout mSet_woman;
@@ -31,15 +35,21 @@ public class SexActivity extends Activity implements OnClickListener {
 	private ImageView mSet_choose_other;
 	private ImageView mSet_choose_man;
 	private ImageView mSet_choose_woman;
+	private Integer init_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sex);
-		sD_pk_user = SdPkUser.getsD_pk_user();
-		user = SdPkUser.getSexUser;
-		sex = user.getSex();
+		boolean isWIFI = Ifwifi.getNetworkConnected(SexActivity.this);
+		if(isWIFI){
+			init_pk_user = InitPkUser.InitPkUser();
+			user = SdPkUser.getSexUser;
+			sex = user.getSex();
+		}else {
+			sex=0;
+		}
 		initUI();
 		initInterface();
 		initSex();
@@ -116,7 +126,14 @@ public class SexActivity extends Activity implements OnClickListener {
 			break;
 		case R.id.Set_OK:
 		case R.id.Set_OK_layout:
-			Set_OK();
+			boolean isWIFI = Ifwifi.getNetworkConnected(SexActivity.this);
+			if (isWIFI) {
+				Set_OK();
+			} else {
+				// 自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+				ToastUtils.ShowMsgCENTER(getApplicationContext(), "网络不可用", 0, toastRoot, 0);
+			}
 			break;
 		case R.id.Set_man:
 			Set_man();
@@ -168,7 +185,7 @@ public class SexActivity extends Activity implements OnClickListener {
 	// 完成
 	private void Set_OK() {
 		User usersetting = new User();
-		usersetting.setPk_user(sD_pk_user);
+		usersetting.setPk_user(init_pk_user);
 		usersetting.setJpush_id(user.getJpush_id());
 		usersetting.setNickname(user.getNickname());
 		usersetting.setPassword(user.getPassword());
@@ -187,7 +204,7 @@ public class SexActivity extends Activity implements OnClickListener {
 		finish();
 		overridePendingTransition(R.anim.left, R.anim.right);
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {

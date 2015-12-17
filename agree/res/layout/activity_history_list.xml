@@ -2,11 +2,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HistoryListActivity"
     android:background="#efefef"
-     >
+    tools:context=".HistoryListActivity" >
 
     <RelativeLayout
+        android:id="@+id/HistoryListTitleLayout"
         android:layout_width="match_parent"
         android:layout_height="50.0dp"
         android:layout_alignParentTop="true"
@@ -27,24 +27,64 @@
              />
 
         <TextView
-            android:id="@+id/textView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:layout_marginRight="60.0dp"
-            android:text="交易记录"
-            android:textSize="15.0sp"
-            android:textColor="#535353"
-             />
-
-        <TextView
             android:id="@+id/textView2"
             android:layout_width="match_parent"
             android:layout_height="0.50dp"
             android:layout_alignParentBottom="true"
             android:background="#aaaaaa"
             />
+
+        <TextView
+            android:id="@+id/textView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="交易记录"
+            android:textColor="#535353"
+            android:textSize="15.0sp" />
+
+    </RelativeLayout>
+
+    <ListView
+        android:id="@+id/HistoryListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/HistoryListTitleLayout"
+        android:layout_centerHorizontal="true"
+        android:background="#ffffff"
+         >
+
+    </ListView>
+
+    <RelativeLayout
+        android:id="@+id/HistoryListNoShow"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/HistoryListTitleLayout"
+        android:layout_centerHorizontal="true"
+        android:visibility="gone"
+         >
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="60.0dp"
+            android:layout_height="60.0dp"
+            android:layout_above="@+id/textView3"
+            android:layout_centerHorizontal="true"
+            android:layout_marginBottom="24dp"
+            android:src="@drawable/calender" />
+
+        <TextView
+            android:id="@+id/textView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_centerVertical="true"
+            android:text="暂无提现记录"
+            android:textColor="#959595"
+            android:textSize="13.0sp" />
 
     </RelativeLayout>
 

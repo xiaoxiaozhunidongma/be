@@ -55,7 +55,9 @@ import com.BJ.javabean.UserAllParty;
 import com.BJ.javabean.WeChatPay;
 import com.BJ.javabean.WeChatPayBack;
 import com.BJ.javabean.WeChatPayMode;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.alipay.sdk.app.PayTask;
 import com.biju.IConstant;
 import com.biju.Interface;
@@ -501,7 +503,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 		//以下是传值做财务订单
 		SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String Create_time=sdf.format(new Date());
-		Integer from_user=SdPkUser.getsD_pk_user();
+		Integer from_user=InitPkUser.InitPkUser();
 		SharedPreferences PayBase_sp=getSharedPreferences("PayBase", 0);
 		Editor editor=PayBase_sp.edit();
 		editor.putString("CreateOrder", req.nonceStr);
@@ -560,13 +562,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 				} else {
 					// 自定义Toast
 					View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast, null);
-					Toast toast = new Toast(getApplicationContext());
-					toast.setGravity(Gravity.CENTER, 0, 100);
-					toast.setView(toastRoot);
-					toast.setDuration(100);
-					TextView tv = (TextView) toastRoot.findViewById(R.id.TextViewInfo);
-					tv.setText("你还没有安装支付宝，请先安装支付宝!");
-					toast.show();
+					ToastUtils.ShowMsgCENTER(getApplicationContext(), "你还没有安装支付宝，请先安装支付宝!", 100, toastRoot, 100);
 				}
 
 				Message msg = new Message();
@@ -717,11 +713,12 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 				String resultStatus = payResult.getResultStatus();
 				// 判断resultStatus 为“9000”则代表支付成功，具体状态码代表含义可参考接口文档
 				if (TextUtils.equals(resultStatus, "9000")) {
+					PartyDetailsActivity.partyDetailsBackground.PartyDetailsBackground();
 					PartyDetailsActivity.getAliPay.AliPay();
 					
 					SimpleDateFormat sdf=new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 					String Create_time=sdf.format(new Date());
-					Integer from_user=SdPkUser.getsD_pk_user();
+					Integer from_user=InitPkUser.InitPkUser();
 					CreateOrder createOrder=new CreateOrder();
 					createOrder.setOrder_id(order_id);
 					createOrder.setOrder_type(2);
@@ -744,13 +741,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 					} else {
 						// 自定义Toast
 						View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast, null);
-						Toast toast = new Toast(getApplicationContext());
-						toast.setGravity(Gravity.CENTER, 0, 100);
-						toast.setView(toastRoot);
-						toast.setDuration(100);
-						TextView tv = (TextView) toastRoot.findViewById(R.id.TextViewInfo);
-						tv.setText("支付失败");
-						toast.show();
+						ToastUtils.ShowMsgCENTER(getApplicationContext(), "支付失败", 100, toastRoot, 100);
 					}
 				}
 				break;
@@ -848,13 +839,7 @@ public class PayBaseActivity extends Activity implements OnClickListener,Callbac
 
         // 自定义Toast
 		View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast, null);
-		Toast toast = new Toast(getApplicationContext());
-		toast.setGravity(Gravity.CENTER, 0, 100);
-		toast.setView(toastRoot);
-		toast.setDuration(200);
-		TextView tv = (TextView) toastRoot.findViewById(R.id.TextViewInfo);
-		tv.setText(msg);
-		toast.show();
+		ToastUtils.ShowMsgCENTER(getApplicationContext(), msg, 100, toastRoot, 100);
     }
 
     @Override

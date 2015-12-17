@@ -3,7 +3,6 @@ package com.BJ.javabean;
 import java.io.Serializable;
 
 import com.activeandroid.annotation.Column;
-import com.activeandroid.annotation.Table;
 
 public class Party3 implements Serializable{
 	@Column

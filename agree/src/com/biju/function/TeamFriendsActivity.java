@@ -21,11 +21,14 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
+import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.MyAllfriendsListenner;
@@ -40,11 +43,13 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 
 	private String beginStr = "http://picstyle.beagree.com/";
 	private String endStr = "@!";
-	
+
 	@SuppressLint("UseSparseArrays")
-	private HashMap<Integer, Boolean> isSelectMap=new HashMap<Integer, Boolean>();
+	private HashMap<Integer, Boolean> isSelectMap = new HashMap<Integer, Boolean>();
 	private boolean isSelected;
-	private ArrayList<String> UserList=new ArrayList<String>();
+	private ArrayList<String> UserList = new ArrayList<String>();
+	private RelativeLayout mTeamFriendsLayout;
+	private RelativeLayout mTeamFriendsNoWIFI;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -58,8 +63,8 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 	private void ReadAllfriends() {
 		Interface instance = Interface.getInstance();
 		User user = new User();
-		Integer getsD_pk_user = SdPkUser.getsD_pk_user();
-		user.setPk_user(getsD_pk_user);
+		Integer init_pk_user = InitPkUser.InitPkUser();
+		user.setPk_user(init_pk_user);
 		instance.readMyAllfriend(this, user);
 		instance.setPostListener(new MyAllfriendsListenner() {
 
@@ -79,11 +84,21 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 	}
 
 	private void initUI() {
-		findViewById(R.id.TeamFriendsOK).setOnClickListener(this);//完成
+		mTeamFriendsNoWIFI = (RelativeLayout) findViewById(R.id.TeamFriendsNoWIFI);// 无网络时候布局
+		mTeamFriendsLayout = (RelativeLayout) findViewById(R.id.TeamFriendsLayout);// 有网络时候布局
+		findViewById(R.id.TeamFriendsOK).setOnClickListener(this);// 完成
 		findViewById(R.id.TeamFriendsBack).setOnClickListener(this);// 返回
 		mTeamFriendsListView = (ListView) findViewById(R.id.TeamFriendsListView);
 		mTeamFriendsListView.setDividerHeight(0);
 		mTeamFriendsListView.setOnItemClickListener(this);
+		boolean isWIFI = Ifwifi.getNetworkConnected(TeamFriendsActivity.this);// 判断是否有网络
+		if (isWIFI) {
+			mTeamFriendsNoWIFI.setVisibility(View.GONE);
+			mTeamFriendsLayout.setVisibility(View.VISIBLE);
+		} else {
+			mTeamFriendsNoWIFI.setVisibility(View.VISIBLE);
+			mTeamFriendsLayout.setVisibility(View.GONE);
+		}
 		adapter = new MyTeamFriendsAdapter();
 		mTeamFriendsListView.setAdapter(adapter);
 	}
@@ -119,7 +134,7 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 			if (convertView == null) {
 				holder = new ViewHolder();
 				LayoutInflater layoutInflater = getLayoutInflater();
-				inflater = layoutInflater.inflate(R.layout.teamfriends_item, null);
+				inflater = layoutInflater.inflate(R.layout.teamfriends_item,null);
 				holder.TeamFriends_head = (ImageView) inflater.findViewById(R.id.TeamFriends_head);
 				holder.TeamFriends_name = (TextView) inflater.findViewById(R.id.TeamFriends_name);
 				holder.TeamFriendsLine1 = (TextView) inflater.findViewById(R.id.TeamFriendsLine1);
@@ -165,12 +180,12 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 		}
 	}
 
-	//完成
+	// 完成
 	private void TeamFriendsOK() {
 		finish();
 		SdPkUser.setTeamFriendsList(UserList);
-		SharedPreferences TeamFriends_sp=getSharedPreferences("TeamFriends", 0);
-		Editor editor=TeamFriends_sp.edit();
+		SharedPreferences TeamFriends_sp = getSharedPreferences("TeamFriends",0);
+		Editor editor = TeamFriends_sp.edit();
 		editor.putBoolean("AddTeamFriends", true);
 		editor.commit();
 	}
@@ -180,19 +195,19 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		isSelected=isSelectMap.get(position);
-		isSelected=!isSelected;
+	public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+		isSelected = isSelectMap.get(position);
+		isSelected = !isSelected;
 		isSelectMap.put(position, isSelected);
-		User user=userList.get(position);
-		if(isSelected){
+		User user = userList.get(position);
+		if (isSelected) {
 			view.findViewById(R.id.TeamFriends_choose).setVisibility(View.VISIBLE);
 			UserList.add(String.valueOf(user.getPk_user()));
-			Log.e("TeamFriendsActivity", "添加的成员===="+user.getPk_user());
-		}else {
+			Log.e("TeamFriendsActivity", "添加的成员====" + user.getPk_user());
+		} else {
 			view.findViewById(R.id.TeamFriends_choose).setVisibility(View.GONE);
 			UserList.remove(String.valueOf(user.getPk_user()));
-			Log.e("TeamFriendsActivity", "删除的成员===="+user.getPk_user());
+			Log.e("TeamFriendsActivity", "删除的成员====" + user.getPk_user());
 		}
 	}
 
@@ -207,5 +222,5 @@ public class TeamFriendsActivity extends Activity implements OnClickListener,OnI
 		}
 		return super.onKeyDown(keyCode, event);
 	}
-	
+
 }

@@ -19,6 +19,7 @@
             android:src="@drawable/tab_party_selector" />
 
         <RelativeLayout
+            android:id="@+id/relativeLayout1"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_below="@+id/tab_image"
@@ -34,8 +35,44 @@
                 android:text="@string/home_tab_text"
                 android:textColor="@color/tab_textcolor_selector"
                 android:textSize="11.0sp" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/relativeLayout2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/tab_image"
+            android:layout_toRightOf="@+id/tab_image" >
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/tab_prompt"
+            android:layout_width="15.0dp"
+            android:layout_height="15.0dp"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@+id/tab_image" 
+            android:visibility="gone"
+            >
+            
+            <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:src="@drawable/redpromprt" />
+
+            <TextView
+                android:id="@+id/tab_prompt_text"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:gravity="center"
+                android:text="0"
+                android:textColor="#000000"
+                android:textSize="10.0sp" />
 
         </RelativeLayout>
+
     </RelativeLayout>
 
     <TextView

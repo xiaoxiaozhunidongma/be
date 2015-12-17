@@ -24,12 +24,14 @@ import android.widget.TextView;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.AddTeamBack;
+import com.BJ.javabean.AddTeamFriends;
+import com.BJ.javabean.AddTeamFriendsBack;
 import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_User;
-import com.BJ.javabean.Loginback;
 import com.BJ.javabean.TeamAddNewMemberModel;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.biju.Interface;
 import com.biju.Interface.MyAllfriendsListenner;
@@ -37,23 +39,24 @@ import com.biju.Interface.TeamAddFriendsListenner;
 import com.biju.R;
 import com.github.volley_examples.utils.GsonUtils;
 
-public class AddTeamFriendsActivity extends Activity implements OnClickListener,OnItemClickListener{
+public class AddTeamFriendsActivity extends Activity implements OnClickListener, OnItemClickListener {
 
 	private ListView mAddTeamFriendsListView;
 	private String beginStr = "http://picstyle.beagree.com/";
 	private String endStr = "@!";
-	
-	private List<User> userList = new ArrayList<User>();
+
 	private MyAddTeamFriendsAdapter adapter;
-	private List<Integer> Pk_user_List=new ArrayList<Integer>();
+	private List<Integer> Pk_user_List = new ArrayList<Integer>();
 	
+	private List<AddTeamFriends> userList = new ArrayList<AddTeamFriends>();
+	private List<Integer> add_Pk_user_List = new ArrayList<Integer>();
+	private List<AddTeamFriends> AddTeamFriendsList = new ArrayList<AddTeamFriends>();
+
 	@SuppressLint("UseSparseArrays")
-	private HashMap<Integer, Boolean> isSelectMap=new HashMap<Integer, Boolean>();
+	private HashMap<Integer, Boolean> isSelectMap = new HashMap<Integer, Boolean>();
 	private boolean isSelected;
-	private List<User> AddTeamFriendsList=new ArrayList<User>();
-	private List<Group_User> Group_UserList=new ArrayList<Group_User>();
+	private List<Group_User> Group_UserList = new ArrayList<Group_User>();
 	private Interface addTeamFriendsInterface;
-	private Interface instance;
 	private RelativeLayout mAddTeamFriendsNoShow;
 
 	@Override
@@ -66,33 +69,50 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 	}
 
 	private void ReadAllfriends() {
-		instance = Interface.getInstance();
-		User user = new User();
-		Integer getsD_pk_user = SdPkUser.getsD_pk_user();
-		user.setPk_user(getsD_pk_user);
-		instance.readMyAllfriend(this, user);
-		instance.setPostListener(new MyAllfriendsListenner() {
+		addTeamFriendsInterface = Interface.getInstance();
+		Integer init_pk_user = InitPkUser.InitPkUser();
+		final User user = new User();
+		user.setPk_user(init_pk_user);
+		addTeamFriendsInterface.readMyAllfriend(this, user);
+		addTeamFriendsInterface.setPostListener(new MyAllfriendsListenner() {
 
 			@Override
 			public void success(String A) {
 				List<Group_ReadAllUser> mGroup_ReadAllUserList = SdPkUser.GetGroup_ReadAllUser;
-				Log.e("AddTeamFriendsActivity", "mGroup_ReadAllUserList的长度======="+mGroup_ReadAllUserList.size());
+				Log.e("AddTeamFriendsActivity","mGroup_ReadAllUserList的长度======="+ mGroup_ReadAllUserList.size());
 				AddTeamFriendsList.clear();
 				userList.clear();
+				add_Pk_user_List.clear();
 				Log.e("AddTeamFriendsActivity", "返回结果" + A);
-				Loginback loginbackread = GsonUtils.parseJson(A,Loginback.class);
-				Integer status=loginbackread.getStatusMsg();
-				if(1==status){
-					userList = loginbackread.getReturnData();
-					if(userList.size()>0){
+				AddTeamFriendsBack teamFriendsBack = GsonUtils.parseJson(A,AddTeamFriendsBack.class);
+				Integer status = teamFriendsBack.getStatusMsg();
+				if (1 == status) {
+					userList = teamFriendsBack.getReturnData();
+					if (userList.size() > 0) {
+						for (int i = 0; i < userList.size(); i++) {
+							AddTeamFriends all_user = userList.get(i);
+							add_Pk_user_List.add(all_user.getPk_user());
+						}
+
+						for (int i = 0; i < userList.size(); i++) {
+							AddTeamFriends all_user = userList.get(i);
+							Integer all_pk_user = all_user.getPk_user();
 							for (int j = 0; j < mGroup_ReadAllUserList.size(); j++) {
-								Group_ReadAllUser group_user=mGroup_ReadAllUserList.get(j);
-								Integer group_pk_user=group_user.getFk_user();
-								for (int i = 0; i <userList.size(); i++) {
-									User all_user=userList.get(i);
-									Integer all_pk_user=all_user.getPk_user();
-								if(String.valueOf(all_pk_user).equals(String.valueOf(group_pk_user))){
-									userList.remove(userList.get(i));
+								Group_ReadAllUser group_user = mGroup_ReadAllUserList.get(j);
+								Integer group_pk_user = group_user.getFk_user();
+								if (String.valueOf(all_pk_user).equals(String.valueOf(group_pk_user))) {
+									add_Pk_user_List.remove(userList.get(i).getPk_user());
+								}
+							}
+						}
+
+						for (int i = 0; i < userList.size(); i++) {
+							AddTeamFriends all_user = userList.get(i);
+							Integer all_pk_user = all_user.getPk_user();
+							for (int j = 0; j < add_Pk_user_List.size(); j++) {
+								Integer all_pk_user1 = add_Pk_user_List.get(j);
+								if (String.valueOf(all_pk_user).equals(String.valueOf(all_pk_user1))) {
+									AddTeamFriendsList.add(all_user);
 								}
 							}
 						}
@@ -106,22 +126,22 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 
 			}
 		});
-		
-		instance.setPostListener(new TeamAddFriendsListenner() {
-			
+
+		addTeamFriendsInterface.setPostListener(new TeamAddFriendsListenner() {
+
 			@Override
 			public void success(String A) {
-				Log.e("AddTeamFriendsActivity", "返回结果===="+A);
-				AddTeamBack addTeamBack=GsonUtils.parseJson(A, AddTeamBack.class);
-				Integer status=addTeamBack.getStatusMsg();
-				if(1==status){
+				Log.e("AddTeamFriendsActivity", "返回结果====" + A);
+				AddTeamBack addTeamBack = GsonUtils.parseJson(A,AddTeamBack.class);
+				Integer status = addTeamBack.getStatusMsg();
+				if (1 == status) {
 					SlidingActivity.readGroupMember.ReadGroupMember();
 				}
 			}
-			
+
 			@Override
 			public void defail(Object B) {
-				
+
 			}
 		});
 	}
@@ -145,15 +165,15 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 				sd.cancel();
 				AddTeamFriendsOK();
 				finish();
-				
+
 			}
 		}).show();
 	}
-	
+
 	private void initUI() {
 		mAddTeamFriendsNoShow = (RelativeLayout) findViewById(R.id.AddTeamFriendsNoShow);
-		findViewById(R.id.AddTeamFriendsBack).setOnClickListener(this);//返回
-		findViewById(R.id.AddTeamFriendsOK).setOnClickListener(this);//完成
+		findViewById(R.id.AddTeamFriendsBack).setOnClickListener(this);// 返回
+		findViewById(R.id.AddTeamFriendsOK).setOnClickListener(this);// 完成
 		mAddTeamFriendsListView = (ListView) findViewById(R.id.AddTeamFriendsListView);
 		mAddTeamFriendsListView.setDividerHeight(0);
 		adapter = new MyAddTeamFriendsAdapter();
@@ -172,7 +192,7 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 
 		@Override
 		public int getCount() {
-			return userList.size();
+			return AddTeamFriendsList.size();
 		}
 
 		@Override
@@ -192,7 +212,7 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 			if (convertView == null) {
 				holder = new ViewHolder();
 				LayoutInflater layoutInflater = getLayoutInflater();
-				inflater = layoutInflater.inflate(R.layout.teamfriends_item, null);
+				inflater = layoutInflater.inflate(R.layout.teamfriends_item,null);
 				holder.TeamFriends_head = (ImageView) inflater.findViewById(R.id.TeamFriends_head);
 				holder.TeamFriends_name = (TextView) inflater.findViewById(R.id.TeamFriends_name);
 				holder.TeamFriendsLine1 = (TextView) inflater.findViewById(R.id.TeamFriendsLine1);
@@ -204,14 +224,14 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 			}
 
 			isSelectMap.put(position, false);
-			User user = userList.get(position);
+			AddTeamFriends user = AddTeamFriendsList.get(position);
 			String nickname = user.getNickname();
 			String avatar_path = user.getAvatar_path();
 			holder.TeamFriends_name.setText(nickname);
 			String completeURL = beginStr + avatar_path + endStr+ "mini-avatar";
 			ImageLoaderUtils.getInstance().LoadImageCricular(AddTeamFriendsActivity.this, completeURL,
 					holder.TeamFriends_head);
-			if (position == userList.size() - 1) {
+			if (position == AddTeamFriendsList.size() - 1) {
 				holder.TeamFriendsLine1.setVisibility(View.VISIBLE);
 				holder.TeamFriendsLine2.setVisibility(View.GONE);
 			} else {
@@ -238,14 +258,13 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 		}
 	}
 
-
-	//完成
+	// 完成
 	private void AddTeamFriendsOK() {
-		if(Pk_user_List.size()>0){
-			Integer fk_group=GroupActivity.getPk_group();
+		if (Pk_user_List.size() > 0) {
+			Integer fk_group = GroupActivity.getPk_group();
 			for (int i = 0; i < Pk_user_List.size(); i++) {
-				Integer pk_user=Pk_user_List.get(i);
-				Group_User group_User=new Group_User();
+				Integer pk_user = Pk_user_List.get(i);
+				Group_User group_User = new Group_User();
 				group_User.setFk_group(fk_group);
 				group_User.setFk_user(pk_user);
 				group_User.setMessage_warn(1);
@@ -255,14 +274,14 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 				group_User.setStatus(1);
 				Group_UserList.add(group_User);
 			}
-			Group_User[] members=new Group_User[Group_UserList.size()];
+			Group_User[] members = new Group_User[Group_UserList.size()];
 			for (int i = 0; i < members.length; i++) {
 				Group_User group_User = Group_UserList.get(i);
-				members[i]=group_User;
+				members[i] = group_User;
 			}
-			TeamAddNewMemberModel TeamAddNewMemberModel=new TeamAddNewMemberModel(members);
-			instance.TeamAddFriends(AddTeamFriendsActivity.this, TeamAddNewMemberModel);
-			
+			TeamAddNewMemberModel TeamAddNewMemberModel = new TeamAddNewMemberModel(members);
+			addTeamFriendsInterface.TeamAddFriends(AddTeamFriendsActivity.this,TeamAddNewMemberModel);
+
 		}
 	}
 
@@ -272,22 +291,22 @@ public class AddTeamFriendsActivity extends Activity implements OnClickListener,
 	}
 
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		isSelected=isSelectMap.get(position);
-		isSelected=!isSelected;
+	public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+		isSelected = isSelectMap.get(position);
+		isSelected = !isSelected;
 		isSelectMap.put(position, isSelected);
-		User user=userList.get(position);
-		if(isSelected){
-			Integer pk_user=user.getPk_user();
+		AddTeamFriends user = AddTeamFriendsList.get(position);
+		if (isSelected) {
+			Integer pk_user = user.getPk_user();
 			Pk_user_List.add(pk_user);
 			view.findViewById(R.id.TeamFriends_choose).setVisibility(View.VISIBLE);
-		}else {
-			Integer pk_user=user.getPk_user();
+		} else {
+			Integer pk_user = user.getPk_user();
 			Pk_user_List.remove(pk_user);
 			view.findViewById(R.id.TeamFriends_choose).setVisibility(View.GONE);
 		}
 	}
-	
+
 	@Override
 	public boolean onKeyDown(int keyCode, KeyEvent event) {
 		switch (keyCode) {

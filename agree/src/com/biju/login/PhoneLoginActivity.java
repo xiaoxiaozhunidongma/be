@@ -31,6 +31,7 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 import com.BJ.javabean.Code;
 import com.BJ.javabean.Codeback;
 import com.BJ.javabean.Group;
+import com.BJ.javabean.GroupHome;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.Phone;
 import com.BJ.javabean.PicSignBack;
@@ -102,7 +103,7 @@ public class PhoneLoginActivity extends Activity implements OnClickListener {
 	}
 
 	// 提供给首界面的容器
-	public static ArrayList<Group> list = new ArrayList<Group>();
+	public static ArrayList<GroupHome> list = new ArrayList<GroupHome>();
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -216,9 +217,6 @@ public class PhoneLoginActivity extends Activity implements OnClickListener {
 							User readuser = new User();
 							readuser.setPk_user(Phone_pk_user);
 							phoneLoginInterface.readUser(PhoneLoginActivity.this, readuser);
-
-							// 把pk_user保存进一个工具类中
-							SdPkUser.setsD_pk_user(Phone_pk_user);
 
 							Person person = new Person(Phone_pk_user);
 							try {

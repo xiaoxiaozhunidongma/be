@@ -11,7 +11,6 @@ public class Group implements Serializable {
 	/**
 	 * extends Model
 	 */
-	// private static final long serialVersionUID = -938676103940439001L;
 	@Column
 	private Integer pk_group;
 	@Column

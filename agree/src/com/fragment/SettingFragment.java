@@ -18,7 +18,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Loginback;
@@ -27,11 +26,13 @@ import com.BJ.javabean.updateback;
 import com.BJ.utils.ByteOrBitmap;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.PicCutter;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
@@ -79,8 +80,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public static String APPID = "201139";
 	public static String USERID = "";
 	public static String SIGN;
-	
-	public ArrayList<Bitmap> recycleBitmaps=new ArrayList<Bitmap>();
+
+	public ArrayList<Bitmap> recycleBitmaps = new ArrayList<Bitmap>();
 
 	public static String getSIGN() {
 		return SIGN;
@@ -90,7 +91,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		SIGN = sIGN;
 	}
 
-	private Integer SD_pk_user;
 	private TextView mSetting_User_ID;
 	private RelativeLayout mSetting_Nickname_change;
 	private RelativeLayout mSetting_Sex_change;
@@ -129,12 +129,11 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	private String uUid;
 	private TextView mSetting_Binding_balance_show;
 	private float mUserAmount;
-	int loadnum=0;
+	int loadnum = 0;
 	private Bitmap convertToBitmap;
 	private Bitmap limitLongScaleBitmap;
 	private Bitmap centerSquareScaleBitmap;
-
-	// 完整路径completeURL=beginStr+result.filepath+endStr;
+	private Integer init_pk_user;
 
 	public SettingFragment() {
 		// Required empty public constructor
@@ -145,8 +144,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			Bundle savedInstanceState) {
 		if (mLayout == null) {
 			mLayout = inflater.inflate(R.layout.fragment_setting, container,false);
-			Log.e("SettingFragment", "进入了onCreateView()====================");
-			SD_pk_user = SdPkUser.getsD_pk_user();
+			init_pk_user = InitPkUser.InitPkUser();
+			Log.e("SettingFragment", "进入了onCreateView()===================="+init_pk_user);
 		}
 		// 获取ossService和sampleBucket
 		ossService = MyApplication.getOssService();
@@ -158,11 +157,12 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		String Cacheurl = PreferenceUtils.readImageCache(getActivity());
 		completeURL = Cacheurl;
 		// 获取SD卡中的pk_user
-		SD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("SettingFragment", "从SD卡中获取到的Pk_user" + SD_pk_user);
+		init_pk_user = InitPkUser.InitPkUser();
+		Log.e("SettingFragment", "从SD卡中获取到的Pk_user====" + init_pk_user);
 
 		initUI();
 		boolean isWIFI = Ifwifi.getNetworkConnected(getActivity());
+		Log.e("SettingFragment", "isWIFI=====" + isWIFI);
 		if (isWIFI) {
 			returndata();
 		} else {
@@ -182,7 +182,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	public void onResume() {
 		if (isShow) {
 			User usersetting = new User();
-			usersetting.setPk_user(SD_pk_user);
+			usersetting.setPk_user(init_pk_user);
 			usersetting.setJpush_id(mUserJpush_id);
 			usersetting.setNickname(mUserNickname);
 			usersetting.setPassword(mUserPassword);
@@ -192,33 +192,31 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			usersetting.setWechat_id(mUserWechat_id);
 			usersetting.setSetup_time(mUserSetup_time);
 			usersetting.setLast_login_time(mUserLast_login_time);
-			//上传
-			String mFilePath = SdPkUser.getFilePath;//回调SD卡路径
-			if(mFilePath!=null){
+			// 上传
+			String mFilePath = SdPkUser.getFilePath;// 回调SD卡路径
+			if (mFilePath != null) {
 				try {
 					convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
-				limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(
-						convertToBitmap, 1080);
-				centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(
-						limitLongScaleBitmap, 180);
+				limitLongScaleBitmap = LimitLong.limitLongScaleBitmap(convertToBitmap, 1080);
+				centerSquareScaleBitmap = PicCutter.centerSquareScaleBitmap(limitLongScaleBitmap, 180);
 				bitmap2Bytes = ByteOrBitmap.Bitmap2Bytes(centerSquareScaleBitmap);
 				recycleBitmaps.add(convertToBitmap);
 				recycleBitmaps.add(limitLongScaleBitmap);
 				recycleBitmaps.add(centerSquareScaleBitmap);
 				UUID randomUUID = UUID.randomUUID();
 				uUid = randomUUID.toString();
-				OSSupload(ossData, bitmap2Bytes, uUid,usersetting);
-			}else{
+				OSSupload(ossData, bitmap2Bytes, uUid, usersetting);
+			} else {
 				mSetting_head.setVisibility(View.VISIBLE);
 				mSetting_head_1.setVisibility(View.GONE);
 			}
 		}
 		super.onResume();
 	}
-	
+
 	@Override
 	public void onStop() {
 		for (int i = 0; i < recycleBitmaps.size(); i++) {
@@ -228,11 +226,11 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		recycleBitmaps.clear();
 		super.onStop();
 	}
-	
+
 	private void returndata() {
 		// 获取SD卡中的pk_user
-		SD_pk_user = SdPkUser.getsD_pk_user();
-		ReadUser(SD_pk_user);
+		init_pk_user = InitPkUser.InitPkUser();
+		ReadUser(init_pk_user);
 	}
 
 	private void ReadUser(int returndata) {
@@ -246,7 +244,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			public void success(String A) {
 
 				// 读取用户资料成功
-				Loginback usersettingback = GsonUtils.parseJson(A,Loginback.class);
+				Loginback usersettingback = GsonUtils.parseJson(A,
+						Loginback.class);
 				int userStatusmsg = usersettingback.getStatusMsg();
 				if (userStatusmsg == 1) {
 					Log.e("SettingFragment", "用户资料" + A);
@@ -266,7 +265,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						mUserAmount = Setting_readuser.getAmount();
 
 						Log.e("SettingFragment", "第一次得到的用户信息11111111===="
-								+ SD_pk_user + "\n" + mUserJpush_id + "\n"
+								+ init_pk_user + "\n" + mUserJpush_id + "\n"
 								+ mUserNickname + "\n" + mUserPassword + "\n"
 								+ mUserSex + "\n" + mUserPhone + "\n"
 								+ mUserSetup_time + "\n" + mUserLast_login_time
@@ -291,15 +290,14 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						break;
 					}
 					mSetting_Phone.setText(mUserPhone);
-					completeURL = beginStr + mUserAvatar_path + endStr+"avatar";
+					completeURL = beginStr + mUserAvatar_path + endStr+ "avatar";
 					PreferenceUtils.saveImageCache(getActivity(), completeURL);// 存SP
-					ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(),completeURL, mSetting_head);
-					if(!("".equals(mUserWechat_id)))
-					{
+					ImageLoaderUtils.getInstance().LoadImageCricular(getActivity(), completeURL, mSetting_head);
+					if (!("".equals(mUserWechat_id))) {
 						mSetting_weixin.setText("已绑定");
 					}
-					
-					mSetting_Binding_balance_show.setText("¥"+mUserAmount+"0");
+
+					mSetting_Binding_balance_show.setText("¥" + mUserAmount+ "0");
 				}
 			}
 
@@ -308,7 +306,6 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 			}
 		});
-
 
 		// 更新的监听
 		Setting_readuserinter.setPostListener(new updateUserListenner() {
@@ -322,7 +319,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 					Log.e("SettingFragment", "更新成功" + A);
 					isShow = false;
 					User readuser = new User();
-					readuser.setPk_user(SD_pk_user);
+					readuser.setPk_user(init_pk_user);
 					Setting_readuserinter.readUser(getActivity(), readuser);
 					mSetting_head.setVisibility(View.VISIBLE);
 					mSetting_head_1.setVisibility(View.GONE);
@@ -338,7 +335,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	}
 
 	private void initUI() {
-		mSetting_weixin = (TextView) mLayout.findViewById(R.id.Setting_weixin);//显示用户是否已绑定微信
+		mSetting_weixin = (TextView) mLayout.findViewById(R.id.Setting_weixin);// 显示用户是否已绑定微信
 		mSetting_Phone = (TextView) mLayout.findViewById(R.id.Setting_Phone);// 用户的手机号码显示
 		mSetting_Sex = (TextView) mLayout.findViewById(R.id.Setting_Sex);// 用户的性别显示
 		mSetting_Nickname = (TextView) mLayout.findViewById(R.id.Setting_Nickname);// 用户的昵称显示
@@ -354,8 +351,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		mSetting_feedback = (RelativeLayout) mLayout.findViewById(R.id.Setting_feedback);// 用户反馈
 		mSetting_about_us = (RelativeLayout) mLayout.findViewById(R.id.Setting_about_us);// 关于我们
 		mSetting_Exit = (RelativeLayout) mLayout.findViewById(R.id.Setting_Exit);// 退出登录
-		mSetting_Binding_balance_show = (TextView) mLayout.findViewById(R.id.Setting_Binding_balance_show);//显示余额
-		
+		mSetting_Binding_balance_show = (TextView) mLayout.findViewById(R.id.Setting_Binding_balance_show);// 显示余额
+
 		mSetting_head.setOnClickListener(this);
 		mSetting_Nickname_change.setOnClickListener(this);
 		mSetting_Sex_change.setOnClickListener(this);
@@ -411,9 +408,9 @@ public class SettingFragment extends Fragment implements OnClickListener {
 		}
 	}
 
-	//余额提现
+	// 余额提现
 	private void Setting_Binding_balance_layout() {
-		Intent intent=new Intent(getActivity(), TouchBalanceActivity.class);
+		Intent intent = new Intent(getActivity(), TouchBalanceActivity.class);
 		startActivity(intent);
 		getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
@@ -436,45 +433,51 @@ public class SettingFragment extends Fragment implements OnClickListener {
 
 	private void Setting_head() {
 		isShow = true;
-//		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
-//		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
-//		getAlbum.setType(IMAGE_TYPE);
-//		startActivityForResult(getAlbum, IMAGE_CODE);
-		
+		// // 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
+		// Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
+		// getAlbum.setType(IMAGE_TYPE);
+		// startActivityForResult(getAlbum, IMAGE_CODE);
+
 		Intent getAlbum = new Intent(getActivity(), SelectPhotoActivity.class);
 		getAlbum.putExtra("SelectType", 0);
 		startActivityForResult(getAlbum, IMAGE_CODE);
-		
+
 		mSetting_head.setVisibility(View.GONE);
 		mSetting_head_1.setVisibility(View.VISIBLE);
 	}
 
 	// 绑定微信账号
 	private void Setting_Binding_weixin() {
-		if (api == null) {
-			api = WXAPIFactory.createWXAPI(getActivity(), "wx2ffba147560de2ff",false);
-		}
-
-		if (!api.isWXAppInstalled()) {
-			// 提醒用户没有按照微信
-			Toast.makeText(getActivity(), "还没有安装微信,请先安装微信!", Toast.LENGTH_SHORT).show();
-			return;
-		}
-
-		api.registerApp("wx2ffba147560de2ff");
-
-		if (!("".equals(mUserWechat_id))) {
-			WeiXin_NiftyDialogBuilder();
+		boolean isWIFI = Ifwifi.getNetworkConnected(getActivity());
+		if (isWIFI) {
+			if (api == null) {
+				api = WXAPIFactory.createWXAPI(getActivity(),
+						"wx2ffba147560de2ff", false);
+			}
+			if (!api.isWXAppInstalled()) {
+				// 提醒用户没有按照微信
+				View toastRoot = getActivity().getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+				ToastUtils.ShowMsgCENTER(getActivity().getApplicationContext(), "还没有安装微信,请先安装微信!", 0, toastRoot, 100);
+				return;
+			}
+			api.registerApp("wx2ffba147560de2ff");
+			if (!("".equals(mUserWechat_id))) {
+				WeiXin_NiftyDialogBuilder();
+			} else {
+				// 跳转微信绑定界面
+				final SendAuth.Req req = new SendAuth.Req();
+				req.scope = "snsapi_userinfo";
+				req.state = "agree_weixin_login";
+				api.sendReq(req);
+				SdPkUser.setGetUser(Setting_readuser);
+				SdPkUser.setGetweixinBinding(true);
+				SdPkUser.setWeixinRegistered(false);
+				SdPkUser.setGetWeSource(false);// 说明是绑定微信过去的
+			}
 		} else {
-			// 跳转微信绑定界面
-			final SendAuth.Req req = new SendAuth.Req();
-			req.scope = "snsapi_userinfo";
-			req.state = "agree_weixin_login";
-			api.sendReq(req);
-			SdPkUser.setGetUser(Setting_readuser);
-			SdPkUser.setGetweixinBinding(true);
-			SdPkUser.setWeixinRegistered(true);
-			SdPkUser.setGetWeSource(false);//说明是绑定微信过去的
+			// 自定义Toast
+			View toastRoot = getActivity().getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+			ToastUtils.ShowMsgCENTER(getActivity().getApplicationContext(),"网络不可用", 0, toastRoot, 0);
 		}
 	}
 
@@ -501,7 +504,8 @@ public class SettingFragment extends Fragment implements OnClickListener {
 				api.sendReq(req);
 				SdPkUser.setGetUser(Setting_readuser);
 				SdPkUser.setGetweixinBinding(true);
-				SdPkUser.setWeixinRegistered(true);
+				SdPkUser.setWeixinRegistered(false);
+				SdPkUser.setGetWeSource(false);// 说明是微信绑定过去的
 			}
 		}).show();
 	}
@@ -514,7 +518,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			Intent intent = new Intent(getActivity(),BindingPhoneActivity.class);
 			intent.putExtra(IConstant.UserData, Setting_readuser);
 			startActivity(intent);
-			getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
+			getActivity().overridePendingTransition(R.anim.in_item,R.anim.out_item);
 		}
 	}
 
@@ -557,7 +561,7 @@ public class SettingFragment extends Fragment implements OnClickListener {
 				Intent intent = new Intent(getActivity(),BindingPhoneActivity.class);
 				intent.putExtra(IConstant.UserData, Setting_readuser);
 				startActivity(intent);
-				getActivity().overridePendingTransition(R.anim.in_item, R.anim.out_item);
+				getActivity().overridePendingTransition(R.anim.in_item,R.anim.out_item);
 			}
 		}).show();
 
@@ -601,15 +605,14 @@ public class SettingFragment extends Fragment implements OnClickListener {
 	@SuppressWarnings("deprecation")
 	private void Drawable(ImageView mSetting_head_12) {
 		Drawable d = mSetting_head_12.getDrawable();
-		if (d != null)
-		{
+		if (d != null) {
 			d.setCallback(null);
 			mSetting_head_12.setImageDrawable(null);
 			mSetting_head_12.setBackgroundDrawable(null);
 		}
 	}
-	
-	public void OSSupload(OSSData ossData, byte[] data, String UUid, final User user) {
+
+	public void OSSupload(OSSData ossData, byte[] data, String UUid,final User user) {
 		ossData = ossService.getOssData(sampleBucket, UUid);
 		ossData.setData(data, "jpg"); // 指定需要上传的数据和它的类型
 		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
@@ -617,23 +620,21 @@ public class SettingFragment extends Fragment implements OnClickListener {
 			@Override
 			public void onSuccess(String objectKey) {
 				Log.e("", "图片上传成功");
-				loadnum=0;//初始化为0
+				loadnum = 0;// 初始化为0
 				Log.e("Main", "objectKey==" + objectKey);
-				//上传完成后注册
+				// 上传完成后注册
 				user.setAvatar_path(objectKey);
 				Setting_readuserinter.updateUser(getActivity(), user);
-				Log.e("SettingFragment","进入了图片上传的时候====================");
-				
-				
+				Log.e("SettingFragment", "进入了图片上传的时候====================");
+
 			}
-			
+
 			@Override
-			public void onProgress(String objectKey, int byteCount,
-					int totalSize) {
+			public void onProgress(String objectKey, int byteCount,int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
 				// Log.e("上传进度", "上传进度: " + p + "%");
 				mSetting_progress.post(new Runnable() {
-					
+
 					@Override
 					public void run() {
 						mSetting_progress.setVisibility(View.VISIBLE);
@@ -644,16 +645,16 @@ public class SettingFragment extends Fragment implements OnClickListener {
 					}
 				});
 			}
-			
+
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
 				Log.e("", "图片上传失败" + ossException.toString());
 				loadnum++;
-				if(loadnum<=3){
-					
+				if (loadnum <= 3) {
+
 					if (isShow) {
 						User usersetting = new User();
-						usersetting.setPk_user(SD_pk_user);
+						usersetting.setPk_user(init_pk_user);
 						usersetting.setJpush_id(mUserJpush_id);
 						usersetting.setNickname(mUserNickname);
 						usersetting.setPassword(mUserPassword);
@@ -668,11 +669,11 @@ public class SettingFragment extends Fragment implements OnClickListener {
 						recycleBitmaps.add(centerSquareScaleBitmap);
 						UUID randomUUID = UUID.randomUUID();
 						uUid = randomUUID.toString();
-						OSSupload(SettingFragment.this.ossData, bitmap2Bytes, uUid,usersetting);
+						OSSupload(SettingFragment.this.ossData, bitmap2Bytes,uUid, usersetting);
 					}
-					
+
 				}
-				
+
 			}
 		});
 	}

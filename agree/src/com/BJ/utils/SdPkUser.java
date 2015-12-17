@@ -8,15 +8,6 @@ import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.User;
 
 public class SdPkUser {
-	//传从登录或者注册来的pk_user
-	private static Integer sD_pk_user;
-	public static Integer getsD_pk_user() {
-		return sD_pk_user;
-	}
-
-	public static void setsD_pk_user(Integer sD_pk_user) {
-		SdPkUser.sD_pk_user = sD_pk_user;
-	}
 
 	//传注册来的一个true做判断布局的作用
 	private static boolean isRegistered_one;
@@ -310,4 +301,15 @@ public class SdPkUser {
 	public static void setChatRoomUser(User chatRoomUser) {
 		ChatRoomUser = chatRoomUser;
 	}
+	
+//	//从groupactivity传所有成员容器到slidingactivity
+//	public static List<Group_ReadAllUser> GroupReadAllUserList;
+//	public static List<Group_ReadAllUser> getGroupReadAllUserList() {
+//		return GroupReadAllUserList;
+//	}
+//
+//	public static void setGroupReadAllUserList(
+//			List<Group_ReadAllUser> groupReadAllUserList) {
+//		GroupReadAllUserList = groupReadAllUserList;
+//	}
 }

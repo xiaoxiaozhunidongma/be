@@ -36,6 +36,7 @@ import com.BJ.javabean.Group_ReadAllUserback;
 import com.BJ.utils.ImageLoaderUtils;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.activeandroid.query.Select;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.produceRequestCodeListenner;
@@ -55,7 +56,7 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 	private RelativeLayout mSlidingMenu_requestcode;
 	private RelativeLayout mSlidingMenu_Team_Setting;
 	private MyMemBerAdapter adapter;
-	private ArrayList<Group_ReadAllUser> Group_Readalluser_List = new ArrayList<Group_ReadAllUser>();
+	private List<Group_ReadAllUser> Group_Readalluser_List = new ArrayList<Group_ReadAllUser>();
 
 	private String beginStr = "http://picstyle.beagree.com/";
 	private String endStr = "@!";
@@ -77,34 +78,15 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_sliding);
+		Group_Readalluser_List=SdPkUser.getGetGroup_ReadAllUser();	
 		Intent intent = getIntent();
 		pk_group = intent.getIntExtra("group_group", 0);
 		source = intent.getBooleanExtra("PersonalData", false);
-		
 		initUI();
 		initSlidingMenuUI();// 侧滑ui
 		initInterface();
-		returndata();// 读取小组中的所有用户
-		SharedPreferences Sliding_sp=getSharedPreferences(IConstant.SlidingClick, 0);
-		int Click=Sliding_sp.getInt(IConstant.Click, 0);
-		isClick=Click;
-		Log.e("SlidingActivity", "这时候的Click=========" + Click);
-		switch (Click) {
-		case 0:
-			mSlidingMenu_Team_Setting.setBackgroundResource(R.color.white);
-			mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
-			break;
-		case 1:
-			mSlidingMenu_Team_Setting.setBackgroundResource(R.drawable.Sliding_choose_color);
-			mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
-			break;
-		case 2:
-			mSlidingMenu_Team_Setting.setBackgroundResource(R.color.white);
-			mSlidingMenu_requestcode.setBackgroundResource(R.drawable.Sliding_choose_color);
-			break;
-		default:
-			break;
-		}
+//		returndata();// 读取小组中的所有用户
+		
 		initReadGroupMember();//添加完好友后进行所有好友重新读取的接口
 	}
 
@@ -123,7 +105,7 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 	// 读取小组中的所有用户
 	private void returndata() {
 		Group readAllPerRelation_group = new Group();
-		readAllPerRelation_group.setPk_group(pk_group);
+		readAllPerRelation_group.setPk_group(pk_group);//pk_group
 		sildingInterface.readAllPerRelation(SlidingActivity.this,readAllPerRelation_group);
 	}
 
@@ -202,6 +184,7 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 		mSlidingMenu_requestcode = (RelativeLayout) findViewById(R.id.SlidingMenu_requestcode);
 		mSlidingMenu_requestcode.setOnClickListener(this);// 生成小组邀请码
 		mSlidingMenu_requestcode_code = (TextView) findViewById(R.id.SlidingMenu_requestcode_code);// 显示所生成的邀请码
+		mSlidingMenu_requestcode_code.setOnClickListener(this);
 		mSlidingMenu_member_listView = (ListView) findViewById(R.id.SlidingMenu_member_listView);// listview
 		View mFooterView= View.inflate(SlidingActivity.this, R.layout.sliding_footer_item, null);
 		RelativeLayout SlidingFooterLayout=(RelativeLayout) mFooterView.findViewById(R.id.SlidingFooterLayout);
@@ -209,6 +192,28 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 		adapter = new MyMemBerAdapter();
 		mSlidingMenu_member_listView.setAdapter(adapter);
 		mSlidingMenu_member_listView.setOnItemClickListener(this);
+		
+		SharedPreferences Sliding_sp=getSharedPreferences(IConstant.SlidingClick, 0);
+		int Click=Sliding_sp.getInt(IConstant.Click, 0);
+		isClick=Click;
+		Log.e("SlidingActivity", "这时候的Click=========" + Click);
+		switch (Click) {
+		case 0:
+			mSlidingMenu_Team_Setting.setBackgroundResource(R.color.white);
+			mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
+			break;
+		case 1:
+			mSlidingMenu_Team_Setting.setBackgroundResource(R.drawable.Sliding_choose_color);
+			mSlidingMenu_requestcode.setBackgroundResource(R.color.white);
+			break;
+		case 2:
+			mSlidingMenu_Team_Setting.setBackgroundResource(R.color.white);
+			mSlidingMenu_requestcode.setBackgroundResource(R.drawable.Sliding_choose_color);
+			break;
+		default:
+			break;
+		}
+		
 	}
 
 	private void initUI() {
@@ -302,6 +307,7 @@ public class SlidingActivity extends Activity implements OnClickListener,OnItemC
 			SlidingMenu_Team_Setting();
 			break;
 		case R.id.SlidingMenu_requestcode:
+		case R.id.SlidingMenu_requestcode_code:
 			SlidingMenu_requestcode();
 			break;
 		case R.id.Sliding_back_layout:

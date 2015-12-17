@@ -14,8 +14,6 @@ import android.content.SharedPreferences.Editor;
 import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -23,17 +21,18 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.ImageText;
 import com.BJ.javabean.MapAddParty;
-import com.BJ.javabean.Party;
+import com.BJ.javabean.Party5;
 import com.BJ.javabean.PartyOkback;
 import com.BJ.utils.ByteOrBitmap;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.BJ.utils.Weeks;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
@@ -67,7 +66,6 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private double mLng;
 	private double mLat;
 	private Integer fk_group;
-	private Integer sD_pk_user;
 	private String isCalendar;
 	private String address;
 	private Interface addNewParty_Interface;
@@ -87,9 +85,9 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private TextView mAdd_New_Party_details;
 	private String months;
 	private String days;
-	private Integer endtimehour;
-	private Integer endtimeminute;
-	private String startTime;
+	private Integer endtimehour=0;
+	private Integer endtimeminute=0;
+	private String startTime="";
 	
 	private List<ImageText> GraphicDetailsList=new ArrayList<ImageText>();
 	private List<ImageText> GraphicDetailsList2=new ArrayList<ImageText>();
@@ -110,7 +108,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_add_new_party);
 		context=this;
-		sD_pk_user = SdPkUser.getsD_pk_user();
+		init_pk_user = InitPkUser.InitPkUser();
 		Intent intent = getIntent();
 		fk_group = intent.getIntExtra(IConstant.Fk_group, 0);
 		source = intent.getBooleanExtra(IConstant.IsSchedule, false);
@@ -144,6 +142,13 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	private String party_name;
 	private boolean ischoose;
 	private Button mAdd_New_Party_OK;
+	private String mEndCalendar="0000-00-00";
+	private String mDeadlineCalendar="0000-00-00";
+	private int mDeadlinetimehour=0;
+	private int mDeadlinetimeminute=0;
+	private String limitnumber;
+	private Integer init_pk_user;
+	
 	//查表
 	private void initDB() {
 		GraphicDetailsList = new Select().from(ImageText.class).execute();
@@ -242,7 +247,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		SharedPreferences Limit_sp=getSharedPreferences(IConstant.LimitNumber, 0);
 		boolean isNumber=Limit_sp.getBoolean(IConstant.IsNumber, false);
 		if(isNumber){
-			String limitnumber=Limit_sp.getString(IConstant.Number, "");
+			limitnumber = Limit_sp.getString(IConstant.Number, "");
 			if("0".equals(limitnumber)){
 				mAdd_New_Party_limit_number.setText("不限");
 			}else {
@@ -278,7 +283,6 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 				PartyOkback partyOkback = GsonUtils.parseJson(A,PartyOkback.class);
 				Integer status = partyOkback.getStatusMsg();
 				if (status == 1) {
-					Log.e("AddNewPartyActivity", "日程是否创建成功======" + A);
 					SharedPreferences refresh_sp=getSharedPreferences(IConstant.AddRefresh, 0);
 					Editor editor2=refresh_sp.edit();
 					editor2.putBoolean(IConstant.IsAddRefresh, true);
@@ -289,6 +293,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 					startActivity(intent);
 					mAdd_New_Party_OK.setEnabled(true);
 					OKToast();
+					clean();
 					finish();
 				}
 			}
@@ -300,16 +305,60 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		});
 	}
 
+	private void clean() {
+		// 复原是否进入过地图选择
+		SharedPreferences map_sp = getSharedPreferences(IConstant.IsMap, 0);
+		Editor editor = map_sp.edit();
+		editor.putBoolean(IConstant.IsMapChoose, false);
+		editor.commit();
+		
+		// 复原是否进入过时间选择
+		SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
+		Editor editor1 = time_sp.edit();
+		editor1.putBoolean(IConstant.IsTimeChoose, false);
+		editor1.commit();
+		
+		//复原选过日期后的
+		SharedPreferences date_sp = getSharedPreferences("isdate", 0);
+		Editor editor3 = date_sp.edit();
+		editor3.putBoolean("date", false);
+		editor3.commit();
+		
+		// 复原是否进入过结束时间选择
+		SharedPreferences endtime_sp = getSharedPreferences(IConstant.EndTime, 0);
+		Editor endtimeeditor = endtime_sp.edit();
+		endtimeeditor.putBoolean(IConstant.IsEndTimeChoose, false);
+		endtimeeditor.commit();
+		
+		// 复原是否进入过报名截止时间选择
+		SharedPreferences Deadline_sp = getSharedPreferences(IConstant.DeadlineTime, 0);
+		Editor Deadlineeditor = Deadline_sp.edit();
+		Deadlineeditor.putBoolean(IConstant.IsDeadlineTimeChoose, false);
+		Deadlineeditor.commit();
+		
+		//是否进入过限制人数的限制
+		SharedPreferences Limit_sp=getSharedPreferences(IConstant.LimitNumber, 0);
+		Editor Limit_editor=Limit_sp.edit();
+		Limit_editor.putBoolean(IConstant.IsNumber, false);
+		Limit_editor.commit();
+		
+		//是否进入过金额界面
+		SharedPreferences CostSp=getSharedPreferences(IConstant.Cost, 0);
+		Editor Costeditor=CostSp.edit();
+		Costeditor.putBoolean(IConstant.IsCost, false);
+		Costeditor.commit();
+		
+		//是否进入过图文信息界面
+		SharedPreferences GraphicDetails_sp=getSharedPreferences("GraphicDetails", 0);
+		Editor GraphicDetails_editor=GraphicDetails_sp.edit();
+		GraphicDetails_editor.putBoolean("IsGraphicDetails", false);
+		GraphicDetails_editor.commit();
+	}
+	
 	private void OKToast() {
 		//自定义Toast
 		View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
-		Toast toast=new Toast(getApplicationContext());
-		toast.setGravity(Gravity.CENTER, 0, 0);
-		toast.setView(toastRoot);
-		toast.setDuration(100);
-		TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
-		tv.setText("创建成功");
-		toast.show();
+		ToastUtils.ShowMsgCENTER(getApplicationContext(), "创建成功", 0, toastRoot, 100);
 	}
 	
 	@Override
@@ -317,17 +366,66 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		initAddress();
 		initTime();
 		initEndTime();
+		initDeadlineTime();
+		Log.e("AddNewPartyActivity", "进入onStart()====");
 		super.onStart();
 	}
+	
+	//获取报名截止时间
+	private void initDeadlineTime() {
+		SharedPreferences Deadline_sp = getSharedPreferences(IConstant.DeadlineTime, 0);
+		boolean isDeadlineChoose=Deadline_sp.getBoolean(IConstant.IsDeadlineTimeChoose, false);
+		if(isDeadlineChoose){
+			mDeadlineCalendar = Deadline_sp.getString(IConstant.DeadlineTimeDate, "");
+			Log.e("AddNewPartyActivity", "获取回来的聚会报名截止时间===="+mDeadlineCalendar);
+			String years = mDeadlineCalendar.substring(0, 4);
+			String months = mDeadlineCalendar.substring(5, 7);
+			String days = mDeadlineCalendar.substring(8, 10);
+			// 计算星期几
+			int y = Integer.valueOf(years);
+			int m = Integer.valueOf(months);
+			int d = Integer.valueOf(days);
+			// 调用计算星期几的方法
+			Weeks.CaculateWeekDay(y, m, d);
+			String week = Weeks.getweek();
+			mDeadlinetimehour = Deadline_sp.getInt(IConstant.DeadlineTimeHour, 0);
+			mDeadlinetimeminute = Deadline_sp.getInt(IConstant.DeadlineTimeMinute, 0);
+			if(mDeadlinetimehour<10)
+			{
+				if(mDeadlinetimeminute<10)
+				{
+					mAdd_New_Party_registration_deadline.setText(years + "年" + months + "月"
+							+ days + "日" + " " + week + " " +"0"+mDeadlinetimehour + ":" +"0"+mDeadlinetimeminute);
+				}else
+				{
+					mAdd_New_Party_registration_deadline.setText(years + "年" + months + "月"
+							+ days + "日" + " " + week + " " +"0"+mDeadlinetimehour + ":" + mDeadlinetimeminute);
+				}
+			}else
+			{
+				if(mDeadlinetimeminute<10)
+				{
+					mAdd_New_Party_registration_deadline.setText(years + "年" + months + "月"
+							+ days + "日" + " " + week + " " + mDeadlinetimehour + ":" +"0"+mDeadlinetimeminute);
+				}else
+				{
+					mAdd_New_Party_registration_deadline.setText(years + "年" + months + "月"
+							+ days + "日" + " " + week + " " + mDeadlinetimehour + ":" + mDeadlinetimeminute);
+				}
+			}
+		}
+	}
+
 	//获取结束时间
 	private void initEndTime() {
 		SharedPreferences endtime_sp = getSharedPreferences(IConstant.EndTime, 0);
 		boolean isEndTimeChoose=endtime_sp.getBoolean(IConstant.IsEndTimeChoose, false);
 		if(isEndTimeChoose){
-			String EndCalendar=endtime_sp.getString(IConstant.EndTimeDate, "");
-			String years = EndCalendar.substring(0, 4);
-			String months = EndCalendar.substring(5, 7);
-			String days = EndCalendar.substring(8, 10);
+			mEndCalendar = endtime_sp.getString(IConstant.EndTimeDate, "");
+			Log.e("AddNewPartyActivity", "获取回来的聚会结束时间===="+mEndCalendar);
+			String years = mEndCalendar.substring(0, 4);
+			String months = mEndCalendar.substring(5, 7);
+			String days = mEndCalendar.substring(8, 10);
 			// 计算星期几
 			int y = Integer.valueOf(years);
 			int m = Integer.valueOf(months);
@@ -521,14 +619,27 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 
 	//报名截止时间
 	private void Add_New_Party_registration_deadline_layout() {
-		
+		// 得到年月日和选的时间
+		if(!("".equals(startTime))){
+			Intent intent = new Intent(AddNewPartyActivity.this, TimeActivity.class);
+			intent.putExtra(IConstant.Time, IConstant.DeadlineTimeChoose);
+			intent.putExtra(IConstant.StartTimeString, startTime);
+			intent.putExtra(IConstant.StartMonths, months);
+			intent.putExtra(IConstant.StartDay, days);
+			intent.putExtra(IConstant.StartHour, hour);
+			startActivity(intent);
+			overridePendingTransition(R.anim.in_item, R.anim.out_item);
+			Log.e("AddNewPartyActivity", "要传的月，日，时==========="+months+"  "+days+"   "+hour);
+		}else{
+			//弹出对话框
+			SweetAlertDialog();
+		}
 	}
 
 	//活动结束时间
 	private void Add_New_Party_end_time_layout() {
 		// 得到年月日和选的时间
-		String StartTime=mAdd_New_Party_time_details.getText().toString().trim();
-		if(!("".equals(StartTime))){
+		if(!("".equals(startTime))){
 			Intent intent = new Intent(AddNewPartyActivity.this, TimeActivity.class);
 			intent.putExtra(IConstant.Time, IConstant.EndTimeChoose);
 			intent.putExtra(IConstant.StartTimeString, startTime);
@@ -536,6 +647,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			intent.putExtra(IConstant.StartDay, days);
 			intent.putExtra(IConstant.StartHour, hour);
 			startActivity(intent);
+			overridePendingTransition(R.anim.in_item, R.anim.out_item);
 			Log.e("AddNewPartyActivity", "要传的月，日，时==========="+months+"  "+days+"   "+hour);
 		}else{
 			//弹出对话框
@@ -574,6 +686,7 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 		Intent intent = new Intent(AddNewPartyActivity.this, TimeActivity.class);
 		intent.putExtra(IConstant.Time, IConstant.StartTimeChoose);
 		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
 	}
 
 	private void TotalCount(String Ems) {
@@ -624,32 +737,44 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 			SweetAlerDialog();
 		}else{
 			party_name = mAdd_New_Party_name.getText().toString().trim();
-			Party party = new Party();
+			Party5 party = new Party5();
 			party.setPk_party(fk_party);
 			party.setFk_group(fk_group);
-			party.setFk_user(sD_pk_user);
+			party.setFk_user(init_pk_user);
 			party.setName(party_name);
-			party.setRemark("sd");
+			party.setRemark("必聚活动");
 			if(isNoChoose){
 				party.setBegin_time(partytimeString);
 			}else {
 				party.setBegin_time(isCalendar + "   " + hour + ":" + minute);
 			}
+			//活动结束时间
+			party.setEnd_time(mEndCalendar+"  "+endtimehour+":"+endtimeminute);
+//			party.setTip_time("");//提醒时间
 			party.setLongitude(mLng);
 			party.setLatitude(mLat);
 			party.setLocation(address);
 			party.setStatus(1);
 			party.setPay_type(type);
 			party.setPay_amount(Pay_amount);
-			party.setPay_fk_user(sD_pk_user);
+			party.setPay_fk_user(init_pk_user);
 			party.setParty_interval(1);
+			party.setSign_count(limitnumber);
+			//报名截止时间
+			party.setSign_time(mDeadlineCalendar+"  "+mDeadlinetimehour+":"+mDeadlinetimeminute);
+			//Party模型要改，差一个限制人数没做
 			Log.e("AddNewPartyActivity", "新建日程的UUID=====" + uUid);
 			Log.e("AddNewPartyActivity", "新建日程的name=====" + party_name);
 			Log.e("AddNewPartyActivity", "新建日程的fk_group=====" + fk_group);
-			Log.e("AddNewPartyActivity", "新建日程的时间=====" + isCalendar + "    " + hour+ ":" + minute);
+			Log.e("AddNewPartyActivity", "新建日程的开始时间=====" + isCalendar + "    " + hour+ ":" + minute);
+			Log.e("AddNewPartyActivity", "新建日程的结束时间=====" + mEndCalendar+"  "+endtimehour+":"+endtimeminute);
+			Log.e("AddNewPartyActivity", "新建日程的报名截止时间=====" + mDeadlineCalendar+"  "+mDeadlinetimehour+":"+mDeadlinetimeminute);
 			Log.e("AddNewPartyActivity", "新建日程的mLng=====" + mLng);
 			Log.e("AddNewPartyActivity", "新建日程的mLat=====" + mLat);
 			Log.e("AddNewPartyActivity", "新建日程的地址=====" + address);
+			Log.e("AddNewPartyActivity", "新建日程限制人数=====" + limitnumber);
+			Log.e("AddNewPartyActivity", "新建日程报名金额=====" + Pay_amount);
+			Log.e("AddNewPartyActivity", "新建日程报名金额类型=====" + type);
 			addNewParty_Interface.addParty(AddNewPartyActivity.this, new MapAddParty(GraphicDetailsList2, party));
 			Log.e("PartyComplete~", "GraphicDetailsList.size="+GraphicDetailsList.size());
 			SdPkUser.setGetpk_party(fk_party);
@@ -657,63 +782,26 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 	}
 
 	private void SweetAlerDialog() {
-		SweetAlertDialog sd=new SweetAlertDialog(context);
+		final SweetAlertDialog sd=new SweetAlertDialog(context);
 		sd.setTitleText("提示");
 		sd.setContentText("活动名称不能为空或者小于2个字符哦~");
+		sd.setConfirmClickListener(new SweetAlertDialog.OnSweetClickListener() {
+			
+			@Override
+			public void onClick(SweetAlertDialog sweetAlertDialog) {
+				mAdd_New_Party_OK.setEnabled(true);
+				sd.cancel();
+			}
+		});
 		sd.show();
 	}
 
 	// 返回
 	private void Add_New_Party_back() {
-		finish();
+		mAdd_New_Party_OK.setEnabled(true);
 		//清楚数据库,无条件全部删除
 		new Delete().from(ImageText.class).execute();
+		clean();
+		finish();
 	}
-
-	@Override
-	protected void onStop() {
-		// 复原是否进入过地图选择
-		SharedPreferences map_sp = getSharedPreferences(IConstant.IsMap, 0);
-		Editor editor = map_sp.edit();
-		editor.putBoolean(IConstant.IsMapChoose, false);
-		editor.commit();
-		
-		// 复原是否进入过时间选择
-		SharedPreferences time_sp = getSharedPreferences(IConstant.IsTime, 0);
-		Editor editor1 = time_sp.edit();
-		editor1.putBoolean(IConstant.IsTimeChoose, false);
-		editor1.commit();
-		
-		//复原选过日期后的
-		SharedPreferences date_sp = getSharedPreferences("isdate", 0);
-		Editor editor3 = date_sp.edit();
-		editor3.putBoolean("date", false);
-		editor3.commit();
-		
-		// 复原是否进入过结束时间选择
-		SharedPreferences endtime_sp = getSharedPreferences(IConstant.EndTime, 0);
-		Editor endtimeeditor = endtime_sp.edit();
-		endtimeeditor.putBoolean(IConstant.IsEndTimeChoose, false);
-		endtimeeditor.commit();
-		
-		//是否进入过限制人数的限制
-		SharedPreferences Limit_sp=getSharedPreferences(IConstant.LimitNumber, 0);
-		Editor Limit_editor=Limit_sp.edit();
-		Limit_editor.putBoolean(IConstant.IsNumber, false);
-		Limit_editor.commit();
-		
-		//是否进入过金额界面
-		SharedPreferences CostSp=getSharedPreferences(IConstant.Cost, 0);
-		Editor Costeditor=CostSp.edit();
-		Costeditor.putBoolean(IConstant.IsCost, false);
-		Costeditor.commit();
-		
-		//是否进入过图文信息界面
-		SharedPreferences GraphicDetails_sp=getSharedPreferences("GraphicDetails", 0);
-		Editor GraphicDetails_editor=GraphicDetails_sp.edit();
-		GraphicDetails_editor.putBoolean("IsGraphicDetails", false);
-		GraphicDetails_editor.commit();
-		super.onStop();
-	}
-	
 }

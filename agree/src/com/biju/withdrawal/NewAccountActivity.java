@@ -3,6 +3,7 @@ package com.biju.withdrawal;
 import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -10,11 +11,17 @@ import android.view.Window;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.BJ.javabean.PaymentAccount;
+import com.BJ.utils.Ifwifi;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.biju.Interface;
 import com.biju.Interface.PayMentAccountListenner;
+import com.biju.function.NewteamActivity;
 import com.biju.R;
 
 public class NewAccountActivity extends Activity implements OnClickListener{
@@ -24,18 +31,18 @@ public class NewAccountActivity extends Activity implements OnClickListener{
 	private Button mNewAccountChooseAccountBut;
 	private EditText mNewAccountAccountEdit;
 	private int SING=-1;
-	private Integer sd_pk_user;
 	private Interface mNewAccountInterface;
 	private RelativeLayout mNewAccountQuickPaymentLayout;
 	private RelativeLayout mNewAccountBankPaymentLayout;
 	private EditText mNewAccountBankPaymentNameEdit;
 	private EditText mNewAccountBankPaymentBankEdit;
+	private Integer init_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
-		sd_pk_user = SdPkUser.getsD_pk_user();
+		init_pk_user = InitPkUser.InitPkUser();
 		setContentView(R.layout.activity_new_account);
 		initUI();
 		initInterface();
@@ -99,7 +106,14 @@ public class NewAccountActivity extends Activity implements OnClickListener{
 			NewAccountChooseAccountBut();
 			break;
 		case R.id.NewAccountSaveBut:
-			NewAccountSaveBut();
+			boolean isWIFI = Ifwifi.getNetworkConnected(NewAccountActivity.this);
+			if (isWIFI) {
+				NewAccountSaveBut();
+			} else {
+				// 自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+				ToastUtils.ShowMsgCENTER(getApplicationContext(), "网络不可用", 0, toastRoot, 0);
+			}
 			break;
 		default:
 			break;
@@ -128,7 +142,7 @@ public class NewAccountActivity extends Activity implements OnClickListener{
 		String name=mNewAccountBankPaymentNameEdit.getText().toString().trim();
 		String bank=mNewAccountBankPaymentBankEdit.getText().toString().trim();
 		PaymentAccount paymentAccount=new PaymentAccount();
-		paymentAccount.setFk_user(sd_pk_user);
+		paymentAccount.setFk_user(init_pk_user);
 		paymentAccount.setAccount(bank);
 		paymentAccount.setType(SING);
 		paymentAccount.setStatus(1);
@@ -139,7 +153,7 @@ public class NewAccountActivity extends Activity implements OnClickListener{
 	private void QuickPayment() {
 		String mInformation=mNewAccountAccountEdit.getText().toString().trim();
 		PaymentAccount paymentAccount=new PaymentAccount();
-		paymentAccount.setFk_user(sd_pk_user);
+		paymentAccount.setFk_user(init_pk_user);
 		paymentAccount.setAccount(mInformation);
 		paymentAccount.setType(SING);
 		paymentAccount.setStatus(1);

@@ -39,10 +39,13 @@ import com.BJ.javabean.Group;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Newteamback;
 import com.BJ.utils.ByteOrBitmap;
+import com.BJ.utils.Ifwifi;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.LimitLong;
 import com.BJ.utils.Path2Bitmap;
 import com.BJ.utils.PicCutter;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.callback.SaveCallback;
 import com.alibaba.sdk.android.oss.model.OSSException;
@@ -80,7 +83,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private String newteam_name;
 	private String sDpath;
 	private Group group;
-	private Integer sD_pk_user;
 	private OSSData ossData;
 	private OSSService ossService;
 	private OSSBucket sampleBucket;
@@ -88,10 +90,11 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	private String uUid;
 	private int toastHeight;
 	private List<Group_User> Group_UserList = new ArrayList<Group_User>();
-	private List<String> mTeamFriendsList=new ArrayList<String>();
-	private int reUploadNum=3;
-	private int reUploadNum1=3;
+	private List<String> mTeamFriendsList = new ArrayList<String>();
+	private int reUploadNum = 3;
+	private int reUploadNum1 = 3;
 	private Button mNewTeam_OK;
+	private Integer init_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,8 +102,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_newteam);
 		// 获取sd卡中的pk_user
-		sD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("NewteamActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
+		init_pk_user = InitPkUser.InitPkUser();
+		Log.e("NewteamActivity", "从SD卡中获取到的Pk_user" + init_pk_user);
 
 		initUI();
 		// 获取ossService和sampleBucket
@@ -113,11 +116,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		DisplayMetrics();
 	}
 
-
 	private void DisplayMetrics() {
-		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metric);
-		int height = metric.heightPixels; // 屏幕高度（像素）
+		com.BJ.utils.DisplayMetrics.DisplayMetrics(NewteamActivity.this);
+		int height = com.BJ.utils.DisplayMetrics.Height();
 		toastHeight = height / 4;
 	}
 
@@ -133,12 +134,12 @@ public class NewteamActivity extends Activity implements OnClickListener {
 					Log.e("NewteamActivity", "小组ID" + A);
 					mNewTeam_OK.setEnabled(true);
 					SdPkUser.setRefreshTeam(true);
-					
-					SharedPreferences TeamFriends_sp=getSharedPreferences("TeamFriends", 0);
-					Editor editor=TeamFriends_sp.edit();
+
+					SharedPreferences TeamFriends_sp = getSharedPreferences("TeamFriends", 0);
+					Editor editor = TeamFriends_sp.edit();
 					editor.putBoolean("AddTeamFriends", false);
 					editor.commit();
-					
+
 					finish();
 					toast();
 				}
@@ -147,13 +148,7 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			private void toast() {
 				// 自定义Toast
 				View toastRoot = getLayoutInflater().inflate(R.layout.my_toast,null);
-				Toast toast = new Toast(getApplicationContext());
-				toast.setGravity(Gravity.TOP, 0, toastHeight);
-				toast.setView(toastRoot);
-				toast.setDuration(100);
-				TextView tv = (TextView) toastRoot.findViewById(R.id.TextViewInfo);
-				tv.setText("创建成功");
-				toast.show();
+				ToastUtils.ShowMsg(getApplicationContext(), "创建成功", toastHeight, toastRoot);
 			}
 
 			@Override
@@ -181,8 +176,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		Timer timer = new Timer();
 		timer.schedule(new TimerTask() {
 			public void run() {
-				InputMethodManager inputManager = (InputMethodManager) mNewteam_name.getContext().getSystemService(
-								NewteamActivity.INPUT_METHOD_SERVICE);
+				InputMethodManager inputManager = (InputMethodManager) mNewteam_name
+						.getContext().getSystemService(NewteamActivity.INPUT_METHOD_SERVICE);
 				inputManager.showSoftInput(mNewteam_name, 0);
 			}
 		}, 998);
@@ -196,8 +191,15 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			NewTeam_back();
 			break;
 		case R.id.NewTeam_OK:
-			NewTeam_OK();
-			sendMessageToJerryFromTom();
+			boolean isWIFI = Ifwifi.getNetworkConnected(NewteamActivity.this);
+			if (isWIFI) {
+				NewTeam_OK();
+				sendMessageToJerryFromTom();
+			} else {
+				// 自定义Toast
+				View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
+				ToastUtils.ShowMsgCENTER(getApplicationContext(), "网络不可用", 0, toastRoot, 0);
+			}
 			break;
 		case R.id.NewTeam_head:
 		case R.id.NewTeam_tv_head:
@@ -221,9 +223,9 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	public void sendMessageToJerryFromTom() {
 		final ArrayList<String> strings = new ArrayList<String>();
 		// Tom 用自己的名字作为clientId，获取AVIMClient对象实例
-		Integer SD_pk_user = SdPkUser.getsD_pk_user();
-		strings.add(String.valueOf(SD_pk_user));// 添加当前用户
-		AVIMClient curuser = AVIMClient.getInstance(String.valueOf(SD_pk_user));
+		Integer init_pk_user = InitPkUser.InitPkUser();
+		strings.add(String.valueOf(init_pk_user));// 添加当前用户
+		AVIMClient curuser = AVIMClient.getInstance(String.valueOf(init_pk_user));
 		// 与服务器连接
 		curuser.open(new AVIMClientCallback() {
 			@Override
@@ -236,21 +238,20 @@ public class NewteamActivity extends Activity implements OnClickListener {
 							attr, new AVIMConversationCreatedCallback() {
 
 								@Override
-								public void done(AVIMConversation conversation,
-										AVIMException e) {
+								public void done(AVIMConversation conversation,AVIMException e) {
 									if (e == null) {
 										Log.e("NewteamActivity", "对话创建成功！");
 										final ChatManager chatManager = ChatManager.getInstance();
 										chatManager.registerConversation(conversation);// 注册对话
 										group.setEm_id(conversation.getConversationId());// Em_id赋值传服务器
-										SharedPreferences TeamFriends_sp=getSharedPreferences("TeamFriends", 0);
-										boolean addteam=TeamFriends_sp.getBoolean("AddTeamFriends", false);
-										if(addteam){
+										SharedPreferences TeamFriends_sp = getSharedPreferences("TeamFriends", 0);
+										boolean addteam = TeamFriends_sp.getBoolean("AddTeamFriends",false);
+										if (addteam) {
 											// 上传OSS
-											OSSupload(ossData, bitmap2Bytes, uUid);
-										}else {
+											OSSupload(ossData, bitmap2Bytes,uUid);
+										} else {
 											// 上传OSS
-											OSSupload1(ossData, bitmap2Bytes, uUid);
+											OSSupload1(ossData, bitmap2Bytes,uUid);
 										}
 									}
 								}
@@ -262,11 +263,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 	}
 
 	private void NewTeam_head() {
-		// 使用intent调用系统提供的相册功能，使用startActivityForResult是为了获取用户选择的图片
-//		Intent getAlbum = new Intent(Intent.ACTION_GET_CONTENT);
-//		getAlbum.setType(IMAGE_TYPE);
-//		startActivityForResult(getAlbum, IMAGE_CODE);
-		
 		Intent getAlbum = new Intent(this, SelectPhotoActivity.class);
 		getAlbum.putExtra("SelectType", 0);
 		startActivityForResult(getAlbum, IMAGE_CODE);
@@ -286,9 +282,6 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		group.setName(newteam_name);
 		group.setLast_post_time(format2);
 
-		// //上传OSS
-		// OSSupload(ossData, bitmap2Bytes,uUid);
-
 	}
 
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -296,34 +289,32 @@ public class NewteamActivity extends Activity implements OnClickListener {
 		if (resultCode != Activity.RESULT_OK || data == null)
 			return;
 		try {
-//			Uri selectedImage = data.getData();
-//			String[] filePathColumn = { MediaStore.Images.Media.DATA };
-//			Cursor cursor = NewteamActivity.this.getContentResolver().query(selectedImage, filePathColumn, null, null, null);
-//			if (cursor != null) {
-//				cursor.moveToFirst();
-//				int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
-//				mFilePath = cursor.getString(columnIndex);
-//				cursor.close();
-//				cursor = null;
-//
-//			} else {
-//				File file = new File(selectedImage.getPath());
-//				mFilePath = file.getAbsolutePath();
-//				if (!file.exists()) {
-//					Toast toast = Toast.makeText(this, "找不到图片",Toast.LENGTH_SHORT);
-//					toast.setGravity(Gravity.CENTER, 0, 0);
-//					toast.show();
-//					return;
-//				}
-//			}
-			
+			// Uri selectedImage = data.getData();
+			// String[] filePathColumn = { MediaStore.Images.Media.DATA };
+			// Cursor cursor =
+			// NewteamActivity.this.getContentResolver().query(selectedImage,
+			// filePathColumn, null, null, null);
+			// if (cursor != null) {
+			// cursor.moveToFirst();
+			// int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+			// mFilePath = cursor.getString(columnIndex);
+			// cursor.close();
+			// cursor = null;
+			//
+			// } else {
+			// File file = new File(selectedImage.getPath());
+			// mFilePath = file.getAbsolutePath();
+			// if (!file.exists()) {
+			// Toast toast = Toast.makeText(this, "找不到图片",Toast.LENGTH_SHORT);
+			// toast.setGravity(Gravity.CENTER, 0, 0);
+			// toast.show();
+			// return;
+			// }
+			// }
+
 			@SuppressWarnings("unchecked")
 			ArrayList<String> mSelectedImageList = (ArrayList<String>) data.getSerializableExtra("mSelectedImageList");
-			mFilePath=mSelectedImageList.get(0);
-			Log.e("NewteamActivity", "mSelectedImageList.size()======" + mSelectedImageList.size());
-			Log.e("NewteamActivity", "mFilePath======" + mFilePath);
-			
-			Log.e("NewteamActivity", "mFilePath======" + mFilePath);
+			mFilePath = mSelectedImageList.get(0);
 			// OSS上传~
 			// Bitmap bmp = MyBimp.revitionImageSize(mFilePath);
 			Bitmap convertToBitmap = Path2Bitmap.convertToBitmap(mFilePath);
@@ -340,8 +331,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			Log.e("Demo", "choose file error!", e);
 		}
 	}
-	
-	private void OSSupload1(OSSData ossData,byte[] bitmap2Bytes, String uUid) {
+
+	private void OSSupload1(OSSData ossData, byte[] bitmap2Bytes, String uUid) {
 		ossData = ossService.getOssData(sampleBucket, uUid);
 		ossData.setData(bitmap2Bytes, "jpg"); // 指定需要上传的数据和它的类型
 		ossData.enableUploadCheckMd5sum(); // 开启上传MD5校验
@@ -357,11 +348,11 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						// myAdapter.notifyDataSetChanged();
 					}
 				});
-				reUploadNum=3;
+				reUploadNum = 3;
 				group.setAvatar_path(objectKey);
 				// 创建CreatGroup
 				Group_User group_User = new Group_User();
-				group_User.setFk_user(sD_pk_user);
+				group_User.setFk_user(init_pk_user);
 				group_User.setRole(1);
 				group.setStatus(1);
 				Group_User[] members = { group_User };
@@ -371,16 +362,17 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			}
 
 			@Override
-			public void onProgress(String objectKey, int byteCount,int totalSize) {
+			public void onProgress(String objectKey, int byteCount,
+					int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
 			}
 
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
 				Log.e("NewteamActivity", "图片上传失败" + ossException.toString());
-				if(reUploadNum>0){
-					sendMessageToJerryFromTom();//递归模式调用自身
-					Log.e("NewteamActivity", "没有好友的图片上传失败,进行第" + reUploadNum+"次上传图片");
+				if (reUploadNum > 0) {
+					sendMessageToJerryFromTom();// 递归模式调用自身
+					Log.e("NewteamActivity", "没有好友的图片上传失败,进行第" + reUploadNum+ "次上传图片");
 					reUploadNum--;
 				}
 			}
@@ -403,15 +395,16 @@ public class NewteamActivity extends Activity implements OnClickListener {
 						// myAdapter.notifyDataSetChanged();
 					}
 				});
-				reUploadNum1=3;
+				reUploadNum1 = 3;
 				mTeamFriendsList = SdPkUser.getTeamFriendsList();
-				Log.e("NewteamActivity", "mTeamFriendsList的长度222222222===="+ mTeamFriendsList.size());
-				if(mTeamFriendsList.size()>0){
+				Log.e("NewteamActivity", "mTeamFriendsList的长度222222222===="
+						+ mTeamFriendsList.size());
+				if (mTeamFriendsList.size() > 0) {
 					group.setAvatar_path(objectKey);
-					Log.e("NewteamActivity", "进入1111111111======" );
+					Log.e("NewteamActivity", "进入1111111111======");
 					// 创建CreatGroup
 					Group_User group_User = new Group_User();
-					group_User.setFk_user(sD_pk_user);
+					group_User.setFk_user(init_pk_user);
 					group_User.setRole(1);
 					Group_UserList.add(group_User);
 					for (int i = 0; i < mTeamFriendsList.size(); i++) {
@@ -435,16 +428,17 @@ public class NewteamActivity extends Activity implements OnClickListener {
 			}
 
 			@Override
-			public void onProgress(String objectKey, int byteCount,int totalSize) {
+			public void onProgress(String objectKey, int byteCount,
+					int totalSize) {
 				final long p = (long) ((byteCount * 100) / (totalSize * 1.0f));
 			}
 
 			@Override
 			public void onFailure(String objectKey, OSSException ossException) {
 				Log.e("NewteamActivity", "图片上传失败" + ossException.toString());
-				if(reUploadNum1>0){
-					sendMessageToJerryFromTom();//递归模式调用自身
-					Log.e("NewteamActivity", "有好友的图片上传失败,进行第" + reUploadNum1+"次上传图片");
+				if (reUploadNum1 > 0) {
+					sendMessageToJerryFromTom();// 递归模式调用自身
+					Log.e("NewteamActivity", "有好友的图片上传失败,进行第" + reUploadNum1+ "次上传图片");
 					reUploadNum1--;
 				}
 			}
@@ -453,7 +447,8 @@ public class NewteamActivity extends Activity implements OnClickListener {
 
 	public String getSDPath() {
 		File sdDir = null;
-		boolean sdCardExist = Environment.getExternalStorageState().equals(android.os.Environment.MEDIA_MOUNTED);
+		boolean sdCardExist = Environment.getExternalStorageState().equals(
+				android.os.Environment.MEDIA_MOUNTED);
 		// 判断sd卡是否存在
 		if (sdCardExist) {
 			sdDir = Environment.getExternalStorageDirectory();// 获取跟目录

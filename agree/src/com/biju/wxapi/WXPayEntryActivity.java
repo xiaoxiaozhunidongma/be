@@ -12,9 +12,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.BJ.javabean.CreateOrder;
+import com.BJ.utils.ToastUtils;
 import com.biju.Interface;
 import com.biju.Interface.CreateOrderListenner;
 import com.biju.R;
+import com.biju.function.PartyDetailsActivity;
 import com.biju.pay.PayBaseActivity;
 import com.tencent.mm.sdk.modelbase.BaseReq;
 import com.tencent.mm.sdk.modelbase.BaseResp;
@@ -101,6 +103,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 		switch (resp.errCode) {
 		case 0:
 			CreateOrder();
+			PartyDetailsActivity.partyDetailsBackground.PartyDetailsBackground();
 			PayBaseActivity.getApply.PartyApply();
 			break;
 		case -1:
@@ -122,14 +125,7 @@ public class WXPayEntryActivity extends Activity implements IWXAPIEventHandler {
 
 	private void Toast() {
 		// 自定义Toast
-		View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast,
-				null);
-		Toast toast = new Toast(getApplicationContext());
-		toast.setGravity(Gravity.CENTER, 0, 100);
-		toast.setView(toastRoot);
-		toast.setDuration(100);
-		TextView tv = (TextView) toastRoot.findViewById(R.id.TextViewInfo);
-		tv.setText("支付失败");
-		toast.show();
+		View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast,null);
+		ToastUtils.ShowMsgCENTER(getApplicationContext(), "支付失败", 100, toastRoot, 100);
 	}
 }

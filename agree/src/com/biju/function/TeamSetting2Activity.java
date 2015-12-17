@@ -20,14 +20,17 @@ import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Exitback;
 import com.BJ.javabean.Group;
+import com.BJ.javabean.GroupHome;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.Groupuserback;
 import com.BJ.javabean.Teamupdateback;
 import com.BJ.javabean.User;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupMsgListenner;
@@ -45,7 +48,6 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private ImageView mTeamSetting2_head;
 	private TextView mTeamSetting2_User_nickname;
 	private TextView mTeamSetting2_Tean_name;
-	private Integer sD_pk_user;
 	private Interface teamSetting2_interface;
 //	private Group teamsetting_group;
 	
@@ -81,6 +83,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private int toastHeight;
 	private Integer mGroupManager;
 	private Integer pk_user;
+	private Integer init_pk_user;
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -96,7 +99,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		mGroupManager = intent.getIntExtra("GroupManager", 0);
 		
 		//获取sd卡中的pk_user
-		sD_pk_user = SdPkUser.getsD_pk_user();
+		init_pk_user = InitPkUser.InitPkUser();
 				
 		initreadUserGroupRelation(pk_group);
 		initMessage();
@@ -108,14 +111,13 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	
 	private void initGroup() {
 		User homeuser = new User();
-		homeuser.setPk_user(sD_pk_user);
+		homeuser.setPk_user(init_pk_user);
 		teamSetting2_interface.readUserGroupMsg(TeamSetting2Activity.this, homeuser);
 	}
 
 	private void DisplayMetrics() {
-		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metric);
-        int height = metric.heightPixels;   // 屏幕高度（像素）
+		com.BJ.utils.DisplayMetrics.DisplayMetrics(TeamSetting2Activity.this);
+		int height = com.BJ.utils.DisplayMetrics.Height();
         toastHeight = height/4;
 	}
 
@@ -290,10 +292,10 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
 				int homeStatusMsg = homeback.getStatusMsg();
 				if (homeStatusMsg == 1) {
-					List<Group> users = homeback.getReturnData();
+					List<GroupHome> users = homeback.getReturnData();
 					if (users.size() > 0) {
 						for (int i = 0; i < users.size(); i++) {
-							Group readhomeuser_1 = users.get(i);
+							GroupHome readhomeuser_1 = users.get(i);
 							Integer rea_pk_group=readhomeuser_1.getPk_group();
 							if(String.valueOf(rea_pk_group).equals(String.valueOf(pk_group))){
 								//初始化显示头像和小组名称
@@ -321,13 +323,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private void Toast1() {
 		//自定义Toast
 		View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast, null);
-		Toast toast=new Toast(getApplicationContext());
-		toast.setGravity(Gravity.TOP, 0, toastHeight);
-		toast.setView(toastRoot);
-		toast.setDuration(100);
-		TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
-		tv.setText("更新设置失败，请重新再试!");
-		toast.show();
+		ToastUtils.ShowMsg(getApplicationContext(), "更新设置失败，请重新再试!", toastHeight, toastRoot);
 	}
 	
 	private void Toast() {
@@ -350,7 +346,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private void initreadUserGroupRelation(Integer pk_group) {
 		Group_User group_User = new Group_User();
 		group_User.setFk_group(pk_group);
-		group_User.setFk_user(sD_pk_user);
+		group_User.setFk_user(init_pk_user);
 		teamSetting2_interface.readUserGroupRelation(TeamSetting2Activity.this,group_User);
 	}
 
@@ -398,10 +394,19 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 		case R.id.TeamSetting2_invite_friends_layout:
 			TeamSetting2_invite_friends_layout();
 			break;
+		case R.id.TeamSetting2_History_party_layout:
+			TeamSetting2_History_party_layout();
+			break;
 		default:
 			break;
 		}
 	}
+	private void TeamSetting2_History_party_layout() {
+		Intent intent=new Intent(TeamSetting2Activity.this, HistoryPartyActivity.class);
+		startActivity(intent);
+		overridePendingTransition(R.anim.in_item, R.anim.out_item);
+	}
+
 	private void TeamSetting2_invite_friends_layout() {
 		Intent intent=new Intent(TeamSetting2Activity.this, AddTeamFriendsActivity.class);
 		startActivity(intent);
@@ -428,7 +433,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 	private void TeamSetting2_save() {
 		Group_User group_user = new Group_User();
 		group_user.setPk_group_user(GroupActivity.pk_group_user);
-		group_user.setFk_user(sD_pk_user);
+		group_user.setFk_user(init_pk_user);
 		group_user.setFk_group(pk_group);
 		if(Clickmessage){
 			group_user.setParty_warn(Message_ischecked);// 聚会信息
@@ -483,7 +488,7 @@ public class TeamSetting2Activity extends Activity implements OnClickListener{
 				isExit=true;
 				Group_User group_user = new Group_User();
 				group_user.setPk_group_user(GroupActivity.pk_group_user);
-				group_user.setFk_user(sD_pk_user);
+				group_user.setFk_user(init_pk_user);
 				group_user.setFk_group(pk_group);
 				group_user.setRole(0);
 				group_user.setStatus(0);

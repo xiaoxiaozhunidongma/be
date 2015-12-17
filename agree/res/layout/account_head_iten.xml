@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" 
-    android:background="#efefef"
-    >
+    android:layout_height="match_parent"
+    android:background="#efefef" >
 
     <RelativeLayout
         android:id="@+id/relativeLayout1"
@@ -28,10 +27,10 @@
             android:layout_height="wrap_content"
             android:layout_centerHorizontal="true"
             android:layout_centerVertical="true"
+            android:gravity="center"
+            android:text="¥0.00"
             android:textColor="#88d4cc"
             android:textSize="30.0sp"
-            android:text="123"
-            android:gravity="center"
             android:textStyle="bold" />
 
         <TextView
@@ -59,13 +58,11 @@
             android:layout_height="wrap_content"
             android:layout_below="@+id/TouchBalanceMoney"
             android:layout_centerHorizontal="true"
-            android:text="TextView"
-            android:gravity="center"
-            android:textSize="13.0sp"
-            android:textColor="#959595"
             android:layout_marginTop="10.0dp"
-             />
-
+            android:gravity="center"
+            android:text="未到账金额: ¥0.00"
+            android:textColor="#959595"
+            android:textSize="13.0sp" />
     </RelativeLayout>
 
 </RelativeLayout>

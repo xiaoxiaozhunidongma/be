@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
@@ -13,10 +12,10 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
-import com.BJ.javabean.Group;
 import com.BJ.javabean.GroupNumber;
 import com.BJ.javabean.Group_User;
 import com.BJ.javabean.RequestCodeback;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.homeImageLoaderUtils;
@@ -33,7 +32,6 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 	private TextView mRequest_tv_code;
 	private TextView mRequest_OK;
 	private Interface requestcode3_interface;
-	private Integer sD_pk_user;
 	private GroupNumber readhomeuser;
 	private ImageView mRequestcode2_head;
 	private TextView mRequestcode2_User_nickname;
@@ -51,6 +49,7 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 	private boolean isPublic;
 	private ImageView mRequestcode2_public_choose;
 	private Integer public_phone=0;
+	private Integer init_pk_user;
 	
 	
 	@Override
@@ -59,8 +58,8 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_request_code3);
 		// 从SD卡中获取到的Pk_user
-		sD_pk_user = SdPkUser.getsD_pk_user();
-		Log.e("RequestCodeActivity", "从SD卡中获取到的Pk_user" + sD_pk_user);
+		init_pk_user = InitPkUser.InitPkUser();
+		Log.e("RequestCodeActivity", "从SD卡中获取到的Pk_user" + init_pk_user);
 		Intent intent = getIntent();
 		readhomeuser=(GroupNumber) intent.getSerializableExtra(IConstant.Requestcode_readhomeuser);
 		number = intent.getIntExtra("RequestCodeNumber", 0);
@@ -157,7 +156,7 @@ public class RequestCode3Activity extends Activity implements OnClickListener{
 		Integer fk_group = readhomeuser.getPk_group();
 		Group_User group_User = new Group_User();
 		group_User.setFk_group(fk_group);
-		group_User.setFk_user(sD_pk_user);
+		group_User.setFk_user(init_pk_user);
 		group_User.setRole(2);
 		group_User.setStatus(1);
 		group_User.setPublic_phone(public_phone);

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="50.0dp"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" >
+
+        <TextView
+            android:id="@+id/HistoryPartyName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="聚会名称"
+            android:textSize="15.0sp" 
+            android:textColor="#535353"
+            android:layout_marginLeft="20.0dp"
+            android:layout_marginTop="10.0dp"
+            android:gravity="left|center"
+            />
+
+        <TextView
+            android:id="@+id/HistoryPartyTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/HistoryPartyName"
+            android:layout_below="@+id/HistoryPartyName"
+            android:text="聚会时间"
+            android:textSize="13.0sp"
+            android:textColor="#c9c9c9"
+            android:gravity="left|center"
+             />
+
+        <TextView
+            android:id="@+id/HistoryPartyLine1"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            android:layout_marginLeft="20.0dp"
+            android:visibility="gone"
+             />
+
+        <TextView
+            android:id="@+id/HistoryPartyLine2"
+            android:layout_width="match_parent"
+            android:layout_height="0.50dp"
+            android:layout_alignParentBottom="true"
+            android:background="#aaaaaa"
+            />
+
+    </RelativeLayout>
+
+</RelativeLayout>

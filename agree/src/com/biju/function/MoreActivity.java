@@ -19,12 +19,8 @@ import android.os.Bundle;
 import android.provider.CalendarContract.Reminders;
 import android.util.Log;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.view.animation.AlphaAnimation;
-import android.view.animation.Animation;
-import android.view.animation.TranslateAnimation;
 import android.view.Window;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -34,6 +30,7 @@ import com.BJ.javabean.Moreback;
 import com.BJ.javabean.Party;
 import com.BJ.javabean.Party2;
 import com.BJ.javabean.UserAllParty;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.RefreshActivity;
 import com.BJ.utils.SdPkUser;
 import com.biju.IConstant;
@@ -41,6 +38,7 @@ import com.biju.Interface;
 import com.biju.Interface.userCanclePartyListenner;
 import com.biju.R;
 import com.biju.wechatshare.Util;
+import com.fragment.PartyFragment;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
@@ -55,7 +53,6 @@ public class MoreActivity extends Activity implements OnClickListener {
 	private Interface moreinterface;
 	private UserAllParty userAllParty;
 	private boolean userAll;
-	private Integer sD_pk_user;
 	private LinearLayout mMore_creator_layout;
 	private LinearLayout mMore_member_layout;
 	private Integer fk_user;
@@ -73,13 +70,14 @@ public class MoreActivity extends Activity implements OnClickListener {
 
 	private String app_id = "wx2ffba147560de2ff";
 	private IWXAPI api;
+	private Integer init_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.activity_more);
-		sD_pk_user = SdPkUser.getsD_pk_user();
+		init_pk_user = InitPkUser.InitPkUser();
 		api = WXAPIFactory.createWXAPI(MoreActivity.this, "wx2ffba147560de2ff",false);
 
 		Intent intent = getIntent();
@@ -117,10 +115,11 @@ public class MoreActivity extends Activity implements OnClickListener {
 				if (status == 1) {
 					Log.e("MoreActivity", "返回是否删除成功" + A);
 					if (userAll) {
-						finish();
+						PartyFragment.getReadAllParty.ReadAllParty();//刷新PartyFragment界面
 						for (int i = 0; i < RefreshActivity.activList_1.size(); i++) {
 							RefreshActivity.activList_1.get(i).finish();
 						}
+						finish();
 					} else {
 						SharedPreferences more_sp = getSharedPreferences(IConstant.MoreRefresh, 0);
 						Editor editor = more_sp.edit();
@@ -153,7 +152,7 @@ public class MoreActivity extends Activity implements OnClickListener {
 		findViewById(R.id.More_creator_cancel).setOnClickListener(this);
 		mMore_creator_layout = (LinearLayout) findViewById(R.id.More_creator_layout);// 创建者
 		mMore_member_layout = (LinearLayout) findViewById(R.id.More_member_layout);// 普通成员
-		if (String.valueOf(fk_user).equals(String.valueOf(sD_pk_user))) {
+		if (String.valueOf(fk_user).equals(String.valueOf(init_pk_user))) {
 			mMore_creator_layout.setVisibility(View.VISIBLE);
 			mMore_member_layout.setVisibility(View.GONE);
 		} else {

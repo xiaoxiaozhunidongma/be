@@ -8,22 +8,21 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.KeyEvent;
-import android.view.Menu;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.Window;
-import android.widget.TextView;
-import android.widget.Toast;
 
 import com.BJ.javabean.Group;
+import com.BJ.javabean.GroupHome;
 import com.BJ.javabean.GroupNumber;
 import com.BJ.javabean.GroupNumberback;
 import com.BJ.javabean.Group_Code;
 import com.BJ.javabean.Groupback;
 import com.BJ.javabean.User;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.biju.IConstant;
 import com.biju.Interface;
 import com.biju.Interface.readUserGroupMsgListenner;
@@ -37,11 +36,11 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 	public static InterActivity interActivity;
 	private boolean isAdd;
 	private Interface requestcode_interface;
-	private Integer sD_pk_user;
-	private ArrayList<Group> requestcode_readuesrlist = new ArrayList<Group>();
+	private ArrayList<GroupHome> requestcode_readuesrlist = new ArrayList<GroupHome>();
 	private GroupNumber requestcode_readhomeuser;
 	private int toastHeight;
 	private Integer group_count;
+	private Integer init_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -55,11 +54,17 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 		DisplayMetrics();//获取屏幕的高度和宽度
 	}
 
+	@Override
+	protected void onRestart() {
+		initActivity();
+		SdPkUser.setRequestcode(true);//说明是从邀请码这么过去的，而不是绑定手机
+		DisplayMetrics();//获取屏幕的高度和宽度
+		super.onRestart();
+	}
+	
 	private void DisplayMetrics() {
-		android.util.DisplayMetrics metric = new android.util.DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(metric);
-//        int width = metric.widthPixels;     // 屏幕宽度（像素）
-        int height = metric.heightPixels;   // 屏幕高度（像素）
+		com.BJ.utils.DisplayMetrics.DisplayMetrics(RequestCodeActivity.this);
+		int height = com.BJ.utils.DisplayMetrics.Height();
         toastHeight = height/4;
 	}
 
@@ -79,22 +84,15 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 								group_count = requestcode_readhomeuser.getGroup_count();
 								// 查找是否已添加过该小组
 								User homeuser = new User();
-								homeuser.setPk_user(sD_pk_user);
-								Log.e("RequestCodeActivity", "sD_pk_user=====" +sD_pk_user);
+								homeuser.setPk_user(init_pk_user);
+								Log.e("RequestCodeActivity", "sD_pk_user=====" +init_pk_user);
 								requestcode_interface.readUserGroupMsg(RequestCodeActivity.this, homeuser);
 							}
 						}else
 						{
 							//自定义Toast
 							View toastRoot = getLayoutInflater().inflate(R.layout.my_error_toast, null);
-							Toast toast=new Toast(getApplicationContext());
-							toast.setGravity(Gravity.TOP, 0, toastHeight);
-							toast.setView(toastRoot);
-							toast.setDuration(100);
-							TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
-							tv.setText("未找到相关数据");
-							toast.show();
-							
+							ToastUtils.ShowMsg(getApplicationContext(), "未找到相关数据", toastHeight, toastRoot);
 							
 						}
 					}
@@ -115,10 +113,10 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 				int homeStatusMsg = homeback.getStatusMsg();
 				if (homeStatusMsg == 1) {
 					Log.e("RequestCodeActivity", "读取出的用户小组信息==========" + A);
-					List<Group> users = homeback.getReturnData();
+					List<GroupHome> users = homeback.getReturnData();
 					if (users.size() > 0) {
 						for (int i = 0; i < users.size(); i++) {
-							Group readhomeuser_1 = users.get(i);
+							GroupHome readhomeuser_1 = users.get(i);
 							requestcode_readuesrlist.add(readhomeuser_1);
 						}
 					}
@@ -131,13 +129,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 					if (isAdd) {
 						//自定义Toast
 						View toastRoot = getLayoutInflater().inflate(R.layout.my_prompt_toast, null);
-						Toast toast=new Toast(getApplicationContext());
-						toast.setGravity(Gravity.TOP, 0, toastHeight);
-						toast.setView(toastRoot);
-						toast.setDuration(100);
-						TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
-						tv.setText("已经加入过该小组");
-						toast.show();
+						ToastUtils.ShowMsg(getApplicationContext(), "已经加入过该小组", toastHeight, toastRoot);
 					} else {
 						FindSuccess();
 					}
@@ -154,13 +146,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 				RequestCodeActivity.this.startActivity(intent);
 				//自定义Toast
 				View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
-				Toast toast=new Toast(getApplicationContext());
-				toast.setGravity(Gravity.TOP, 0, toastHeight);
-				toast.setView(toastRoot);
-				toast.setDuration(100);
-				TextView tv=(TextView)toastRoot.findViewById(R.id.TextViewInfo);
-				tv.setText("找到小组");
-				toast.show();
+				ToastUtils.ShowMsg(getApplicationContext(), "找到小组", toastHeight, toastRoot);
 			}
 
 			@Override
@@ -177,7 +163,7 @@ public class RequestCodeActivity extends Activity implements OnClickListener{
 			@Override
 			public void startActivity() {
 				isAdd=false;
-				sD_pk_user = SdPkUser.getsD_pk_user();
+				init_pk_user = InitPkUser.InitPkUser();
 				initInterface();
 				String code=SdPkUser.getCode;
 				Group_Code group_Code = new Group_Code();

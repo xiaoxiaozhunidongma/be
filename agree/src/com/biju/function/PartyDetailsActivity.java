@@ -9,16 +9,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.view.View.OnClickListener;
+import android.view.Window;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
-import android.view.Window;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Group;
@@ -37,9 +35,10 @@ import com.BJ.javabean.ReturnData;
 import com.BJ.javabean.User;
 import com.BJ.javabean.UserAllParty;
 import com.BJ.utils.ImageLoaderUtils;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.RefreshActivity;
-import com.BJ.utils.SdPkUser;
+import com.BJ.utils.ToastUtils;
 import com.BJ.utils.Weeks;
 import com.biju.IConstant;
 import com.biju.Interface;
@@ -64,7 +63,6 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 	private Integer pk_party_user;
 	private UserAllParty allParty;
 	private boolean userAll;
-	private Integer sD_pk_user;
 
 	private TextView mPartyDetailsPartyAddress;
 	private TextView mPartyDetailsPartyName;
@@ -96,6 +94,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 	private ImageView mPartyDetailsPartyGraphicImage;
 	private RelativeLayout mPartyDetailsBackground;
 	public static GetPartyDetailsBackground partyDetailsBackground;
+	private Integer init_pk_user;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -105,7 +104,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 		// 加入list中
 		RefreshActivity.activList_1.add(PartyDetailsActivity.this);
 		// 获取sd卡中的sD_pk_user
-		sD_pk_user = SdPkUser.getsD_pk_user();
+		init_pk_user = InitPkUser.InitPkUser();
 		initUI();
 		initInterface();
 		initOneParty();
@@ -147,7 +146,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 				party_user.setRelationship(4);
 				party_user.setStatus(1);
 				party_user.setFk_party(pk_party);
-				party_user.setFk_user(sD_pk_user);
+				party_user.setFk_user(init_pk_user);
 				readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 				Toast();
 			}
@@ -166,7 +165,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 				party_user.setRelationship(4);
 				party_user.setStatus(1);
 				party_user.setFk_party(pk_party);
-				party_user.setFk_user(sD_pk_user);
+				party_user.setFk_user(init_pk_user);
 				readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 				Toast();
 			}
@@ -247,7 +246,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 						}
 						// 查找当前用户的参与信息
 						Integer pk_user = relation.getPk_user();
-						if (String.valueOf(pk_user).equals(String.valueOf(sD_pk_user))) {
+						if (String.valueOf(pk_user).equals(String.valueOf(init_pk_user))) {
 							current_relationship = relationList.get(i).getRelationship();
 							if (current_relationship == 4) {
 								mPartyDetails_apply.setText("已参与");
@@ -611,7 +610,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 										party_user.setRelationship(0);
 										party_user.setStatus(1);
 										party_user.setFk_party(pk_party);
-										party_user.setFk_user(sD_pk_user);
+										party_user.setFk_user(init_pk_user);
 										readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 									}
 								}).show();
@@ -623,7 +622,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 				party_user.setRelationship(4);
 				party_user.setStatus(1);
 				party_user.setFk_party(pk_party);
-				party_user.setFk_user(sD_pk_user);
+				party_user.setFk_user(init_pk_user);
 				readpartyInterface.updateUserJoinMsg(PartyDetailsActivity.this,party_user);
 				Toast();
 			} else if (3 == mPay_type) {
@@ -651,13 +650,7 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 	private void Toast() {
 		// 自定义Toast
 		View toastRoot = getLayoutInflater().inflate(R.layout.my_toast, null);
-		Toast toast = new Toast(getApplicationContext());
-		toast.setGravity(Gravity.CENTER, 0, 100);
-		toast.setView(toastRoot);
-		toast.setDuration(100);
-		TextView tv = (TextView) toastRoot.findViewById(R.id.TextViewInfo);
-		tv.setText("报名成功");
-		toast.show();
+		ToastUtils.ShowMsgCENTER(getApplicationContext(), "报名成功", 100, toastRoot, 100);
 	}
 
 	private void PartyDetails_more() {

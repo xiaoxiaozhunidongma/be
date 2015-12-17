@@ -449,7 +449,8 @@
                 android:layout_height="44.0dp"
                 android:layout_below="@+id/Add_New_Party_end_time_layout"
                 android:layout_centerHorizontal="true"
-                android:background="#ffffff" >
+                android:background="#ffffff" 
+                >
 
                 <TextView
                     android:id="@+id/Add_New_Party_registration_deadline_prompt"
