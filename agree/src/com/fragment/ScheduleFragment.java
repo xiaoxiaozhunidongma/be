@@ -285,7 +285,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					holder.times.setTextColor(holder.times.getResources().getColor(R.color.party_time_background));
 					holder.Party_item_redprompt.setVisibility(View.VISIBLE);
 				} else if(ralationship == 0){
-					holder.Party_item_redprompt.setVisibility(View.GONE);
+					holder.Party_item_redprompt.setVisibility(View.VISIBLE);
 					holder.Party_item_background.setBackgroundResource(R.drawable.white);//如果没有参与聚会则背景为白色
 					holder.name.setTextColor(holder.name.getResources().getColor(R.drawable.Party_notpartake_nickname_color));//未参与后名称颜色深灰
 					holder.address.setTextColor(holder.address.getResources().getColor(R.drawable.Party_notpartake_address_color));//未参与后地址颜色浅灰

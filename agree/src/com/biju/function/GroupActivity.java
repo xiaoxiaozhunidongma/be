@@ -107,6 +107,7 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	public static GetClickOK clickOK;
 	
 	private Integer init_pk_user;
+	private List<Group_ReadAllUser> Group_ReadAllUserList=new ArrayList<Group_ReadAllUser>();
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -345,12 +346,11 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 
 	private void selectDB() {
 		
-	List<Group_ReadAllUser> Group_ReadAllUserList = new Select().from(Group_ReadAllUser.class).execute();
+	Group_ReadAllUserList = new Select().from(Group_ReadAllUser.class).execute();
 	FromAvaUrlMap.clear();
 	for (int i = 0; i < Group_ReadAllUserList.size(); i++) {
 		Group_ReadAllUser user = Group_ReadAllUserList.get(i);
-		String avatar_path = beginStr + user.getAvatar_path()
-				+ endStr + "mini-avatar";
+		String avatar_path = beginStr + user.getAvatar_path()+ endStr + "mini-avatar";
 		FromAvaUrlMap.put(user.getFk_user(), avatar_path);
 	}}
 

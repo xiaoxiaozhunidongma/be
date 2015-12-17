@@ -197,7 +197,6 @@ public class MainActivity extends FragmentActivity {
 		// 有对小组进行修改过后传false
 		SdPkUser.setRefreshTeam(false);
 		SdPkUser.setExit(false);
-		// 新建完日程后的
 
 		// 欢迎界面
 		SharedPreferences Welcome_sp = getSharedPreferences("WelCome", 0);
