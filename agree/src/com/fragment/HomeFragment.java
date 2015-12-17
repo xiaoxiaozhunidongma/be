@@ -68,6 +68,7 @@ import com.avos.avoscloud.im.v2.callback.AVIMClientCallback;
 import com.avos.avoscloud.im.v2.callback.AVIMConversationCallback;
 import com.biju.IConstant;
 import com.biju.Interface;
+import com.biju.Interface.GroupChatNotifyListenner;
 import com.biju.Interface.readAllPerRelationListenner;
 import com.biju.Interface.readUserGroupMsgListenner;
 import com.biju.Interface.readUserListenner;
@@ -175,7 +176,22 @@ public class HomeFragment extends Fragment implements OnClickListener,
 		return mLayout;
 	}
 
-	// 获取屏幕宽高
+	private void initGroupChatListenner() {
+		Interface GroupChatInter = Interface.getInstance();
+		GroupChatInter.setPostListener(new GroupChatNotifyListenner() {
+			
+			@Override
+			public void success(String A) {
+				Log.e("HomeFragment", "群聊通知返回："+A);
+			}
+			
+			@Override
+			public void defail(Object B) {
+			}
+		});
+	}
+
+	//获取屏幕宽高
 	private void DisplayMetrics() {
 		com.BJ.utils.DisplayMetrics.DisplayMetrics(getActivity());
 		int width = com.BJ.utils.DisplayMetrics.Width();

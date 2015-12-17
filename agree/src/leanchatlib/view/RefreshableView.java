@@ -136,8 +136,8 @@ public class RefreshableView extends LinearLayout implements View.OnTouchListene
         if (top == hideHeaderTop) {
           break;
         }
-        int time = 10;
-        sleep(time);
+//        int time = 10;
+//        sleep(time);
       }
       return null;
     }
@@ -184,8 +184,8 @@ public class RefreshableView extends LinearLayout implements View.OnTouchListene
         if (top == 0) {
           break;
         }
-        int time = 10;
-        sleep(time);
+//        int time = 10;
+//        sleep(time);
       }
       if (refreshListener != null) {
         refreshListener.onRefresh();
@@ -205,13 +205,13 @@ public class RefreshableView extends LinearLayout implements View.OnTouchListene
     status = IDLE;
   }
 
-  private void sleep(int time) {
-    try {
-      Thread.sleep(time);
-    } catch (InterruptedException e) {
-      e.printStackTrace();
-    }
-  }
+//  private void sleep(int time) {
+//    try {
+//      Thread.sleep(time);
+//    } catch (InterruptedException e) {
+//      e.printStackTrace();
+//    }
+//  }
 
   private void updateHeaderView() {
     if (lastStatus == status) {

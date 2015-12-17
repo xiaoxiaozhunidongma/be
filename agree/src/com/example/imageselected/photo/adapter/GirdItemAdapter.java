@@ -130,7 +130,7 @@ public class GirdItemAdapter extends BaseAdapter{
 			});
 			break;
 		case TYPE_2:
-			holder.id_item_select.setBackgroundResource(R.drawable.picture_unselected);
+			holder.id_item_select.setBackgroundResource(R.drawable.iconfont_kongxinyuan);
 			holder.id_item_image.setBackgroundResource(R.drawable.pictures_no);
 			ImageLoader.getInstance(3,Type.LIFO).loadImage(mDirPath + "/" + mDatas.get(position), holder.id_item_image);
 			holder.id_item_image.setColorFilter(null);
@@ -140,10 +140,10 @@ public class GirdItemAdapter extends BaseAdapter{
 			 * 已经选择过的图片，显示出选择过的效果
 			 */
 			if (mSelectedImage.contains(mDirPath + "/" + mDatas.get(position))){
-				holder.id_item_select.setImageResource(R.drawable.pictures_selected);
+				holder.id_item_select.setImageResource(R.drawable.iconfont_xuanzedagou);
 				holder.id_item_image.setColorFilter(Color.parseColor("#77000000"));
 			}else{
-				holder.id_item_select.setImageResource(R.drawable.picture_unselected);
+				holder.id_item_select.setImageResource(R.drawable.iconfont_kongxinyuan);
 				holder.id_item_image.setColorFilter(Color.parseColor("#00000000"));
 			}
 			break;
@@ -165,7 +165,7 @@ public class GirdItemAdapter extends BaseAdapter{
 			// 已经选择过该图片
 			if (mSelectedImage.contains(mDirPath + "/" + mDatas.get(position))){
 				mSelectedImage.remove(mDirPath + "/" + mDatas.get(position));
-				holder.id_item_select.setImageResource(R.drawable.picture_unselected);
+				holder.id_item_select.setImageResource(R.drawable.iconfont_kongxinyuan);
 				holder.id_item_image.setColorFilter(null);
 			} else{// 未选择该图片
 				switch (selectType) {
@@ -188,7 +188,7 @@ public class GirdItemAdapter extends BaseAdapter{
 					break;
 				}
 				mSelectedImage.add(mDirPath + "/" + mDatas.get(position));
-				holder.id_item_select.setImageResource(R.drawable.pictures_selected);
+				holder.id_item_select.setImageResource(R.drawable.iconfont_xuanzedagou);
 				holder.id_item_image.setColorFilter(Color.parseColor("#77000000"));
 			}
 			onPhotoSelectedListener.photoClick(mSelectedImage);

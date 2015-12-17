@@ -7,12 +7,18 @@ import leanchatlib.controller.ChatManager;
 import leanchatlib.controller.ChatManagerAdapter;
 import leanchatlib.model.UserInfo;
 import android.app.Application;
+import android.app.Notification;
+import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import cn.jpush.android.api.JPushInterface;
 
+import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.photo.Res;
 import com.activeandroid.ActiveAndroid;
+import com.activeandroid.query.Select;
 import com.alibaba.sdk.android.oss.OSSService;
 import com.alibaba.sdk.android.oss.OSSServiceProvider;
 import com.alibaba.sdk.android.oss.model.AccessControlList;
@@ -21,10 +27,20 @@ import com.alibaba.sdk.android.oss.model.ClientConfiguration;
 import com.alibaba.sdk.android.oss.model.TokenGenerator;
 import com.alibaba.sdk.android.oss.storage.OSSBucket;
 import com.alibaba.sdk.android.oss.util.OSSToolKit;
+import com.avos.avoscloud.AVException;
+import com.avos.avoscloud.AVInstallation;
 import com.avos.avoscloud.AVOSCloud;
+import com.avos.avoscloud.PushService;
+import com.avos.avoscloud.SaveCallback;
 import com.avos.avoscloud.im.v2.AVIMConversation;
+import com.avos.avoscloud.im.v2.AVIMReservedMessageType;
 import com.avos.avoscloud.im.v2.AVIMTypedMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMImageMessage;
+import com.avos.avoscloud.im.v2.messages.AVIMTextMessage;
 import com.baidu.mapapi.SDKInitializer;
+import com.biju.MainActivity;
+import com.biju.R;
+import com.biju.login.WelComeActivity;
 import com.easemob.EMCallBack;
 import com.example.takephoto.DemoHXSDKHelper;
 import com.nostra13.universalimageloader.cache.disc.naming.HashCodeFileNameGenerator;
@@ -98,10 +114,54 @@ public class MyApplication extends Application {
 		      @Override
 		      public void shouldShowNotification(Context context, String selfId, AVIMConversation conversation, AVIMTypedMessage message) {
 //		    	  Toast.makeText(context, "收到了一条消息但并未打开相应的对话。可以触发系统通知。", Toast.LENGTH_LONG).show();
+//		    		List<Group_ReadAllUser> Group_ReadAllUserList = new Select().from(Group_ReadAllUser.class).execute();
+//		    	  String from = message.getFrom();
+//		    	  String FromNickname="您的联系人";
+//		    	  for (int i = 0; i < Group_ReadAllUserList.size(); i++) {
+//		    		  Group_ReadAllUser group_ReadAllUser = Group_ReadAllUserList.get(i);
+//		    		  Integer pk_user = group_ReadAllUser.getPk_user();
+//		    		  if(String.valueOf(pk_user).equals(from)){
+//		    			   FromNickname = group_ReadAllUser.getNickname();                                         
+//		    		  }
+//		    	  }
+//		    	  String content = "收到的内容";
+//		    	    AVIMReservedMessageType type = AVIMReservedMessageType.getAVIMReservedMessageType(message.getMessageType());
+//		    	    switch (type) {
+//		    	      case TextMessageType:
+//		    	        AVIMTextMessage textMsg = (AVIMTextMessage) message;
+//		    	        content=textMsg.getText();
+//		    	        break;
+//		    	      case ImageMessageType:
+//		    	        AVIMImageMessage imageMsg = (AVIMImageMessage) message;
+//		    	        content="图片";
+//		    	        break;
+//		    	      case AudioMessageType:
+//		    	        break;
+//		    	      case LocationMessageType:
+//		    	        break;
+//		    	      default:
+//		    	    	    	 content="你收到了未知类型的消息";
+////		    	        contentLayout.requestLayout();
+//		    	        break;
+//		    	    }                                                  
+//		    	  
+//		    	    // 1、先得到通知管理器对象
+//		    	   NotificationManager mNotify = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+//				// 3、通知主体对象
+//		    	  Notification notification = new Notification(R.drawable.about_us, FromNickname+":"+content, System.currentTimeMillis());
+//		    	  Object attribute = conversation.getAttribute("type");
+//				Intent intent = new Intent(context, MainActivity.class);
+//		    	  PendingIntent contentIntent = PendingIntent.getActivity(context, 0, intent , Notification.FLAG_AUTO_CANCEL);
+//		    	    // 4、设置下拉后显示
+//		    	  notification.setLatestEventInfo(context, "必聚", "您有新的消息", contentIntent );
+//		    	    // 2、发送通知
+//		    	   mNotify.notify(888, notification);
+		    	   
 		      }
 		    });
-		
-		// 初始化数据库
+		    
+		    
+ 		// 初始化数据库
 		ActiveAndroid.initialize(this);
 
 		Res.init(this);// 初始化RES
