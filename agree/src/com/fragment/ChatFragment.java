@@ -68,6 +68,7 @@ import android.widget.Toast;
 import cn.pedant.SweetAlert.SweetAlertDialog;
 
 import com.BJ.javabean.Chat;
+import com.BJ.utils.InitPkUser;
 import com.BJ.utils.SdPkUser;
 import com.avos.avoscloud.AVException;
 import com.avos.avoscloud.im.v2.AVIMConversation;
@@ -159,7 +160,7 @@ public class ChatFragment extends Fragment implements OnClickListener,ChatActivi
 		      addMessageAndScroll(message);
 		      Chat chat=new Chat();
 		      chat.setFk_group(GroupActivity.pk_group);
-		      chat.setFk_user(SdPkUser.getsD_pk_user());
+		      chat.setFk_user(InitPkUser.InitPkUser());
 			GroupChatInter.GroupChatNotify(getActivity(), chat);
 		    }
 		  }
