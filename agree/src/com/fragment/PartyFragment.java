@@ -82,7 +82,7 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 					android.R.color.holo_blue_bright,
 					android.R.color.holo_orange_light);
 			
-			initReadAllParty();
+			initReadAllParty();//刷新回调的接口
 		}
 		return mLayout;
 	}
@@ -97,19 +97,6 @@ public class PartyFragment extends Fragment implements OnClickListener,SwipeRefr
 			
 		};
 		this.getReadAllParty=getReadAllParty;
-	}
-
-	@Override
-	public void onResume() {
-		SharedPreferences refresh_sp=getActivity().getSharedPreferences(IConstant.AddRefresh, 0);
-		boolean isaddrefresh=refresh_sp.getBoolean(IConstant.IsAddRefresh, false);
-		Log.e("PartyFragment", "进入了onResume========"+isaddrefresh);
-		if(isaddrefresh)
-		{
-			initParty();
-			adapter.notifyDataSetChanged();
-		}
-		super.onResume();
 	}
 	
 	private void initInterface() {

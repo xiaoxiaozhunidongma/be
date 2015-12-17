@@ -6,9 +6,11 @@ import com.activeandroid.Model;
 import com.activeandroid.annotation.Column;
 import com.activeandroid.annotation.Table;
 
-@Table(name = "jpush")
-public class JPush extends Model implements Serializable{
-	//所有信息的数据库的表
+@Table(name = "jpushnosee")
+public class JPushNoSee extends Model implements Serializable{
+	//未读过的信息的数据库的表
+	public JPushNoSee(){}
+	
 	@Column
 	private Integer pk_group;
 	@Column
@@ -35,16 +37,14 @@ public class JPush extends Model implements Serializable{
 	}
 	@Override
 	public String toString() {
-		return "JPush [pk_group=" + pk_group + ", type_tag=" + type_tag
+		return "JPushNoSee [pk_group=" + pk_group + ", type_tag=" + type_tag
 				+ ", party_update=" + party_update + "]";
 	}
-	public JPush(Integer pk_group, Integer type_tag, Integer party_update) {
+	public JPushNoSee(Integer pk_group, Integer type_tag, Integer party_update) {
 		super();
 		this.pk_group = pk_group;
 		this.type_tag = type_tag;
 		this.party_update = party_update;
-	}
-	public JPush() {
 	}
 	
 	

@@ -27,6 +27,7 @@ import android.widget.TextView;
 import cn.jpush.android.api.JPushInterface;
 
 import com.BJ.javabean.JPush;
+import com.BJ.javabean.JPushNoSee;
 import com.BJ.javabean.JPushTabNumber;
 import com.BJ.utils.InitHead;
 import com.BJ.utils.InitPkUser;
@@ -58,12 +59,9 @@ public class MainActivity extends FragmentActivity {
 	private Bitmap limitLongScaleBitmap;
 	private Bitmap centerSquareScaleBitmap;
 	private Integer init_pk_user;
-	private List<JPush>  JpushList1=new ArrayList<JPush>();
-	private List<JPushTabNumber>  JPushTabNumberList=new ArrayList<JPushTabNumber>();
 	private RelativeLayout tab_prompt;
 	private TextView tab_prompt_text;
 	private MyReceiver receiver;
-	private boolean isTabNO=false;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
@@ -99,6 +97,7 @@ public class MainActivity extends FragmentActivity {
 			isJpush = intent.getBooleanExtra("JPushTabNumber", false);
 			if(isJpush){
 				oneNumber = intent.getIntExtra("OneNumber", 0);
+				Log.e("MainActivity", "获取传送过来的oneNumber======="+oneNumber);
 				//设置显示条数
 				if(oneNumber>0){
 					tab_prompt.setVisibility(View.VISIBLE);
@@ -108,8 +107,6 @@ public class MainActivity extends FragmentActivity {
 					Log.e("MainActivity", "进入小于011111111==========");
 					tab_prompt.setVisibility(View.GONE);
 				}
-			}else {
-				initDB();
 			}
 		}
 		
@@ -155,9 +152,6 @@ public class MainActivity extends FragmentActivity {
 		// tab_text.setTextSize(15);
 		tab_image.setImageResource(tab_imagelist[i]);
 		mTabhost.addTab(tabSpec.setIndicator(view), cls, null);
-		if(i==1){
-			initDBTabnumber();
-		}
 		
 		//tabhost的监听滑动的监听
 		mTabhost.setOnTabChangedListener(new OnTabChangeListener() {
@@ -167,75 +161,11 @@ public class MainActivity extends FragmentActivity {
 				int TabId=Integer.valueOf(tabId);
 				if(2==TabId){
 					tab_prompt.setVisibility(View.GONE);
-					new Delete().from(JPushTabNumber.class).execute();
 				}
 			}
 		});
 	}
 
-	//刚进入界面时查表
-	private void initDBTabnumber() {
-		JPushTabNumberList.clear();
-		//再查新表
-		JPushTabNumberList=new Select().from(JPushTabNumber.class).execute();
-		Log.e("MainActivity", "JPushTabNumberList的长度=========="+JPushTabNumberList.size());
-		//设置显示条数
-		if(JPushTabNumberList.size()>0){
-			tab_prompt.setVisibility(View.VISIBLE);
-			tab_prompt_text.setText(""+JPushTabNumberList.size());
-			Log.e("MainActivity", "进入大于0==========");
-		}else {
-			Log.e("MainActivity", "进入小于0==========");
-			tab_prompt.setVisibility(View.GONE);
-		}
-	}
-	
-	@Override
-	protected void onRestart() {
-		super.onRestart();
-		initDBTabnumber();
-		Log.e("MainActivity", "进入onRestart()==========");
-	}
-
-	private void initDB() {
-		JpushList1.clear();
-		JPushTabNumberList.clear();
-		//先删除表中的数据再重新加入
-		new Delete().from(JPushTabNumber.class).execute();
-		
-		// 查表
-		JpushList1 = new Select().from(JPush.class).execute();
-		
-		for (int i = 0; i < JpushList1.size(); i++) {
-			JPush jPush=JpushList1.get(i);
-			String pk_group=jPush.getPk_group();
-			String type_tag=jPush.getType_tag();
-			JPushTabNumber jPushTabNumber=new JPushTabNumber(pk_group, type_tag);
-			jPushTabNumber.save();
-		}
-		
-		//再查新表
-		JPushTabNumberList=new Select().from(JPushTabNumber.class).execute();
-		//设置显示条数
-		if(JPushTabNumberList.size()>0){
-			tab_prompt.setVisibility(View.VISIBLE);
-			tab_prompt_text.setText(""+JPushTabNumberList.size());
-		}else {
-			tab_prompt.setVisibility(View.GONE);
-		}
-		Log.e("MainActivity", "在查表时得到的JpushList1====="+JpushList1.size());
-		Log.e("MainActivity", "在查表时得到的JPushTabNumberList====="+JPushTabNumberList.size());
-	}
-	
-	@Override
-	protected void onStart() {
-		super.onStart();
-		// 关闭之前的界面
-		for (int i = 0; i < RefreshActivity.activList_3.size(); i++) {
-			RefreshActivity.activList_3.get(i).finish();
-		}
-		Log.e("MainActivity", "进入==onStart" );
-	}
 
 	@Override
 	protected void onStop() {
@@ -268,17 +198,16 @@ public class MainActivity extends FragmentActivity {
 		SdPkUser.setRefreshTeam(false);
 		SdPkUser.setExit(false);
 		// 新建完日程后的
-		SharedPreferences refresh_sp = getSharedPreferences(
-				IConstant.AddRefresh, 0);
-		Editor editor2 = refresh_sp.edit();
-		editor2.putBoolean(IConstant.IsAddRefresh, false);
-		editor2.commit();
 
 		// 欢迎界面
 		SharedPreferences Welcome_sp = getSharedPreferences("WelCome", 0);
 		Editor Welcome_editor = Welcome_sp.edit();
 		Welcome_editor.putBoolean("welcome", true);
 		Welcome_editor.commit();
+		
+//		new Delete().from(JPushNoSee.class).execute();
+//		new Delete().from(JPushTabNumber.class).execute();
+//		new Delete().from(JPush.class).execute();
 	}
 
 	@Override

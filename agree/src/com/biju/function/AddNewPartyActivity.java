@@ -50,6 +50,8 @@ import com.biju.pay.CostActivity;
 import com.biju.pay.GraphicDetailsActivity;
 import com.biju.pay.LimitNumberActivity;
 import com.biju.wechatshare.WEChatShaerActivity;
+import com.fragment.PartyFragment;
+import com.fragment.ScheduleFragment;
 import com.github.volley_examples.utils.GsonUtils;
 
 public class AddNewPartyActivity extends Activity implements OnClickListener {
@@ -283,10 +285,8 @@ public class AddNewPartyActivity extends Activity implements OnClickListener {
 				PartyOkback partyOkback = GsonUtils.parseJson(A,PartyOkback.class);
 				Integer status = partyOkback.getStatusMsg();
 				if (status == 1) {
-					SharedPreferences refresh_sp=getSharedPreferences(IConstant.AddRefresh, 0);
-					Editor editor2=refresh_sp.edit();
-					editor2.putBoolean(IConstant.IsAddRefresh, true);
-					editor2.commit();
+					ScheduleFragment.getRefresh.Refresh();//对ScheduleFragment进行刷新
+					PartyFragment.getReadAllParty.ReadAllParty();//对PartyFragment进行刷新
 					Intent intent=new Intent(AddNewPartyActivity.this, WEChatShaerActivity.class);
 					intent.putExtra("Source", source);
 					intent.putExtra("Party_name", party_name);

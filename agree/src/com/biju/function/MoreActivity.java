@@ -39,6 +39,7 @@ import com.biju.Interface.userCanclePartyListenner;
 import com.biju.R;
 import com.biju.wechatshare.Util;
 import com.fragment.PartyFragment;
+import com.fragment.ScheduleFragment;
 import com.github.volley_examples.utils.GsonUtils;
 import com.tencent.mm.sdk.modelmsg.SendMessageToWX;
 import com.tencent.mm.sdk.modelmsg.WXMediaMessage;
@@ -121,10 +122,7 @@ public class MoreActivity extends Activity implements OnClickListener {
 						}
 						finish();
 					} else {
-						SharedPreferences more_sp = getSharedPreferences(IConstant.MoreRefresh, 0);
-						Editor editor = more_sp.edit();
-						editor.putBoolean(IConstant.Morecancle, true);
-						editor.commit();
+						ScheduleFragment.getRefresh.Refresh();//对ScheduleFragment进行刷新
 						Intent intent = new Intent(MoreActivity.this,GroupActivity.class);
 						startActivity(intent);
 					}

@@ -61,6 +61,7 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 	private RelativeLayout mSchedule_swipe_refresh_layout;
 	private RelativeLayout mSchedule_prompt_layout;
 	private Integer init_pk_user;
+	public static GetRefresh getRefresh;
 
 	public ScheduleFragment() {
 		// Required empty public constructor
@@ -86,10 +87,24 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 					android.R.color.holo_blue_bright,
 					android.R.color.holo_orange_light);
 			Log.e("ScheduleFragment", "进入了onStart()=========");
+			
+			initRefresh();//对界面进行刷新的回调接口
 		}
 		return mLayout;
 	}
 	
+	private void initRefresh() {
+		GetRefresh getRefresh=new GetRefresh(){
+
+			@Override
+			public void Refresh() {
+				initreadUserGroupParty();
+			}
+			
+		};
+		this.getRefresh=getRefresh;
+	}
+
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -97,36 +112,6 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		parent.removeView(mLayout);
 	}
 	
-	@Override
-	public void onResume() {
-		Log.e("ScheduleFragment", "进入了onResume() =========");
-		SharedPreferences PartyDetails_sp = getActivity().getSharedPreferences(IConstant.IsPartyDetails_, 0);
-		boolean PartyDetails=PartyDetails_sp.getBoolean(IConstant.PartyDetails, false);
-		if(PartyDetails)
-		{
-			initreadUserGroupParty();
-			adapter.notifyDataSetChanged();
-		}
-		
-		SharedPreferences refresh_sp=getActivity().getSharedPreferences(IConstant.AddRefresh, 0);
-		boolean isaddrefresh=refresh_sp.getBoolean(IConstant.IsAddRefresh, false);
-		if(isaddrefresh)
-		{
-			initreadUserGroupParty();
-			adapter.notifyDataSetChanged();
-			Log.e("ScheduleFragment", "进入了onResume() 的isaddrefresh========="+isaddrefresh);
-		}
-		
-		SharedPreferences more_sp=getActivity().getSharedPreferences(IConstant.MoreRefresh, 0);
-		boolean iscancle=more_sp.getBoolean(IConstant.Morecancle, false);
-		if(iscancle)
-		{
-			initreadUserGroupParty();
-			adapter.notifyDataSetChanged();
-		}
-		
-		super.onResume();
-	}
 	private void initUI() {
 		mLayout.findViewById(R.id.Schedule_prompt).setOnClickListener(this);//点击进行创建新活动
 		mSchedule_prompt_layout = (RelativeLayout) mLayout.findViewById(R.id.Schedule_prompt_layout);//没有聚会时候进行提示
@@ -479,5 +464,9 @@ public class ScheduleFragment extends Fragment implements SwipeRefreshLayout.OnR
 		intent.putExtra(IConstant.Fk_group, GroupActivity.getPk_group());
 		intent.putExtra(IConstant.IsSchedule, true);
 		startActivity(intent);
+	}
+	
+	public interface GetRefresh{
+		void Refresh();
 	}
 }

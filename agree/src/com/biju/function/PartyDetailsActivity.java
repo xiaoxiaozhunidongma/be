@@ -50,6 +50,8 @@ import com.biju.Interface.updateUserJoinMsgListenner;
 import com.biju.R;
 import com.biju.pay.GraphicPreviewActivity;
 import com.biju.pay.PayBaseActivity;
+import com.fragment.PartyFragment;
+import com.fragment.ScheduleFragment;
 import com.github.volley_examples.utils.GsonUtils;
 import com.google.gson.reflect.TypeToken;
 
@@ -673,13 +675,11 @@ public class PartyDetailsActivity extends Activity implements OnClickListener {
 
 	private void PartyDetails_back() {
 		if (userAll) {
+			PartyFragment.getReadAllParty.ReadAllParty();//调用接口进行刷新
 			finish();
 		} else {
 			finish();
-			SharedPreferences PartyDetails_sp = getSharedPreferences(IConstant.IsPartyDetails_, 0);
-			Editor editor = PartyDetails_sp.edit();
-			editor.putBoolean(IConstant.PartyDetails, true);
-			editor.commit();
+			ScheduleFragment.getRefresh.Refresh();//对ScheduleFragment进行刷新
 		}
 	}
 

@@ -79,8 +79,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 	}
 
 	private boolean photo;
-	private boolean partyDetails;
-
 	private GestureDetector mGestureDetector;
 	private int verticalMinDistance = 180;
 	private int minVelocity = 0;
@@ -124,9 +122,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		pk_group = intent.getIntExtra(IConstant.HomePk_group, pk_group);
 		name = intent.getStringExtra(IConstant.HomeGroupName);
 		initUI();
-
-		SharedPreferences PartyDetails_sp = getSharedPreferences(IConstant.IsPartyDetails_, 0);
-		partyDetails = PartyDetails_sp.getBoolean(IConstant.PartyDetails, false);
 
 		initInterface();// 监听
 		selectDB();//oncreate时候就查表一次，后面还要查表
@@ -367,15 +362,6 @@ public class GroupActivity extends FragmentActivity implements OnClickListener {
 		editor.putBoolean("Photo", false);
 		editor.commit();
 
-		SharedPreferences PartyDetails_sp = getSharedPreferences(IConstant.IsPartyDetails_, 0);
-		Editor PartyDetails_editor = PartyDetails_sp.edit();
-		PartyDetails_editor.putBoolean(IConstant.PartyDetails, false);
-		PartyDetails_editor.commit();
-
-		SharedPreferences refresh_sp = getSharedPreferences(IConstant.AddRefresh, 0);
-		Editor editor2 = refresh_sp.edit();
-		editor2.putBoolean(IConstant.IsAddRefresh, false);
-		editor2.commit();
 		//退出当前小组后，在Sliding中的点击效果也要取消掉,而且重新读取小组中的所有用户
 		SharedPreferences Sliding_sp=getSharedPreferences(IConstant.SlidingClick, 0);
 		Editor Sliding_editor=Sliding_sp.edit();

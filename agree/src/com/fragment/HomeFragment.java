@@ -3,10 +3,11 @@ package com.fragment;
 import java.util.ArrayList;
 import java.util.List;
 
+import leanchatlib.controller.ChatManager;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import leanchatlib.controller.ChatManager;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
@@ -44,8 +45,8 @@ import com.BJ.javabean.GroupHome;
 import com.BJ.javabean.Group_ReadAllUser;
 import com.BJ.javabean.Group_ReadAllUserback;
 import com.BJ.javabean.Groupback;
-import com.BJ.javabean.ImageText;
 import com.BJ.javabean.JPush;
+import com.BJ.javabean.JPushNoSee;
 import com.BJ.javabean.JPushTabNumber;
 import com.BJ.javabean.Loginback;
 import com.BJ.javabean.User;
@@ -54,12 +55,10 @@ import com.BJ.utils.ExampleUtil;
 import com.BJ.utils.FooterView;
 import com.BJ.utils.Ifwifi;
 import com.BJ.utils.InitPkUser;
-import com.BJ.utils.JPReceive;
 import com.BJ.utils.PreferenceUtils;
 import com.BJ.utils.SdPkUser;
 import com.BJ.utils.ToastUtils;
 import com.BJ.utils.homeImageLoaderUtils;
-import com.activeandroid.Model;
 import com.activeandroid.query.Delete;
 import com.activeandroid.query.Select;
 import com.avos.avoscloud.im.v2.AVIMClient;
@@ -86,7 +85,8 @@ import com.nostra13.universalimageloader.core.listener.PauseOnScrollListener;
  *
  */
 @TargetApi(19)
-public class HomeFragment extends Fragment implements OnClickListener,SwipeRefreshLayout.OnRefreshListener {
+public class HomeFragment extends Fragment implements OnClickListener,
+		SwipeRefreshLayout.OnRefreshListener {
 
 	private View mLayout;
 	private String beginStr = "http://picstyle.beagree.com/";
@@ -118,7 +118,7 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 	public static User readuser;
 	private boolean changeName;
 	private RelativeLayout mHomeNoWIFI;
-	
+
 	private MessageReceiver mMessageReceiver;
 	public static final String MESSAGE_RECEIVED_ACTION = "com.example.jpushdemo.MESSAGE_RECEIVED_ACTION";
 	public static final String KEY_TITLE = "title";
@@ -126,10 +126,12 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 	public static final String KEY_EXTRAS = "extras";
 	public static boolean isForeground = false;
 	private ImageView mHomePromptImage;
-	
-	private List<String>  JpushList=new ArrayList<String>();
-	private List<JPush>  JpushList1=new ArrayList<JPush>();
-	private List<JPushTabNumber>  JPushTabNumberList=new ArrayList<JPushTabNumber>();
+
+	private List<Integer> JpushList = new ArrayList<Integer>();
+	private List<JPush> JpushList1 = new ArrayList<JPush>();
+	private List<JPushTabNumber> JPushTabNumberList = new ArrayList<JPushTabNumber>();
+	private List<JPushNoSee> JPushNoSeeList = new ArrayList<JPushNoSee>();
+	private Integer party_update_number = 0;
 
 	public HomeFragment() {
 	}
@@ -152,46 +154,34 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 			swipe_refresh_1.setOnRefreshListener(this);
 
 			// 顶部刷新的样式
-			swipeLayout.setColorSchemeResources(android.R.color.holo_red_light,android.R.color.holo_green_light,
-					android.R.color.holo_blue_bright,android.R.color.holo_orange_light);
-			swipe_refresh_1.setColorSchemeResources(android.R.color.holo_red_light,android.R.color.holo_green_light,
-					android.R.color.holo_blue_bright,android.R.color.holo_orange_light);
+			swipeLayout.setColorSchemeResources(android.R.color.holo_red_light,
+					android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright,
+					android.R.color.holo_orange_light);
+			swipe_refresh_1.setColorSchemeResources(
+					android.R.color.holo_red_light,
+					android.R.color.holo_green_light,
+					android.R.color.holo_blue_bright,
+					android.R.color.holo_orange_light);
 
 			if (sdcard) {
 				init_pk_user = InitPkUser.InitPkUser();
-				Log.e("HomeFragment", "有封装工具类来的pk_user====="+init_pk_user);
-				ReadTeamInterface(init_pk_user);
+				Log.e("HomeFragment", "有封装工具类来的pk_user=====" + init_pk_user);
+				// ReadTeamInterface(init_pk_user);
 			}
-			initDB();
 			registerMessageReceiver();
 			Log.e("HomeFragment", "onCreateView()=======");
 		}
 		return mLayout;
 	}
 
-	private void initDB() {
-		JpushList1.clear();
-		JpushList.clear();
-		// 查表
-		JpushList1 = new Select().from(JPush.class).execute();
-		for (int i = 0; i < JpushList1.size(); i++) {
-			JPush jPush3=JpushList1.get(i);
-			String jpush_pk_group=jPush3.getPk_group();
-			Log.e("HomeFragment", "在查表时得到的jpush_pk_group====="+jpush_pk_group);
-			JpushList.add(jpush_pk_group);
-		}
-		Log.e("HomeFragment", "在查表时得到的JpushList1====="+JpushList1.size());
-		Log.e("HomeFragment", "在查表时得到的JpushList====="+JpushList.size());
-		adapter.notifyDataSetChanged();
-	}
-
-	//获取屏幕宽高
+	// 获取屏幕宽高
 	private void DisplayMetrics() {
 		com.BJ.utils.DisplayMetrics.DisplayMetrics(getActivity());
 		int width = com.BJ.utils.DisplayMetrics.Width();
 		columnWidth = (width - 30) / 2;
 	}
-	
+
 	public void registerMessageReceiver() {
 		mMessageReceiver = new MessageReceiver();
 		IntentFilter filter = new IntentFilter();
@@ -199,62 +189,57 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 		filter.addAction(MESSAGE_RECEIVED_ACTION);
 		getActivity().registerReceiver(mMessageReceiver, filter);
 	}
-	
+
 	public class MessageReceiver extends BroadcastReceiver {
 
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			if (MESSAGE_RECEIVED_ACTION.equals(intent.getAction())) {
-              String extras = intent.getStringExtra(KEY_EXTRAS);
-              setCostomMsg(extras);
+				String extras = intent.getStringExtra(KEY_EXTRAS);
+				setCostomMsg(extras);
 			}
 		}
 	}
-	
-	private void setCostomMsg(String extras){
-		Log.e("HomeFragment", "得到的msg====="+extras);
+
+	private void setCostomMsg(String extras) {
+		Log.e("HomeFragment", "得到的msg=====" + extras);
 		JpushList1.clear();
 		JpushList.clear();
-		 if (!ExampleUtil.isEmpty(extras)) {
-				try {
-					JSONObject extraJson = new JSONObject(extras);
-					if (null != extraJson && extraJson.length() > 0) {
-						JPush jPush=GsonUtils.parseJson(extras, JPush.class);
-						String jPush_pk_group = jPush.getPk_group();
-						String jPush_type_tag = jPush.getType_tag();
-						if(2==Integer.valueOf(jPush_type_tag)){
-							//存进数据库
-							JPush jPush2=new JPush(jPush_pk_group, jPush_type_tag);
-							jPush2.save();
-							
-							// 查表
-							JpushList1 = new Select().from(JPush.class).execute();
-							for (int i = 0; i < JpushList1.size(); i++) {
-								JPush jPush3=JpushList1.get(i);
-								String jpush_pk_group=jPush3.getPk_group();
-								JpushList.add(jpush_pk_group);
+		if (!ExampleUtil.isEmpty(extras)) {
+			try {
+				JSONObject extraJson = new JSONObject(extras);
+				if (null != extraJson && extraJson.length() > 0) {
+					JPush jPush = GsonUtils.parseJson(extras, JPush.class);
+					Integer jPush_pk_group = jPush.getPk_group();
+					Integer jPush_type_tag = jPush.getType_tag();
+					if (2 == Integer.valueOf(jPush_type_tag)) {
+						// 再查新表,然后删除点击的
+						JPushTabNumberList = new Select().from(JPushTabNumber.class).execute();
+						for (int i = 0; i < JPushTabNumberList.size(); i++) {
+							JPushTabNumber jPushTabNumber = JPushTabNumberList.get(i);
+							Integer jPushTab_pk_group = jPushTabNumber.getPk_group();
+							if (String.valueOf(jPushTab_pk_group).equals(String.valueOf(jPush_pk_group))) {
+								new Delete().from(JPushTabNumber.class).where("pk_group=?", jPushTab_pk_group).execute();
 							}
-							
-							SendBroadcastReceiver(false,0);//发送广播给mainactivity
-							
-							adapter.notifyDataSetChanged();
-							Log.e("HomeFragment", "得到的jPush_pk_group====="+jPush_pk_group);
-							Log.e("HomeFragment", "得到的jPush_type_tag====="+jPush_type_tag);
-							Log.e("HomeFragment", "得到的JpushList1====="+JpushList1.size());
-							Log.e("HomeFragment", "得到的JpushList====="+JpushList.size());
 						}
-					}
-				} catch (JSONException e) {
 
-				}}
-		
+						ReadTeamInterface(init_pk_user);//重新读获取数据
+
+						adapter.notifyDataSetChanged();
+					}
+				}
+			} catch (JSONException e) {
+
+			}
+		}
+
 	}
 
 	private void SendBroadcastReceiver(boolean one, Integer party_update) {
-		Intent intent=new Intent();
+		Intent intent = new Intent();
 		intent.setAction("JPush");
 		intent.putExtra("JPushTabNumber", one);
-		if(one){
+		if (one) {
 			intent.putExtra("OneNumber", party_update);
 		}
 		getActivity().sendBroadcast(intent);
@@ -265,10 +250,9 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 		isForeground = false;
 		super.onPause();
 	}
-	
+
 	@Override
 	public void onStart() {
-		initDB();
 		Log.e("HomeFragment", "onStart()=======");
 		WIFIChange();// 判断WIFI的改变进行布局显示的改变
 		boolean exitteam = SdPkUser.RefreshTeam;
@@ -325,9 +309,14 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 		homeInterface.setPostListener(new readUserGroupMsgListenner() {
 
 			private GroupHome readhomeuser_1;
+
 			@Override
 			public void success(String A) {
 				PhoneLoginActivity.list.clear();
+				JpushList1.clear();
+				JpushList.clear();
+				new Delete().from(JPush.class).execute();// 每次读之前先把数据库删除
+
 				Groupback homeback = GsonUtils.parseJson(A, Groupback.class);
 				int homeStatusMsg = homeback.getStatusMsg();
 				if (homeStatusMsg == 1) {
@@ -337,6 +326,11 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 						for (int i = 0; i < users.size(); i++) {
 							readhomeuser_1 = users.get(i);
 							PhoneLoginActivity.list.add(readhomeuser_1);
+							Integer jPush_pk_group = readhomeuser_1.getPk_group();
+							Integer party_update = readhomeuser_1.getParty_update();
+							// 存进数据库
+							JPush jPush2 = new JPush(jPush_pk_group, 2,party_update);
+							jPush2.save();
 						}
 
 						// 赋值长度
@@ -350,6 +344,23 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 							home_gridview.setVisibility(View.VISIBLE);
 						}
 					}
+					// 查表
+					JpushList1 = new Select().from(JPush.class).execute();
+					Log.e("HomeFragment","JpushList1的长度=======" + JpushList1.size());
+					for (int i = 0; i < JpushList1.size(); i++) {
+						JPush jPush3 = JpushList1.get(i);
+						Integer jpush_pk_group = jPush3.getPk_group();
+						JpushList.add(jpush_pk_group);
+
+						Integer party_update = jPush3.getParty_update();
+						party_update_number = party_update_number+ party_update;
+						Log.e("HomeFragment", "计算得到的party_update_number======="+ party_update_number + "========" + i);
+						Log.e("HomeFragment", "每次的party_update_number======="+ jPush3.getParty_update() + "========" + i);
+					}
+					SendBroadcastReceiver(true, party_update_number);// 发送广播给mainactivity,
+					party_update_number = 0;//重新赋值为0
+					Log.e("HomeFragment", "传送过去的party_update_number======="+ party_update_number);
+
 					adapter.notifyDataSetChanged();
 				} else {
 					swipeLayout.setVisibility(View.GONE);
@@ -475,26 +486,15 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
 
 						group_name = group.getName();
-						
-						//从数据库中删除
-						for (int i = 0; i < JpushList1.size(); i++) {
-							JPush jPush=JpushList1.get(i);
-							String jPush_pk_group=jPush.getPk_group();
-							if(jPush_pk_group.equals(String.valueOf(pk_group))){
-								new Delete().from(JPush.class).where("pk_group=?", jPush_pk_group).execute();
-							}
-						}
-						
-						//再查新表,然后删除点击的
-						JPushTabNumberList=new Select().from(JPushTabNumber.class).execute();
-						for (int i = 0; i < JPushTabNumberList.size(); i++) {
-							JPushTabNumber jPushTabNumber=JPushTabNumberList.get(i);
-							String jPushTab_pk_group=jPushTabNumber.getPk_group();
-							if(jPushTab_pk_group.equals(String.valueOf(pk_group))){
-								new Delete().from(JPushTabNumber.class).where("pk_group=?", jPushTab_pk_group).execute();
-							}
-						}
-						
+
+						// 每次点击把当前的pk_group加入数据库
+						JPushTabNumber jPushTabNumber = new JPushTabNumber(pk_group, 2, 0);
+						jPushTabNumber.save();
+
+						// 看过的冲JPushNoSee数据表中删除
+						new Delete().from(JPushNoSee.class).where("pk_group=?", pk_group).execute();
+						Log.e("HomeFragment", "删除了======" + pk_group);
+
 					}
 				} else {
 					if (!(PhoneLoginActivity.list.size() == arg2)) {
@@ -507,25 +507,14 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 						homeInterface.readAllPerRelation(getActivity(),readAllPerRelation_group);
 
 						group_name = group.getName();
-						
-						//从数据库中删除
-						for (int i = 0; i < JpushList1.size(); i++) {
-							JPush jPush=JpushList1.get(i);
-							String jPush_pk_group=jPush.getPk_group();
-							if(jPush_pk_group.equals(String.valueOf(pk_group))){
-								new Delete().from(JPush.class).where("pk_group=?", jPush_pk_group).execute();
-							}
-						}
-						
-						//再查新表,然后删除点击的
-						JPushTabNumberList=new Select().from(JPushTabNumber.class).execute();
-						for (int i = 0; i < JPushTabNumberList.size(); i++) {
-							JPushTabNumber jPushTabNumber=JPushTabNumberList.get(i);
-							String jPushTab_pk_group=jPushTabNumber.getPk_group();
-							if(jPushTab_pk_group.equals(String.valueOf(pk_group))){
-								new Delete().from(JPushTabNumber.class).where("pk_group=?", jPushTab_pk_group).execute();
-							}
-						}
+
+						// 每次点击把当前的pk_group加入数据库
+						JPushTabNumber jPushTabNumber = new JPushTabNumber(pk_group, 2, 0);
+						jPushTabNumber.save();
+
+						// 看过的冲JPushNoSee数据表中删除
+						new Delete().from(JPushNoSee.class).where("pk_group=?", pk_group).execute();
+						Log.e("HomeFragment", "删除了======" + pk_group);
 					}
 				}
 			}
@@ -616,8 +605,7 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 				if (position == PhoneLoginActivity.list.size() + 1) {
 					if (footerView == null) {
 						footerView = new FooterView(parent.getContext());
-						GridView.LayoutParams pl = new GridView.LayoutParams(getDisplayWidth((getActivity())),
-								LayoutParams.WRAP_CONTENT);
+						GridView.LayoutParams pl = new GridView.LayoutParams(getDisplayWidth((getActivity())),LayoutParams.WRAP_CONTENT);
 						footerView.setLayoutParams(pl);
 						footerView.setOnClickListener(new OnClickListener() {
 
@@ -639,7 +627,7 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 			home_item_name = (TextView) inflater.findViewById(R.id.home_item_name);
 			home_item_name_layout = (RelativeLayout) inflater.findViewById(R.id.home_item_name_layout);
 			mHomePromptImage = (ImageView) inflater.findViewById(R.id.HomePromptImage);
-			
+
 			if (position == PhoneLoginActivity.list.size()) {
 				home_item_head.setVisibility(View.INVISIBLE);
 				home_item_name.setVisibility(View.INVISIBLE);
@@ -680,28 +668,61 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 						completeURL = beginStr + homeAvatar_path + endStr+ "group-front-cover";
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
 						homeImageLoaderUtils.getInstance().LoadImage(getActivity(), completeURL, home_item_head);
-						
-						for (int i = 0; i < JpushList.size(); i++) {
-							String jPush_pk_group=JpushList.get(i);
-							Log.e("HomeFragment", "当前jPush_pk_group======="+ jPush_pk_group);
-							Integer pk_group=homeuser_gridview.getPk_group();
-							Log.e("HomeFragment", "当前pk_group======="+ pk_group);
-							if(jPush_pk_group.equals(String.valueOf(pk_group))){
+
+						Integer party_update = homeuser_gridview.getParty_update();
+						Integer pk_group = homeuser_gridview.getPk_group();
+						if (party_update > 0) {
+
+							// 加入之前先删除库中已有的
+							new Delete().from(JPushNoSee.class).where("pk_group=?", pk_group).execute();
+							// 加入未看过的数据库中
+							JPushNoSee jPushNoSee = new JPushNoSee(pk_group, 2,0);
+							jPushNoSee.save();
+
+							JPushNoSeeList.clear();
+							JPushNoSeeList = new Select().from(JPushNoSee.class).execute();
+							Log.e("HomeFragment","JPushNoSeeList的长度11111======"+ JPushNoSeeList.size());
+							if (JPushNoSeeList.size() > 0) {
+								for (int i = 0; i < JPushNoSeeList.size(); i++) {
+									JPushNoSee jPushNoSee1 = JPushNoSeeList.get(i);
+									Integer jPushNoSee_pk_group = jPushNoSee1.getPk_group();
+									Log.e("HomeFragment", "所加入的ID======"+ jPushNoSee_pk_group);
+								}
+							}
+
+							// 再查新表,
+							JPushTabNumberList.clear();
+							JPushTabNumberList = new Select().from(JPushTabNumber.class).execute();
+							if (JPushTabNumberList.size() > 0) {
+								for (int i = 0; i < JPushTabNumberList.size(); i++) {
+									JPushTabNumber jPushTabNumber = JPushTabNumberList.get(i);
+									Integer jpush_pk_group = jPushTabNumber.getPk_group();
+									if (String.valueOf(pk_group).equals(String.valueOf(jpush_pk_group))) {
+										mHomePromptImage.setVisibility(View.GONE);
+									} else {
+										mHomePromptImage.setVisibility(View.VISIBLE);
+									}
+								}
+							} else {
 								mHomePromptImage.setVisibility(View.VISIBLE);
-								Log.e("HomeFragment", "进入显示的=======");
+							}
+						} else {
+							JPushNoSeeList.clear();
+							JPushNoSeeList = new Select().from(JPushNoSee.class).execute();
+							Log.e("HomeFragment", "JPushNoSeeList的长度======"+ JPushNoSeeList.size());
+							if (JPushNoSeeList.size() > 0) {
+								for (int i = 0; i < JPushNoSeeList.size(); i++) {
+									JPushNoSee jPushNoSee = JPushNoSeeList.get(i);
+									Integer jPushNoSee_pk_group = jPushNoSee.getPk_group();
+									if (String.valueOf(jPushNoSee_pk_group).equals(String.valueOf(pk_group))) {
+										mHomePromptImage.setVisibility(View.VISIBLE);
+									}
+								}
+							} else {
+								mHomePromptImage.setVisibility(View.GONE);
 							}
 						}
-//						Integer party_update=homeuser_gridview.getParty_update();
-//						Log.e("HomeFragment", "party_update======="+party_update);
-//						if(party_update>0){
-//							mHomePromptImage.setVisibility(View.VISIBLE);
-//							SendBroadcastReceiver(true,party_update);//发送广播给mainactivity
-//							Log.e("HomeFragment", "进入111111111=======");
-//						}else {
-//							SendBroadcastReceiver(false,0);//发送广播给mainactivity
-//							Log.e("HomeFragment", "进入22222222=======");
-//						}
-						
+
 					}
 				}
 			} else {
@@ -714,31 +735,65 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 						completeURL = beginStr + homeAvatar_path + endStr+ "group-front-cover";
 						PreferenceUtils.saveImageCache(getActivity(),completeURL);
 						homeImageLoaderUtils.getInstance().LoadImage(getActivity(), completeURL, home_item_head);
-					
-						for (int i = 0; i < JpushList.size(); i++) {
-							String jPush_pk_group=JpushList.get(i);
-							Log.e("HomeFragment", "当前jPush_pk_group======="+ jPush_pk_group);
-							Integer pk_group=homeuser_gridview.getPk_group();
-							Log.e("HomeFragment", "当前pk_group======="+ pk_group);
-							if(jPush_pk_group.equals(String.valueOf(pk_group))){
+
+						Integer party_update = homeuser_gridview.getParty_update();
+						Integer pk_group = homeuser_gridview.getPk_group();
+						if (party_update > 0) {
+
+							// 加入之前先删除库中已有的
+							new Delete().from(JPushNoSee.class).where("pk_group=?", pk_group).execute();
+							// 加入未看过的数据库中
+							JPushNoSee jPushNoSee = new JPushNoSee(pk_group, 2,0);
+							jPushNoSee.save();
+
+							JPushNoSeeList.clear();
+							JPushNoSeeList = new Select().from(JPushNoSee.class).execute();
+							Log.e("HomeFragment","JPushNoSeeList的长度11111======"+ JPushNoSeeList.size());
+							if (JPushNoSeeList.size() > 0) {
+								for (int i = 0; i < JPushNoSeeList.size(); i++) {
+									JPushNoSee jPushNoSee1 = JPushNoSeeList.get(i);
+									Integer jPushNoSee_pk_group = jPushNoSee1.getPk_group();
+									Log.e("HomeFragment", "所加入的ID======"+ jPushNoSee_pk_group);
+								}
+							}
+
+							// 再查新表,
+							JPushTabNumberList.clear();
+							JPushTabNumberList = new Select().from(JPushTabNumber.class).execute();
+							if (JPushTabNumberList.size() > 0) {
+								for (int i = 0; i < JPushTabNumberList.size(); i++) {
+									JPushTabNumber jPushTabNumber = JPushTabNumberList.get(i);
+									Integer jpush_pk_group = jPushTabNumber.getPk_group();
+									if (String.valueOf(pk_group).equals(String.valueOf(jpush_pk_group))) {
+										mHomePromptImage.setVisibility(View.GONE);
+									} else {
+										mHomePromptImage.setVisibility(View.VISIBLE);
+									}
+								}
+							} else {
 								mHomePromptImage.setVisibility(View.VISIBLE);
-								Log.e("HomeFragment", "进入显示的=======");
+							}
+						} else {
+							JPushNoSeeList.clear();
+							JPushNoSeeList = new Select().from(JPushNoSee.class).execute();
+							Log.e("HomeFragment", "JPushNoSeeList的长度======"+ JPushNoSeeList.size());
+							if (JPushNoSeeList.size() > 0) {
+								for (int i = 0; i < JPushNoSeeList.size(); i++) {
+									JPushNoSee jPushNoSee = JPushNoSeeList.get(i);
+									Integer jPushNoSee_pk_group = jPushNoSee.getPk_group();
+									if (String.valueOf(jPushNoSee_pk_group).equals(String.valueOf(pk_group))) {
+										mHomePromptImage.setVisibility(View.VISIBLE);
+									}
+								}
+							} else {
+								mHomePromptImage.setVisibility(View.GONE);
 							}
 						}
-						
-//						Integer party_update=homeuser_gridview.getParty_update();
-//						if(party_update>0){
-//							mHomePromptImage.setVisibility(View.VISIBLE);
-//							SendBroadcastReceiver(true,party_update);//发送广播给mainactivity
-//							Log.e("HomeFragment", "进入111111111=======");
-//						}else {
-//							SendBroadcastReceiver(false,0);//发送广播给mainactivity
-//							Log.e("HomeFragment", "进入222222222=======");
-//						}
+
 					}
 				}
 			}
-			
+
 			return inflater;
 		}
 
@@ -778,7 +833,7 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 		getActivity().unregisterReceiver(mMessageReceiver);
 		super.onDestroy();
 	}
-	
+
 	@Override
 	public void onDestroyView() {
 		super.onDestroyView();
@@ -811,7 +866,6 @@ public class HomeFragment extends Fragment implements OnClickListener,SwipeRefre
 		new Handler().postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				initDB();
 				ReadTeamInterface(init_pk_user);
 				swipeLayout.setRefreshing(false);
 				swipe_refresh_1.setRefreshing(false);

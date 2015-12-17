@@ -8,32 +8,44 @@ import com.activeandroid.annotation.Table;
 
 @Table(name = "jpushtabnumber")
 public class JPushTabNumber extends Model implements Serializable{
+	//已经读过的信息的数据库的表
 	public JPushTabNumber(){}
 	
 	@Column
-	private String pk_group;
+	private Integer pk_group;
 	@Column
-	private String type_tag;
-	public String getPk_group() {
+	private Integer type_tag;
+	@Column
+	private Integer party_update;
+	public Integer getPk_group() {
 		return pk_group;
 	}
-	public void setPk_group(String pk_group) {
+	public void setPk_group(Integer pk_group) {
 		this.pk_group = pk_group;
 	}
-	public String getType_tag() {
+	public Integer getType_tag() {
 		return type_tag;
 	}
-	public void setType_tag(String type_tag) {
+	public void setType_tag(Integer type_tag) {
 		this.type_tag = type_tag;
 	}
-	public JPushTabNumber(String pk_group, String type_tag) {
-		super();
-		this.pk_group = pk_group;
-		this.type_tag = type_tag;
+	public Integer getParty_update() {
+		return party_update;
+	}
+	public void setParty_update(Integer party_update) {
+		this.party_update = party_update;
 	}
 	@Override
 	public String toString() {
-		return "JPush [pk_group=" + pk_group + ", type_tag=" + type_tag + "]";
+		return "JPushTabNumber [pk_group=" + pk_group + ", type_tag="
+				+ type_tag + ", party_update=" + party_update + "]";
+	}
+	public JPushTabNumber(Integer pk_group, Integer type_tag,
+			Integer party_update) {
+		super();
+		this.pk_group = pk_group;
+		this.type_tag = type_tag;
+		this.party_update = party_update;
 	}
 	
 	

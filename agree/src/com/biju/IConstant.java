@@ -25,12 +25,6 @@ public interface IConstant {
 	public String ParTake = "partake";
 	public String UserAllUoreParty = "userAllmoreparty";
 	public String MoreParty = "moreparty";
-//	public String CommentsList_partake="commentslist_partake";
-//	public String CommentsList_not_say="commentsList_not_say";
-
-	// 使用在PartyDetailsActivity类，ScheduleFragment类，GroupActivity类的sp中
-	public String IsPartyDetails_ = "isPartyDetails_";
-	public String PartyDetails = "PartyDetails";
 
 	// 使用在GroupActivity类中和TeamSettingActivity类中
 	public String Group = "Group";
@@ -61,8 +55,6 @@ public interface IConstant {
 
 	// 从ScheduleFragment到addnewparty
 	public String Fk_group = "fk_group";
-	public String AddRefresh = "addrefresh";
-	public String IsAddRefresh = "isaddrefresh";
 	public String IsSchedule = "isSchedule";
 
 	// Schedule到partydetailes中
@@ -70,10 +62,6 @@ public interface IConstant {
 	public String Pk_party_user = "pk_party_user";
 	public String Pk_party = "pk_party";
 	public String fk_group = "fk_group";
-
-	// more到Schedule
-	public String MoreRefresh = "morerefresh";
-	public String Morecancle = "morecancle";
 
 	// partyfragmnet到partydetails
 	public String Partyfragmnet = "partyfragmnet";
